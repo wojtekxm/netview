@@ -1,2 +1,2 @@
 hello world
-hello
+jeśli to czytasz, wpisz swoje imię na dole, zrób commit i push :)

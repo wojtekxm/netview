@@ -2,4 +2,11 @@ hello world
 jeśli to czytasz, wpisz swoje imię na dole, zrób commit i push :)
 
 Mateusz Berent :)
+<<<<<<< HEAD
 lektor xddddd
+=======
+
+Kaceper Nitubydz :D
+
+Wojtek
+>>>>>>> origin/master

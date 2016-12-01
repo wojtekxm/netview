@@ -4,6 +4,7 @@ potem wykonaj:
 git commit -a
 git push origin master
 
+
 Mateusz Berent :)
 lektor xddddd
 Kaceper Nitubydz :D

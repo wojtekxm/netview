@@ -1,12 +1,10 @@
 hello world
-jeśli to czytasz, wpisz swoje imię na dole, zrób commit i push :)
+jeśli to czytasz, wpisz swoje imię na dole :)
+potem wykonaj:
+git commit -a
+git push origin master
 
 Mateusz Berent :)
-<<<<<<< HEAD
 lektor xddddd
-=======
-
 Kaceper Nitubydz :D
-
-Wojtek
->>>>>>> origin/master
+Wojtek ;)

@@ -1,6 +1,0 @@
-Na Windowsie można zainstalować program Git z oficjalnej strony git-scm.com/downloads
-Nie pobierajcie klienta GitHub, bo nawet nie mamy tam repo!
-Po zainstalowaniu tego programu uruchomcie Git Bash, który powinien być na pulpicie.
-To jest taki specjalny terminal w którym działają popularne komendy z Unixa oraz git.
-Ten plik edytuję właśnie na Windowsie, w programie Vi, odpalonym z terminala Git Bash.
-Pozdro :-)

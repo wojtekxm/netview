@@ -32,4 +32,9 @@ public class DeviceInfo {
     public void setClients(int clients) {
         this.clients = clients;
     }
+
+    @Override
+    public String toString() {
+        return "{name=\"" + name + "\", clients=" + clients + ", enabled=" + isEnabled + "}";
+    }
 }

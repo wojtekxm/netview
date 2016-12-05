@@ -9,9 +9,7 @@ import java.sql.Statement;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Management {
     private static final int CONTROLLER_NAME_MAX_CHARS = 85;
@@ -23,12 +21,14 @@ public class Management {
     }
 
     public static boolean isValidControllerName(String name) {
-        if (name.length() < 1) return false;
-        return name.length() <= CONTROLLER_NAME_MAX_CHARS && Unicode.noSurrogates(name);
+        if( name.length() < 1 ) return false;
+        if( name.length() > CONTROLLER_NAME_MAX_CHARS )return false;
+        return Unicode.noSurrogates(name);
     }
 
     public static boolean isCompatibleDeviceName(String name) {
-        return name.length() <= DEVICE_NAME_MAX_CHARS && Unicode.noSurrogates(name);
+        if( name.length() > DEVICE_NAME_MAX_CHARS )return false;
+        return Unicode.noSurrogates(name);
     }
 
     public static String getCompatibleDeviceName(String original) {
@@ -102,9 +102,7 @@ public class Management {
             log( "examineController", exc );
             return;
         }
-        // przechowuje mapę urządzeń odczytaną z bazy danych
-        // mapuje nazwę urządzenia do jego ID
-        final HashMap<String, Integer> found = new HashMap<>();
+        if( surveyed.size() < 1 )return;
 
         Instant now = Instant.now();
         long longTS = now.getEpochSecond();
@@ -112,40 +110,67 @@ public class Management {
             throw new IllegalStateException("timestamp overflow");
         int timestamp = (int)longTS;
 
-        /*try( Connection con = Database.connect() ) {
-            for(DeviceInfo info : list) {
-                String sql1 = "SELECT id FROM device WHERE name = ?";
-                int deviceId = -1;
-                try( PreparedStatement prep = con.prepareStatement(sql1) ) {
-                    prep.setString(1, info.getName() );
-                    try( ResultSet res = prep.executeQuery() ) {
-                        if( res.next() ) {
-                            deviceId = res.getInt("id");
-                        }
-                    }
-                }
-                if(deviceId == -1) {
-                    String sql2 = "INSERT INTO device (name, is_known, description, controller_id) VALUES (?, FALSE, NULL, ?)";
-                    try( PreparedStatement prep = con.prepareStatement(sql2, PreparedStatement.RETURN_GENERATED_KEYS) ) {
-                        prep.setString( 1, info.getName() );
-                        prep.setInt( 2, controllerId );
-                        prep.executeUpdate();
-                        try( ResultSet res = prep.getGeneratedKeys() ) {
-                            res.next();
-                            deviceId = res.getInt(1);
-                        }
-                    }
-                }
-                String sql3 = "INSERT INTO device_survey (`timestamp`, is_enabled, clients_sum, device_id) VALUES (?, ?, ?, ?)";
-                try(PreparedStatement prep = con.prepareStatement(sql3)) {
-                    prep.setInt(1, timestamp);
-                    prep.setBoolean(2, info.isEnabled());
-                    prep.setInt(3, info.getClients());
-                    prep.setInt(4, deviceId);
-                    prep.executeUpdate();
+        try( Connection con = Database.connect() ) {
+            try(Statement st = con.createStatement();
+                ResultSet res = st.executeQuery("SELECT name, id FROM device") ) {
+                while( res.next() ) {
+                    String name = res.getString("name");
+                    int id = res.getInt("id");
+                    SurveyItem item = surveyed.get(name);
+                    if(item != null)item.setId(id);
                 }
             }
-        }*/
+
+            final ArrayList<String> strangeNames = new ArrayList<>();
+            surveyed.forEach( (deviceName, surveyItem) -> {
+                if( surveyItem.getId() == -1 )strangeNames.add(deviceName);
+            } );
+
+            if( strangeNames.size() > 0 ) {
+                final StringBuilder sb = new StringBuilder();
+                sb.append("INSERT INTO device (name, is_known, controller_id) VALUES ");
+                for(int i = 0; i < strangeNames.size(); i++) {
+                    if(i > 0)sb.append(", ");
+                    sb.append("(?, FALSE, ?)");
+                }
+                String sql = sb.toString().intern();
+                try( PreparedStatement prep = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS) ) {
+                    for(int i = 0; i < strangeNames.size(); i++) {
+                        prep.setString( 2 * i + 1, strangeNames.get(i) );
+                        prep.setInt( 2 * i + 2, controllerId );
+                    }
+                    prep.executeUpdate();
+                    try( ResultSet res = prep.getGeneratedKeys() ) {
+                        for (String name : strangeNames) {
+                            res.next();
+                            int deviceId = res.getInt(1);
+                            surveyed.get(name).setId(deviceId);
+                        }
+                    }
+                }
+            }
+
+            final StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO device_survey (`timestamp`, is_enabled, clients_sum, device_id) VALUES ");
+            for(int i = 0; i < surveyed.size(); i++) {
+                if(i > 0)sb.append(", ");
+                sb.append("(?, ?, ?, ?)");
+            }
+            String sql = sb.toString().intern();
+            try( PreparedStatement prep = con.prepareStatement(sql) ) {
+                int x = 0;
+                for (Map.Entry<String, SurveyItem> entry : surveyed.entrySet()) {
+                    final String deviceName = entry.getKey();
+                    final SurveyItem surveyItem = entry.getValue();
+                    prep.setInt(4 * x + 1, timestamp);
+                    prep.setBoolean(4 * x + 2, surveyItem.isEnabled());
+                    prep.setInt(4 * x + 3, surveyItem.getClients());
+                    prep.setInt(4 * x + 4, surveyItem.getId());
+                    x++;
+                }
+                prep.executeUpdate();
+            }
+        }
     }
 
     protected static class SurveyItem {

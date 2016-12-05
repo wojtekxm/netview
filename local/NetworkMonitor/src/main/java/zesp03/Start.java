@@ -14,11 +14,12 @@ public class Start {
     public static void examine() throws IOException, SQLException, SNMPException {
         Management m = new Management();
         System.out.println("start");
-        long t0 = System.currentTimeMillis();
+        long t0 = System.nanoTime();
 
         m.examineAll();
 
-        long t1 = System.currentTimeMillis();
-        System.out.println("czas trwania " + (t1-t0) + "ms");
+        long t1 = System.nanoTime();
+        double d = (t1 - t0) * 0.000000001;
+        System.out.println( String.format("czas trwania %.3fs", d) );
     }
 }

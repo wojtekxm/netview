@@ -43,9 +43,6 @@ public class Management {
         return sb.toString().intern();
     }
 
-    //TODO: wyrzucić Admin exception jeśli taki controller już istnieje (zamiast SQLException) [?]
-    //TODO: wyrzucić Admin exception jeśli IP jest w złym formacie
-    //TODO: użyć transakcji
     public void registerController(String name, String ipv4) throws SQLException, AdminException {
         if( ! isValidControllerName(name) )
             throw new AdminException("invalid controller name");

@@ -2,13 +2,13 @@ package zesp03;
 
 import static org.junit.Assert.*;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import zesp03.pojo.DeviceInfo;
+import zesp03.pojo.SurveyItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class TestManagement {
     @Test
@@ -86,7 +86,7 @@ public class TestManagement {
         d.setClients(7);
         final ArrayList<DeviceInfo> list = new ArrayList<>();
         list.add( d );
-        final HashMap<String, Management.SurveyItem> map = mgm.filterDevices(list);
+        final HashMap<String, SurveyItem> map = mgm.filterDevices(list);
         assertEquals("map size", map.size(), 1);
         map.forEach( (key, survey) -> {
             assertEquals( "name", d.getName(), key );
@@ -110,9 +110,9 @@ public class TestManagement {
         final ArrayList<DeviceInfo> list = new ArrayList<>();
         list.add(d1);
         list.add(d2);
-        final HashMap<String, Management.SurveyItem> map = mgm.filterDevices(list);
+        final HashMap<String, SurveyItem> map = mgm.filterDevices(list);
         assertEquals("map size", map.size(), 1);
-        Management.SurveyItem si = map.get( "x??d" );
+        SurveyItem si = map.get( "x??d" );
         assertNotNull( si );
         assertEquals( "isEnabled", si.isEnabled(), d1.isEnabled() );
         assertEquals( "clients", si.getClients(), d1.getClients() );

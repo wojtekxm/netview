@@ -1,4 +1,4 @@
-package zesp03;
+package zesp03.pojo;
 
 /**
  * Plain Old Java Object

@@ -1,5 +1,7 @@
 package zesp03;
 
+import zesp03.pojo.DeviceInfo;
+
 import java.util.List;
 
 /**

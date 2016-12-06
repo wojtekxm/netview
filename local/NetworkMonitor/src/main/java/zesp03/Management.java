@@ -1,5 +1,7 @@
 package zesp03;
 
+import zesp03.pojo.*;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,6 +67,48 @@ public class Management {
             ps.setInt(2, controllerId);
             ps.executeUpdate();
         }
+    }
+
+    public ArrayList<CheckInfo> checkDevices() throws SQLException {
+        final String sql = "SELECT controller.id AS ControllerId, controller.name AS ControllerName, " +
+                "controller.ipv4 AS ControllerIPv4, controller.description AS ControllerDescription, " +
+                "device.id AS DeviceId, device.name AS DeviceName, " +
+                "device.is_known AS DeviceIsKnown, device.description AS DeviceDescription, " +
+                "Survey.id AS SurveyId, Survey.is_enabled AS SurveyIsEnabled, " +
+                "Survey.clients_sum AS SurveyClientsSum, Survey.`timestamp` AS SurveyTimestamp " +
+                "FROM controller RIGHT JOIN device ON controller.id = device.controller_id " +
+                "LEFT JOIN ( " +
+                " SELECT * FROM device_survey WHERE (device_survey.device_id, device_survey.`timestamp`) IN " +
+                " ( SELECT device_survey.device_id, MAX(device_survey.`timestamp`) FROM device_survey GROUP BY device_survey.device_id ) " +
+                " GROUP BY device_survey.device_id " +
+                ") Survey ON device.id = Survey.device_id";
+        final ArrayList<CheckInfo> list = new ArrayList<>();
+        try( Connection con = Database.connect();
+            Statement st = con.createStatement();
+            ResultSet res = st.executeQuery(sql) ) {
+            while( res.next() ) {
+                ControllerRow ct = new ControllerRow();
+                ct.setId( res.getInt("ControllerId") );
+                ct.setName( res.getString("ControllerName") );
+                ct.setIPv4( res.getString("ControllerIPv4") );
+                ct.setDescription( res.getString("ControllerDescription") );
+                DeviceRow dev = new DeviceRow();
+                dev.setId( res.getInt("DeviceId") );
+                dev.setName( res.getString("DeviceName") );
+                dev.setKnown( res.getBoolean("DeviceIsKnown") );
+                dev.setDescription( res.getString("DeviceDescription") );
+                dev.setControllerId( ct.getId() );
+                SurveyRow sur = new SurveyRow();
+                sur.setId( res.getInt("SurveyId") );
+                sur.setEnabled( res.getBoolean("SurveyIsEnabled") );
+                sur.setClientsSum( res.getInt("SurveyClientsSum") );
+                sur.setTimestamp( res.getInt("SurveyTimestamp") );
+                sur.setDeviceId( dev.getId() );
+                CheckInfo ci = new CheckInfo(ct, dev, sur);
+                list.add(ci);
+            }
+        }
+        return list;
     }
 
     public void examineAll() throws SQLException, SNMPException {
@@ -167,34 +211,6 @@ public class Management {
                 }
                 prep.executeUpdate();
             }
-        }
-    }
-
-    protected static class SurveyItem {
-        private int id;
-        private final int clients;
-        private final boolean enabled;
-
-        SurveyItem(int clients, boolean isEnabled) {
-            this.id = -1;
-            this.clients = clients;
-            this.enabled = isEnabled;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public int getClients() {
-            return clients;
-        }
-
-        public boolean isEnabled() {
-            return enabled;
-        }
-
-        public void setId(int id) {
-            this.id = id;
         }
     }
 

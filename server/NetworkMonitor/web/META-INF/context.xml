@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/">
+    <Resource name="jdbc/mariadb"
+              auth="Container"
+              type="javax.sql.DataSource"
+              username="dbuser"
+              password="1234"
+              driverClassName="org.mariadb.jdbc.Driver"
+              url="jdbc:mariadb://localhost:3306/pz"
+              initialSize="0"
+              maxTotal="8"
+              maxIdle="4"/>
+</Context>

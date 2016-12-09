@@ -33,6 +33,7 @@ public class Check extends HttpServlet {
 
             w.println("<a href=\"test.jsp\">test.jsp</a><br>");
             w.println("<a href=\"check\">check</a><br>");
+            w.println("<a href=\"dbtest\">dbtest</a><br>");
             w.println("</body></html>");
         }
     }

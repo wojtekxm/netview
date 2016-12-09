@@ -8,15 +8,25 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Database {
+    private static final DataSource ds;
+
+    static {
+        try {
+            Context ctx0 = new InitialContext();
+            Context ctx1 = (Context) ctx0.lookup("java:comp/env");
+            ds = (DataSource) ctx1.lookup("jdbc/mariadb");
+        }
+        catch(NamingException exc) {
+            throw new IllegalStateException(exc);
+        }
+    }
+
     /**
      * Łączy się z MariaDB jako użytkownik dbuser.
      * @return połączenie do bazy "pz" jako użytkownik dbuser
      * @throws SQLException nie udało się pobrać połączenia do bazy danych
      */
-    public static Connection connect() throws SQLException, NamingException {
-        Context ctx0 = new InitialContext();
-        Context ctx1 = (Context)ctx0.lookup( "java:comp/env" );
-        DataSource ds = (DataSource)ctx1.lookup( "jdbc/mariadb" );
+    public static synchronized Connection connect() throws SQLException {
         return ds.getConnection();
     }
 }

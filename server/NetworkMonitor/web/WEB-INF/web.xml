@@ -20,4 +20,13 @@
         <url-pattern>/check</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>DbTest</servlet-name>
+        <servlet-class>zesp03.servlet.DbTest</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DbTest</servlet-name>
+        <url-pattern>/dbtest</url-pattern>
+    </servlet-mapping>
+
 </web-app>

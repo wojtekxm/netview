@@ -9,5 +9,6 @@
     <h1>Network Monitor</h1><br>
     <a href="test.jsp">test.jsp</a><br>
     <a href="check">check</a><br>
+    <a href="dbtest">dbtest</a><br>
 </body>
 </html>

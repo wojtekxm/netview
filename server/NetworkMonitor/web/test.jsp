@@ -12,5 +12,6 @@
     </form><br>
     <a href="index.jsp">index.jsp</a><br>
     <a href="check">check</a><br>
+    <a href="dbtest">dbtest</a><br>
 </body>
 </html>

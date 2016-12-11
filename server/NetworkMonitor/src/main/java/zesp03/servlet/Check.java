@@ -16,7 +16,7 @@ public class Check extends HttpServlet {
         handle(request, response);
     }
 
-    protected void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
         resp.setContentType("text/html");
@@ -31,9 +31,11 @@ public class Check extends HttpServlet {
             if(x == null)w.println("brak parametru!<br><br>");
             else w.println("otrzymano parametr: " + x + "<br><br>");
 
+            w.println("<a href=\"index.jsp\">index.jsp</a><br>");
             w.println("<a href=\"test.jsp\">test.jsp</a><br>");
             w.println("<a href=\"check\">check</a><br>");
             w.println("<a href=\"dbtest\">dbtest</a><br>");
+            w.println("<a href=\"survey\">survey</a><br>");
             w.println("</body></html>");
         }
     }

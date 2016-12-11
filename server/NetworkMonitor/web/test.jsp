@@ -11,7 +11,9 @@
         <input type="submit" value="Wyślij">
     </form><br>
     <a href="index.jsp">index.jsp</a><br>
+    <a href="test.jsp">test.jsp</a><br>
     <a href="check">check</a><br>
     <a href="dbtest">dbtest</a><br>
+    <a href="survey">survey</a><br>
 </body>
 </html>

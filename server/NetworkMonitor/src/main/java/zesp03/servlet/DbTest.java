@@ -25,12 +25,12 @@ public class DbTest extends HttpServlet {
         handle(request, response);
     }
 
-    protected void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
         resp.setContentType("text/plain");
 
-        int devices = -1;
+        int devices;
         try( Connection con = Database.connect();
              Statement st = con.createStatement();
              ResultSet rset = st.executeQuery("SELECT COUNT(*) FROM device") ) {

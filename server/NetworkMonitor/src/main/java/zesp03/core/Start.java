@@ -1,15 +1,11 @@
 package zesp03.core;
 
-import zesp03.exception.AdminException;
-import zesp03.exception.SNMPException;
 import zesp03.pojo.CheckInfo;
 import zesp03.pojo.ControllerRow;
 import zesp03.pojo.DeviceRow;
 import zesp03.pojo.SurveyRow;
 
-import javax.naming.NamingException;
 import java.io.IOException;
-import java.sql.*;
 import java.util.ArrayList;
 
 @Deprecated

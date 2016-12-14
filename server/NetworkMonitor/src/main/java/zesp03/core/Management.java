@@ -1,14 +1,9 @@
 package zesp03.core;
 
-import zesp03.core.Database;
-import zesp03.core.FakeSNMP;
-import zesp03.core.SNMPHandler;
-import zesp03.core.Unicode;
 import zesp03.exception.AdminException;
 import zesp03.exception.SNMPException;
 import zesp03.pojo.*;
 
-import javax.naming.NamingException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -52,7 +47,7 @@ public class Management {
         return sb.toString().intern();
     }
 
-    public void registerController(String name, String ipv4) throws SQLException, NamingException, AdminException {
+    public void registerController(String name, String ipv4) throws SQLException, AdminException {
         if( ! isValidControllerName(name) )
             throw new AdminException("invalid controller name");
         String sql = "INSERT INTO controller (name, ipv4) VALUES (?, ?)";
@@ -64,7 +59,7 @@ public class Management {
         }
     }
 
-    public void registerNewDevice(String name, int controllerId) throws SQLException, NamingException, AdminException {
+    public void registerNewDevice(String name, int controllerId) throws SQLException, AdminException {
         if( ! isCompatibleDeviceName(name) )
             throw new AdminException("invalid device name");
         String sql = "INSERT INTO device (name, is_known, description, controller_id) VALUES (?, TRUE, NULL, ?)";
@@ -76,7 +71,7 @@ public class Management {
         }
     }
 
-    public ArrayList<CheckInfo> checkDevices() throws SQLException, NamingException {
+    public ArrayList<CheckInfo> checkDevices() throws SQLException {
         final String sql = "SELECT controller.id AS ControllerId, controller.name AS ControllerName, " +
                 "controller.ipv4 AS ControllerIPv4, controller.description AS ControllerDescription, " +
                 "device.id AS DeviceId, device.name AS DeviceName, " +
@@ -118,7 +113,7 @@ public class Management {
         return list;
     }
 
-    public void examineAll() throws SQLException, NamingException, SNMPException {
+    public void examineAll() throws SQLException {
         final HashMap<Integer, String> map = new HashMap<>();
         String sql = "SELECT id, ipv4 FROM controller";
         try(Connection con = Database.connect();
@@ -135,13 +130,13 @@ public class Management {
             try {
                 examineController(controllerId, ipv4);
             }
-            catch(SQLException | NamingException exc) {
+            catch(SQLException exc) {
                 log( "examineAll", exc );
             }
         } );
     }
 
-    protected void examineController(int controllerId, String ipv4) throws SQLException, NamingException {
+    protected void examineController(int controllerId, String ipv4) throws SQLException {
         HashMap<String, DeviceState> surveyed;
         try {
             surveyed = filterDevices( snmp.queryDevices(ipv4) );

@@ -13,9 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * Created by wojte on 09.12.2016.
- */
 public class DbTest extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         handle(request, response);
@@ -25,12 +22,12 @@ public class DbTest extends HttpServlet {
         handle(request, response);
     }
 
-    protected void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
         resp.setContentType("text/plain");
 
-        int devices = -1;
+        int devices;
         try( Connection con = Database.connect();
              Statement st = con.createStatement();
              ResultSet rset = st.executeQuery("SELECT COUNT(*) FROM device") ) {

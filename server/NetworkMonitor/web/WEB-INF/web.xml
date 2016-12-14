@@ -30,6 +30,25 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Survey</servlet-name>
+        <servlet-class>zesp03.servlet.Survey</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Survey</servlet-name>
+        <url-pattern>/survey</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>showDevices</servlet-name>
+        <servlet-class>zesp03.servlet.showDevices</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>showDevices</servlet-name>
+        <url-pattern>/showDevices</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Controllers</servlet-name>
         <servlet-class>zesp03.servlet.Controllers</servlet-class>
     </servlet>

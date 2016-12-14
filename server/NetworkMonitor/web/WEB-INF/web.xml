@@ -29,4 +29,12 @@
         <url-pattern>/dbtest</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Controllers</servlet-name>
+        <servlet-class>zesp03.servlet.Controllers</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Controllers</servlet-name>
+        <url-pattern>/Controllers</url-pattern>
+    </servlet-mapping>
 </web-app>

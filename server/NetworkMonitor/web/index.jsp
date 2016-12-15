@@ -12,5 +12,6 @@
     <a href="check">check</a><br>
     <a href="dbtest">dbtest</a><br>
     <a href="survey">survey</a><br>
+    <a href="devicestatus">try beta</a>
 </body>
 </html>

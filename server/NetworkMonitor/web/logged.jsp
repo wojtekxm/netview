@@ -37,10 +37,11 @@
     <div id="content">
         <ul id="accessPoints">
             <li> <div id="wydzial">Wszystkie kontrolery</div>
-                <ul >
+                <ul>
+                    <jsp:useBean id="random" class="java.util.Random" scope="application" />
                     <c:forEach var="d" items="${devicesList}">
                     <%--<c:forEach var="i" begin="0" end="400">--%>
-                        <li id=${d}></li>
+                            <li id=${d}>5</li>
                     </c:forEach>
                 </ul>
             </li>

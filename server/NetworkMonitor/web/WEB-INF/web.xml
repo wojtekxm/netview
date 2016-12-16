@@ -44,7 +44,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>DeviceStatus</servlet-name>
-        <url-pattern>/DeviceStatus</url-pattern>
+        <url-pattern>/devicestatus</url-pattern>
     </servlet-mapping>
 
 </web-app>

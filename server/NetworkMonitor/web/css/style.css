@@ -1,0 +1,166 @@
+	body
+	{
+		padding: 0px;
+		margin:0px;
+		font-family: 'Josefin Sans', sans-serif;
+		font-size:14px;
+		background-attachment: scroll;
+		background-size:contain;
+		background-color: black;
+	}
+
+	#container
+	{
+		margin-bottom:0px;
+		margin-top: 0px;
+		width: 1200px; 
+		height: 100%;
+		margin-left: auto;
+		margin-right: auto;
+		background-color: rgba(240,240,240,1);
+	}
+
+	#logo
+	{
+		background-color: black;/* rgba(152, 255, 182, 1);*/
+		color:white;
+		text-align:center;
+	}
+
+	#accessPoints
+	{
+		font-size: 20px;
+		list-style: none;
+		margin:0px;
+		padding:0px;
+		width: 1200px;
+		height: 100%;
+		background-color: rgba(20,20,20,1);
+		color:white;
+		float:left;
+		text-align: left;
+	}
+
+	#accessPoints ul 
+	{
+		margin:0;
+    	padding: 0;
+		padding-top: 5px;
+    	padding-left: 5px;
+		background-color: rgba(12,12,12,1);
+		display: block; 
+        float: none;
+        overflow: hidden;
+		text-shadow: 1px 1px 2px #000000;
+		font-size: 11px;
+		list-style: none; 
+/*		height: 0px;
+	    overflow: hidden;
+	    opacity:0;
+   		filter:alpha(opacity=0);
+	    -webkit-transition: all 0.4s ease-in-out;
+	    transition: all 0.4s ease-in-out;*/
+	}
+
+	#accessPoints li ul li
+	{
+		margin:auto;
+		position: relative;
+		overflow:hidden; 
+		text-shadow: 1px 1px 2px #000000;
+		font-size:12px; 
+/*		display: inline;*/
+		list-style: none; 
+/*		display: block;*/
+		width: 158px;
+	}
+
+
+
+	/*#menu*/
+	/*{*/
+		/*float:left;*/
+		/*text-align: left;*/
+		/*width: 1200px;*/
+		/*height: 60px;*/
+		/*background:url(/images/menuBar.jpg);*/
+		/*background-color: rgba(152, 255, 182, 1);*/
+	/*}*/
+
+	#wydzial
+	{
+		padding: 3px;
+		background-color: black;
+	}
+
+	#nazwa
+	{
+		margin-top: 6px;
+		font-size: 24px;
+		text-decoration-style: solid;
+		padding-left:10px;
+		background-color: black;/*rgba(20, 20, 20, 1);*/
+		color:white;
+	}
+
+	ul li ul li#greenDiode
+	{
+		margin:3px;
+		top:0;
+		left:0;
+		width:35px;
+		height: 25px;
+		float:left;
+		color:white;
+		text-decoration-style: solid;
+		text-align: left;
+		background-color:#00ad1d;
+		border-radius:5px;
+		transition:  1s;
+
+	}
+	ul li ul li#greenDiode:hover
+	{
+		z-index: 999;
+		background-color:#00f028;
+		transform: scale(1.7, 1.7);
+		-moz-transform: scale(1.7, 1.7);
+		-ms-transform: scale(1.7, 1.7);
+		-webkit-transform: scale(1.7, 1.7);
+		-o-transform: scale(1.7, 1.7);
+	}
+
+	ul li ul li#redDiode
+	{
+		margin:3px;
+		top:0;
+		left:0;
+		width:35px;
+		height: 25px;
+		float:left;
+		color:white;
+		text-decoration-style: solid;
+		text-align: left;
+		background-color:#d10000;
+		border-radius:5px;
+		transition: 1s;
+	}
+
+	ul li ul li#redDiode:hover
+	{
+		background-color:#ff1f1f;
+		z-index: 999;
+		transform: scale(1.7, 1.7);
+		-moz-transform: scale(1.7, 1.7);
+		-ms-transform: scale(1.7, 1.7);
+		-webkit-transform: scale(1.7, 1.7);
+		-o-transform: scale(1.7, 1.7);
+	}
+
+	ul li#wydzial
+	{
+		margin:0px;
+		z-index:900;
+	}
+
+	

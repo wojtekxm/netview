@@ -27,10 +27,6 @@
         <input type="hidden" name="<%= Survey.PARAM_ACTION %>" value="<%= Survey.PARAM_ACTION_UPDATE %>">
         <input type="submit" value="Nowe badanie">
     </form><br>
-    <a href="index.jsp">index.jsp</a><br>
-    <a href="test.jsp">test.jsp</a><br>
-    <a href="check">check</a><br>
-    <a href="dbtest">dbtest</a><br>
-    <a href="survey">survey</a><br>
+
 </body>
 </html>

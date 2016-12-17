@@ -13,6 +13,6 @@
     <a href="dbtest">dbtest</a><br>
     <a href="survey">survey</a><br>
     <a href="showDevices">showDevices</a><br>
-    <a href="Controllers">Controllers</a><br>
+    <a href="Controllers.jsp">Controllers</a><br>
 </body>
 </html>

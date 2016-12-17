@@ -21,7 +21,9 @@ public class Check extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
         resp.setContentType("text/html");
         try(PrintWriter w = resp.getWriter() ) {
-            String x = req.getParameter("x");
+            String x = req.getParameter("name");
+            String y = req.getParameter("ipv4");
+            String z = req.getParameter("description");
             w.println("<!DOCTYPE html>");
             w.println("<html lang=\"pl\"><head>");
             w.println("<meta charset=\"utf-8\">");
@@ -29,15 +31,18 @@ public class Check extends HttpServlet {
             w.println("</head><body>");
 
             if(x == null)w.println("brak parametru!<br><br>");
-            else w.println("otrzymano parametr: " + x + "<br><br>");
+            else w.println("Dodano kontroler o nazwie: " + x + "<br><br>");
 
-            w.println("<a href=\"index.jsp\">index.jsp</a><br>");
-            w.println("<a href=\"test.jsp\">test.jsp</a><br>");
-            w.println("<a href=\"check\">check</a><br>");
-            w.println("<a href=\"dbtest\">dbtest</a><br>");
-            w.println("<a href=\"survey\">survey</a><br>");
-            w.println("<a href=\"showDevices\">showDevices</a><br>");
+            if(x == null)w.println("brak parametru!<br><br>");
+            else w.println("Adres IPv4 kontrolera: " + y + "<br><br>");
+
+            if(x == null)w.println("brak parametru!<br><br>");
+            else w.println("Komentarz: " + z + "<br><br>");
+
             w.println("</body></html>");
+
+
+
         }
     }
 }

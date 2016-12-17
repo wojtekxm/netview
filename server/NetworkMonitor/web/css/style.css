@@ -122,7 +122,7 @@
 	}
 	ul li ul li#greenDiode:hover
 	{
-		z-index: 999;
+		z-index: 1000;
 		background-color:#00f028;
 		transform: scale(1.7, 1.7);
 		-moz-transform: scale(1.7, 1.7);

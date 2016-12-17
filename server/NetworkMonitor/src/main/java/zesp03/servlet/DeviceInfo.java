@@ -13,7 +13,7 @@ import java.util.Random;
 /**
  * Created by Kacper on 2016-12-15.
  */
-public class DeviceStatus extends HttpServlet {
+public class DeviceInfo extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
@@ -24,21 +24,21 @@ public class DeviceStatus extends HttpServlet {
         List<String> devices = new ArrayList<>();
         List<Integer> count = new ArrayList<>();
         String diodes[] = {"greenDiode", "redDiode"};
-//        for (int i = 0; i < 400; i++) {
-//            int idx = new Random().nextInt(diodes.length);
-//            int c = new Random().nextInt(50);
-//            String randDiode = (diodes[idx]);
-////            System.out.println(randDiode);
-//            devices.add(randDiode);
-//            if(randDiode.equals(diodes[0])){
-//                count.add(c);
-//                System.out.println(c);
-//            }else if(randDiode.equals(diodes[1])){
-//                count.add(0);
-//                System.out.println("0");
-//            }
-//        }
-//        System.out.println(devices.size());
+        for (int i = 0; i < 400; i++) {
+            int idx = new Random().nextInt(diodes.length);
+            int c = new Random().nextInt(50);
+            String randDiode = (diodes[idx]);
+//            System.out.println(randDiode);
+            devices.add(randDiode);
+            if(randDiode.equals(diodes[0])){
+                count.add(c);
+                System.out.println(c);
+            }else if(randDiode.equals(diodes[1])){
+                count.add(0);
+                System.out.println("0");
+            }
+        }
+        System.out.println(devices.size());
         req.setAttribute("devicesList", devices);
         req.setAttribute("countList", count);
         req.getRequestDispatcher("logged.jsp").forward(req,resp);

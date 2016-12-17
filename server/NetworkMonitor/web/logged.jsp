@@ -29,6 +29,7 @@
 </head>
 
 <body>
+<div id="all">
 <div id="container">
     <div id="logo" >
         <a href="index.html"><img src="/images/logo2.jpg"></a>
@@ -39,15 +40,15 @@
             <li> <div id="wydzial">Wszystkie kontrolery</div>
                 <ul>
                     <jsp:useBean id="random" class="java.util.Random" scope="application" />
-                    <c:forEach var="d" items="${devicesList}">
+                    <c:forEach var="d" items="${devicesList}" varStatus="status">
                     <%--<c:forEach var="i" begin="0" end="400">--%>
-                            <li id=${d}>5</li>
+                            <li id=${d}>${countList[status.index]}</li>
                     </c:forEach>
                 </ul>
             </li>
         </ul>
     </div>
-
+</div>
 </div>
 </body>
 </html>

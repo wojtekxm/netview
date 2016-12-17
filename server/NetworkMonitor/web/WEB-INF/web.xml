@@ -39,12 +39,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>DeviceStatus</servlet-name>
-        <servlet-class>zesp03.servlet.DeviceStatus</servlet-class>
+        <servlet-name>DeviceInfo</servlet-name>
+        <servlet-class>zesp03.servlet.DeviceInfo</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>DeviceStatus</servlet-name>
-        <url-pattern>/devicestatus</url-pattern>
+        <servlet-name>DeviceInfo</servlet-name>
+        <url-pattern>/deviceinfo</url-pattern>
     </servlet-mapping>
 
 </web-app>

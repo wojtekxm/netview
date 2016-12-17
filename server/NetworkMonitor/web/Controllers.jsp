@@ -6,7 +6,7 @@
 </head>
 <body>
 <p><font size="30">Dodawanie kontrolerów</font></p>
-<form method="post" action="check">
+<form method="post" action="AddController">
     <p><b>Nazwa kontrolera:</b></p>
     <input type="text" name="name">
     <p><b>IPv4 kontrolera:</b></p>

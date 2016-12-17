@@ -47,4 +47,14 @@
         <url-pattern>/deviceinfo</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>showDevices</servlet-name>
+        <servlet-class>zesp03.servlet.showDevices</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>showDevices</servlet-name>
+        <url-pattern>/showDevices</url-pattern>
+    </servlet-mapping>
+
 </web-app>

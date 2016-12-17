@@ -12,6 +12,11 @@
     <a href="check">check</a><br>
     <a href="dbtest">dbtest</a><br>
     <a href="survey">survey</a><br>
+<<<<<<< HEAD
     <a href="deviceinfo">try beta</a>
+=======
+    <a href="showDevices">showDevices</a><br>
+    <a href="devicestatus">try beta</a>
+>>>>>>> origin/master
 </body>
 </html>

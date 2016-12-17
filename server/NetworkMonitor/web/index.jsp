@@ -4,19 +4,14 @@
 <head>
     <meta charset="utf-8">
     <title>Network Monitor</title>
+    <link rel="icon" href="favicon.png">
 </head>
 <body>
-    <h1>Network Monitor</h1><br>
+    <h1>Network Monitor</h1>
+    <br>
     <a href="index.jsp">index.jsp</a><br>
-    <a href="test.jsp">test.jsp</a><br>
-    <a href="check">check</a><br>
-    <a href="dbtest">dbtest</a><br>
     <a href="survey">survey</a><br>
-<<<<<<< HEAD
-    <a href="deviceinfo">try beta</a>
-=======
+    <a href="deviceinfo">try beta (deviceinfo)</a><br>
     <a href="showDevices">showDevices</a><br>
-    <a href="devicestatus">try beta</a>
->>>>>>> origin/master
 </body>
 </html>

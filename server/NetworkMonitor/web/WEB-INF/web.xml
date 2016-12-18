@@ -48,4 +48,13 @@
         <url-pattern>/showDevices</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>AddController</servlet-name>
+        <servlet-class>zesp03.servlet.AddController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddController</servlet-name>
+        <url-pattern>/AddController</url-pattern>
+    </servlet-mapping>
+
 </web-app>

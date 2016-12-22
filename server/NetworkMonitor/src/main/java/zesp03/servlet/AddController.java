@@ -1,5 +1,6 @@
 package zesp03.servlet;
 
+import org.mariadb.jdbc.internal.stream.PrepareSqlException;
 import zesp03.core.Database;
 
 import javax.servlet.ServletException;
@@ -16,8 +17,8 @@ public class AddController extends HttpServlet {
     Connection conn = null;
     Statement stmt;
     ResultSet rset = null;
-    PreparedStatement pstmt = null;
     String idg;
+    PreparedStatement pstmt = null;
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,18 +36,24 @@ public class AddController extends HttpServlet {
         String x = req.getParameter("name");
         String y = req.getParameter("ipv4");
         String z = req.getParameter("description");
-        try( Connection con = Database.connect();
-             Statement st = con.createStatement();
-             ResultSet rset = st.executeQuery("INSERT INTO CONTROLLER VALUES(x, y, z)") ) {
-             rset.next();
+        try {
+            Connection con = Database.connect();
 
+            pstmt = con.prepareStatement("INSERT INTO CONTROLLER (name, ipv4, description) VALUES (?, ?, ?)");
+            pstmt.setString(1, x);
+            pstmt.setString(2, y);
+            pstmt.setString(3, z);
+            pstmt.executeQuery();
+            con.commit();
+            //rset.next();
         }
+
         catch(SQLException exc) {
             throw new ServletException(exc);
         }
 
         try(PrintWriter w = resp.getWriter() ) {
-            w.println("Dodano do bazy kontroler o nazwie " + x + " adresie PIv4 " + y);
+            w.println("Dodano do bazy kontroler o nazwie " + x + " adresie PIv4 " + y + "oraz dodatkowym komentarzu " + z);
         }
 
 

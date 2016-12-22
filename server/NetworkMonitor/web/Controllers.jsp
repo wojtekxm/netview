@@ -11,7 +11,7 @@
     <input type="text" name="name">
     <p><b>IPv4 kontrolera:</b></p>
     <input type="text" name="ipv4">
-    <p><b>Komentarz(opcjonalne):</b></p>
+    <p><b>Komentarz:</b></p>
     <input type="text" name="description">
     <p></p>
     <input type="submit" value="Dodaj">

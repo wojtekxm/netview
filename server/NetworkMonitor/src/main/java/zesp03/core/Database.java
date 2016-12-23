@@ -14,7 +14,7 @@ public class Database {
         try {
             Context ctx0 = new InitialContext();
             Context ctx1 = (Context) ctx0.lookup("java:comp/env");
-            ds = (DataSource) ctx1.lookup("jdbc/mariadb");
+            ds = (DataSource) ctx1.lookup("jdbc/MySQLDB");
         }
         catch(NamingException exc) {
             throw new IllegalStateException(exc);

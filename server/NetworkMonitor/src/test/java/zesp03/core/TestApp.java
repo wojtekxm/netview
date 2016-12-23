@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TestManagement {
+public class TestApp {
     @Test
     public void isValidControllerName_empty_false() {
         assertFalse( App.isValidControllerName("") );
@@ -97,25 +97,26 @@ public class TestManagement {
 
     @Test
     public void filterDevices_doubleNames_singleName() throws IOException {
-        DeviceState d1 = new DeviceState();
-        d1.setName("x" + TestUnicode.BAT_STRING + "d");
-        d1.setClientsSum(7);
-        d1.setEnabled(false);
-        DeviceState d2 = new DeviceState();
-        d2.setName( d1.getName() );
-        d2.setClientsSum(9);
-        d2.setEnabled(true);
+        final DeviceState device1 = new DeviceState();
+        device1.setName("x" + TestUnicode.BAT_STRING + "d");
+        device1.setClientsSum(7);
+        device1.setEnabled(false);
+        final DeviceState device2 = new DeviceState();
+        device2.setName( device1.getName() );
+        device2.setClientsSum(9);
+        device2.setEnabled(true);
         final ArrayList<DeviceState> list = new ArrayList<>();
-        list.add(d1);
-        list.add(d2);
+        list.add(device1);
+        list.add(device2);
         final HashMap<String, DeviceState> map = App.filterDevices(list);
         assertEquals("map size", map.size(), 1);
-        DeviceState ds = map.get( "x??d" );
-        assertNotNull( ds );
-        assertEquals( "isEnabled", ds.isEnabled(), d1.isEnabled() );
-        assertEquals( "clientsSum", ds.getClientsSum(), d1.getClientsSum() );
-        assertEquals( "id -1", ds.getId(), -1 );
-        assertNotEquals( "isEnabled", ds.isEnabled(), d2.isEnabled() );
-        assertNotEquals( "clientsSum", ds.getClientsSum(), d2.getClientsSum() );
+        final DeviceState d = map.get( "x??d" );
+        assertNotNull( d );
+        assertEquals( "id", d.getId(), 0 );
+        assertEquals( "name", d.getName(), "x??d" );
+        assertEquals( "isEnabled", d.isEnabled(), device1.isEnabled() );
+        assertEquals( "clientsSum", d.getClientsSum(), device1.getClientsSum() );
+        assertNotEquals( "isEnabled", d.isEnabled(), device2.isEnabled() );
+        assertNotEquals( "clientsSum", d.getClientsSum(), device2.getClientsSum() );
     }
 }

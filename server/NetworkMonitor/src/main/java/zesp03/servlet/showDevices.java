@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 /**
  * Created by Berent on 2016-12-11.
@@ -24,24 +25,26 @@ public class showDevices extends HttpServlet {
     }
 
     protected void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");
         resp.setContentType("text/html");
-
-        try( PrintWriter w = resp.getWriter() ) {
-
-            w.println( getHTML() );
-
-        } catch(Exception propagate) {
+        String html;
+        try {
+            html = getHTML();
+        }
+        catch(SQLException propagate) {
             throw new RuntimeException(propagate);
+        }
+
+        try(PrintWriter w = resp.getWriter() ) {
+            w.println(html);
         }
     }
 
     //==================================================================================================================
     // STRUCTURE OF HTML
     //==================================================================================================================
-    private String getHTML() throws Exception {
+    private String getHTML() throws SQLException {
 
         StringBuilder sb = new StringBuilder();
 
@@ -71,7 +74,7 @@ public class showDevices extends HttpServlet {
 
         return sb.toString();
     }
-    private String getBody() throws Exception {
+    private String getBody() throws SQLException {
 
         StringBuilder sb = new StringBuilder();
 
@@ -87,7 +90,7 @@ public class showDevices extends HttpServlet {
     //==================================================================================================================
     // TABLE
     //==================================================================================================================
-    private String getTable() throws Exception {
+    private String getTable() throws SQLException {
 
         StringBuilder sb = new StringBuilder();
 
@@ -118,7 +121,7 @@ public class showDevices extends HttpServlet {
 
         return sb.toString();
     }
-    private String getTableRows() throws Exception {
+    private String getTableRows() throws SQLException {
 
         return App.checkDevices().stream()
                 .sorted( (elem1, elem2)->Integer.compare(elem1.controller().getId(), elem2.controller().getId()) )

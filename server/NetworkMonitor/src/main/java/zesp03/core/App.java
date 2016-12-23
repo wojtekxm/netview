@@ -61,7 +61,7 @@ public class App {
     public static synchronized void registerController(String name, String ipv4) throws SQLException, AdminException {
         if( ! isValidControllerName(name) )
             throw new AdminException("invalid controller name");
-        String sql = "INSERT INTO controller (name, ipv4) VALUES (?, ?)";
+        String sql = "INSERT INTO controller (`name`, ipv4) VALUES (?, ?)";
         try(Connection c = Database.connect();
             PreparedStatement ps = c.prepareStatement(sql) ) {
             ps.setString(1, name);
@@ -74,7 +74,7 @@ public class App {
     public static synchronized void registerNewDevice(String name, int controllerId) throws SQLException, AdminException {
         if( ! isCompatibleDeviceName(name) )
             throw new AdminException("invalid device name");
-        String sql = "INSERT INTO device (name, is_known, description, controller_id) VALUES (?, TRUE, NULL, ?)";
+        String sql = "INSERT INTO device (`name`, is_known, description, controller_id) VALUES (?, TRUE, NULL, ?)";
         try(Connection c = Database.connect();
             PreparedStatement ps = c.prepareStatement(sql) ) {
             ps.setString(1, name);
@@ -86,17 +86,19 @@ public class App {
     // synchronized?
     //TODO użyj transakcji
     public static synchronized ArrayList<CheckInfo> checkDevices() throws SQLException {
-        final String sql = "SELECT controller.id AS ControllerId, controller.name AS ControllerName, " +
+        final String sql = "SELECT controller.id AS ControllerId, controller.`name` AS ControllerName, " +
                 "controller.ipv4 AS ControllerIPv4, controller.description AS ControllerDescription, " +
-                "device.id AS DeviceId, device.name AS DeviceName, " +
+                "device.id AS DeviceId, device.`name` AS DeviceName, " +
                 "device.is_known AS DeviceIsKnown, device.description AS DeviceDescription, " +
                 "Survey.id AS SurveyId, Survey.is_enabled AS SurveyIsEnabled, " +
                 "Survey.clients_sum AS SurveyClientsSum, Survey.`timestamp` AS SurveyTimestamp " +
                 "FROM controller RIGHT JOIN device ON controller.id = device.controller_id " +
-                "LEFT JOIN ( " +
-                " SELECT * FROM device_survey WHERE (device_survey.device_id, device_survey.`timestamp`) IN " +
-                " ( SELECT device_survey.device_id, MAX(device_survey.`timestamp`) FROM device_survey GROUP BY device_survey.device_id ) " +
-                " GROUP BY device_survey.device_id " +
+                "LEFT JOIN (" +
+                "SELECT * FROM device_survey WHERE device_survey.id IN (" +
+                "SELECT MIN(device_survey.id) FROM device_survey WHERE (device_survey.device_id, device_survey.`timestamp`) IN (" +
+                "SELECT device_survey.device_id, MAX(device_survey.`timestamp`) FROM device_survey GROUP BY device_survey.device_id" +
+                ") GROUP BY device_survey.device_id" +
+                ") " +
                 ") Survey ON device.id = Survey.device_id";
         final ArrayList<CheckInfo> list = new ArrayList<>();
         try( Connection con = Database.connect();
@@ -172,7 +174,7 @@ public class App {
 
         try( Connection con = Database.connect() ) {
             try(Statement st = con.createStatement();
-                ResultSet res = st.executeQuery("SELECT name, id FROM device") ) {
+                ResultSet res = st.executeQuery("SELECT `name`, id FROM device") ) {
                 while( res.next() ) {
                     String name = res.getString("name");
                     int id = res.getInt("id");
@@ -188,7 +190,7 @@ public class App {
 
             if( strangeNames.size() > 0 ) {
                 final StringBuilder sb = new StringBuilder();
-                sb.append("INSERT INTO device (name, is_known, controller_id) VALUES ");
+                sb.append("INSERT INTO device (`name`, is_known, controller_id) VALUES ");
                 for(int i = 0; i < strangeNames.size(); i++) {
                     if(i > 0)sb.append(", ");
                     sb.append("(?, FALSE, ?)");

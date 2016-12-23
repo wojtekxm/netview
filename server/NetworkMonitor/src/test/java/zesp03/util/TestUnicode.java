@@ -1,8 +1,7 @@
-package zesp03.core;
+package zesp03.util;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import zesp03.core.Unicode;
 
 public class TestUnicode {
     // znak "nietoperz" który nie mieści się w jednym char

@@ -13,5 +13,6 @@
     <a href="survey">survey</a><br>
     <a href="deviceinfo">try beta (deviceinfo)</a><br>
     <a href="showDevices">showDevices</a><br>
+    <a href="logged.jsp">logged.jsp (???)</a><br>
 </body>
 </html>

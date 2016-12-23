@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
+import zesp03.core.App;
 import zesp03.core.Database;
-import zesp03.core.Management;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,9 +29,8 @@ public class Survey extends HttpServlet {
         try {
             String action = request.getParameter(PARAM_ACTION);
             if( action.equals(PARAM_ACTION_UPDATE) ) {
-                final Management m = new Management();
                 long t0 = System.nanoTime();
-                m.examineAll();
+                App.examineAll();
                 long t1 = System.nanoTime();
                 attrTime = (t1 - t0) * 0.000000001;
                 try(Connection con = Database.connect();

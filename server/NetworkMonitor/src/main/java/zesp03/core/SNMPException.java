@@ -1,4 +1,4 @@
-package zesp03.exception;
+package zesp03.core;
 
 /**
  * wyjątek sygnalizuje że nie da się zrealizować operacji związanej z SNMP

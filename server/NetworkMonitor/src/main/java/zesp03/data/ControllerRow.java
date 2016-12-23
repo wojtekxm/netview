@@ -1,4 +1,4 @@
-package zesp03.pojo;
+package zesp03.data;
 
 public class ControllerRow {
     private int id;

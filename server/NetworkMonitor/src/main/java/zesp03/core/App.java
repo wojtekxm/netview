@@ -1,8 +1,7 @@
 package zesp03.core;
 
-import zesp03.exception.AdminException;
-import zesp03.exception.SNMPException;
-import zesp03.pojo.*;
+import zesp03.data.*;
+import zesp03.util.Unicode;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -15,13 +14,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class Management {
+public class App {
     private static final int CONTROLLER_NAME_MAX_CHARS = 85;
     private static final int DEVICE_NAME_MAX_CHARS = 85;
-    private final SNMPHandler snmp;
+    private static final SNMPHandler snmp;
 
-    public Management() throws IOException {
-        snmp = new FakeSNMP();
+    static {
+        try {
+            snmp = new FakeSNMP();
+        }
+        catch(IOException exc) {
+            throw new IllegalStateException(exc);
+        }
     }
 
     public static boolean isValidControllerName(String name) {
@@ -47,7 +51,8 @@ public class Management {
         return sb.toString().intern();
     }
 
-    public void registerController(String name, String ipv4) throws SQLException, AdminException {
+    //TODO użyj transakcji
+    public static void registerController(String name, String ipv4) throws SQLException, AdminException {
         if( ! isValidControllerName(name) )
             throw new AdminException("invalid controller name");
         String sql = "INSERT INTO controller (name, ipv4) VALUES (?, ?)";
@@ -59,7 +64,8 @@ public class Management {
         }
     }
 
-    public void registerNewDevice(String name, int controllerId) throws SQLException, AdminException {
+    //TODO użyj transakcji
+    public static void registerNewDevice(String name, int controllerId) throws SQLException, AdminException {
         if( ! isCompatibleDeviceName(name) )
             throw new AdminException("invalid device name");
         String sql = "INSERT INTO device (name, is_known, description, controller_id) VALUES (?, TRUE, NULL, ?)";
@@ -71,7 +77,9 @@ public class Management {
         }
     }
 
-    public ArrayList<CheckInfo> checkDevices() throws SQLException {
+    // synchronized?
+    //TODO użyj transakcji
+    public static ArrayList<CheckInfo> checkDevices() throws SQLException {
         final String sql = "SELECT controller.id AS ControllerId, controller.name AS ControllerName, " +
                 "controller.ipv4 AS ControllerIPv4, controller.description AS ControllerDescription, " +
                 "device.id AS DeviceId, device.name AS DeviceName, " +
@@ -113,7 +121,8 @@ public class Management {
         return list;
     }
 
-    public void examineAll() throws SQLException {
+    //TODO użyj transakcji
+    public static void examineAll() throws SQLException {
         final HashMap<Integer, String> map = new HashMap<>();
         String sql = "SELECT id, ipv4 FROM controller";
         try(Connection con = Database.connect();
@@ -136,7 +145,8 @@ public class Management {
         } );
     }
 
-    protected void examineController(int controllerId, String ipv4) throws SQLException {
+    //TODO użyj transakcji
+    protected static void examineController(int controllerId, String ipv4) throws SQLException {
         HashMap<String, DeviceState> surveyed;
         try {
             surveyed = filterDevices( snmp.queryDevices(ipv4) );
@@ -225,7 +235,7 @@ public class Management {
      *             Lista nie będzie modyfikowana przez tą metodę.
      * @return mapa utworzona na podstawie przefiltrowanej listy urządzeń
      */
-    protected HashMap<String, DeviceState> filterDevices(List<DeviceState> list) {
+    protected static HashMap<String, DeviceState> filterDevices(List<DeviceState> list) {
         final HashMap<String, DeviceState> result = new HashMap<>();
         for(DeviceState ds : list) {
             String name = ds.getName();
@@ -247,11 +257,11 @@ public class Management {
         return result;
     }
 
-    protected void log(String method, String message, String... extra) {
-        // !!! zamień na coś lepszego
+    //TODO zamień na coś lepszego
+    protected static void log(String method, String message, String... extra) {
         DateTimeFormatter form = DateTimeFormatter.ofPattern("uuuu LLL dd, HH:mm:ss");
         String dt = LocalDateTime.now().format(form);
-        System.out.println(dt + " Management log (invoked by " + method + "):");
+        System.out.println(dt + " App log (invoked by " + method + "):");
         System.out.println(message);
         for(String e : extra) {
             System.out.println(e);
@@ -259,7 +269,7 @@ public class Management {
         System.out.println();
     }
 
-    protected void log(String method, Throwable exception, String... extra) {
+    protected static void log(String method, Throwable exception, String... extra) {
         log(method, exception.toString(), extra);
     }
 }

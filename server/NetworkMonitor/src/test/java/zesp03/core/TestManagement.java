@@ -3,7 +3,8 @@ package zesp03.core;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import zesp03.pojo.DeviceState;
+import zesp03.data.DeviceState;
+import zesp03.util.TestUnicode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 public class TestManagement {
     @Test
     public void isValidControllerName_empty_false() {
-        assertFalse( Management.isValidControllerName("") );
+        assertFalse( App.isValidControllerName("") );
     }
 
     @Test
@@ -20,28 +21,28 @@ public class TestManagement {
         String s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
                 "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" +
                 "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc";
-        assertFalse( Management.isValidControllerName(s) );
+        assertFalse( App.isValidControllerName(s) );
     }
 
     @Test
     public void isValidControllerName_wifi_true() {
-        assertTrue( Management.isValidControllerName("wifi") );
+        assertTrue( App.isValidControllerName("wifi") );
     }
 
     @Test
     public void isValidControllerName_withSupplementary_false() {
         String s = "wifi" + TestUnicode.BAT_STRING + "1234";
-        assertFalse( Management.isValidControllerName(s) );
+        assertFalse( App.isValidControllerName(s) );
     }
 
     @Test
     public void isCompatibleDeviceName_abc_true() {
-        assertTrue( Management.isCompatibleDeviceName("abc") );
+        assertTrue( App.isCompatibleDeviceName("abc") );
     }
 
     @Test
     public void isCompatibleDeviceName_empty_true() {
-        assertTrue( Management.isCompatibleDeviceName("") );
+        assertTrue( App.isCompatibleDeviceName("") );
     }
 
     @Test
@@ -49,36 +50,34 @@ public class TestManagement {
         String s = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" +
                 "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy" +
                 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-        assertFalse( Management.isCompatibleDeviceName(s) );
+        assertFalse( App.isCompatibleDeviceName(s) );
     }
 
     @Test
     public void isCompatibleDeviceName_withSurrogates_false() {
         String s = "1" + TestUnicode.BAT_STRING + "2";
-        assertFalse( Management.isCompatibleDeviceName(s) );
+        assertFalse( App.isCompatibleDeviceName(s) );
     }
 
     @Test
     public void getCompatibleDeviceName_valid_theSame() {
-        assertEquals( Management.getCompatibleDeviceName("123"), "123" );
+        assertEquals( App.getCompatibleDeviceName("123"), "123" );
     }
 
     @Test
     public void getCompatibleDeviceName_withSurrogates_corrected() {
         String original = "a" + TestUnicode.BAT_STRING + "b";
         String expected = "a??b";
-        assertEquals( Management.getCompatibleDeviceName(original), expected );
+        assertEquals( App.getCompatibleDeviceName(original), expected );
     }
 
     @Test
     public void filterDevices_empty_empty() throws IOException {
-        Management mgm = new Management();
-        assertTrue( mgm.filterDevices( new ArrayList<>() ).isEmpty() );
+        assertTrue( App.filterDevices( new ArrayList<>() ).isEmpty() );
     }
 
     @Test
     public void filterDevices_compatible_unchanged() throws IOException {
-        final Management mgm = new Management();
         DeviceState ds = new DeviceState();
         ds.setName("abc");
         ds.setEnabled(true);
@@ -86,7 +85,7 @@ public class TestManagement {
         ds.setId(-1);
         final ArrayList<DeviceState> list = new ArrayList<>();
         list.add( ds );
-        final HashMap<String, DeviceState> map = mgm.filterDevices(list);
+        final HashMap<String, DeviceState> map = App.filterDevices(list);
         assertEquals("map size", map.size(), 1);
         map.forEach( (key, survey) -> {
             assertEquals( "name", ds.getName(), key );
@@ -98,7 +97,6 @@ public class TestManagement {
 
     @Test
     public void filterDevices_doubleNames_singleName() throws IOException {
-        Management mgm = new Management();
         DeviceState d1 = new DeviceState();
         d1.setName("x" + TestUnicode.BAT_STRING + "d");
         d1.setClientsSum(7);
@@ -110,7 +108,7 @@ public class TestManagement {
         final ArrayList<DeviceState> list = new ArrayList<>();
         list.add(d1);
         list.add(d2);
-        final HashMap<String, DeviceState> map = mgm.filterDevices(list);
+        final HashMap<String, DeviceState> map = App.filterDevices(list);
         assertEquals("map size", map.size(), 1);
         DeviceState ds = map.get( "x??d" );
         assertNotNull( ds );

@@ -1,8 +1,6 @@
 package zesp03.servlet;
 
-import sun.awt.HeadlessToolkit;
-import zesp03.core.Management;
-import zesp03.pojo.*;
+import zesp03.core.App;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,16 +13,6 @@ import java.io.PrintWriter;
  * Created by Berent on 2016-12-11.
  */
 public class showDevices extends HttpServlet {
-
-    private final Management management;
-
-    //==================================================================================================================
-    // CONSTRUCTOR
-    //==================================================================================================================
-    public showDevices() throws Exception {
-        management = new Management();
-    }
-
     //==================================================================================================================
     // SERVLET METHODS
     //==================================================================================================================
@@ -132,7 +120,7 @@ public class showDevices extends HttpServlet {
     }
     private String getTableRows() throws Exception {
 
-        return management.checkDevices().stream()
+        return App.checkDevices().stream()
                 .sorted( (elem1, elem2)->Integer.compare(elem1.controller().getId(), elem2.controller().getId()) )
                 .map( checkInfo -> {
 

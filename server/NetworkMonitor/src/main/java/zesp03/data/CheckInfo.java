@@ -1,4 +1,4 @@
-package zesp03.pojo;
+package zesp03.data;
 
 public class CheckInfo {
     private final ControllerRow controller;

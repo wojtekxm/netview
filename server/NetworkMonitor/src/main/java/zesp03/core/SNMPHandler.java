@@ -1,7 +1,6 @@
 package zesp03.core;
 
-import zesp03.exception.SNMPException;
-import zesp03.pojo.DeviceState;
+import zesp03.data.DeviceState;
 
 import java.util.List;
 

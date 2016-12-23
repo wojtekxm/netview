@@ -1,4 +1,4 @@
-package zesp03.exception;
+package zesp03.core;
 
 /**
  * Ten wyjątek sygnalizuje że pewnej operacji administracyjnej nie dało się wykonać,

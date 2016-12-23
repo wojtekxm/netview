@@ -1,4 +1,4 @@
-package zesp03.core;
+package zesp03.util;
 
 /**
  * Klasa Unicode zawiera same statyczne metody które służą do sprawdzenia

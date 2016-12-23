@@ -10,6 +10,7 @@
 <head>
     <meta charset="utf-8">
     <title>Network Monitor</title>
+    <link rel="icon" href="favicon.png">
 </head>
 <body>
 <%

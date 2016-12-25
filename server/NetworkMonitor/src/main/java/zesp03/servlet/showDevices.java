@@ -17,9 +17,12 @@ public class showDevices extends HttpServlet {
     //==================================================================================================================
     // SERVLET METHODS
     //==================================================================================================================
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         handle(request, response);
     }
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         handle(request, response);
     }

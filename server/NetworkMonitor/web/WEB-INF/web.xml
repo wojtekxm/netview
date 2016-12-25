@@ -11,33 +11,46 @@
         <res-auth>Container</res-auth>
     </resource-ref>
 
-
     <servlet>
-        <servlet-name>Survey</servlet-name>
-        <servlet-class>zesp03.servlet.Survey</servlet-class>
+        <servlet-name>Details</servlet-name>
+        <servlet-class>zesp03.servlet.Details</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>Survey</servlet-name>
-        <url-pattern>/survey</url-pattern>
-    </servlet-mapping>
-
     <servlet>
         <servlet-name>DeviceInfo</servlet-name>
         <servlet-class>zesp03.servlet.DeviceInfo</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>DeviceInfo</servlet-name>
-        <url-pattern>/deviceinfo</url-pattern>
-    </servlet-mapping>
-
-
     <servlet>
         <servlet-name>showDevices</servlet-name>
         <servlet-class>zesp03.servlet.showDevices</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>StatusSmall</servlet-name>
+        <servlet-class>zesp03.servlet.StatusSmall</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Survey</servlet-name>
+        <servlet-class>zesp03.servlet.Survey</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Details</servlet-name>
+        <url-pattern>/details</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeviceInfo</servlet-name>
+        <url-pattern>/deviceinfo</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>showDevices</servlet-name>
         <url-pattern>/showDevices</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StatusSmall</servlet-name>
+        <url-pattern>/status-small</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Survey</servlet-name>
+        <url-pattern>/survey</url-pattern>
     </servlet-mapping>
 
 </web-app>

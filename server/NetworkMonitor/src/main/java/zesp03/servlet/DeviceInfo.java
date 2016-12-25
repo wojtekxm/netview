@@ -14,6 +14,7 @@ import java.util.Random;
  * Created by Kacper on 2016-12-15.
  */
 public class DeviceInfo extends HttpServlet {
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         resp.setCharacterEncoding("utf-8");

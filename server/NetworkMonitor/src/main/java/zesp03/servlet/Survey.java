@@ -21,6 +21,7 @@ public class Survey extends HttpServlet {
     // mapowany do typu Integer
     public static final String ATTR_ROWS = "zesp03.servlet.Survey.ATTR_ROWS";
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         Double attrTime = null;
@@ -49,14 +50,16 @@ public class Survey extends HttpServlet {
         request.setAttribute(ATTR_ROWS, attrRows);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
-        request.getRequestDispatcher("/WEB-INF/view/survey.jsp").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/Survey.jsp").include(request, response);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         request.setAttribute(ATTR_TIME, null);
         request.setAttribute(ATTR_ROWS, null);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
-        request.getRequestDispatcher("/WEB-INF/view/survey.jsp").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/Survey.jsp").include(request, response);
     }
 }

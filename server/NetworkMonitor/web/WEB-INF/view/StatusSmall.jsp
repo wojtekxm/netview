@@ -19,6 +19,18 @@
     <link rel="stylesheet" href="css/status-small.css">
 </head>
 <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.jsp">Network Monitor</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="index.jsp">strona główna</a></li>
+                <li><a href="make-survey">nowe badania</a></li>
+                <li class="active"><a href="status-small">stan urządzeń (mały widok)</a></li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <ul class="view-small"><%
             int sumActive = 0;

@@ -28,8 +28,8 @@
         <servlet-class>zesp03.servlet.StatusSmall</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Survey</servlet-name>
-        <servlet-class>zesp03.servlet.Survey</servlet-class>
+        <servlet-name>MakeSurvey</servlet-name>
+        <servlet-class>zesp03.servlet.MakeSurvey</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -49,8 +49,8 @@
         <url-pattern>/status-small</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Survey</servlet-name>
-        <url-pattern>/survey</url-pattern>
+        <servlet-name>MakeSurvey</servlet-name>
+        <url-pattern>/make-survey</url-pattern>
     </servlet-mapping>
 
 </web-app>

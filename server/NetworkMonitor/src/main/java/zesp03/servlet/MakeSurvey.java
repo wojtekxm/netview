@@ -13,13 +13,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Survey extends HttpServlet {
+public class MakeSurvey extends HttpServlet {
     public static final String PARAM_ACTION = "action";
     public static final String PARAM_ACTION_UPDATE = "update";
     // mapowany do typu Double
-    public static final String ATTR_TIME = "zesp03.servlet.Survey.ATTR_TIME";
+    public static final String ATTR_TIME = "zesp03.servlet.MakeSurvey.ATTR_TIME";
     // mapowany do typu Integer
-    public static final String ATTR_ROWS = "zesp03.servlet.Survey.ATTR_ROWS";
+    public static final String ATTR_ROWS = "zesp03.servlet.MakeSurvey.ATTR_ROWS";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,7 +51,7 @@ public class Survey extends HttpServlet {
         request.setAttribute(ATTR_ROWS, attrRows);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
-        request.getRequestDispatcher("/WEB-INF/view/Survey.jsp").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/MakeSurvey.jsp").include(request, response);
     }
 
     @Override
@@ -61,6 +61,6 @@ public class Survey extends HttpServlet {
         request.setAttribute(ATTR_ROWS, null);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
-        request.getRequestDispatcher("/WEB-INF/view/Survey.jsp").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/MakeSurvey.jsp").include(request, response);
     }
 }

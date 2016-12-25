@@ -32,29 +32,36 @@ public class Details extends HttpServlet {
         final DeviceRow attrDevice = new DeviceRow();
         final ArrayList<SurveyRow> attrSurveys = new ArrayList<>();
 
-        String paramId = request.getParameter(PARAM_ID);
-        if(paramId == null)throw new IllegalStateException("zzz");//!
         int deviceId;
         try {
+            String paramId = request.getParameter(PARAM_ID);
+            if(paramId == null) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "id required");
+                return;
+            }
             deviceId = Integer.parseInt(paramId);
         }
         catch(NumberFormatException exc) {
-            throw new IllegalStateException("zzz", exc);//!
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid id");
+            return;
         }
 
-        final String s1 = "SELECT device.id AS DeviceId, device.`name` AS DeviceName, " +
+        final String sql1 = "SELECT device.id AS DeviceId, device.`name` AS DeviceName, " +
                 "device.is_known AS DeviceIsKnown, device.description AS DeviceDescription, " +
                 "device.controller_id AS DeviceControllerId, controller.id AS ControllerId, " +
                 "controller.`name` AS ControllerName, controller.ipv4 AS ControllerIPv4, " +
                 "controller.description AS ControllerDescription FROM device " +
                 "LEFT JOIN controller ON device.controller_id = controller.id WHERE device.id = ?";
-        final String s2 = "SELECT * FROM device_survey WHERE device_id=? ORDER BY `timestamp` DESC, id DESC";
+        final String sql2 = "SELECT * FROM device_survey WHERE device_id=? ORDER BY `timestamp` DESC, id DESC";
         try( Connection con = Database.connect();
-             PreparedStatement p1 = con.prepareStatement(s1);
-             PreparedStatement p2 = con.prepareStatement(s2) ) {
+             PreparedStatement p1 = con.prepareStatement(sql1);
+             PreparedStatement p2 = con.prepareStatement(sql2) ) {
             p1.setInt(1, deviceId);
             try( ResultSet r1 = p1.executeQuery() ) {
-                if( ! r1.next() )throw new IllegalStateException("zzz");//!
+                if( ! r1.next() ) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "no such device");
+                    return;
+                }
                 attrDevice.setId( r1.getInt("DeviceId") );
                 attrDevice.setName( r1.getString("DeviceName") );
                 attrDevice.setKnown( r1.getBoolean("DeviceIsKnown") );
@@ -79,7 +86,8 @@ public class Details extends HttpServlet {
             }
         }
         catch(SQLException exc) {
-            throw new IllegalStateException("zzz");//!
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "database error");
+            return;
         }
 
         request.setAttribute(ATTR_CONTROLLER, attrController);

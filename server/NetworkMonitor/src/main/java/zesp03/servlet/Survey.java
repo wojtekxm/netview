@@ -43,7 +43,8 @@ public class Survey extends HttpServlet {
             }
         }
         catch(SQLException exc) {
-            throw new ServletException(exc);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "database error");
+            return;
         }
 
         request.setAttribute(ATTR_TIME, attrTime);

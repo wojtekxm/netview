@@ -36,7 +36,8 @@ public class showDevices extends HttpServlet {
             html = getHTML();
         }
         catch(SQLException propagate) {
-            throw new RuntimeException(propagate);
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "database error");
+            return;
         }
 
         try(PrintWriter w = resp.getWriter() ) {

@@ -16,27 +16,19 @@ public class StatusSmall extends HttpServlet {
     public static final String ATTR_LIST = "zesp03.servlet.StatusSmall.ATTR_LIST";
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        handle(request, response);
-    }
-
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        handle(request, response);
-    }
-
-    private void handle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("utf-8");
+        request.setCharacterEncoding("utf-8");
         ArrayList<CheckInfo> attrList;
         try {
             attrList = App.checkDevices();
         }
         catch(SQLException exc) {
-            throw new IllegalStateException(exc);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "database error");
+            return;
         }
-        req.setAttribute(ATTR_LIST, attrList);
-        resp.setCharacterEncoding("utf-8");
-        resp.setContentType("text/html");
-        req.getRequestDispatcher("WEB-INF/view/StatusSmall.jsp").include(req, resp);
+        request.setAttribute(ATTR_LIST, attrList);
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html");
+        request.getRequestDispatcher("WEB-INF/view/StatusSmall.jsp").include(request, response);
     }
 }

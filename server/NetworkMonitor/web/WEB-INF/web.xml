@@ -53,4 +53,23 @@
         <url-pattern>/make-survey</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>showDevices</servlet-name>
+        <servlet-class>zesp03.servlet.showDevices</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>showDevices</servlet-name>
+        <url-pattern>/showDevices</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddController</servlet-name>
+        <servlet-class>zesp03.servlet.AddController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddController</servlet-name>
+        <url-pattern>/AddController</url-pattern>
+    </servlet-mapping>
+
 </web-app>

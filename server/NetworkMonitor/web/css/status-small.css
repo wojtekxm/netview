@@ -17,11 +17,20 @@ ul.view-small {
 .square-green {
     background-color: #7FDB65;
 }
+.square-green:hover {
+    background-color: #2ABF00;
+}
 .square-red {
     background-color: #F54242;
 }
+.square-red:hover {
+    background-color: #D90000;
+}
 .square-gray {
     background-color: #999;
+}
+.square-gray:hover {
+    background-color: #666;
 }
 .square-green>a, .square-red>a, .square-gray>a {
     display: block;

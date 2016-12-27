@@ -25,7 +25,6 @@
                 <a class="navbar-brand" href="index.jsp">Network Monitor</a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="index.jsp">strona główna</a></li>
                 <li><a href="make-survey">nowe badania</a></li>
                 <li class="active"><a href="status-small">stan urządzeń (mały widok)</a></li>
             </ul>
@@ -53,7 +52,10 @@
                     sumDisabled++;
                 }
                 final String h = "details?" + Details.PARAM_ID + "=" + info.device().getId();
-        %><li class="<%= c %>"><a href="<%= h %>"></a></li
+                String t = info.device().getName();
+                if( info.device().getDescription() != null )t += "<br>opis: " + info.device().getDescription();
+                t += "<br>z: " + info.controller().getName();
+        %><li class="<%= c %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>"></a></li
         ><% } %></ul>
         <hr>
         <div class="summary">
@@ -66,5 +68,10 @@
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    </script>
 </body>
 </html>

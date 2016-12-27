@@ -23,7 +23,6 @@
                 <a class="navbar-brand" href="index.jsp">Network Monitor</a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="index.jsp">strona główna</a></li>
                 <li class="active"><a href="make-survey">nowe badania</a></li>
                 <li><a href="status-small">stan urządzeń (mały widok)</a></li>
             </ul>

@@ -12,6 +12,10 @@
     </resource-ref>
 
     <servlet>
+        <servlet-name>AddController</servlet-name>
+        <servlet-class>zesp03.servlet.AddController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Details</servlet-name>
         <servlet-class>zesp03.servlet.Details</servlet-class>
     </servlet>
@@ -33,6 +37,10 @@
     </servlet>
 
     <servlet-mapping>
+        <servlet-name>AddController</servlet-name>
+        <url-pattern>/AddController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>Details</servlet-name>
         <url-pattern>/details</url-pattern>
     </servlet-mapping>
@@ -51,25 +59,6 @@
     <servlet-mapping>
         <servlet-name>MakeSurvey</servlet-name>
         <url-pattern>/make-survey</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>showDevices</servlet-name>
-        <servlet-class>zesp03.servlet.showDevices</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>showDevices</servlet-name>
-        <url-pattern>/showDevices</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>AddController</servlet-name>
-        <servlet-class>zesp03.servlet.AddController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AddController</servlet-name>
-        <url-pattern>/AddController</url-pattern>
     </servlet-mapping>
 
 </web-app>

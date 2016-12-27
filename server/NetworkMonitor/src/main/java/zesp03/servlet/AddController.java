@@ -1,6 +1,5 @@
 package zesp03.servlet;
 
-import org.mariadb.jdbc.internal.stream.PrepareSqlException;
 import zesp03.core.Database;
 
 import javax.servlet.ServletException;

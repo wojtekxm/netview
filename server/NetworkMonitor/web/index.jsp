@@ -21,6 +21,7 @@
                     <li><a href="deviceinfo">stan wszystkich urządzeń, standardowy widok (deviceinfo)</a></li>
                     <li><a href="showDevices">stan wszystkich urządzeń, tabelka (showDevices)</a></li>
                     <li><a href="logged.jsp">??? (logged.jsp)</a></li>
+                    <li><a href="Controllers.jsp">dodawanie kontrolerów...(Controllers.jsp)</a></li>
                 </ul>
         </div>
     </div>

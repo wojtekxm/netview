@@ -84,6 +84,7 @@ public class Management {
                 " ( SELECT device_survey.device_id, MAX(device_survey.`timestamp`) FROM device_survey GROUP BY device_survey.device_id ) " +
                 " GROUP BY device_survey.device_id " +
                 ") Survey ON device.id = Survey.device_id";
+
         final ArrayList<CheckInfo> list = new ArrayList<>();
         try( Connection con = Database.connect();
             Statement st = con.createStatement();
@@ -113,6 +114,32 @@ public class Management {
         return list;
     }
 
+    public List< ControllerRow > checkControllers() throws SQLException {
+
+        final String sql = "SELECT id, name, ipv4, description FROM controller ORDER BY id ASC";
+
+        final List< ControllerRow > controllers = new ArrayList<>();
+
+        try( Connection con = Database.connect();
+             Statement st = con.createStatement();
+             ResultSet res = st.executeQuery(sql) ) {
+
+
+            while( res.next() ) {
+
+                ControllerRow controller = new ControllerRow();
+                controller.setId( res.getInt("id") );
+                controller.setName( res.getString("name") );
+                controller.setIPv4( res.getString("ipv4") );
+                controller.setDescription( res.getString("description") );
+
+
+                controllers.add( controller );
+            }
+        }
+
+        return controllers;
+    }
     public void examineAll() throws SQLException {
         final HashMap<Integer, String> map = new HashMap<>();
         String sql = "SELECT id, ipv4 FROM controller";
@@ -257,6 +284,15 @@ public class Management {
             System.out.println(e);
         }
         System.out.println();
+    }
+
+    public void removeController(final long controllerId) throws SQLException {
+
+        try (final Connection connection = Database.connect();
+             PreparedStatement stmt = connection.prepareStatement("DELETE FROM controller WHERE id = ?")) {
+            stmt.setLong(1, controllerId);
+            stmt.execute();
+        }
     }
 
     protected void log(String method, Throwable exception, String... extra) {

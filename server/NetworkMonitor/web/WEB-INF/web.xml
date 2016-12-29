@@ -37,5 +37,13 @@
         <servlet-name>Survey</servlet-name>
         <url-pattern>/survey</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ShowControllersServlet</servlet-name>
+        <servlet-class>zesp03.servlet.ShowControllersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ShowControllersServlet</servlet-name>
+        <url-pattern>/ShowControllersServlet</url-pattern>
+    </servlet-mapping>
 
 </web-app>

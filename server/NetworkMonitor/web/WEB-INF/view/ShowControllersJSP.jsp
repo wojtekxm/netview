@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="zesp03.pojo.ControllerRow" %>
+<%@ page import="zesp03.data.ControllerRow" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>

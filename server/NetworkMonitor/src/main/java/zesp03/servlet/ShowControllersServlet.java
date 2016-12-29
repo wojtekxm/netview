@@ -1,6 +1,6 @@
 package zesp03.servlet;
 
-import zesp03.core.Management;
+import zesp03.core.App;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,17 +12,6 @@ import java.util.Arrays;
 
 
 public class ShowControllersServlet  extends HttpServlet {
-
-    private final Management management;
-
-    //==================================================================================================================
-    // CONSTRUCTOR
-    //==================================================================================================================
-    public ShowControllersServlet() throws Exception {
-
-        management = new Management();
-    }
-
     //==================================================================================================================
     // SERVLET METHODS
     //==================================================================================================================
@@ -30,7 +19,7 @@ public class ShowControllersServlet  extends HttpServlet {
         // TODO: Powinno usuwać wszystkie kontrolery jednym zapytaniem do bazy, zamiast robienia zapytania per id kontrolera
         for(final String controllerId : Arrays.asList(request.getParameterValues("ids-to-delete"))) {
             try {
-                management.removeController(Long.parseLong(controllerId));
+                App.removeController(Long.parseLong(controllerId));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -46,7 +35,7 @@ public class ShowControllersServlet  extends HttpServlet {
 
         request.setCharacterEncoding("utf-8");
         try {
-            request.getSession().setAttribute("controllers", management.checkControllers() );
+            request.getSession().setAttribute("controllers", App.checkControllers() );
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

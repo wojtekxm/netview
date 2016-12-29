@@ -24,16 +24,20 @@
         <servlet-class>zesp03.servlet.DeviceInfo</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>MakeSurvey</servlet-name>
+        <servlet-class>zesp03.servlet.MakeSurvey</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowControllersServlet</servlet-name>
+        <servlet-class>zesp03.servlet.ShowControllersServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>showDevices</servlet-name>
         <servlet-class>zesp03.servlet.showDevices</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>StatusSmall</servlet-name>
         <servlet-class>zesp03.servlet.StatusSmall</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>MakeSurvey</servlet-name>
-        <servlet-class>zesp03.servlet.MakeSurvey</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -49,24 +53,20 @@
         <url-pattern>/deviceinfo</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>MakeSurvey</servlet-name>
+        <url-pattern>/make-survey</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowControllersServlet</servlet-name>
+        <url-pattern>/ShowControllersServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>showDevices</servlet-name>
         <url-pattern>/showDevices</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>StatusSmall</servlet-name>
         <url-pattern>/status-small</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>MakeSurvey</servlet-name>
-        <url-pattern>/make-survey</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>ShowControllersServlet</servlet-name>
-        <servlet-class>zesp03.servlet.ShowControllersServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ShowControllersServlet</servlet-name>
-        <url-pattern>/ShowControllersServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -70,7 +70,7 @@ public class App {
         }
     }
 
-    public static void removeController(final long controllerId) throws SQLException {
+    public static synchronized void removeController(final long controllerId) throws SQLException {
 
         try (final Connection connection = Database.connect();
              PreparedStatement stmt = connection.prepareStatement("DELETE FROM controller WHERE id = ?")) {
@@ -138,30 +138,21 @@ public class App {
         return list;
     }
 
-    public List< ControllerRow > checkControllers() throws SQLException {
-
+    public static synchronized List<ControllerRow> checkControllers() throws SQLException {
         final String sql = "SELECT id, name, ipv4, description FROM controller ORDER BY id ASC";
-
-        final List< ControllerRow > controllers = new ArrayList<>();
-
+        final List<ControllerRow> controllers = new ArrayList<>();
         try( Connection con = Database.connect();
              Statement st = con.createStatement();
              ResultSet res = st.executeQuery(sql) ) {
-
-
             while( res.next() ) {
-
                 ControllerRow controller = new ControllerRow();
                 controller.setId( res.getInt("id") );
                 controller.setName( res.getString("name") );
                 controller.setIPv4( res.getString("ipv4") );
                 controller.setDescription( res.getString("description") );
-
-
                 controllers.add( controller );
             }
         }
-
         return controllers;
     }
 

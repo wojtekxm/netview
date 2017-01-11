@@ -105,6 +105,7 @@
 
 	ul li ul li#greenDiode
 	{
+		cursor: pointer;
 		margin:3px;
 		top:0;
 		left:0;
@@ -117,12 +118,13 @@
 		text-decoration-style: solid;
 		background-color:#00ad1d;
 		border-radius:5px;
-		transition:  1s;
+		transition:  0.5s;
 
 	}
 	ul li ul li#greenDiode:hover
 	{
-		z-index: 1000;
+		z-index:1000;
+		cursor: pointer;
 		background-color:#00f028;
 		transform: scale(1.7, 1.7);
 		-moz-transform: scale(1.7, 1.7);
@@ -133,6 +135,7 @@
 
 	ul li ul li#redDiode
 	{
+		cursor: pointer;
 		margin:3px;
 		top:0;
 		left:0;
@@ -146,13 +149,44 @@
 		text-decoration-style: solid;
 		background-color:#d10000;
 		border-radius:5px;
-		transition: 1s;
+		transition: 0.5s;
 	}
 
 	ul li ul li#redDiode:hover
 	{
-		background-color:#ff1f1f;
-		z-index: 999;
+		z-index:1000;
+		cursor: pointer;
+		background-color:#ff3333;
+		transform: scale(1.7, 1.7);
+		-moz-transform: scale(1.7, 1.7);
+		-ms-transform: scale(1.7, 1.7);
+		-webkit-transform: scale(1.7, 1.7);
+		-o-transform: scale(1.7, 1.7);
+	}
+
+	ul li ul li#greyDiode
+	{
+		margin:3px;
+		top:0;
+		left:0;
+		width:35px;
+		height: 25px;
+		text-align: center;
+		line-height: 25px;
+		line-break: auto;
+		float:left;
+		color:rgba(225,225,225,1);
+		text-decoration-style: solid;
+		background-color:#666666;
+		border-radius:5px;
+		transition: 0.5s;
+	}
+
+	ul li ul li#greyDiode:hover
+	{
+		z-index:1000;
+		cursor: hand;
+		background-color:#a6a6a6;
 		transform: scale(1.7, 1.7);
 		-moz-transform: scale(1.7, 1.7);
 		-ms-transform: scale(1.7, 1.7);

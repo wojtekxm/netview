@@ -7,11 +7,14 @@
 %><%@ page import="java.time.LocalDateTime"
 %><%@ page import="java.time.ZoneId"
 %><%@ page import="java.time.format.DateTimeFormatter"
+%><%@ page import="java.util.Collections"
 %><%@ page contentType="text/html;charset=UTF-8" language="java"
 %><%
     ControllerRow attrController = (ControllerRow)request.getAttribute(Details.ATTR_CONTROLLER);
     DeviceRow attrDevice = (DeviceRow)request.getAttribute(Details.ATTR_DEVICE);
-    ArrayList<SurveyRow> attrSurveys = (ArrayList<SurveyRow>)request.getAttribute(Details.ATTR_SURVEYS);
+    ArrayList<SurveyRow> attrSurveyList = (ArrayList<SurveyRow>)request.getAttribute(Details.ATTR_SURVEY_LIST);
+    int attrSurveysNumber = (Integer)request.getAttribute(Details.ATTR_SURVEYS_NUMBER);
+    int attrHistoryLimit = (Integer)request.getAttribute(Details.ATTR_HISTORY_LIMIT);
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -19,19 +22,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Network Monitor</title>
-    <link rel="icon" href="favicon.png">
+    <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
-    <link rel="stylesheet" href="css/status-small.css">
+    <link rel="stylesheet" href="/css/status-small.css">
 </head>
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="index.jsp">Network Monitor</a>
+                <a class="navbar-brand" href="/index.jsp">Network Monitor</a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="make-survey">nowe badania</a></li>
-                <li><a href="status-small">stan urządzeń (mały widok)</a></li>
+                <li><a href="/make-survey">nowe badania</a></li>
+                <li><a href="/status-small">stan urządzeń (mały widok)</a></li>
             </ul>
         </div>
     </nav>
@@ -78,11 +81,11 @@
                 </thead>
                 <tbody><%
                     int n = 1;
-                    for(final SurveyRow row : attrSurveys) {
+                    for(final SurveyRow row : attrSurveyList) {
                         final Instant instant = Instant.ofEpochSecond( row.getTimestamp() );
                         final ZoneId zone = ZoneId.systemDefault();
                         final LocalDateTime ld = LocalDateTime.ofInstant(instant, zone);
-                        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy kk:mm:ss");
+                        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                         final String time = ld.format(formatter);
                 %>
                 <tr>
@@ -95,6 +98,33 @@
                 %>
                 </tbody>
             </table>
+            <div class="panel-footer">
+                Łącznie jest <%= attrSurveysNumber %> wyników.
+                Liczba wyników na stronę
+                <form method="get" action="/details" style="display: inline"><%
+                    final ArrayList<Integer> limits = new ArrayList<>();
+                    limits.add(10);
+                    limits.add(20);
+                    limits.add(50);
+                    limits.add(100);
+                    limits.add(200);
+                    limits.add(500);
+                    limits.add(1000);
+                    if( ! limits.contains(attrHistoryLimit) )
+                        limits.add(attrHistoryLimit);
+                    Collections.sort(limits);
+                    %>
+                    <input type="hidden" name="id" value="<%= attrDevice.getId() %>">
+                    <select name="<%= Details.PARAM_HISTORY_LIMIT %>"><%
+                        for(Integer i : limits) {
+                        %>
+                        <option value="<%= i %>" <%= i.equals(attrHistoryLimit) ? "selected" : "" %>><%= i %></option><%
+                        }
+                        %>
+                    </select>
+                    <input type="submit" value="Wyświetl">
+                </form>
+            </div>
         </div>
     </div>
     <script src="/js/jquery-3.1.1.min.js"></script>

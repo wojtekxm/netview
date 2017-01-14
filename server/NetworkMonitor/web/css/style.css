@@ -21,53 +21,73 @@
 		background-color: black;
 	}
 
-	#logo
+	#content
 	{
-		padding-top: 60px;
-		background-color: black;/* rgba(152, 255, 182, 1);*/
-
+		position: relative;
 	}
 
-	/*#tittle*/
-	/*{*/
-		/*width:580px;*/
-		/*height: 90px;*/
-	/*}*/
+	/*animate css3 function*/
+	@keyframes dropHeader {
+		0% {
+			transform: translateX(100%);
+		}
+		100% {
+			transform: translateX(0);
+		}
+	}
 
-	#accessPoints
+	.welcome
 	{
-		font-size: 20px;
-		list-style: none;
-		margin:0px;
-		padding:0px;
 		width: 1200px;
-		height: 100%;
-		background-color: rgba(12,12,12,1);
-		color:white;
-		float:left;
-		text-align: left;
+		height: 198px;
+		position: relative;
 	}
 
-	#accessPoints ul 
+
+	.logo
+	{
+		background-color: black;/* rgba(152, 255, 182, 1);*/
+	}
+
+	.tittle
+	{
+		width:580px;
+		height: 90px;
+		line-height: 90px;
+		font-size: 26px;
+		padding-left: 140px;
+		float: left;
+		position: absolute;
+		left: 0px;
+		top: 49px;
+		z-index: 999;
+		background-color: rgba(1, 1, 1, 0.85);
+		color:white;
+		/*animate onload*/
+		animation-name: dropHeader;
+		animation-iteration-count: 1;
+		animation-timing-function: ease-out;
+		animation-duration: 1.3s;
+	}
+
+	ul
 	{
 		margin:0;
-		padding: 5px;
+		padding: 0;
 		background-color: rgba(12,12,12,1);
 		display: block; 
         float: none;
         overflow: hidden;
 		text-shadow: 1px 1px 2px #000000;
 		font-size: 11px;
-		list-style: none; 
-/*		height: 0px;
-	    overflow: hidden;
-	    opacity:0;
-   		filter:alpha(opacity=0);
-	    -webkit-transition: all 0.4s ease-in-out;
-	    transition: all 0.4s ease-in-out;*/
+		list-style: none;
+		width: 1200px;
+		height: 100%;
+		color:white;
+		text-align: left;
 	}
 
-	#accessPoints li ul li
+	li ul li
 	{
 		margin:auto;
 		/*position: relative;*/
@@ -94,6 +114,8 @@
 
 	#wydzial
 	{
+		font-size: 20px;
+		width: 100%;
 		padding-top: 3px;
 		padding-bottom: 3px;
 		padding-left: 8px;
@@ -110,7 +132,7 @@
 		color:white;
 	}
 
-	ul li ul li#greenDiode
+	ul li ul li.greenDiode
 	{
 		cursor: pointer;
 		margin:3px;
@@ -128,9 +150,8 @@
 		transition:  0.5s;
 
 	}
-	ul li ul li#greenDiode:hover
+	ul li ul li.greenDiode:hover
 	{
-		z-index:1000;
 		cursor: pointer;
 		background-color:#00f028;
 		transform: scale(1.7, 1.7);
@@ -140,7 +161,7 @@
 		-o-transform: scale(1.7, 1.7);
 	}
 
-	ul li ul li#redDiode
+	ul li ul li.redDiode
 	{
 		cursor: pointer;
 		margin:3px;
@@ -159,9 +180,8 @@
 		transition: 0.5s;
 	}
 
-	ul li ul li#redDiode:hover
+	ul li ul li.redDiode:hover
 	{
-		z-index:1000;
 		cursor: pointer;
 		background-color:#ff3333;
 		transform: scale(1.7, 1.7);
@@ -171,7 +191,7 @@
 		-o-transform: scale(1.7, 1.7);
 	}
 
-	ul li ul li#greyDiode
+	ul li ul li.greyDiode
 	{
 		cursor: pointer;
 		margin:3px;
@@ -190,9 +210,8 @@
 		transition: 0.5s;
 	}
 
-	ul li ul li#greyDiode:hover
+	ul li ul li.greyDiode:hover
 	{
-		z-index:1000;
 		cursor: pointer;
 		background-color:#a6a6a6;
 		transform: scale(1.7, 1.7);
@@ -244,6 +263,7 @@
 
 	.nav
 	{
+		z-index: 1000;
 		width:100%;
 		padding: 9px 0;
 		background-color: rgba(3, 3, 3, 1);

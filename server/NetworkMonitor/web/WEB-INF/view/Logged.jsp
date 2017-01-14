@@ -36,13 +36,13 @@
 <div id="container">
     <div class="welcome">
         <div class="tittle">NETWORK-MONITOR</div>
-        <div class="logo"><a href="index.html"><img src="/images/logoo.jpg"></a></div>
+        <div class="logo"><img src="/images/logoo.jpg"></div>
     </div>
         <!--   	<div id="menu"></div> -->
     <div id="content">
-        <ul id="accessPoints" style="z-index: 1000;top:0;">
+        <ul style="z-index: 1000;top:0;">
             <li> <div id="wydzial">Wszystkie kontrolery</div>
-                <ul>
+                <ul style="padding-left: 6px;">
                     <%
                     int sumActive = 0;
                     int sumInactive = 0;
@@ -69,12 +69,12 @@
                         String t = info.device().getName();
                         if( info.device().getDescription() != null )t += "<br>opis: " + info.device().getDescription();
                         t += "<br>z: " + info.controller().getName();
-                    %><li id="<%= c %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
+                    %><li class="<%= c %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
                     ><% } %>
 
                 </ul>
             </li>
-            <div class="summary" style="width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;margin-bottom:15px; background-color: black;">
+            <div class="summary" style="font-size:20px;width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;margin-bottom:15px; background-color: black;">
                 <div style="display:table-cell;"><div id="greenDiode"></div> &emsp;aktywne: &nbsp;<%= sumActive %>&emsp;</div>
                 <div style="display:table-cell;"><div id="redDiode"></div> &emsp;nieaktywne: &nbsp;<%= sumInactive %>&emsp;</div>
                 <div style="display: table-cell;"><div id="greyDiode"></div> &emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</div>

@@ -17,15 +17,22 @@
 		height: 100%;
 		margin-left: auto;
 		margin-right: auto;
-		background-color: rgba(240,240,240,1);
+		/*background-color: rgba(240,240,240,1);*/
+		background-color: black;
 	}
 
 	#logo
 	{
+		padding-top: 60px;
 		background-color: black;/* rgba(152, 255, 182, 1);*/
-		color:white;
-		text-align:center;
+
 	}
+
+	/*#tittle*/
+	/*{*/
+		/*width:580px;*/
+		/*height: 90px;*/
+	/*}*/
 
 	#accessPoints
 	{
@@ -35,7 +42,7 @@
 		padding:0px;
 		width: 1200px;
 		height: 100%;
-		background-color: rgba(20,20,20,1);
+		background-color: rgba(12,12,12,1);
 		color:white;
 		float:left;
 		text-align: left;
@@ -44,9 +51,7 @@
 	#accessPoints ul 
 	{
 		margin:0;
-    	padding: 0;
-		padding-top: 5px;
-    	padding-left: 5px;
+		padding: 5px;
 		background-color: rgba(12,12,12,1);
 		display: block; 
         float: none;
@@ -65,7 +70,7 @@
 	#accessPoints li ul li
 	{
 		margin:auto;
-		position: relative;
+		/*position: relative;*/
 		overflow:hidden; 
 		text-shadow: 1px 1px 2px #000000;
 		font-size:12px; 
@@ -89,7 +94,9 @@
 
 	#wydzial
 	{
-		padding: 3px;
+		padding-top: 3px;
+		padding-bottom: 3px;
+		padding-left: 8px;
 		background-color: black;
 	}
 
@@ -166,6 +173,7 @@
 
 	ul li ul li#greyDiode
 	{
+		cursor: pointer;
 		margin:3px;
 		top:0;
 		left:0;
@@ -185,7 +193,7 @@
 	ul li ul li#greyDiode:hover
 	{
 		z-index:1000;
-		cursor: hand;
+		cursor: pointer;
 		background-color:#a6a6a6;
 		transform: scale(1.7, 1.7);
 		-moz-transform: scale(1.7, 1.7);
@@ -198,4 +206,83 @@
 	{
 		margin:0px;
 		z-index:900;
+	}
+
+	#redDiode
+	{
+		float:left;
+		width:35px;
+		height: 25px;
+		background-color:#d10000;
+		border-radius:5px;
+	}
+	#greenDiode
+	{
+		float:left;
+		width:35px;
+		height: 25px;
+		background-color:#00ad1d;
+		border-radius:5px;
+	}
+	#greyDiode
+	{
+		float:left;
+		width:35px;
+		height: 25px;
+		background-color:#666666;
+		border-radius:5px;
+	}
+
+	.sticky
+	{
+		width:100%;
+		position: fixed;
+		left:0;
+		right:0;
+		z-index: 1000;
+	}
+
+	.nav
+	{
+		width:100%;
+		padding: 9px 0;
+		background-color: rgba(3, 3, 3, 1);
+		text-align: center;
+	}
+	ol
+	{
+		padding:0;
+		margin:0;
+		list-style-type: none;
+		font-size:18px;
+		height: 35px;
+		line-height: 215%;
+		display: inline-block;
+	}
+	ol a.aNav
+	{
+		text-decoration: none;
+		color:white;
+		display:block;
+	}
+	ol > li
+	{
+		float:left;
+		width: 200px;
+		height:40px;
+		border-right: 0.5px dashed #171717;
+	}
+	ol > li:first-child
+	{
+		border-left: 0.5px dashed #171717;
+	}
+	ol > li:hover
+	{
+		background-color: #0f0f0f;
+		cursor:pointer;
+	}
+
+	ol > li:hover > a
+	{
+		color: #2DF2BE;
 	}

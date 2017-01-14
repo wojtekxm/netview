@@ -23,23 +23,24 @@
 </head>
 
 <body>
-
-<div class="nav">
-    <ol>
-        <li><a href="index.jsp" class="aNav">Strona główna</a></li>
-        <li><a href="make-survey" class="aNav">Nowe badanie</a></li>
-        <li><a href="status-small" class="aNav">Mały widok</a></li>
-    </ol>
+<div style="height:60px;">
+    <div class="nav">
+        <ol>
+            <li><a href="index.jsp" class="aNav">Strona główna</a></li>
+            <li><a href="make-survey" class="aNav">Nowe badanie</a></li>
+            <li><a href="status-small" class="aNav">Mały widok</a></li>
+        </ol>
+    </div>
 </div>
 <div id="all">
 <div id="container">
-    <div id="tittle"></div>
-    <div id="logo" >
-        <a href="index.html"><img src="/images/logoo.jpg"></a>
+    <div class="welcome">
+        <div class="tittle">NETWORK-MONITOR</div>
+        <div class="logo"><a href="index.html"><img src="/images/logoo.jpg"></a></div>
     </div>
-    <!--   	<div id="menu"></div> -->
+        <!--   	<div id="menu"></div> -->
     <div id="content">
-        <ul id="accessPoints">
+        <ul id="accessPoints" style="z-index: 1000;top:0;">
             <li> <div id="wydzial">Wszystkie kontrolery</div>
                 <ul>
                     <%
@@ -73,7 +74,7 @@
 
                 </ul>
             </li>
-            <div class="summary" style="width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;margin-bottom:20px; background-color: black;">
+            <div class="summary" style="width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;margin-bottom:15px; background-color: black;">
                 <div style="display:table-cell;"><div id="greenDiode"></div> &emsp;aktywne: &nbsp;<%= sumActive %>&emsp;</div>
                 <div style="display:table-cell;"><div id="redDiode"></div> &emsp;nieaktywne: &nbsp;<%= sumInactive %>&emsp;</div>
                 <div style="display: table-cell;"><div id="greyDiode"></div> &emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</div>

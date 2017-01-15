@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,27 +35,28 @@ public class DeviceInfo extends HttpServlet {
             return;
         }
 
-//        for(CheckInfo dev : allDevices){
-//
-//            int number = dev.survey().getClientsSum();
-//            count.add(number);
-//
-//            if(dev.survey().isEnabled()==true && dev.survey().getClientsSum()==0) {
-//                diode.add("redDiode");
-//            }else if(dev.survey().isEnabled()==true && dev.survey().getClientsSum()!=0){
-//                diode.add("greenDiode");
-//            }else if(dev.survey().isEnabled()==false){
-//                diode.add("greyDiode");
-//            }
-//
-//            dev.device().getId();
-//            dev.device().getControllerId();
-//            dev.device().getDescription();
-//        }
         request.setAttribute(allDevicesString, allDevices);
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
-        request.getRequestDispatcher("WEB-INF/view/Logged.jsp").forward(request,response);
+
+        String uname=request.getParameter("uname");
+        String pass=request.getParameter("pass");
+
+        HttpSession session = request.getSession(true);
+        if(null != (session.getAttribute("error"))){
+            session.removeAttribute("error");
+        }
+
+        if(uname.equals("user") && pass.equals("user"))
+        {
+            request.setAttribute("username", uname);
+            request.getRequestDispatcher("WEB-INF/view/Logged.jsp").forward(request,response);
+        }
+        else
+        {
+            session.setAttribute( "error", "Podano zły login lub hasło");
+            request.getRequestDispatcher("LoginPage.jsp").forward(request,response);
+        }
     }
 
 }

@@ -16,7 +16,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge; chrome=1"/>
     <title>Network Monitor</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/loggedStyle.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 
@@ -42,7 +42,7 @@
     <div id="content">
         <ul style="z-index: 1000;top:0;">
             <li> <div id="wydzial">Wszystkie kontrolery</div>
-                <ul style="padding-left: 6px;">
+                <ul style="padding: 5px;">
                     <%
                     int sumActive = 0;
                     int sumInactive = 0;
@@ -74,7 +74,7 @@
 
                 </ul>
             </li>
-            <div class="summary" style="font-size:20px;width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;margin-bottom:15px; background-color: black;">
+            <div class="summary" style="font-size:20px;width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;background-color: black;">
                 <div style="display:table-cell;"><div id="greenDiode"></div> &emsp;aktywne: &nbsp;<%= sumActive %>&emsp;</div>
                 <div style="display:table-cell;"><div id="redDiode"></div> &emsp;nieaktywne: &nbsp;<%= sumInactive %>&emsp;</div>
                 <div style="display: table-cell;"><div id="greyDiode"></div> &emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</div>

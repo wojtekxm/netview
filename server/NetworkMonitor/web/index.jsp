@@ -1,5 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-%><!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
@@ -21,6 +22,7 @@
                 <li><a href="showDevices">stan wszystkich urządzeń, tabelka (showDevices)</a></li>
                 <li><a href="Controllers.jsp">dodawanie kontrolerów (Controllers.jsp)</a></li>
                 <li><a href="ShowControllersServlet">usuwanie kontrolerów (ShowControllersServlet)</a></li>
+                <li><a href="LoginPage.jsp">strona logowania (LoginPage.jsp)</a></li>
                 <li><a href="AddController">??? (AddController)</a></li>
             </ul>
         </div>

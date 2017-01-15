@@ -40,6 +40,7 @@
         <servlet-class>zesp03.servlet.StatusSmall</servlet-class>
     </servlet>
 
+
     <servlet-mapping>
         <servlet-name>AddController</servlet-name>
         <url-pattern>/AddController</url-pattern>
@@ -68,5 +69,6 @@
         <servlet-name>StatusSmall</servlet-name>
         <url-pattern>/status-small</url-pattern>
     </servlet-mapping>
+
 
 </web-app>

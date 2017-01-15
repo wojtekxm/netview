@@ -29,6 +29,7 @@
             <li><a href="index.jsp" class="aNav">Strona główna</a></li>
             <li><a href="make-survey" class="aNav">Nowe badanie</a></li>
             <li><a href="status-small" class="aNav">Mały widok</a></li>
+            <li><a href="logout" class="aNav">Wyloguj</a></li>
         </ol>
     </div>
 </div>

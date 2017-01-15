@@ -39,6 +39,10 @@
         <servlet-name>StatusSmall</servlet-name>
         <servlet-class>zesp03.servlet.StatusSmall</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>zesp03.servlet.Logout</servlet-class>
+    </servlet>
 
 
     <servlet-mapping>
@@ -68,6 +72,10 @@
     <servlet-mapping>
         <servlet-name>StatusSmall</servlet-name>
         <url-pattern>/status-small</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
 

@@ -49,7 +49,8 @@ public class DeviceInfo extends HttpServlet {
 
         if(uname.equals("user") && pass.equals("user"))
         {
-            request.setAttribute("username", uname);
+            session=request.getSession();
+            session.setAttribute("username", uname); 
             request.getRequestDispatcher("WEB-INF/view/Logged.jsp").forward(request,response);
         }
         else

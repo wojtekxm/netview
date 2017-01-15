@@ -7,6 +7,8 @@
     <persistence-unit name="CRM" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>zesp03.entity.Controller</class>
+        <class>zesp03.entity.Device</class>
+        <class>zesp03.entity.DeviceSurvey</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/pz?useSSL=false"/>
@@ -15,7 +17,7 @@
             <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
             <property name="hibernate.hikari.autoCommit" value="false"/>
             <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.hbm2ddl.auto" value="none"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57InnoDBDialect"/>
         </properties>
     </persistence-unit>

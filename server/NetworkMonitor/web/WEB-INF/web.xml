@@ -4,12 +4,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <resource-ref>
-        <description>MySQL JDBC DataSource</description>
-        <res-ref-name>jdbc/MySQLDB</res-ref-name>
-        <res-type>javax.sql.DataSource</res-type>
-        <res-auth>Container</res-auth>
-    </resource-ref>
+    
 
     <servlet>
         <servlet-name>AddController</servlet-name>
@@ -39,6 +34,10 @@
         <servlet-name>StatusSmall</servlet-name>
         <servlet-class>zesp03.servlet.StatusSmall</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>WinterIsComing</servlet-name>
+        <servlet-class>zesp03.servlet.WinterIsComing</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>AddController</servlet-name>
@@ -67,6 +66,10 @@
     <servlet-mapping>
         <servlet-name>StatusSmall</servlet-name>
         <url-pattern>/status-small</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>WinterIsComing</servlet-name>
+        <url-pattern>/winter</url-pattern>
     </servlet-mapping>
 
 </web-app>

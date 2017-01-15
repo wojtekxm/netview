@@ -23,6 +23,12 @@
 </head>
 
 <body>
+<%
+    if(session.getAttribute("username")==null)
+    {
+        response.sendRedirect("LoginPage.jsp");
+    }
+%>
 <div style="height:60px;">
     <div class="nav">
         <ol>

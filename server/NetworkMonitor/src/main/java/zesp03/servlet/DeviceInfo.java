@@ -3,6 +3,7 @@ package zesp03.servlet;
 
 import zesp03.core.App;
 import zesp03.data.CheckInfo;
+import zesp03.data.Dev;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,9 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by Kacper on 2016-12-15.
- */
 public class DeviceInfo extends HttpServlet {
 
     public static final String allDevicesString = "zesp03.servlet.DeviceInfo.allDevices";
@@ -26,16 +24,9 @@ public class DeviceInfo extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
 
-        ArrayList<CheckInfo> allDevices;
-        try {
-            allDevices = App.checkDevices();
-        }
-        catch(SQLException exc) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "database error");
-            return;
-        }
+        List<Dev> list = App.checkDevs();
 
-        request.setAttribute(allDevicesString, allDevices);
+        request.setAttribute(allDevicesString, list);
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
 

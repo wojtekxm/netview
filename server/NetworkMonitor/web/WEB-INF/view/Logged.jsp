@@ -1,13 +1,12 @@
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="zesp03.data.CheckInfo" %>
-<%@ page import="zesp03.servlet.Details" %>
-<%@ page import="zesp03.servlet.DeviceInfo" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<%
-    ArrayList<CheckInfo> allDevices = (ArrayList<CheckInfo>)request.getAttribute(DeviceInfo.allDevicesString);
+<%@ page import="zesp03.data.CheckInfo"
+%><%@page import="zesp03.servlet.Details"
+%><%@ page import="zesp03.servlet.DeviceInfo"
+%><%@ page import="zesp03.data.Dev"
+%><%@ page import="java.util.List"
+%><%@ page language="java" contentType="text/html; charset=UTF-8"
+%><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
+%><%
+    List<Dev> list = (List<Dev>)request.getAttribute(DeviceInfo.allDevicesString);
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -32,10 +31,10 @@
 <div style="height:60px;">
     <div class="nav">
         <ol>
-            <li><a href="index.jsp" class="aNav">Strona główna</a></li>
-            <li><a href="make-survey" class="aNav">Nowe badanie</a></li>
-            <li><a href="status-small" class="aNav">Mały widok</a></li>
-            <li><a href="logout" class="aNav">Wyloguj</a></li>
+            <li><a href="/index.jsp" class="aNav">Strona główna</a></li>
+            <li><a href="/make-survey" class="aNav">Nowe badanie</a></li>
+            <li><a href="/status-small" class="aNav">Mały widok</a></li>
+            <li><a href="/logout" class="aNav">Wyloguj</a></li>
         </ol>
     </div>
 </div>
@@ -54,29 +53,29 @@
                     int sumActive = 0;
                     int sumInactive = 0;
                     int sumDisabled = 0;
-                    for(final CheckInfo info : allDevices) {
-                        int sumUsers=info.survey().getClientsSum();
-                        String c;
-                        if( info.survey().isEnabled() ) {
-                            if( info.survey().getClientsSum() > 0 ) {
-                                c = "greenDiode";
+                    for(final Dev info : list) {
+                        int sumUsers = info.getSurvey().getClientsSum();
+                        String clazz;
+                        if( info.getSurvey().isEnabled() ) {
+                            if( info.getSurvey().getClientsSum() > 0 ) {
+                                clazz = "greenDiode";
                                 sumActive++;
                             }
                             else {
-                                c = "redDiode";
+                                clazz = "redDiode";
                                 sumInactive++;
                             }
                         }
                         else {
-                            c = "greyDiode";
+                            clazz = "greyDiode";
                             sumDisabled++;
                         }
 
-                        final String h = "details?" + Details.PARAM_ID + "=" + info.device().getId();
-                        String t = info.device().getName();
-                        if( info.device().getDescription() != null )t += "<br>opis: " + info.device().getDescription();
-                        t += "<br>z: " + info.controller().getName();
-                    %><li class="<%= c %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
+                        final String h = "/details?" + Details.PARAM_ID + "=" + info.getDevice().getId();
+                        String t = info.getDevice().getName();
+                        if( info.getDevice().getDescription() != null )t += "<br>opis: " + info.getDevice().getDescription();
+                        t += "<br>z: " + info.getController().getName();
+                    %><li class="<%= clazz %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
                     ><% } %>
 
                 </ul>

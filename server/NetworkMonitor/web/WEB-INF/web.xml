@@ -32,10 +32,6 @@
         <servlet-class>zesp03.servlet.ShowControllersServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>showDevices</servlet-name>
-        <servlet-class>zesp03.servlet.showDevices</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>StatusSmall</servlet-name>
         <servlet-class>zesp03.servlet.StatusSmall</servlet-class>
     </servlet>
@@ -67,10 +63,6 @@
     <servlet-mapping>
         <servlet-name>ShowControllersServlet</servlet-name>
         <url-pattern>/ShowControllersServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>showDevices</servlet-name>
-        <url-pattern>/showDevices</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>StatusSmall</servlet-name>

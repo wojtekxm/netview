@@ -19,7 +19,6 @@
                 <li><a href="make-survey">robienie nowych badań (make-survey)</a></li>
                 <li><a href="status-small">stan wszystkich urządzeń, pomniejszony widok (status-small)</a></li>
                 <li><a href="deviceinfo">stan wszystkich urządzeń, standardowy widok (deviceinfo)</a></li>
-                <li><a href="showDevices">stan wszystkich urządzeń, tabelka (showDevices)</a></li>
                 <li><a href="Controllers.jsp">dodawanie kontrolerów (Controllers.jsp)</a></li>
                 <li><a href="ShowControllersServlet">usuwanie kontrolerów (ShowControllersServlet)</a></li>
                 <li><a href="LoginPage.jsp">strona logowania (LoginPage.jsp)</a></li>

@@ -5,15 +5,15 @@
   Time: 00:29
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="zesp03.data.ControllerRow" %>
+<%@ page import="zesp03.entity.Controller" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%
-    ArrayList<ControllerRow> controllers = (ArrayList<ControllerRow>)request.getSession().getAttribute("controllers");
+    List<Controller> controllers = (List<Controller>)request.getAttribute("controllers");
 %>
 
 <!DOCTYPE html>
@@ -38,7 +38,7 @@
                     <%= controllers.get(i).getName() %>
                 </td>
                 <td>
-                    <%= controllers.get(i).getIPv4() %>
+                    <%= controllers.get(i).getIpv4() %>
                 </td>
                 <td>
                     <%= controllers.get(i).getDescription() %>

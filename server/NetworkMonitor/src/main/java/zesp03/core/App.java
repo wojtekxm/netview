@@ -57,41 +57,6 @@ public class App {
         return sb.toString().intern();
     }
 
-    //TODO użyj transakcji
-    public static synchronized void registerController(String name, String ipv4) throws SQLException, AdminException {
-        if( ! isValidControllerName(name) )
-            throw new AdminException("invalid controller name");
-        String sql = "INSERT INTO controller (`name`, ipv4) VALUES (?, ?)";
-        try(Connection c = Database.connect();
-            PreparedStatement ps = c.prepareStatement(sql) ) {
-            ps.setString(1, name);
-            ps.setString(2, ipv4);
-            ps.executeUpdate();
-        }
-    }
-
-    public static synchronized void removeController(final long controllerId) throws SQLException {
-
-        try (final Connection connection = Database.connect();
-             PreparedStatement stmt = connection.prepareStatement("DELETE FROM controller WHERE id = ?")) {
-            stmt.setLong(1, controllerId);
-            stmt.execute();
-        }
-    }
-
-    //TODO użyj transakcji
-    public static synchronized void registerNewDevice(String name, int controllerId) throws SQLException, AdminException {
-        if( ! isCompatibleDeviceName(name) )
-            throw new AdminException("invalid device name");
-        String sql = "INSERT INTO device (`name`, is_known, description, controller_id) VALUES (?, TRUE, NULL, ?)";
-        try(Connection c = Database.connect();
-            PreparedStatement ps = c.prepareStatement(sql) ) {
-            ps.setString(1, name);
-            ps.setInt(2, controllerId);
-            ps.executeUpdate();
-        }
-    }
-
     // synchronized?
     //TODO użyj transakcji
     public static synchronized ArrayList<CheckInfo> checkDevices() throws SQLException {
@@ -136,24 +101,6 @@ public class App {
             }
         }
         return list;
-    }
-
-    public static synchronized List<ControllerRow> checkControllers() throws SQLException {
-        final String sql = "SELECT id, name, ipv4, description FROM controller ORDER BY id ASC";
-        final List<ControllerRow> controllers = new ArrayList<>();
-        try( Connection con = Database.connect();
-             Statement st = con.createStatement();
-             ResultSet res = st.executeQuery(sql) ) {
-            while( res.next() ) {
-                ControllerRow controller = new ControllerRow();
-                controller.setId( res.getInt("id") );
-                controller.setName( res.getString("name") );
-                controller.setIPv4( res.getString("ipv4") );
-                controller.setDescription( res.getString("description") );
-                controllers.add( controller );
-            }
-        }
-        return controllers;
     }
 
     //TODO użyj transakcji

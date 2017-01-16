@@ -3,15 +3,14 @@ package zesp03.servlet;
 import zesp03.core.App;
 import zesp03.core.Database;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class MakeSurvey extends HttpServlet {
     public static final String PARAM_ACTION = "action";
@@ -27,25 +26,29 @@ public class MakeSurvey extends HttpServlet {
         Double attrTime = null;
         Integer attrRows = null;
 
+        String action = request.getParameter(PARAM_ACTION);
         try {
-            String action = request.getParameter(PARAM_ACTION);
             if( action.equals(PARAM_ACTION_UPDATE) ) {
                 long t0 = System.nanoTime();
                 App.examineAll();
                 long t1 = System.nanoTime();
                 attrTime = (t1 - t0) * 0.000000001;
-                try(Connection con = Database.connect();
-                    Statement st = con.createStatement();
-                    ResultSet rset = st.executeQuery("SELECT COUNT(*) FROM device_survey") ) {
-                    rset.next();
-                    attrRows = rset.getInt(1);
-                }
+
+                final EntityManager em = Database.createEntityManager();
+                final EntityTransaction tran = em.getTransaction();
+                tran.begin();
+
+                attrRows = ((Number)em.createQuery("SELECT COUNT(id) FROM DeviceSurvey").getSingleResult()).intValue();
+
+                tran.commit();
+                em.close();
             }
         }
         catch(SQLException exc) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "database error");
             return;
         }
+
 
         request.setAttribute(ATTR_TIME, attrTime);
         request.setAttribute(ATTR_ROWS, attrRows);

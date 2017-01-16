@@ -76,7 +76,7 @@
 
 	.user
 	{
-		width:400px;
+		width:417px;
 		height: 40px;
 		line-height: 33px;
 		text-align: center;
@@ -84,7 +84,7 @@
 		float: left;
 		position: absolute;
 		right: 0px;
-		bottom: 45px;
+		bottom: 42px;
 		z-index: 999;
 		background-color: rgba(1, 1, 1, 0.85);
 		color:white;

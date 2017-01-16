@@ -58,7 +58,6 @@ public class DeviceInfo extends HttpServlet {
                 request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             }
         }else{
-            session.setAttribute("error", "Podano zły login lub hasło");
             request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
         }
     }

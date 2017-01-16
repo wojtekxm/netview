@@ -26,7 +26,7 @@ public class DeviceInfo extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
 
-        ArrayList<CheckInfo> allDevices;
+        ArrayList<CheckInfo>  allDevices;
         try {
             allDevices = App.checkDevices();
         }
@@ -34,6 +34,7 @@ public class DeviceInfo extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "database error");
             return;
         }
+
 
         request.setAttribute(allDevicesString, allDevices);
         response.setCharacterEncoding("utf-8");

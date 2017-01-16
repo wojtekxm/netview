@@ -22,7 +22,7 @@
                 <li><a href="Controllers.jsp">dodawanie kontrolerów (Controllers.jsp)</a></li>
                 <li><a href="ShowControllersServlet">usuwanie kontrolerów (ShowControllersServlet)</a></li>
                 <li><a href="AddController">??? (AddController)</a></li><br><br>
-                <li><a href="deviceinfo">LOGOWANIE, stan wszystkich urządzeń, standardowy widok (deviceinfo)</a></li>
+                <li><a href="deviceinfo">LOGOWANIE + stan wszystkich urządzeń, standardowy widok (deviceinfo)</a></li>
             </ul>
         </div>
     </div>

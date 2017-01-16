@@ -1,7 +1,6 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
-import zesp03.entity.Controller;
 import zesp03.entity.Device;
 
 import javax.persistence.EntityManager;
@@ -24,26 +23,36 @@ public class WinterIsComing extends HttpServlet {
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/plain");
 
+        int id;
+        try {
+            id = Integer.parseInt( request.getParameter("id") );
+        }
+        catch(NumberFormatException exc) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid id");
+            return;
+        }
+
         final EntityManager em = Database.createEntityManager();
         EntityTransaction t = em.getTransaction();
         t.begin();
 
-        Controller c = new Controller();
-        c.setName("tak-zimno" + System.nanoTime() );
-        c.setDescription("Stark");
-        c.setIpv4("9.9.9.9");
-        em.persist(c);
-
-        Device d = new Device();
-        d.setController(c);
-        d.setName("LUL" + System.nanoTime());
-        em.persist(d);
+        Device d = em.find(Device.class, id);
+        if(d == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "no such device");
+            return;
+        }
+        int s = d.getDeviceSurveys().size();
+        //d.getController();
 
         t.commit();
         em.close();
 
         try( PrintWriter w = response.getWriter() ) {
-            w.println("zima nadeszła");
+            w.println("device.getDeviceSurveys().size() = " + d.getDeviceSurveys().size());
+            w.println("device id = " + d.getId());
+            w.println("device name = " + d.getName());
+            w.println("controller id = " + d.getController().getId());
+            w.println("controller name = " + d.getController().getName());
         }
     }
 }

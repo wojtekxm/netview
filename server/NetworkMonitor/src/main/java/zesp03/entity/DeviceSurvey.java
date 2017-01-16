@@ -8,16 +8,16 @@ public class DeviceSurvey {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "device_survey")
     @TableGenerator(name = "device_survey", pkColumnValue = "device_survey", allocationSize = 1)
-    private int id;
+    private Integer id;
 
     @Column(name = "\"timestamp\"", nullable = false)
-    private int timestamp;
+    private Integer timestamp;
 
     @Column(name = "is_enabled", nullable = false)
-    private boolean isEnabled;
+    private Boolean isEnabled;
 
     @Column(name = "clients_sum", nullable = false)
-    private int clientsSum;
+    private Integer clientsSum;
 
     @ManyToOne
     @JoinColumn(
@@ -26,35 +26,35 @@ public class DeviceSurvey {
     )
     private Device device;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getTimestamp() {
+    public Integer getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(int timestamp) {
+    public void setTimestamp(Integer timestamp) {
         this.timestamp = timestamp;
     }
 
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return isEnabled;
     }
 
-    public void setIsEnabled(boolean enabled) {
+    public void setIsEnabled(Boolean enabled) {
         isEnabled = enabled;
     }
 
-    public int getClientsSum() {
+    public Integer getClientsSum() {
         return clientsSum;
     }
 
-    public void setClientsSum(int clientsSum) {
+    public void setClientsSum(Integer clientsSum) {
         this.clientsSum = clientsSum;
     }
 

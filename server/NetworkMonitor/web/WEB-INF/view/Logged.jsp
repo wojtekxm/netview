@@ -43,6 +43,7 @@
 <div id="container">
     <div class="welcome">
         <div class="tittle">NETWORK-MONITOR</div>
+        <div class="user">zalogowany: <%= (String)session.getAttribute("username")  %></div>
         <div class="logo"><img src="/images/logoo.jpg"></div>
     </div>
         <!--   	<div id="menu"></div> -->
@@ -76,7 +77,7 @@
                         String t = info.device().getName();
                         if( info.device().getDescription() != null )t += "<br>opis: " + info.device().getDescription();
                         t += "<br>z: " + info.controller().getName();
-                    %><li class="<%= c %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
+                    %><li class="<%= c %>" title="<%= t %>" data-toggle="tooltip" data-placement="top" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
                     ><% } %>
 
                 </ul>

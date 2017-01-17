@@ -28,8 +28,16 @@
         <servlet-class>zesp03.servlet.MakeSurvey</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ShowControllersServlet</servlet-name>
-        <servlet-class>zesp03.servlet.ShowControllersServlet</servlet-class>
+        <servlet-name>ShowControllers</servlet-name>
+        <servlet-class>zesp03.servlet.ShowControllers</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowDetailsController</servlet-name>
+        <servlet-class>zesp03.servlet.ShowDetailsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveController</servlet-name>
+        <servlet-class>zesp03.servlet.RemoveController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>showDevices</servlet-name>
@@ -38,6 +46,14 @@
     <servlet>
         <servlet-name>StatusSmall</servlet-name>
         <servlet-class>zesp03.servlet.StatusSmall</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>zesp03.servlet.Logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>WinterIsComing</servlet-name>
+        <servlet-class>zesp03.servlet.WinterIsComing</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -57,8 +73,16 @@
         <url-pattern>/make-survey</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ShowControllersServlet</servlet-name>
-        <url-pattern>/ShowControllersServlet</url-pattern>
+        <servlet-name>ShowControllers</servlet-name>
+        <url-pattern>/ShowControllers</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowDetailsController</servlet-name>
+        <url-pattern>/ShowDetailsController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveController</servlet-name>
+        <url-pattern>/RemoveController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>showDevices</servlet-name>
@@ -67,6 +91,14 @@
     <servlet-mapping>
         <servlet-name>StatusSmall</servlet-name>
         <url-pattern>/status-small</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>WinterIsComing</servlet-name>
+        <url-pattern>/winter</url-pattern>
     </servlet-mapping>
 
 </web-app>

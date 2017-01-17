@@ -1,5 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-%><!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
@@ -12,6 +13,7 @@
 <body>
     <div class="container">
         <h1>Network Monitor</h1>
+
         <div class="row">
             <ul class="nav nav-pills nav-stacked">
                 <li><a href="index.jsp">strona główna (index.jsp)</a></li>
@@ -20,8 +22,8 @@
                 <li><a href="deviceinfo">stan wszystkich urządzeń, standardowy widok (deviceinfo)</a></li>
                 <li><a href="showDevices">stan wszystkich urządzeń, tabelka (showDevices)</a></li>
                 <li><a href="Controllers.jsp">dodawanie kontrolerów (Controllers.jsp)</a></li>
-                <li><a href="ShowControllersServlet">usuwanie kontrolerów (ShowControllersServlet)</a></li>
-                <li><a href="logged.jsp">??? (logged.jsp)</a></li>
+                <li><a href="ShowControllers">Wyswietlanie i usuwanie kontrolerów (ShowControllersServlet)</a></li>
+                <li><a href="LoginPage.jsp">strona logowania (LoginPage.jsp)</a></li>
                 <li><a href="AddController">??? (AddController)</a></li>
             </ul>
         </div>

@@ -30,7 +30,6 @@
         </div>
     </nav>
     <div class="container">
-        <h1>czas <%= (Double)request.getAttribute("ttt") %>s</h1>
         <ul class="view-small"><%
             int sumActive = 0;
             int sumInactive = 0;

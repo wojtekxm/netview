@@ -3,6 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>zesp03.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>StatusSmall</servlet-name>
+        <servlet-name>Details</servlet-name>
+        <servlet-name>DeviceInfo</servlet-name>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>AddController</servlet-name>
@@ -41,8 +51,8 @@
         <servlet-class>zesp03.servlet.Logout</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>WinterIsComing</servlet-name>
-        <servlet-class>zesp03.servlet.WinterIsComing</servlet-class>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>zesp03.servlet.Login</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -82,8 +92,8 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>WinterIsComing</servlet-name>
-        <url-pattern>/winter</url-pattern>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
 </web-app>

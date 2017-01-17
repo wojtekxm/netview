@@ -29,7 +29,8 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td><input type="submit" value="Zaloguj" style="width:100%;color:black;font-weight: bold;z-index: 100;"></td>
+                    <td><input type="submit" value="Zaloguj"
+                               style="width:100%;color:black;font-weight: bold;z-index: 100;"></td>
                 </tr>
             </table>
             </div>

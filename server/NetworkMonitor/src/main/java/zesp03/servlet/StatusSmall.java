@@ -19,12 +19,8 @@ public class StatusSmall extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         List<DeviceStatus> states;
 
-        double ttt;//!
-        long t0 = System.nanoTime();//!
         states = App.checkDevs();
-        ttt = (System.nanoTime() - t0) * 0.000000001;//!
 
-        request.setAttribute("ttt", ttt);//!
         request.setAttribute(ATTR_STATES, states);
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");

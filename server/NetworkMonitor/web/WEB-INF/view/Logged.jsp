@@ -1,5 +1,6 @@
 <%@page import="zesp03.data.DeviceStatus"
-%><%@ page import="zesp03.servlet.Details"
+%>
+<%@ page import="zesp03.servlet.Details"
 %><%@ page import="zesp03.servlet.DeviceInfo"
 %><%@ page import="java.util.List"
 %><%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -40,7 +41,8 @@
 <div id="container">
     <div class="welcome">
         <div class="tittle">NETWORK-MONITOR</div>
-        <div class="user">zalogowany: <%= (String)session.getAttribute("username")  %></div>
+        <div class="user">zalogowany: <%= (String) session.getAttribute("username")  %>
+        </div>
         <div class="logo"><img src="/images/logoo.jpg"></div>
     </div>
         <!--   	<div id="menu"></div> -->

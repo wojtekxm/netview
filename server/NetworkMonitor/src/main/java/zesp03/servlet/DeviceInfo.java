@@ -34,7 +34,7 @@ public class DeviceInfo extends HttpServlet {
             session.removeAttribute("error");
         }
 
-        if(uname != null && pass != null) {
+        if (uname != null && pass != null) {
             if (uname.equals("user") && pass.equals("user")) {
                 session = request.getSession();
                 session.setAttribute("username", uname);
@@ -43,7 +43,7 @@ public class DeviceInfo extends HttpServlet {
                 session.setAttribute("error", "Podano zły login lub hasło");
                 request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
             }
-        }else{
+        } else {
             request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
         }
     }

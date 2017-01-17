@@ -44,9 +44,11 @@
     <div class="list-group ">
         <div class="row">
             <a href="ShowControllers" class="btn btn-primary btn-default btn-lg active" role="button">Wróc</a>
-            <a href="RemoveController?id=<%= controller.getId() %>" class="btn btn-primary btn-default btn-lg active" role="button">Usuń</a>
+            <form method="post" action="RemoveController?id=<%= controller.getId() %>">
+                <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active" role="button">
+            </form>
         </div>
-        <div class="row"></div>
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 szczegóły urządzenia

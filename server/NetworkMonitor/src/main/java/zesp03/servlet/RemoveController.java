@@ -19,10 +19,12 @@ package zesp03.servlet;
 public class RemoveController extends HttpServlet {
 
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
-    }
-    protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
         removeController( request );
+
+        response.sendRedirect( "ShowControllers" );
+    }
+    protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
         response.sendRedirect( "ShowControllers" );
     }

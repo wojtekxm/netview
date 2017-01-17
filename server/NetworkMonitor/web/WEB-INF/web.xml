@@ -21,8 +21,16 @@
         <servlet-class>zesp03.servlet.MakeSurvey</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ShowControllersServlet</servlet-name>
-        <servlet-class>zesp03.servlet.ShowControllersServlet</servlet-class>
+        <servlet-name>ShowControllers</servlet-name>
+        <servlet-class>zesp03.servlet.ShowControllers</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowDetailsController</servlet-name>
+        <servlet-class>zesp03.servlet.ShowDetailsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveController</servlet-name>
+        <servlet-class>zesp03.servlet.RemoveController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>StatusSmall</servlet-name>
@@ -54,8 +62,16 @@
         <url-pattern>/make-survey</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ShowControllersServlet</servlet-name>
-        <url-pattern>/ShowControllersServlet</url-pattern>
+        <servlet-name>ShowControllers</servlet-name>
+        <url-pattern>/ShowControllers</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowDetailsController</servlet-name>
+        <url-pattern>/ShowDetailsController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveController</servlet-name>
+        <url-pattern>/RemoveController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>StatusSmall</servlet-name>

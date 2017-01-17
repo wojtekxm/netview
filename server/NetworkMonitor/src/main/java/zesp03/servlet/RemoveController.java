@@ -1,17 +1,15 @@
 package zesp03.servlet;
 
-        import zesp03.core.Database;
-        import zesp03.entity.Controller;
+import zesp03.core.Database;
+import zesp03.entity.Controller;
 
-        import javax.persistence.EntityManager;
-        import javax.persistence.EntityTransaction;
-        import javax.servlet.RequestDispatcher;
-        import javax.servlet.ServletException;
-        import javax.servlet.http.HttpServlet;
-        import javax.servlet.http.HttpServletRequest;
-        import javax.servlet.http.HttpServletResponse;
-        import java.io.IOException;
-        import java.util.Arrays;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by Berent on 2017-01-17.
@@ -22,7 +20,7 @@ public class RemoveController extends HttpServlet {
     }
     protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
 
-        removeController( request );
+        removeController(request);
 
         response.sendRedirect( "ShowControllers" );
     }

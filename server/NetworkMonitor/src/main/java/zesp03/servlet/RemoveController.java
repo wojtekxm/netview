@@ -15,13 +15,14 @@ import java.io.IOException;
  * Created by Berent on 2017-01-17.
  */
 public class RemoveController extends HttpServlet {
-
+    @Override
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
-    }
-    protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
-
         removeController(request);
+        response.sendRedirect("ShowControllers");
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
         response.sendRedirect( "ShowControllers" );
     }
 

@@ -1,18 +1,22 @@
 package zesp03.core;
 
-import zesp03.data.*;
+import zesp03.data.DeviceStatus;
+import zesp03.data.SurveyInfo;
+import zesp03.entity.Controller;
+import zesp03.entity.Device;
+import zesp03.entity.DeviceSurvey;
 import zesp03.util.Unicode;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Bardzo ważna klasa w naszym projekcie.
@@ -57,87 +61,64 @@ public class App {
         return sb.toString().intern();
     }
 
-    // synchronized?
-    //TODO użyj transakcji
-    public static synchronized ArrayList<CheckInfo> checkDevices() throws SQLException {
-        final String sql = "SELECT controller.id AS ControllerId, controller.`name` AS ControllerName, " +
-                "controller.ipv4 AS ControllerIPv4, controller.description AS ControllerDescription, " +
-                "device.id AS DeviceId, device.`name` AS DeviceName, " +
-                "device.is_known AS DeviceIsKnown, device.description AS DeviceDescription, " +
-                "Survey.id AS SurveyId, Survey.is_enabled AS SurveyIsEnabled, " +
-                "Survey.clients_sum AS SurveyClientsSum, Survey.`timestamp` AS SurveyTimestamp " +
-                "FROM controller RIGHT JOIN device ON controller.id = device.controller_id " +
-                "LEFT JOIN (" +
-                "SELECT * FROM device_survey WHERE device_survey.id IN (" +
-                "SELECT MIN(device_survey.id) FROM device_survey WHERE (device_survey.device_id, device_survey.`timestamp`) IN (" +
-                "SELECT device_survey.device_id, MAX(device_survey.`timestamp`) FROM device_survey GROUP BY device_survey.device_id" +
-                ") GROUP BY device_survey.device_id" +
-                ") " +
-                ") Survey ON device.id = Survey.device_id";
-        final ArrayList<CheckInfo> list = new ArrayList<>();
-        try( Connection con = Database.connect();
-             Statement st = con.createStatement();
-             ResultSet res = st.executeQuery(sql) ) {
-            while( res.next() ) {
-                ControllerRow ct = new ControllerRow();
-                ct.setId( res.getInt("ControllerId") );
-                ct.setName( res.getString("ControllerName") );
-                ct.setIPv4( res.getString("ControllerIPv4") );
-                ct.setDescription( res.getString("ControllerDescription") );
-                DeviceRow dev = new DeviceRow();
-                dev.setId( res.getInt("DeviceId") );
-                dev.setName( res.getString("DeviceName") );
-                dev.setKnown( res.getBoolean("DeviceIsKnown") );
-                dev.setDescription( res.getString("DeviceDescription") );
-                dev.setControllerId( ct.getId() );
-                SurveyRow sur = new SurveyRow();
-                sur.setId( res.getInt("SurveyId") );
-                sur.setEnabled( res.getBoolean("SurveyIsEnabled") );
-                sur.setClientsSum( res.getInt("SurveyClientsSum") );
-                sur.setTimestamp( res.getInt("SurveyTimestamp") );
-                sur.setDeviceId( dev.getId() );
-                CheckInfo ci = new CheckInfo(ct, dev, sur);
-                list.add(ci);
-            }
-        }
+    public static List<DeviceStatus> checkDevs() {
+        final EntityManager em = Database.createEntityManager();
+        final EntityTransaction tran = em.getTransaction();
+        tran.begin();
+
+        final List<DeviceStatus> list = em.createQuery(
+                "SELECT c, d, s FROM DeviceSurvey s INNER JOIN s.device d INNER JOIN d.controller c WHERE s.id IN (" +
+                        "SELECT MAX(id) FROM DeviceSurvey WHERE (device, timestamp) IN (" +
+                        "SELECT device, MAX(timestamp) FROM DeviceSurvey GROUP BY device" +
+                        ") GROUP BY id" +
+                        ")",
+                Object[].class)
+                .getResultList()
+                .stream()
+                .map(arr -> new DeviceStatus((Controller) arr[0], (Device) arr[1], (DeviceSurvey) arr[2]))
+                .collect(Collectors.toList());
+
+        tran.commit();
+        em.close();
         return list;
     }
 
-    //TODO użyj transakcji
-    public static synchronized void examineAll() throws SQLException {
-        final HashMap<Integer, String> map = new HashMap<>();
-        String sql = "SELECT id, ipv4 FROM controller";
-        try(Connection con = Database.connect();
-            Statement st = con.createStatement();
-            ResultSet res = st.executeQuery(sql) ) {
-            while( res.next() ) {
-                int id = res.getInt("id");
-                String ipv4 = res.getString("ipv4");
-                map.put(id, ipv4);
+    public static void examineNetwork() {
+        List<Controller> list = null;
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            list = em.createQuery("SELECT c FROM Controller c", Controller.class).getResultList();
+
+            tran.commit();
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+
+        if (list != null) {
+            for (Controller c : list) {
+                examineOne(c.getId(), c.getIpv4());
             }
         }
-        map.forEach( (controllerId, ipv4) -> {
-            // czy ten controllerId nadal będzie istnieć w bazie po zakończeniu powyższego Connection [?]
-            try {
-                examineController(controllerId, ipv4);
-            }
-            catch(SQLException exc) {
-                log( "examineAll", exc );
-            }
-        } );
     }
 
-    //TODO użyj transakcji
-    protected static synchronized void examineController(final int controllerId, final String ipv4) throws SQLException {
-        HashMap<String, DeviceState> surveyed;
+    protected static void examineOne(int controllerId, String ipv4) {
+        HashMap<String, SurveyInfo> surveyed;
         try {
             surveyed = filterDevices( snmp.queryDevices(ipv4) );
         }
         catch(SNMPException exc) {
-            log( "examineController", exc );
+            log("examineOne", exc);//?
             return;
         }
-        if( surveyed.size() < 1 )return;
+        if (surveyed.size() < 1) return;
         surveyed.forEach( (name, ds) -> ds.setId(-1) );
 
         Instant now = Instant.now();
@@ -146,66 +127,71 @@ public class App {
             throw new IllegalStateException("timestamp overflow");
         int timestamp = (int)longTS;
 
-        try( Connection con = Database.connect() ) {
-            try(Statement st = con.createStatement();
-                ResultSet res = st.executeQuery("SELECT `name`, id FROM device") ) {
-                while( res.next() ) {
-                    String name = res.getString("name");
-                    int id = res.getInt("id");
-                    DeviceState ds = surveyed.get(name);
-                    if(ds != null)ds.setId(id);
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Controller controller = em.find(Controller.class, controllerId);
+            if (controller == null) {
+                tran.commit();
+                em.close();
+                return;
+            }
+
+            List<Device> devices = em.createQuery("SELECT d FROM Device d", Device.class).getResultList();
+            final HashMap<String, Device> existing = new HashMap<>();
+            for (Device d : devices) {
+                existing.put(d.getName(), d);
+            }
+
+            int x = 0;
+            for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
+                final String name = e.getKey();
+                if (!existing.containsKey(name)) {
+                    Device d = new Device();
+                    d.setName(name);
+                    d.setController(controller);
+                    d.setIsKnown(false);
+                    em.persist(d);
+                    existing.put(name, d);
+                }
+                if (++x == 100) {
+                    em.flush();
+                    em.clear();
+                    x = 0;
                 }
             }
 
-            final ArrayList<String> strangeNames = new ArrayList<>();
-            surveyed.forEach( (deviceName, deviceState) -> {
-                if( deviceState.getId() == -1 )strangeNames.add(deviceName);
-            } );
-
-            if( strangeNames.size() > 0 ) {
-                final StringBuilder sb = new StringBuilder();
-                sb.append("INSERT INTO device (`name`, is_known, controller_id) VALUES ");
-                for(int i = 0; i < strangeNames.size(); i++) {
-                    if(i > 0)sb.append(", ");
-                    sb.append("(?, FALSE, ?)");
-                }
-                String sql = sb.toString().intern();
-                try( PreparedStatement prep = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS) ) {
-                    for(int i = 0; i < strangeNames.size(); i++) {
-                        prep.setString( 2 * i + 1, strangeNames.get(i) );
-                        prep.setInt( 2 * i + 2, controllerId );
-                    }
-                    prep.executeUpdate();
-                    try( ResultSet res = prep.getGeneratedKeys() ) {
-                        for (String name : strangeNames) {
-                            res.next();
-                            int deviceId = res.getInt(1);
-                            surveyed.get(name).setId(deviceId);
-                        }
-                    }
+            x = 0;
+            for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
+                final String name = e.getKey();
+                final SurveyInfo info = e.getValue();
+                final Device d = existing.get(name);
+                final DeviceSurvey s = new DeviceSurvey();
+                s.setTimestamp(timestamp);
+                s.setIsEnabled(info.isEnabled());
+                s.setClientsSum(info.getClientsSum());
+                s.setDevice(d);
+                em.persist(s);
+                if (++x == 100) {
+                    em.flush();
+                    em.clear();
+                    x = 0;
                 }
             }
-
-            final StringBuilder sb = new StringBuilder();
-            sb.append("INSERT INTO device_survey (`timestamp`, is_enabled, clients_sum, device_id) VALUES ");
-            for(int i = 0; i < surveyed.size(); i++) {
-                if(i > 0)sb.append(", ");
-                sb.append("(?, ?, ?, ?)");
-            }
-            String sql = sb.toString().intern();
-            try( PreparedStatement prep = con.prepareStatement(sql) ) {
-                int x = 0;
-                for (Map.Entry<String, DeviceState> entry : surveyed.entrySet()) {
-                    final String deviceName = entry.getKey();
-                    final DeviceState deviceState = entry.getValue();
-                    prep.setInt(4 * x + 1, timestamp);
-                    prep.setBoolean(4 * x + 2, deviceState.isEnabled());
-                    prep.setInt(4 * x + 3, deviceState.getClientsSum());
-                    prep.setInt(4 * x + 4, deviceState.getId());
-                    x++;
-                }
-                prep.executeUpdate();
-            }
+            tran.commit();
+        } catch (javax.persistence.PersistenceException exc) {
+            log("examineOne", exc);//?
+            if (tran != null && tran.isActive()) tran.rollback();
+        } catch (RuntimeException exc) {
+            log("examineOne", exc);//?
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
         }
     }
 
@@ -218,9 +204,9 @@ public class App {
      *             Lista nie będzie modyfikowana przez tą metodę.
      * @return mapa utworzona na podstawie przefiltrowanej listy urządzeń
      */
-    protected static HashMap<String, DeviceState> filterDevices(List<DeviceState> list) {
-        final HashMap<String, DeviceState> result = new HashMap<>();
-        for(DeviceState ds : list) {
+    protected static HashMap<String, SurveyInfo> filterDevices(List<SurveyInfo> list) {
+        final HashMap<String, SurveyInfo> result = new HashMap<>();
+        for (SurveyInfo ds : list) {
             String name = ds.getName();
             if( ! isCompatibleDeviceName(name) ) {
                 String old = name;
@@ -244,12 +230,12 @@ public class App {
     protected static void log(String method, String message, String... extra) {
         DateTimeFormatter form = DateTimeFormatter.ofPattern("uuuu LLL dd, HH:mm:ss");
         String dt = LocalDateTime.now().format(form);
-        System.out.println(dt + " App log (invoked by " + method + "):");
-        System.out.println(message);
+        System.err.println(dt + " App log (invoked by " + method + "):");
+        System.err.println(message);
         for(String e : extra) {
-            System.out.println(e);
+            System.err.println(e);
         }
-        System.out.println();
+        System.err.println();
     }
 
     protected static void log(String method, Throwable exception, String... extra) {

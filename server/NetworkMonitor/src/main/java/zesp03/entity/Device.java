@@ -9,14 +9,14 @@ import java.util.List;
 public class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "device")
-    @TableGenerator(name = "device", pkColumnValue = "device", allocationSize = 1)
-    private int id;
+    @TableGenerator(name = "device", pkColumnValue = "device", allocationSize = 10)
+    private Integer id;
 
     @Column(name = "\"name\"", length = 85, nullable = false, unique = true)
     private String name;
 
     @Column(name = "is_known", nullable = false)
-    private boolean isKnown;
+    private Boolean isKnown;
 
     @Column(length = 1000)
     private String description;
@@ -28,14 +28,14 @@ public class Device {
     )
     private Controller controller;
 
-    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DeviceSurvey> deviceSurveys = new ArrayList<>();
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -47,11 +47,11 @@ public class Device {
         this.name = name;
     }
 
-    public boolean isKnown() {
+    public Boolean isKnown() {
         return isKnown;
     }
 
-    public void setIsKnown(boolean known) {
+    public void setIsKnown(Boolean known) {
         isKnown = known;
     }
 

@@ -12,12 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 public class WinterIsComing extends HttpServlet {
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
@@ -28,22 +25,12 @@ public class WinterIsComing extends HttpServlet {
         EntityTransaction t = em.getTransaction();
         t.begin();
 
-        Controller c = new Controller();
-        c.setName("tak-zimno" + System.nanoTime() );
-        c.setDescription("Stark");
-        c.setIpv4("9.9.9.9");
-        em.persist(c);
-
-        Device d = new Device();
-        d.setController(c);
-        d.setName("LUL" + System.nanoTime());
-        em.persist(d);
+        try( PrintWriter w = response.getWriter() ) {
+            w.println("Winter has come");
+            w.println("And winter is gone");
+        }
 
         t.commit();
         em.close();
-
-        try( PrintWriter w = response.getWriter() ) {
-            w.println("zima nadeszła");
-        }
     }
 }

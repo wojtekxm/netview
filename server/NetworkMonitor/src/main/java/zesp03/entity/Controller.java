@@ -10,7 +10,7 @@ public class Controller {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "controller")
     @TableGenerator(name = "controller", pkColumnValue = "controller", allocationSize = 1)
-    private int id;
+    private Integer id;
 
     @Column(name = "\"name\"", unique = true, nullable = false, length = 85)
     private String name;
@@ -24,11 +24,11 @@ public class Controller {
     @OneToMany(mappedBy = "controller", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Device> devices = new ArrayList<>();
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -31,6 +31,7 @@
 			transform: translateY(0);
 		}
 	}
+
 	@keyframes dropHeader2 {
 		0% {
 			transform: translateY(100%);
@@ -74,9 +75,8 @@
 		animation-duration: 1.3s;
 	}
 
-	.user
-	{
-		width:417px;
+	.user {
+		width: 417px;
 		height: 40px;
 		line-height: 33px;
 		text-align: center;
@@ -87,7 +87,7 @@
 		bottom: 42px;
 		z-index: 999;
 		background-color: rgba(1, 1, 1, 0.85);
-		color:white;
+		color: white;
 		/*animate onload*/
 		animation-name: dropHeader2;
 		animation-iteration-count: 1;
@@ -184,7 +184,7 @@
 		color:rgba(225,225,225,1);
 		text-decoration-style: solid;
 		background-color:#00ad1d;
-		border-radius:3px;
+		border-radius: 3px;
 		transition:  0.5s;
 
 	}
@@ -214,7 +214,7 @@
 		color:rgba(225,225,225,1);
 		text-decoration-style: solid;
 		background-color:#d10000;
-		border-radius:3px;
+		border-radius: 3px;
 		transition: 0.5s;
 	}
 
@@ -244,7 +244,7 @@
 		color:rgba(225,225,225,1);
 		text-decoration-style: solid;
 		background-color:#666666;
-		border-radius:3px;
+		border-radius: 3px;
 		transition: 0.5s;
 	}
 
@@ -272,7 +272,7 @@
 		width:35px;
 		height: 25px;
 		background-color:#d10000;
-		border-radius:3px;
+		border-radius: 3px;
 	}
 	#greenDiode
 	{
@@ -280,7 +280,7 @@
 		width:35px;
 		height: 25px;
 		background-color:#00ad1d;
-		border-radius:3px;
+		border-radius: 3px;
 	}
 	#greyDiode
 	{
@@ -288,7 +288,7 @@
 		width:35px;
 		height: 25px;
 		background-color:#666666;
-		border-radius:3px;
+		border-radius: 3px;
 	}
 
 	.sticky

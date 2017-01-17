@@ -75,7 +75,7 @@
 		position: absolute;
 		float: left;
 		left: 0px;
-		top: 35px;
+		top: 27%;
 		z-index: 999;
 		background-color: rgba(1, 1, 1, 0.85);
 		color:white;
@@ -98,7 +98,7 @@
 		float: left;
 		position: absolute;
 		right: 0px;
-		bottom: 42px;
+		bottom: 35%;
 		z-index: 999;
 		background-color: rgba(1, 1, 1, 0.85);
 		color:white;
@@ -114,7 +114,7 @@
 		margin:0;
 		padding: 0;
 		background-color: rgba(12,12,12,1);
-		display: block; 
+		display: block;
         float: none;
 		text-shadow: 1px 1px 2px #000000;
 		font-size: 11px;
@@ -132,7 +132,7 @@
 		position: relative;
 		z-index: 998;
 		margin:auto;
-		display: block;
+		display: table-cell;
 		text-shadow: 1px 1px 2px #000000;
 		font-size:12px;
 		list-style: none;
@@ -145,8 +145,11 @@
 
 	ul li ul
 	{
-		display: block;
+		display: table;
 		position: relative;
+		min-height: 100px;
+		height: auto;
+		width: 100%;
 	}
 	ul li ul li > a
 	{
@@ -367,4 +370,9 @@
 	ol > li:hover > a
 	{
 		color: #2DF2BE;
+	}
+
+	.summary
+	{
+		color:white;font-size:20px;width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;background-color: black;
 	}

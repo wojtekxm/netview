@@ -43,6 +43,10 @@
         <servlet-name>Logout</servlet-name>
         <servlet-class>zesp03.servlet.Logout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Style</servlet-name>
+        <servlet-class>zesp03.servlet.Style</servlet-class>
+    </servlet>
 
 
     <servlet-mapping>
@@ -76,6 +80,10 @@
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Style</servlet-name>
+        <url-pattern>/style</url-pattern>
     </servlet-mapping>
 
 

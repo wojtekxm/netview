@@ -109,7 +109,7 @@ public class App {
         }
     }
 
-    protected static void examineOne(int controllerId, String ipv4) {
+    protected static void examineOne(long controllerId, String ipv4) {
         HashMap<String, SurveyInfo> surveyed;
         try {
             surveyed = filterDevices( snmp.queryDevices(ipv4) );
@@ -158,7 +158,7 @@ public class App {
                     em.persist(d);
                     existing.put(name, d);
                 }
-                if (++x == 100) {
+                if (++x == 50) {
                     em.flush();
                     em.clear();
                     x = 0;
@@ -176,7 +176,7 @@ public class App {
                 s.setClientsSum(info.getClientsSum());
                 s.setDevice(d);
                 em.persist(s);
-                if (++x == 100) {
+                if (++x == 50) {
                     em.flush();
                     em.clear();
                     x = 0;

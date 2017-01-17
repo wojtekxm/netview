@@ -12,15 +12,20 @@ import java.util.List;
 
 public class StatusSmall extends HttpServlet {
     // mapuje do List<DeviceStatus>
-    public static final String ATTR_STATES = "zesp03.servlet.StatusSmall.ATR_STATES";
+    public static final String ATTR_STATES = "zesp03.servlet.StatusSmall.ATTR_STATES";
+    // mapuje do Double
+    public static final String ATTR_TIME = "zesp03.servlet.StatusSmall.ATTR_TIME";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         List<DeviceStatus> states;
 
+        long t0 = System.nanoTime();
         states = App.checkDevs();
+        double time = (System.nanoTime() - t0) * 0.000000001;
 
+        request.setAttribute(ATTR_TIME, time);
         request.setAttribute(ATTR_STATES, states);
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");

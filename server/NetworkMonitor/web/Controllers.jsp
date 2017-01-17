@@ -26,7 +26,6 @@
             <p></p>
                     <center><input type="submit" value="Dodaj kontroler" class="btn btn-primary btn-default btn-lg active"></center>
             <p></p>
-                        <center><a href="javascript:history.back();"><input type="button" value="Wstecz" class="btn btn-primary btn-default btn-lg active"></A></center>
         </form><br></div>
 </div>
 </div>

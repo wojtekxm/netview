@@ -22,20 +22,21 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="index.jsp">Network Monitor</a>
+            <a class="navbar-brand" href="/index.jsp">Network Monitor</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="">Menu</a></li>
-            <li><a href="">kolejna zakladka</a></li>
+            <li><a href="/make-survey">nowe badania</a></li>
+            <li><a href="/status-small">urządzenia (mały widok)</a></li>
+            <li><a href="/deviceinfo">urządzenia (średni widok)</a></li>
+            <li><a href="/ShowControllers">kontrolery</a></li>
+            <li><a href="/logout">wyloguj</a></li>
         </ul>
-        <hr>
     </div>
 </nav>
 
 <div class="container">
     <div class="list-group ">
         <div class="row">
-            <a href="ShowControllers" class="btn btn-primary btn-default btn-lg active" role="button">Wróc</a>
             <form method="post" action="RemoveController?id=<%= controller.getId() %>">
                 <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active" role="button">
             </form>

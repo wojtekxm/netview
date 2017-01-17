@@ -6,6 +6,7 @@
 %><%@ page contentType="text/html;charset=UTF-8" language="java"
 %><%
     List<DeviceStatus> states = (List<DeviceStatus>) request.getAttribute(StatusSmall.ATTR_STATES);
+    Double time = (Double) request.getAttribute(StatusSmall.ATTR_TIME);
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -64,6 +65,8 @@
             <div class="square-green"></div> aktywne: <%= sumActive %><br>
             <div class="square-red"></div> nieaktywne: <%= sumInactive %><br>
             <div class="square-gray"></div> wyłączone: <%= sumDisabled %><br>
+            <small>sprawdzanie stanów zajęło <%= String.format("%.3f", time) %> sek.</small>
+            <br>
         </div>
     </div>
     <script src="/js/jquery-3.1.1.min.js"></script>

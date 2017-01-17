@@ -54,23 +54,28 @@
         <table class="table table-bordered">
             <tr>
                 <td>nazwa</td>
-                <td><%= device.getName() %></td>
+                <td><%= device.getName() %>
+                </td>
             </tr>
             <tr>
                 <td>opis</td>
-                <td><%= device.getDescription() != null ? device.getDescription() : "<em>(brak)</em>" %></td>
+                <td><%= device.getDescription() != null ? device.getDescription() : "<em>(brak)</em>" %>
+                </td>
             </tr>
             <tr>
                 <td>nazwa kontrolera</td>
-                <td><%= controller.getName() %></td>
+                <td><%= controller.getName() %>
+                </td>
             </tr>
             <tr>
                 <td>IP kontrolera</td>
-                <td><%= controller.getIpv4() %></td>
+                <td><%= controller.getIpv4() %>
+                </td>
             </tr>
             <tr>
                 <td>opis kontrolera</td>
-                <td><%= controller.getDescription() != null ? controller.getDescription() : "<em>(brak)</em>" %></td>
+                <td><%= controller.getDescription() != null ? controller.getDescription() : "<em>(brak)</em>" %>
+                </td>
             </tr>
         </table>
     </div>
@@ -89,19 +94,24 @@
             </thead>
             <tbody><%
                 int n = 1;
-                for(final DeviceSurvey survey : selectedSurveys) {
-                    final Instant instant = Instant.ofEpochSecond( survey.getTimestamp() );
+                for (final DeviceSurvey survey : selectedSurveys) {
+                    final Instant instant = Instant.ofEpochSecond(survey.getTimestamp());
                     final ZoneId zone = ZoneId.systemDefault();
                     final LocalDateTime ld = LocalDateTime.ofInstant(instant, zone);
                     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                     final String time = ld.format(formatter);
             %>
             <tr>
-                <td><%= n++ %></td>
-                <td><%= time %></td>
-                <td><%= survey.isEnabled() ? "tak" : "nie" %></td>
-                <td><%= survey.getClientsSum() %></td>
-            </tr><%
+                <td><%= n++ %>
+                </td>
+                <td><%= time %>
+                </td>
+                <td><%= survey.isEnabled() ? "tak" : "nie" %>
+                </td>
+                <td><%= survey.getClientsSum() %>
+                </td>
+            </tr>
+            <%
                 }
             %>
             </tbody>
@@ -118,15 +128,17 @@
                 limits.add(200);
                 limits.add(500);
                 limits.add(1000);
-                if( ! limits.contains(historyLimit) )
+                if (!limits.contains(historyLimit))
                     limits.add(historyLimit);
                 Collections.sort(limits);
             %>
                 <input type="hidden" name="id" value="<%= device.getId() %>">
                 <select name="<%= Details.PARAM_HISTORY_LIMIT %>"><%
-                    for(Integer i : limits) {
+                    for (Integer i : limits) {
                 %>
-                    <option value="<%= i %>" <%= i.equals(historyLimit) ? "selected" : "" %>><%= i %></option><%
+                    <option value="<%= i %>" <%= i.equals(historyLimit) ? "selected" : "" %>><%= i %>
+                    </option>
+                    <%
                         }
                     %>
                 </select>

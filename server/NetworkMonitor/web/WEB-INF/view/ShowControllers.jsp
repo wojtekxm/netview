@@ -24,13 +24,15 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="index.jsp">Network Monitor</a>
+            <a class="navbar-brand" href="/index.jsp">Network Monitor</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="">Menu</a></li>
-            <li><a href="">kolejna zakladka</a></li>
+            <li><a href="/make-survey">nowe badania</a></li>
+            <li><a href="/status-small">urządzenia (mały widok)</a></li>
+            <li><a href="/deviceinfo">urządzenia (średni widok)</a></li>
+            <li class="active"><a href="/ShowControllers">kontrolery</a></li>
+            <li><a href="/logout">wyloguj</a></li>
         </ul>
-        <hr>
     </div>
 </nav>
 

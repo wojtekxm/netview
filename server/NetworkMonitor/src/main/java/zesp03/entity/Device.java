@@ -9,8 +9,8 @@ import java.util.List;
 public class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "device")
-    @TableGenerator(name = "device", pkColumnValue = "device", allocationSize = 10)
-    private Integer id;
+    @TableGenerator(name = "device", pkColumnValue = "device")
+    private Long id;
 
     @Column(name = "\"name\"", length = 85, nullable = false, unique = true)
     private String name;
@@ -24,18 +24,18 @@ public class Device {
     @ManyToOne
     @JoinColumn(
             name = "controller_id",
-            foreignKey = @ForeignKey(name = "device_ibfk_1")
+            foreignKey = @ForeignKey(name = "device_controller_fk")
     )
     private Controller controller;
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DeviceSurvey> deviceSurveys = new ArrayList<>();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

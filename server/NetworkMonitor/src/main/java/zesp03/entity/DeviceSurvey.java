@@ -7,8 +7,8 @@ import javax.persistence.*;
 public class DeviceSurvey {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "device_survey")
-    @TableGenerator(name = "device_survey", pkColumnValue = "device_survey", allocationSize = 100)
-    private Integer id;
+    @TableGenerator(name = "device_survey", pkColumnValue = "device_survey")
+    private Long id;
 
     @Column(name = "\"timestamp\"", nullable = false)
     private Integer timestamp;
@@ -22,15 +22,15 @@ public class DeviceSurvey {
     @ManyToOne
     @JoinColumn(
             name = "device_id",
-            foreignKey = @ForeignKey(name = "device_survey_ibfk_1")
+            foreignKey = @ForeignKey(name = "devicesurvey_device_fk")
     )
     private Device device;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

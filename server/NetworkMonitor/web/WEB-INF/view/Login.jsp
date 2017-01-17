@@ -15,26 +15,47 @@
     <title>Network Monitor</title>
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/loginStyle.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet'
+          type='text/css'>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 </head>
 <body>
 <div class="container"><%
     if (error != null) {
 %>
-    <h1>Musisz być zalogowany by wejść na tą stronę</h1><%
+    <h1 class="error">Musisz być zalogowany by wejść na tą stronę</h1><%
         }
+    %>
+    <div class="tittle">NETWORK-MONITOR</div>
+    <br><br>
+    <form action="/login" method="post">
+        <div class="loginFields">
+            <table style="width:50px;">
+                <tr>
+                    <td>Login:&nbsp;</td>
+                    <td><input type="text" name="<%= Login.POST_USERNAME %>"
+                               style="z-index: 100; font-weight: bold;color:black;"></td>
+                </tr>
+                <tr>
+                    <td>Hasło:&nbsp;</td>
+                    <td><input type="password" name="<%= Login.POST_PASSWORD %>"
+                               style="z-index: 100;font-weight: bold; color:black;"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Zaloguj"
+                               style="width:100%;color:black;font-weight: bold;z-index: 100;"></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+    <%
         if (failed) {
     %>
-    <h1>Nazwa użytkownika lub hasło nie poprawne, spróbuj jeszcze raz</h1><%
+    <h1 class="error">Podano zły login lub hasło</h1><%
         }
     %>
-    <form action="/login" method="post">
-        <div>nazwa użytkownika</div>
-        <input type="text" name="<%= Login.POST_USERNAME %>">
-        <div>hasło</div>
-        <input type="password" name="<%= Login.POST_PASSWORD %>">
-        <br>
-        <input type="submit" value="Zaloguj">
-    </form>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

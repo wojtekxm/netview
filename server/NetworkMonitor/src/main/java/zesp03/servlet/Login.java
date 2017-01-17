@@ -33,7 +33,7 @@ public class Login extends HttpServlet {
                 Cookie cp = new Cookie(AuthFilter.COOKIE_PASSTOKEN, "0123456789abcdef");
                 cu.setMaxAge(60 * 60 * 24 * 30);
                 response.addCookie(cp);
-                response.sendRedirect("/status-small");//? home page
+                response.sendRedirect("/index.jsp");//? home page
                 return;
             } else {
                 request.setAttribute(ATTR_FAILED, Boolean.TRUE);

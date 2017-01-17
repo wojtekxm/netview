@@ -11,6 +11,8 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
     public static String COOKIE_USERID = "userid";
     public static String COOKIE_PASSTOKEN = "token";
+    // mapuje do String
+    public static String ATTR_USERNAME = "zesp03.filter.AuthFilter.ATTR_USERNAME";
 
     @Override
     public void destroy() {
@@ -30,6 +32,7 @@ public class AuthFilter implements Filter {
                     passToken.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(userId);
                     hresp.addCookie(passToken);
+                    hreq.setAttribute(ATTR_USERNAME, "Marek");//?
                     chain.doFilter(req, resp);
                     return;
                 } else {

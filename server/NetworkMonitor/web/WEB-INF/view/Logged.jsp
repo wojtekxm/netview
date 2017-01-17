@@ -1,5 +1,7 @@
 <%@page import="zesp03.data.DeviceStatus"
 %>
+<%@ page import="zesp03.filter.AuthFilter"
+%>
 <%@ page import="zesp03.servlet.Details"
 %><%@ page import="zesp03.servlet.DeviceInfo"
 %><%@ page import="java.util.List"
@@ -7,6 +9,7 @@
 %><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
 %><%
     List<DeviceStatus> list = (List<DeviceStatus>) request.getAttribute(DeviceInfo.allDevicesString);
+    String username = (String) request.getAttribute(AuthFilter.ATTR_USERNAME);
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -17,31 +20,24 @@
     <link rel="stylesheet" href="/css/loggedStyle.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-
 </head>
-
 <body>
-<%
-    if(session.getAttribute("username")==null)
-    {
-        response.sendRedirect("LoginPage.jsp");
-    }
-%>
 <div style="height:60px;">
     <div class="nav">
         <ol>
             <li><a href="/index.jsp" class="aNav">Strona główna</a></li>
             <li><a href="/make-survey" class="aNav">Nowe badanie</a></li>
             <li><a href="/status-small" class="aNav">Mały widok</a></li>
+            <li><a href="/ShowControllers" class="aNav">Kontrolery</a></li>
             <li><a href="/logout" class="aNav">Wyloguj</a></li>
         </ol>
     </div>
 </div>
-<div id="all">
+<div id="all" class="container-fluid">
 <div id="container">
     <div class="welcome">
         <div class="tittle">NETWORK-MONITOR</div>
-        <div class="user">zalogowany: <%= (String) session.getAttribute("username")  %>
+        <div class="user">zalogowany: <%= username %>
         </div>
         <div class="logo"><img src="/images/logoo.jpg"></div>
     </div>

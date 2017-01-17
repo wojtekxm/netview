@@ -25,7 +25,10 @@
             </div>
             <ul class="nav navbar-nav">
                 <li><a href="/make-survey">nowe badania</a></li>
-                <li class="active"><a href="/status-small">stan urządzeń (mały widok)</a></li>
+                <li class="active"><a href="/status-small">urządzenia (mały widok)</a></li>
+                <li><a href="/deviceinfo">urządzenia (średni widok)</a></li>
+                <li><a href="/ShowControllers">kontrolery</a></li>
+                <li><a href="/logout">wyloguj</a></li>
             </ul>
         </div>
     </nav>

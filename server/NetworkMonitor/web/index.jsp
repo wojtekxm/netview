@@ -21,8 +21,7 @@
                 <li><a href="/deviceinfo">stan wszystkich urządzeń, standardowy widok (deviceinfo)</a></li>
                 <li><a href="/ShowControllers">Wyswietlanie kontrolerów (ShowControllers)</a></li>
                 <li><a href="/Controllers.jsp">dodawanie kontrolerów (Controllers.jsp)</a></li>
-                <li><a href="/LoginPage.jsp">strona logowania (LoginPage.jsp)</a></li>
-                <li><a href="/login">logowanie 2 (login)</a></li>
+                <li><a href="/login">logowanie (login)</a></li>
             </ul>
         </div>
     </div>

@@ -1,33 +1,25 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Berent
-  Date: 2016-12-21
-  Time: 00:29
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page import="zesp03.entity.Controller" %>
-<%@ page import="java.util.List" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page import="zesp03.entity.Controller"
+%>
+<%@ page import="java.util.List"
+%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
+%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"
+%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
+%>
 <%
     List< Controller > controllers = ( List< Controller > )request.getAttribute( "controllers" );
-%>
-
-<!DOCTYPE html>
+%><!DOCTYPE html>
 <html lang="pl">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Network Monitor</title>
+    <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
-
 <body>
 <nav class="navbar navbar-default">
     <div class="container-fluid">

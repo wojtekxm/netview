@@ -9,9 +9,14 @@
     </filter>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
-        <servlet-name>StatusSmall</servlet-name>
+        <servlet-name>AddController</servlet-name>
         <servlet-name>Details</servlet-name>
         <servlet-name>DeviceInfo</servlet-name>
+        <servlet-name>MakeSurvey</servlet-name>
+        <servlet-name>RemoveController</servlet-name>
+        <servlet-name>ShowControllers</servlet-name>
+        <servlet-name>ShowDetailsController</servlet-name>
+        <servlet-name>StatusSmall</servlet-name>
     </filter-mapping>
 
     <servlet>

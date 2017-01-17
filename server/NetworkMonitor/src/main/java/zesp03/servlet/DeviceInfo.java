@@ -34,16 +34,17 @@ public class DeviceInfo extends HttpServlet {
             session.removeAttribute("error");
         }
 
-        if(uname.equals("user") && pass.equals("user"))
-        {
-            session=request.getSession();
-            session.setAttribute("username", uname); 
-            request.getRequestDispatcher("WEB-INF/view/Logged.jsp").forward(request,response);
-        }
-        else
-        {
-            session.setAttribute( "error", "Podano zły login lub hasło");
-            request.getRequestDispatcher("LoginPage.jsp").forward(request,response);
+        if(uname != null && pass != null) {
+            if (uname.equals("user") && pass.equals("user")) {
+                session = request.getSession();
+                session.setAttribute("username", uname);
+                request.getRequestDispatcher("WEB-INF/view/Logged.jsp").forward(request, response);
+            } else {
+                session.setAttribute("error", "Podano zły login lub hasło");
+                request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
+            }
+        }else{
+            request.getRequestDispatcher("LoginPage.jsp").forward(request, response);
         }
     }
 

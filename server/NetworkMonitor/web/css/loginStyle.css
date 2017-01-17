@@ -47,7 +47,7 @@ body
     width:228px;
     text-align: center;
     color:red;
-    font-size: 20px;
+    font-size: 18px;
     position: absolute;
     top: 65%;
     left: 50%;
@@ -57,10 +57,11 @@ body
 
 #tittle
 {
+    color:white;
     height: auto;
+    font-weight: bold;
     width:228px;
     text-align: center;
-    color:white;
     font-size: 20px;
     position: absolute;
     top: 30%;

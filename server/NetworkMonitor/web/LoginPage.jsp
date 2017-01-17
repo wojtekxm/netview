@@ -21,15 +21,15 @@
             <table style="width:50px;">
                 <tr>
                     <td>Login:&nbsp;</td>
-                    <td><input type="text" name="uname" style="z-index: 100; color:black;"></td>
+                    <td><input type="text" name="uname" style="z-index: 100; font-weight: bold;color:black;"></td>
                 </tr>
                 <tr>
                     <td>Hasło:&nbsp;</td>
-                    <td><input type="password" name="pass" style="z-index: 100; color:black;"></td>
+                    <td><input type="password" name="pass" style="z-index: 100;font-weight: bold; color:black;"></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><input type="submit" value="Zaloguj" style="width:100%;color:black;z-index: 100;"></td>
+                    <td><input type="submit" value="Zaloguj" style="width:100%;color:black;font-weight: bold;z-index: 100;"></td>
                 </tr>
             </table>
             </div>

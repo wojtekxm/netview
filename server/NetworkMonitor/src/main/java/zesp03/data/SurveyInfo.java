@@ -1,6 +1,6 @@
 package zesp03.data;
 
-public class DeviceState {
+public class SurveyInfo {
     private String name;
     private boolean isEnabled;
     private int clientsSum;

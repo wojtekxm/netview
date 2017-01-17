@@ -42,20 +42,20 @@ public class ShowControllersServlet  extends HttpServlet {
     protected void handle( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
 
-        List<Controller> attrList = null;
+        List<Controller> list = null;
 
         final EntityManager em = Database.createEntityManager();
         final EntityTransaction tran = em.getTransaction();
         tran.begin();
 
-        attrList = em.createQuery("SELECT c FROM Controller c").getResultList();
+        list = em.createQuery("SELECT c FROM Controller c", Controller.class).getResultList();
 
         tran.commit();
         em.close();
 
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
-        request.setAttribute("controllers", attrList);
+        request.setAttribute("controllers", list);
         request.getRequestDispatcher("/WEB-INF/view/ShowControllersJSP.jsp").include( request, response );
     }
 }

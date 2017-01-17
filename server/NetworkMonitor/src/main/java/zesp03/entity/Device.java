@@ -9,7 +9,7 @@ import java.util.List;
 public class Device {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "device")
-    @TableGenerator(name = "device", pkColumnValue = "device", allocationSize = 1)
+    @TableGenerator(name = "device", pkColumnValue = "device", allocationSize = 10)
     private Integer id;
 
     @Column(name = "\"name\"", length = 85, nullable = false, unique = true)

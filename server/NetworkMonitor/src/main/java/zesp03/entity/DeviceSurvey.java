@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class DeviceSurvey {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "device_survey")
-    @TableGenerator(name = "device_survey", pkColumnValue = "device_survey", allocationSize = 1)
+    @TableGenerator(name = "device_survey", pkColumnValue = "device_survey", allocationSize = 100)
     private Integer id;
 
     @Column(name = "\"timestamp\"", nullable = false)

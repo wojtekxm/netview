@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class MakeSurvey extends HttpServlet {
     public static final String PARAM_ACTION = "action";
@@ -23,35 +22,28 @@ public class MakeSurvey extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        Double attrTime = null;
-        Integer attrRows = null;
+        Double time = null;
+        Long rows = null;
 
         String action = request.getParameter(PARAM_ACTION);
-        try {
             if( action.equals(PARAM_ACTION_UPDATE) ) {
                 long t0 = System.nanoTime();
-                App.examineAll();
-                long t1 = System.nanoTime();
-                attrTime = (t1 - t0) * 0.000000001;
+                App.examineNetwork();
+                time = (System.nanoTime() - t0) * 0.000000001;
 
                 final EntityManager em = Database.createEntityManager();
                 final EntityTransaction tran = em.getTransaction();
                 tran.begin();
 
-                attrRows = ((Number)em.createQuery("SELECT COUNT(id) FROM DeviceSurvey").getSingleResult()).intValue();
+                rows = em.createQuery("SELECT COUNT(id) FROM DeviceSurvey", Long.class).getSingleResult();
 
                 tran.commit();
                 em.close();
             }
-        }
-        catch(SQLException exc) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "database error");
-            return;
-        }
 
 
-        request.setAttribute(ATTR_TIME, attrTime);
-        request.setAttribute(ATTR_ROWS, attrRows);
+        request.setAttribute(ATTR_TIME, time);
+        request.setAttribute(ATTR_ROWS, rows);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
         request.getRequestDispatcher("/WEB-INF/view/MakeSurvey.jsp").include(request, response);

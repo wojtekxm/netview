@@ -2,8 +2,7 @@ package zesp03.servlet;
 
 
 import zesp03.core.App;
-import zesp03.data.CheckInfo;
-import zesp03.data.Dev;
+import zesp03.data.DeviceStatus;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,10 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class DeviceInfo extends HttpServlet {
 
@@ -24,7 +20,7 @@ public class DeviceInfo extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
 
-        List<Dev> list = App.checkDevs();
+        List<DeviceStatus> list = App.checkDevs();
 
         request.setAttribute(allDevicesString, list);
         response.setCharacterEncoding("utf-8");

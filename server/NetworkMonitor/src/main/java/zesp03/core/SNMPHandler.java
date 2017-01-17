@@ -1,6 +1,6 @@
 package zesp03.core;
 
-import zesp03.data.DeviceState;
+import zesp03.data.SurveyInfo;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public interface SNMPHandler {
     /**
      * Zapytuje kontroler o wskazanym IP o listę wszystkich urządzeń którymi zarządza.
-     * Dla każdego urządzenia zwraca strukturę DeviceState,
+     * Dla każdego urządzenia zwraca strukturę SurveyInfo,
      * czyli nazwa urządzenia, stan (czy jest włączone) i liczba podłączonych klientów.
      * Nie ma takiej gwarancji że nazwy wszystkich urządzeń na tej liście będą unikalne.
      * @param controllerIP adres IP kontrolera
@@ -19,5 +19,5 @@ public interface SNMPHandler {
      * @throws SNMPException nie udało się połączyć z kontrolerem o wskazanym IP,
      * lub z innych powodów nie udało się zrealizować zapytania SNMP
      */
-    List<DeviceState> queryDevices(String controllerIP) throws SNMPException;
+    List<SurveyInfo> queryDevices(String controllerIP) throws SNMPException;
 }

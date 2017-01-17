@@ -1,14 +1,13 @@
-<%@ page import="zesp03.data.CheckInfo"
-%><%@page import="zesp03.servlet.Details"
+<%@page import="zesp03.data.DeviceStatus"
+%>
+<%@ page import="zesp03.servlet.Details"
 %><%@ page import="zesp03.servlet.DeviceInfo"
-%><%@ page import="zesp03.data.Dev"
 %><%@ page import="java.util.List"
 %><%@ page language="java" contentType="text/html; charset=UTF-8"
 %><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
 %><%
-    List<Dev> list = (List<Dev>)request.getAttribute(DeviceInfo.allDevicesString);
-%>
-<!DOCTYPE html>
+    List<DeviceStatus> list = (List<DeviceStatus>) request.getAttribute(DeviceInfo.allDevicesString);
+%><!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
@@ -53,7 +52,7 @@
                     int sumActive = 0;
                     int sumInactive = 0;
                     int sumDisabled = 0;
-                    for(final Dev info : list) {
+                        for (final DeviceStatus info : list) {
                         int sumUsers = info.getSurvey().getClientsSum();
                         String clazz;
                         if( info.getSurvey().isEnabled() ) {

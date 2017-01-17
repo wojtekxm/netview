@@ -4,14 +4,15 @@ import zesp03.entity.Controller;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
 
-public class Dev {
+public class DeviceStatus {
     private Controller controller;
     private Device device;
     private DeviceSurvey survey;
 
-    public Dev() {}
+    public DeviceStatus() {
+    }
 
-    public Dev(Controller c, Device d, DeviceSurvey s) {
+    public DeviceStatus(Controller c, Device d, DeviceSurvey s) {
         this.controller = c;
         this.device = d;
         this.survey = s;

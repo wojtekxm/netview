@@ -1,10 +1,11 @@
-<%@ page import="zesp03.servlet.StatusSmall"
+<%@ page import="zesp03.data.DeviceStatus"
 %><%@ page import="zesp03.servlet.Details"
+%>
+<%@ page import="zesp03.servlet.StatusSmall"
 %><%@ page import="java.util.List"
-%><%@ page import="zesp03.data.Dev"
 %><%@ page contentType="text/html;charset=UTF-8" language="java"
 %><%
-    List<Dev> states = (List<Dev>)request.getAttribute(StatusSmall.ATTR_STATES);
+    List<DeviceStatus> states = (List<DeviceStatus>) request.getAttribute(StatusSmall.ATTR_STATES);
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -34,7 +35,7 @@
             int sumActive = 0;
             int sumInactive = 0;
             int sumDisabled = 0;
-            for(final Dev info : states) {
+            for (final DeviceStatus info : states) {
                 String clazz;
                 if( info.getSurvey().isEnabled() ) {
                     if( info.getSurvey().getClientsSum() > 0 ) {

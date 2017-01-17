@@ -1,28 +1,23 @@
 package zesp03.servlet;
 
 import zesp03.core.App;
-import zesp03.data.CheckInfo;
-import zesp03.data.Dev;
-import zesp03.data.DeviceState;
-import zesp03.entity.DeviceSurvey;
+import zesp03.data.DeviceStatus;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StatusSmall extends HttpServlet {
-    // mapuje do List<Dev>
+    // mapuje do List<DeviceStatus>
     public static final String ATTR_STATES = "zesp03.servlet.StatusSmall.ATR_STATES";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
-        List<Dev> states;
+        List<DeviceStatus> states;
 
         double ttt;//!
         long t0 = System.nanoTime();//!

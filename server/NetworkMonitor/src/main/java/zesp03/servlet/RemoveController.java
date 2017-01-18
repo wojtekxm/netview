@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Berent on 2017-01-17.
- */
 public class RemoveController extends HttpServlet {
     @Override
     protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
@@ -35,7 +32,7 @@ public class RemoveController extends HttpServlet {
 
         tran.begin();
 
-        int id = Integer.parseInt( request.getParameter( "id" ) );
+        Long id = Long.parseLong(request.getParameter("id"));
 
         Controller c = em.find( Controller.class, id );
         em.remove( c );

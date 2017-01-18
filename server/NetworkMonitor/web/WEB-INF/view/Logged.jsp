@@ -10,6 +10,8 @@
 %><%
     List<DeviceStatus> list = (List<DeviceStatus>) request.getAttribute(DeviceInfo.allDevicesString);
     String username = (String) request.getAttribute(AuthFilter.ATTR_USERNAME);
+    String style = (String) session.getAttribute("style");
+    String logo = (String) session.getAttribute("logo");
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -48,7 +50,7 @@
         <div class="tittle">NETWORK-MONITOR</div>
         <div class="user">zalogowany: <%= username %>
         </div>
-        <div class="logo"><img src="/images/logoo.jpg"></div>
+        <div class="logo"><img src="/images/<%= logo %>.jpg"></div>
     </div>
         <!--   	<div id="menu"></div> -->
     <div id="content">

@@ -1,6 +1,6 @@
-<%@ page import="zesp03.entity.Controller"
+<%@ page import="zesp03.data.ControllerData"
 %>
-<%@ page import="zesp03.entity.Device"
+<%@ page import="zesp03.data.DeviceData"
 %>
 <%@ page import="zesp03.entity.DeviceSurvey"
 %>
@@ -13,10 +13,11 @@
 <%@ page import="java.util.ArrayList"
 %><%@ page import="java.util.Collections"
 %><%@ page import="java.util.List"
-%><%@ page contentType="text/html;charset=UTF-8" language="java"
+%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
 %><%
-    Device device = (Device)request.getAttribute(Details.ATTR_DEV);
-    Controller controller = device.getController();
+    DeviceData device = (DeviceData) request.getAttribute(Details.ATTR_DEVICE);
+    ControllerData controller = (ControllerData) request.getAttribute(Details.ATTR_CONTROLLER);
     List<DeviceSurvey> selectedSurveys = (List<DeviceSurvey>)request.getAttribute(Details.ATTR_SELECTED_SURVEYS);
     int totalSurveys = (Integer)request.getAttribute(Details.ATTR_TOTAL_SURVEYS);
     int historyLimit = (Integer)request.getAttribute(Details.ATTR_HISTORY_LIMIT);

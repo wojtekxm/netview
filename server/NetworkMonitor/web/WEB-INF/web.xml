@@ -17,6 +17,8 @@
         <servlet-name>ShowControllers</servlet-name>
         <servlet-name>ShowDetailsController</servlet-name>
         <servlet-name>StatusSmall</servlet-name>
+        <servlet-name>Style</servlet-name>
+        <url-pattern>/Controllers.jsp</url-pattern>
     </filter-mapping>
 
     <servlet>
@@ -59,7 +61,6 @@
         <servlet-name>Style</servlet-name>
         <servlet-class>zesp03.servlet.Style</servlet-class>
     </servlet>
-
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>zesp03.servlet.Login</servlet-class>
@@ -109,6 +110,4 @@
         <servlet-name>Style</servlet-name>
         <url-pattern>/style</url-pattern>
     </servlet-mapping>
-
-
 </web-app>

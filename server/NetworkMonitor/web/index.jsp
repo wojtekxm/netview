@@ -18,13 +18,19 @@
         <h1>Network Monitor</h1>
         <div class="row">
             <ul class="nav nav-pills nav-stacked">
-                <li><a href="/index.jsp">strona główna (index.jsp)</a></li>
-                <li><a href="/make-survey">robienie nowych badań (make-survey)</a></li>
-                <li><a href="/status-small">stan wszystkich urządzeń, pomniejszony widok (status-small)</a></li>
-                <li><a href="/deviceinfo">stan wszystkich urządzeń, standardowy widok (deviceinfo)</a></li>
-                <li><a href="/ShowControllers">Wyswietlanie kontrolerów (ShowControllers)</a></li>
-                <li><a href="/Controllers.jsp">dodawanie kontrolerów (Controllers.jsp)</a></li>
-                <li><a href="/login">logowanie (login)</a></li>
+                <li><a href="/index.jsp">strona główna <span class="label label-default">index.jsp</span></a></li>
+                <li><a href="/make-survey">nowe badania sieci <span class="label label-default">make-survey</span></a>
+                </li>
+                <li><a href="/status-small">stan urządzeń (pomniejszony widok) <span class="label label-default">status-small</span></a>
+                </li>
+                <li><a href="/deviceinfo">stan urządzeń (standardowy widok) <span
+                        class="label label-default">deviceinfo</span></a></li>
+                <li><a href="/ShowControllers">kontrolery <span class="label label-default">ShowControllers</span></a>
+                </li>
+                <li><a href="/Controllers.jsp">nowy kontroler <span
+                        class="label label-default">Controllers.jsp</span></a></li>
+                <li><a href="/login">logowanie <span class="label label-default">login</span></a></li>
+                <li><a href="/logout">wylogowanie <span class="label label-default">logout</span></a></li>
             </ul>
         </div>
     </div>

@@ -1,6 +1,8 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
+import zesp03.data.ControllerData;
+import zesp03.data.DeviceData;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
 
@@ -17,8 +19,10 @@ import java.util.stream.Collectors;
 public class Details extends HttpServlet {
     public static final String PARAM_ID = "id";
     public static final String PARAM_HISTORY_LIMIT = "limit";
-    // mapuje do zesp03.entity.Device
-    public static final String ATTR_DEV = "zesp03.servlet.Details.ATTR_DEVICE";
+    // mapuje do zesp03.data.ControllerData
+    public static final String ATTR_CONTROLLER = "zesp03.servlet.Details.ATTR_CONTROLLER";
+    // mapuje do zesp03.data.DeviceData
+    public static final String ATTR_DEVICE = "zesp03.servlet.Details.ATTR_DEVICE";
     // mapuje do List<DeviceSurvey> posortowanej: na początku najnowsze
     public static final String ATTR_SELECTED_SURVEYS = "zesp03.servlet.Details.ATTR_SELECTED_SURVEYS";
     // mapuje do Integer
@@ -30,19 +34,21 @@ public class Details extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         Device device;
+        DeviceData deviceData;
+        ControllerData controllerData;
         List<DeviceSurvey> selectedSurveys;
         Integer totalSurveys;
         Integer historyLimit;
         final String paramId = request.getParameter(PARAM_ID);
         final String paramHistoryLimit = request.getParameter(PARAM_HISTORY_LIMIT);
 
-        int devId;
+        long devId;
         try {
             if(paramId == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "id required");
                 return;
             }
-            devId = Integer.parseInt(paramId);
+            devId = Long.parseLong(paramId);
         }
         catch(NumberFormatException exc) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid id");
@@ -75,7 +81,8 @@ public class Details extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no such device");
             return;
         }
-        device.getController();
+        deviceData = new DeviceData(device);
+        controllerData = new ControllerData(device.getController());
         selectedSurveys = device.getDeviceSurveys().stream()
                 .sorted( (s1, s2) -> {
                     if( s1.getTimestamp().equals(s2.getTimestamp()) ) {
@@ -90,7 +97,8 @@ public class Details extends HttpServlet {
         tran.commit();
         em.close();
 
-        request.setAttribute(ATTR_DEV, device);
+        request.setAttribute(ATTR_CONTROLLER, controllerData);
+        request.setAttribute(ATTR_DEVICE, deviceData);
         request.setAttribute(ATTR_SELECTED_SURVEYS, selectedSurveys);
         request.setAttribute(ATTR_TOTAL_SURVEYS, totalSurveys);
         request.setAttribute(ATTR_HISTORY_LIMIT, historyLimit);

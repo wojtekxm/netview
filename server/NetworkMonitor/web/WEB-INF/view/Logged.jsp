@@ -17,17 +17,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge; chrome=1"/>
     <title>Network Monitor</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
-    <link rel="stylesheet" href="/css/loggedStyle.css">
+    <link rel="stylesheet" href="/css/<%= style %>.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+
 </head>
+
 <body>
+<%
+    if(session.getAttribute("username")==null)
+    {
+        response.sendRedirect("LoginPage.jsp");
+    }
+%>
 <div style="height:60px;">
     <div class="nav">
         <ol>
             <li><a href="/index.jsp" class="aNav">Strona główna</a></li>
             <li><a href="/make-survey" class="aNav">Nowe badanie</a></li>
             <li><a href="/status-small" class="aNav">Mały widok</a></li>
+            <li><a href="style" class="aNav">Zmień styl</a></li>
             <li><a href="/ShowControllers" class="aNav">Kontrolery</a></li>
             <li><a href="/logout" class="aNav">Wyloguj</a></li>
         </ol>
@@ -77,12 +86,12 @@
 
                 </ul>
             </li>
-            <div class="summary" style="font-size:20px;width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;background-color: black;">
-                <div style="display:table-cell;"><div id="greenDiode"></div> &emsp;aktywne: &nbsp;<%= sumActive %>&emsp;</div>
-                <div style="display:table-cell;"><div id="redDiode"></div> &emsp;nieaktywne: &nbsp;<%= sumInactive %>&emsp;</div>
-                <div style="display: table-cell;"><div id="greyDiode"></div> &emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</div>
-            </div>
         </ul>
+    </div>
+    <div class="summary">
+        <div style="display:table-cell;"><div id="greenDiode"></div> &emsp;aktywne: &nbsp;<%= sumActive %>&emsp;</div>
+        <div style="display:table-cell;"><div id="redDiode"></div> &emsp;nieaktywne: &nbsp;<%= sumInactive %>&emsp;</div>
+        <div style="display: table-cell;"><div id="greyDiode"></div> &emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</div>
     </div>
 </div>
 </div>

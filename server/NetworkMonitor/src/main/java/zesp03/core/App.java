@@ -3,6 +3,7 @@ package zesp03.core;
 import zesp03.data.DeviceStatus;
 import zesp03.data.SurveyInfo;
 import zesp03.entity.Controller;
+import zesp03.entity.CurrentSurvey;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
 import zesp03.util.Unicode;
@@ -66,6 +67,14 @@ public class App {
         final EntityTransaction tran = em.getTransaction();
         tran.begin();
 
+        final List<DeviceStatus> l = em.createQuery("SELECT c, d, ds, cs FROM CurrentSurvey cs " +
+                "INNER JOIN cs.survey ds " +
+                "INNER JOIN ds.device d " +
+                "INNER JOIN d.controller c", Object[].class)
+                .getResultList()
+                .stream()
+                .map(arr -> new DeviceStatus((Controller) arr[0], (Device) arr[1], (DeviceSurvey) arr[2]))
+                .collect(Collectors.toList());
         final List<DeviceStatus> list = em.createQuery(
                 "SELECT c, d, s FROM DeviceSurvey s INNER JOIN s.device d INNER JOIN d.controller c WHERE s.id IN (" +
                         "SELECT MAX(id) FROM DeviceSurvey WHERE (device, timestamp) IN (" +
@@ -80,11 +89,11 @@ public class App {
 
         tran.commit();
         em.close();
-        return list;
+        return l;
     }
 
     public static void examineNetwork() {
-        List<Controller> list = null;
+        List<Controller> list;
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -137,7 +146,6 @@ public class App {
             Controller controller = em.find(Controller.class, controllerId);
             if (controller == null) {
                 tran.commit();
-                em.close();
                 return;
             }
 
@@ -156,12 +164,15 @@ public class App {
                     d.setController(controller);
                     d.setIsKnown(false);
                     em.persist(d);
+                    CurrentSurvey cs = new CurrentSurvey();
+                    cs.setDevice(d);
+                    em.persist(cs);
                     existing.put(name, d);
-                }
-                if (++x == 50) {
-                    em.flush();
-                    em.clear();
-                    x = 0;
+                    if (++x == 50) {
+                        em.flush();
+                        em.clear();
+                        x = 0;
+                    }
                 }
             }
 
@@ -176,6 +187,9 @@ public class App {
                 s.setClientsSum(info.getClientsSum());
                 s.setDevice(d);
                 em.persist(s);
+                CurrentSurvey cs = s.getDevice().getCurrentSurvey();
+                cs.setSurvey(s);
+                em.merge(cs);
                 if (++x == 50) {
                     em.flush();
                     em.clear();

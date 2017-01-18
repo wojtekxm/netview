@@ -19,7 +19,7 @@ public class DeviceSurvey {
     @Column(name = "clients_sum", nullable = false)
     private Integer clientsSum;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "device_id",
             foreignKey = @ForeignKey(name = "devicesurvey_device_fk")

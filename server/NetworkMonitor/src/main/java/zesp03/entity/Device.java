@@ -21,7 +21,7 @@ public class Device {
     @Column(length = 1000)
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "controller_id",
             foreignKey = @ForeignKey(name = "device_controller_fk")
@@ -30,6 +30,9 @@ public class Device {
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DeviceSurvey> deviceSurveys = new ArrayList<>();
+
+    @OneToOne(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private CurrentSurvey currentSurvey;
 
     public Long getId() {
         return id;
@@ -83,5 +86,9 @@ public class Device {
     public void removeDeviceSurvey(DeviceSurvey s) {
         if( deviceSurveys.remove(s) )
             s.setDevice(null);
+    }
+
+    public CurrentSurvey getCurrentSurvey() {
+        return currentSurvey;
     }
 }

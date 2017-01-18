@@ -10,14 +10,14 @@ public class CurrentSurvey {
     @TableGenerator(name = "current_survey", pkColumnValue = "current_survey")
     private Long id;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "device_id",
             foreignKey = @ForeignKey(name = "currentsurvey_device_fk")
     )
     private Device device;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "survey_id",
             foreignKey = @ForeignKey(name = "currentsurvey_devicesurvey_fk")

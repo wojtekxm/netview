@@ -50,6 +50,6 @@ public class Style extends HttpServlet {
         }
         request.setAttribute(allDevicesString, allDevices);
 
-        request.getRequestDispatcher("WEB-INF/view/Logged.jsp").forward(request, response);
+        request.getRequestDispatcher("deviceinfo").forward(request, response);
     }
 }

@@ -49,8 +49,6 @@ public class DeviceInfo extends HttpServlet {
             session.removeAttribute("error");
         }
 
-        session.setAttribute("style", "loggedStyleBlack");
-        session.setAttribute("logo", "logoo");
 
         if(uname != null || pass != null) {
             if (uname.equals("user") && pass.equals("user")) {

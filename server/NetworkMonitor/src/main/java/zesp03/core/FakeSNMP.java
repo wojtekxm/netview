@@ -1,6 +1,6 @@
 package zesp03.core;
 
-import zesp03.data.DeviceState;
+import zesp03.data.SurveyInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -64,14 +64,14 @@ public class FakeSNMP implements SNMPHandler {
     }
 
     @Override
-    public List<DeviceState> queryDevices(String controllerIP) throws SNMPException {
+    public List<SurveyInfo> queryDevices(String controllerIP) throws SNMPException {
         if( ! map.containsKey(controllerIP) )
             throw new SNMPException("unable to connect with specified controller");
         final ArrayList<String> names = map.get(controllerIP);
         final Random random = new Random();
-        final ArrayList<DeviceState> result = new ArrayList<>();
+        final ArrayList<SurveyInfo> result = new ArrayList<>();
         for(String name : names) {
-            DeviceState ds = new DeviceState();
+            SurveyInfo ds = new SurveyInfo();
             ds.setName(name);
             // 80% szansy że będzie włączony
             ds.setEnabled( random.nextInt(5) < 4 );

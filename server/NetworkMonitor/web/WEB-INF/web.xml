@@ -3,13 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
-
-    <resource-ref>
-        <description>MySQL JDBC DataSource</description>
-        <res-ref-name>jdbc/MySQLDB</res-ref-name>
-        <res-type>javax.sql.DataSource</res-type>
-        <res-auth>Container</res-auth>
-    </resource-ref>
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>zesp03.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>StatusSmall</servlet-name>
+        <servlet-name>Details</servlet-name>
+        <servlet-name>DeviceInfo</servlet-name>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>AddController</servlet-name>
@@ -28,12 +31,16 @@
         <servlet-class>zesp03.servlet.MakeSurvey</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ShowControllersServlet</servlet-name>
-        <servlet-class>zesp03.servlet.ShowControllersServlet</servlet-class>
+        <servlet-name>ShowControllers</servlet-name>
+        <servlet-class>zesp03.servlet.ShowControllers</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>showDevices</servlet-name>
-        <servlet-class>zesp03.servlet.showDevices</servlet-class>
+        <servlet-name>ShowDetailsController</servlet-name>
+        <servlet-class>zesp03.servlet.ShowDetailsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveController</servlet-name>
+        <servlet-class>zesp03.servlet.RemoveController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>StatusSmall</servlet-name>
@@ -48,6 +55,10 @@
         <servlet-class>zesp03.servlet.Style</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>zesp03.servlet.Login</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>AddController</servlet-name>
@@ -66,12 +77,16 @@
         <url-pattern>/make-survey</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ShowControllersServlet</servlet-name>
-        <url-pattern>/ShowControllersServlet</url-pattern>
+        <servlet-name>ShowControllers</servlet-name>
+        <url-pattern>/ShowControllers</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>showDevices</servlet-name>
-        <url-pattern>/showDevices</url-pattern>
+        <servlet-name>ShowDetailsController</servlet-name>
+        <url-pattern>/ShowDetailsController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveController</servlet-name>
+        <url-pattern>/RemoveController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>StatusSmall</servlet-name>
@@ -80,6 +95,10 @@
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Style</servlet-name>

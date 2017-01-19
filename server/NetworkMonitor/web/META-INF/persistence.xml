@@ -9,6 +9,7 @@
         <class>zesp03.entity.Controller</class>
         <class>zesp03.entity.Device</class>
         <class>zesp03.entity.DeviceSurvey</class>
+        <class>zesp03.entity.CurrentSurvey</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url"
@@ -17,7 +18,6 @@
             <property name="javax.persistence.jdbc.password" value="1234"/>
             <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
             <property name="hibernate.hikari.autoCommit" value="false"/>
-            <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.jdbc.batch_size" value="50"/>
             <property name="hibernate.jdbc.batch_versioned_data" value="true"/>
             <property name="hibernate.order_inserts" value="true"/>

@@ -75,17 +75,6 @@ public class App {
                 .stream()
                 .map(arr -> new DeviceStatus((Controller) arr[0], (Device) arr[1], (DeviceSurvey) arr[2]))
                 .collect(Collectors.toList());
-        final List<DeviceStatus> list = em.createQuery(
-                "SELECT c, d, s FROM DeviceSurvey s INNER JOIN s.device d INNER JOIN d.controller c WHERE s.id IN (" +
-                        "SELECT MAX(id) FROM DeviceSurvey WHERE (device, timestamp) IN (" +
-                        "SELECT device, MAX(timestamp) FROM DeviceSurvey GROUP BY device" +
-                        ") GROUP BY id" +
-                        ")",
-                Object[].class)
-                .getResultList()
-                .stream()
-                .map(arr -> new DeviceStatus((Controller) arr[0], (Device) arr[1], (DeviceSurvey) arr[2]))
-                .collect(Collectors.toList());
 
         tran.commit();
         em.close();
@@ -188,8 +177,15 @@ public class App {
                 s.setDevice(d);
                 em.persist(s);
                 CurrentSurvey cs = s.getDevice().getCurrentSurvey();
-                cs.setSurvey(s);
-                em.merge(cs);
+                if (cs == null) {
+                    cs = new CurrentSurvey();
+                    cs.setDevice(s.getDevice());
+                    cs.setSurvey(s);
+                    em.persist(cs);
+                } else {
+                    cs.setSurvey(s);
+                    em.merge(cs);
+                }
                 if (++x == 50) {
                     em.flush();
                     em.clear();

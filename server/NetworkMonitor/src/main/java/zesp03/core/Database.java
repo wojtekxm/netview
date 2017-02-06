@@ -30,7 +30,7 @@ public class Database implements ServletContextListener {
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
-            em = createEntityManager();
+            em = Database.createEntityManager();
             tran = em.getTransaction();
             tran.begin();
             action.accept(em);

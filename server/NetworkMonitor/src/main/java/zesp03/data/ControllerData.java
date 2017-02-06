@@ -3,7 +3,7 @@ package zesp03.data;
 import zesp03.entity.Controller;
 
 public class ControllerData {
-    private Long id;
+    private long id;
     private String name;
     private String ipv4;
     private String description;
@@ -15,11 +15,11 @@ public class ControllerData {
         this.description = c.getDescription();
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

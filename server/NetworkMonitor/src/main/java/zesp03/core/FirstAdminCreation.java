@@ -14,9 +14,6 @@ public class FirstAdminCreation implements ServletContextListener {
         if (name != null && password != null) {
             String hash = App.passwordToHash(password);
             Secret s = Secret.create(hash.toCharArray(), 1);
-            System.out.println("first admin name = " + name);//!
-            System.out.println("first admin reset password = " + password);//!
-            System.out.println("hash = " + hash);//!
             Database.run(em -> {
                 List<User> list = em.createQuery("SELECT u FROM User u WHERE u.name = :n", User.class)
                         .setParameter("n", name)

@@ -3,10 +3,10 @@ package zesp03.data;
 import zesp03.entity.DeviceSurvey;
 
 public class SurveyData {
-    private Long id;
-    private Integer timestamp;
-    private Boolean isEnabled;
-    private Integer clientsSum;
+    private long id;
+    private int timestamp;
+    private boolean isEnabled;
+    private int clientsSum;
 
     public SurveyData(DeviceSurvey s) {
         this.id = s.getId();
@@ -15,35 +15,35 @@ public class SurveyData {
         this.clientsSum = s.getClientsSum();
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Integer getTimestamp() {
+    public int getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Integer timestamp) {
+    public void setTimestamp(int timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return isEnabled;
     }
 
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
     }
 
-    public Integer getClientsSum() {
+    public int getClientsSum() {
         return clientsSum;
     }
 
-    public void setClientsSum(Integer clientsSum) {
+    public void setClientsSum(int clientsSum) {
         this.clientsSum = clientsSum;
     }
 }

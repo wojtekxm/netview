@@ -1,5 +1,7 @@
 <%@page import="zesp03.data.DeviceStatus"
 %>
+<%@ page import="zesp03.data.UserData"
+%>
 <%@ page import="zesp03.filter.AuthFilter"
 %>
 <%@ page import="zesp03.servlet.Details"
@@ -9,7 +11,7 @@
 %><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
 %><%
     List<DeviceStatus> list = (List<DeviceStatus>) request.getAttribute(DeviceInfo.allDevicesString);
-    String username = (String) request.getAttribute(AuthFilter.ATTR_USERNAME);
+    UserData userData = (UserData) request.getAttribute(AuthFilter.ATTR_USERDATA);
     String style = (String) session.getAttribute("style");
     String logo = (String) session.getAttribute("logo");
 %><!DOCTYPE html>
@@ -22,9 +24,7 @@
     <link rel="stylesheet" href="/css/<%= style %>.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-
 </head>
-
 <body>
 <%
     if(session.getAttribute("username")==null)
@@ -48,11 +48,10 @@
 <div id="container">
     <div class="welcome">
         <div class="tittle">NETWORK-MONITOR</div>
-        <div class="user">zalogowany: <%= username %>
+        <div class="user">zalogowany: <%= userData.getName() %>
         </div>
         <div class="logo"><img src="/images/<%= logo %>.jpg"></div>
     </div>
-        <!--   	<div id="menu"></div> -->
     <div id="content">
         <ul style="z-index: 1000;top:0;">
             <li> <div id="wydzial">Wszystkie kontrolery</div>
@@ -105,7 +104,6 @@
     })
 </script>
 <script>
-
     $(document).ready(function(){
         var NavY = $('.nav').offset().top;
 
@@ -124,7 +122,6 @@
             stickyNav()
     });
     });
-
 </script>
 </body>
 </html>

@@ -3,9 +3,9 @@ package zesp03.data;
 import zesp03.entity.Device;
 
 public class DeviceData {
-    private Long id;
+    private long id;
     private String name;
-    private Boolean isKnown;
+    private boolean isKnown;
     private String description;
 
     public DeviceData(Device d) {
@@ -15,11 +15,11 @@ public class DeviceData {
         this.description = d.getDescription();
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -31,11 +31,11 @@ public class DeviceData {
         this.name = name;
     }
 
-    public Boolean getKnown() {
+    public boolean getKnown() {
         return isKnown;
     }
 
-    public void setKnown(Boolean known) {
+    public void setKnown(boolean known) {
         isKnown = known;
     }
 

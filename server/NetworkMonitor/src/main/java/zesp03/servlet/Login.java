@@ -1,13 +1,21 @@
 package zesp03.servlet;
 
+import zesp03.core.App;
+import zesp03.core.Database;
+import zesp03.core.Secret;
+import zesp03.data.UserData;
+import zesp03.entity.User;
 import zesp03.filter.AuthFilter;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class Login extends HttpServlet {
     public static String POST_USERNAME = "u";
@@ -26,11 +34,37 @@ public class Login extends HttpServlet {
         String username = request.getParameter(POST_USERNAME);
         String password = request.getParameter(POST_PASSWORD);
         if (username != null && password != null) {
-            if (username.equals("mark") && password.equals("zuckerberg")) {
-                Cookie cu = new Cookie(AuthFilter.COOKIE_USERID, "1000");
+            final String hash = App.passwordToHash(password);
+            UserData userData = null;
+
+            EntityManager em = null;
+            EntityTransaction tran = null;
+            try {
+                em = Database.createEntityManager();
+                tran = em.getTransaction();
+                tran.begin();
+                List<User> list = em.createQuery("SELECT u FROM User u WHERE u.name = :n", User.class)
+                        .setParameter("n", username)
+                        .getResultList();
+                if (!list.isEmpty()) {
+                    User user = list.get(0);
+                    Secret secret = Secret.readData(user.getSecret());
+                    if (secret.check(hash.toCharArray()))
+                        userData = new UserData(user);
+                }
+                tran.commit();
+            } catch (RuntimeException exc) {
+                if (tran != null && tran.isActive()) tran.rollback();
+                throw exc;
+            } finally {
+                if (em != null) em.close();
+            }
+
+            if (userData != null) {
+                Cookie cu = new Cookie(AuthFilter.COOKIE_USERID, Long.toString(userData.getId()));
                 cu.setMaxAge(60 * 60 * 24 * 30);
                 response.addCookie(cu);
-                Cookie cp = new Cookie(AuthFilter.COOKIE_PASSTOKEN, "0123456789abcdef");
+                Cookie cp = new Cookie(AuthFilter.COOKIE_PASSTOKEN, hash);
                 cu.setMaxAge(60 * 60 * 24 * 30);
                 response.addCookie(cp);
                 response.sendRedirect("/index.jsp");//? home page

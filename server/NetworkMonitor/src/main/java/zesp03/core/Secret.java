@@ -20,7 +20,7 @@ public final class Secret {
     public static final int ALL_BYTES = ITERATIONS_BYTES + SALT_BYTES + KEY_BYTES;
 
     /**
-     * @param password   hasło, nie może być puste
+     * @param password hasło, nie może być puste
      * @param iterations liczba iteracji, musi być dodatnia
      * @return sekret utworzony dla danego hasła i liczby iteracji
      */

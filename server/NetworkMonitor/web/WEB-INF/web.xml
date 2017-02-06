@@ -3,6 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <listener>
+        <listener-class>zesp03.core.Database</listener-class>
+    </listener>
+    <listener>
+        <listener-class>zesp03.core.FirstAdminCreation</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>first-admin-name</param-name>
+        <param-value>admin0</param-value>
+    </context-param>
+    <context-param>
+        <param-name>first-admin-reset-password</param-name>
+        <param-value>zer0</param-value>
+    </context-param>
+
     <filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>zesp03.filter.AuthFilter</filter-class>

@@ -10,6 +10,7 @@
         <class>zesp03.entity.Device</class>
         <class>zesp03.entity.DeviceSurvey</class>
         <class>zesp03.entity.CurrentSurvey</class>
+        <class>zesp03.entity.User</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url"

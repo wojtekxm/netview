@@ -11,9 +11,13 @@ import zesp03.util.Unicode;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -234,6 +238,21 @@ public class App {
             }
         }
         return result;
+    }
+
+    /**
+     * @param password hasło dla którego ma być wyznaczony hash
+     * @return hash funkcji SHA-256 dla podanego hasła, zaprezentowany w formacie Base64URL.
+     */
+    public static String passwordToHash(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] binaryPassword = password.getBytes("UTF-8");
+            byte[] binaryHash = md.digest(binaryPassword);
+            return Base64.getUrlEncoder().encodeToString(binaryHash);
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException exc) {
+            throw new IllegalStateException(exc);
+        }
     }
 
     //TODO zamień na coś lepszego

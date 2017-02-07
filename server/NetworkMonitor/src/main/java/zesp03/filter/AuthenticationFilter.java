@@ -14,11 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AuthFilter implements Filter {
+public class AuthenticationFilter implements Filter {
     public static String COOKIE_USERID = "userid";
     public static String COOKIE_PASSTOKEN = "passtoken";
     // mapuje do UserData, null jeśli uwierzytelnianie się nie powiodło
-    public static String ATTR_USERDATA = "zesp03.filter.AuthFilter.ATTR_USERDATA";
+    public static String ATTR_USERDATA = "zesp03.filter.AuthenticationFilter.ATTR_USERDATA";
 
     @Override
     public void destroy() {

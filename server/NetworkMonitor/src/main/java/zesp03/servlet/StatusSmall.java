@@ -18,7 +18,6 @@ public class StatusSmall extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
         List<DeviceStatus> states;
 
         long t0 = System.nanoTime();
@@ -27,7 +26,6 @@ public class StatusSmall extends HttpServlet {
 
         request.setAttribute(ATTR_TIME, time);
         request.setAttribute(ATTR_STATES, states);
-        response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
         request.getRequestDispatcher("WEB-INF/view/StatusSmall.jsp").include(request, response);
     }

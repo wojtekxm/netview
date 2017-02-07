@@ -2,7 +2,7 @@
 %>
 <%@ page import="zesp03.data.UserData"
 %>
-<%@ page import="zesp03.filter.AuthFilter"
+<%@ page import="zesp03.filter.AuthenticationFilter"
 %>
 <%@ page import="zesp03.servlet.Details"
 %><%@ page import="zesp03.servlet.DeviceInfo"
@@ -11,7 +11,7 @@
 %><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
 %><%
     List<DeviceStatus> list = (List<DeviceStatus>) request.getAttribute(DeviceInfo.allDevicesString);
-    UserData userData = (UserData) request.getAttribute(AuthFilter.ATTR_USERDATA);
+    UserData userData = (UserData) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
     String style = (String) session.getAttribute("style");
     String logo = (String) session.getAttribute("logo");
 %><!DOCTYPE html>

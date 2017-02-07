@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by Berent on 2017-01-16.
- */
 public class ShowControllers extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,7 +37,6 @@ public class ShowControllers extends HttpServlet {
         tran.commit();
         em.close();
 
-        response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
         request.setAttribute("controllers", attrList);
         request.getRequestDispatcher("/WEB-INF/view/ShowControllers.jsp").include( request, response );

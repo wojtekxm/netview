@@ -17,12 +17,10 @@ public class DeviceInfo extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
 
         List<DeviceStatus> list = App.checkDevs();
 
         request.setAttribute(allDevicesString, list);
-        response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
         request.getRequestDispatcher("WEB-INF/view/Logged.jsp").include(request, response);
     }

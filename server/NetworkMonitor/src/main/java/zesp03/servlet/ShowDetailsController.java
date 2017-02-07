@@ -3,7 +3,6 @@ package zesp03.servlet;
 import zesp03.core.Database;
 import zesp03.entity.Controller;
 
-import javax.naming.ldap.Control;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
@@ -44,7 +43,6 @@ public class ShowDetailsController extends HttpServlet {
         tran.commit();
         em.close();
 
-        response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
 
         request.setAttribute("controller", controller );

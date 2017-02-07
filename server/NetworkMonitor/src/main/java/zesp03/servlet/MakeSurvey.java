@@ -21,7 +21,6 @@ public class MakeSurvey extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
         Double time = null;
         Long rows = null;
 
@@ -44,17 +43,14 @@ public class MakeSurvey extends HttpServlet {
 
         request.setAttribute(ATTR_TIME, time);
         request.setAttribute(ATTR_ROWS, rows);
-        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
         request.getRequestDispatcher("/WEB-INF/view/MakeSurvey.jsp").include(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
         request.setAttribute(ATTR_TIME, null);
         request.setAttribute(ATTR_ROWS, null);
-        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html");
         request.getRequestDispatcher("/WEB-INF/view/MakeSurvey.jsp").include(request, response);
     }

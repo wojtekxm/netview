@@ -39,7 +39,8 @@
 <div class="container">
     <div class="list-group ">
         <div class="row">
-            <a href="Controllers.jsp" class="btn btn-primary btn-default btn-lg active" role="button">Stwórz nowy kontroler</a>
+            <a href="/Controllers.jsp" class="btn btn-primary btn-default btn-lg active" role="button">Stwórz nowy
+                kontroler</a>
         </div>
 
         <% for( int i = 0; i < controllers.size(); ++i ) { %>

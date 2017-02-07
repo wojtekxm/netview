@@ -1,6 +1,6 @@
 package zesp03.servlet;
 
-import zesp03.filter.AuthFilter;
+import zesp03.filter.AuthenticationFilter;
 import zesp03.util.Cookies;
 
 import javax.servlet.ServletException;
@@ -14,17 +14,15 @@ public class Logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
-        response.setCharacterEncoding("utf-8");
 
-        Cookie cu = Cookies.find(request, AuthFilter.COOKIE_USERID);
+        Cookie cu = Cookies.find(request, AuthenticationFilter.COOKIE_USERID);
         if (cu != null) {
             cu.setValue("");
             cu.setMaxAge(0);
             response.addCookie(cu);
         }
-        Cookie cp = Cookies.find(request, AuthFilter.COOKIE_PASSTOKEN);
+        Cookie cp = Cookies.find(request, AuthenticationFilter.COOKIE_PASSTOKEN);
         if (cp != null) {
             cp.setValue("");
             cp.setMaxAge(0);

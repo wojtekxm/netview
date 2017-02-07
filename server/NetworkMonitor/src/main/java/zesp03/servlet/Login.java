@@ -5,7 +5,7 @@ import zesp03.core.Database;
 import zesp03.core.Secret;
 import zesp03.data.UserData;
 import zesp03.entity.User;
-import zesp03.filter.AuthFilter;
+import zesp03.filter.AuthenticationFilter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -27,9 +27,7 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
-        response.setCharacterEncoding("utf-8");
 
         String username = request.getParameter(POST_USERNAME);
         String password = request.getParameter(POST_PASSWORD);
@@ -61,10 +59,10 @@ public class Login extends HttpServlet {
             }
 
             if (userData != null) {
-                Cookie cu = new Cookie(AuthFilter.COOKIE_USERID, Long.toString(userData.getId()));
+                Cookie cu = new Cookie(AuthenticationFilter.COOKIE_USERID, Long.toString(userData.getId()));
                 cu.setMaxAge(60 * 60 * 24 * 30);
                 response.addCookie(cu);
-                Cookie cp = new Cookie(AuthFilter.COOKIE_PASSTOKEN, hash);
+                Cookie cp = new Cookie(AuthenticationFilter.COOKIE_PASSTOKEN, hash);
                 cu.setMaxAge(60 * 60 * 24 * 30);
                 response.addCookie(cp);
                 response.sendRedirect("/index.jsp");//? home page
@@ -81,9 +79,7 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
-        response.setCharacterEncoding("utf-8");
         request.getRequestDispatcher("/WEB-INF/view/Login.jsp").include(request, response);
     }
 }

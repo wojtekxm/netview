@@ -15,8 +15,6 @@ import java.io.PrintWriter;
 public class AddController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("utf-8");
-        resp.setCharacterEncoding("utf-8");
         resp.setContentType("text/plain");
 
         final String paramName = req.getParameter("name");

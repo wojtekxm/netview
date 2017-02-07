@@ -32,7 +32,6 @@ public class Details extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
         Device device;
         DeviceData deviceData;
         ControllerData controllerData;
@@ -102,7 +101,6 @@ public class Details extends HttpServlet {
         request.setAttribute(ATTR_SELECTED_SURVEYS, selectedSurveys);
         request.setAttribute(ATTR_TOTAL_SURVEYS, totalSurveys);
         request.setAttribute(ATTR_HISTORY_LIMIT, historyLimit);
-        response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
         request.getRequestDispatcher("WEB-INF/view/Details.jsp").include(request, response);
     }

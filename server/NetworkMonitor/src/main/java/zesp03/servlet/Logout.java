@@ -14,8 +14,6 @@ public class Logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
-
         Cookie cu = Cookies.find(request, AuthenticationFilter.COOKIE_USERID);
         if (cu != null) {
             cu.setValue("");

@@ -101,7 +101,6 @@ public class Details extends HttpServlet {
         request.setAttribute(ATTR_SELECTED_SURVEYS, selectedSurveys);
         request.setAttribute(ATTR_TOTAL_SURVEYS, totalSurveys);
         request.setAttribute(ATTR_HISTORY_LIMIT, historyLimit);
-        response.setContentType("text/html");
         request.getRequestDispatcher("WEB-INF/view/Details.jsp").include(request, response);
     }
 }

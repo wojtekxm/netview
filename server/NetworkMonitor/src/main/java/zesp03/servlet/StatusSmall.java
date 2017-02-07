@@ -26,7 +26,6 @@ public class StatusSmall extends HttpServlet {
 
         request.setAttribute(ATTR_TIME, time);
         request.setAttribute(ATTR_STATES, states);
-        response.setContentType("text/html");
         request.getRequestDispatcher("WEB-INF/view/StatusSmall.jsp").include(request, response);
     }
 }

@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class Utf8Filter implements Filter {
+public class HtmlFilter implements Filter {
     @Override
     public void destroy() {
     }
@@ -16,9 +16,15 @@ public class Utf8Filter implements Filter {
             final HttpServletRequest hreq = (HttpServletRequest) req;
             final HttpServletResponse hresp = (HttpServletResponse) resp;
             String r = hreq.getRequestURI();
-            if (!(r.startsWith("/images") || r.startsWith("/favicon"))) {
+            String[] prefixes = {"/images", "/css", "/js", "/favicon"};
+            boolean skip = false;
+            for (String prefix : prefixes) {
+                if (r.startsWith(prefix)) skip = true;
+            }
+            if (!skip) {
                 hreq.setCharacterEncoding("utf-8");
                 hresp.setCharacterEncoding("utf-8");
+                hresp.setContentType("text/html");
             }
             chain.doFilter(req, resp);
         } else {

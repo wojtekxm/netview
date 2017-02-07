@@ -15,8 +15,6 @@ import java.io.PrintWriter;
 public class AddController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/plain");
-
         final String paramName = req.getParameter("name");
         if(paramName == null) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "name required");

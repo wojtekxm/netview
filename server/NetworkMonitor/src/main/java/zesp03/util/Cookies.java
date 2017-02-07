@@ -3,9 +3,6 @@ package zesp03.util;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * Created by wojte on 17.01.2017.
- */
 public class Cookies {
     /**
      * Zwraca ciasteczko o nazwie cookieName.

@@ -16,10 +16,7 @@ import static zesp03.servlet.DeviceInfo.allDevicesString;
 public class Style extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
-
         HttpSession session = request.getSession(true);
-
 
         String style = (String)session.getAttribute("style");
         String logo = (String)session.getAttribute("logo");

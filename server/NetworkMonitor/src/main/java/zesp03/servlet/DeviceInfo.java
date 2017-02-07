@@ -21,7 +21,6 @@ public class DeviceInfo extends HttpServlet {
         List<DeviceStatus> list = App.checkDevs();
 
         request.setAttribute(allDevicesString, list);
-        response.setContentType("text/html");
         request.getRequestDispatcher("WEB-INF/view/Logged.jsp").include(request, response);
     }
 }

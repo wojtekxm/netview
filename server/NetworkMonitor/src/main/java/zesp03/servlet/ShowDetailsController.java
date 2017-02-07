@@ -10,12 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Berent on 2017-01-16.
- */
 public class ShowDetailsController extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,13 +33,11 @@ public class ShowDetailsController extends HttpServlet {
         tran.begin();
 
         int id = Integer.valueOf( request.getParameter( "id" ) );
-        List< Controller > controllers = ( ArrayList< Controller > )em.createQuery("SELECT c FROM Controller c").getResultList();
+        List<Controller> controllers = em.createQuery("SELECT c FROM Controller c", Controller.class).getResultList();
         Controller controller = controllers.stream().filter( (c) -> c.getId() == id).findFirst().get();
 
         tran.commit();
         em.close();
-
-        response.setContentType("text/html");
 
         request.setAttribute("controller", controller );
         request.getRequestDispatcher("/WEB-INF/view/ShowDetailsController.jsp").include( request, response );

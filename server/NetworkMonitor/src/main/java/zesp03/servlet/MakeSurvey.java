@@ -43,7 +43,6 @@ public class MakeSurvey extends HttpServlet {
 
         request.setAttribute(ATTR_TIME, time);
         request.setAttribute(ATTR_ROWS, rows);
-        response.setContentType("text/html");
         request.getRequestDispatcher("/WEB-INF/view/MakeSurvey.jsp").include(request, response);
     }
 
@@ -51,7 +50,6 @@ public class MakeSurvey extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute(ATTR_TIME, null);
         request.setAttribute(ATTR_ROWS, null);
-        response.setContentType("text/html");
         request.getRequestDispatcher("/WEB-INF/view/MakeSurvey.jsp").include(request, response);
     }
 }

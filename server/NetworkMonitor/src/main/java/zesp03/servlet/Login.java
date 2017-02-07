@@ -18,17 +18,15 @@ import java.io.IOException;
 import java.util.List;
 
 public class Login extends HttpServlet {
-    public static String POST_USERNAME = "u";
-    public static String POST_PASSWORD = "p";
-    public static String GET_ERROR = "error";
+    public static final String POST_USERNAME = "u";
+    public static final String POST_PASSWORD = "p";
+    public static final String GET_ERROR = "error";
     // mapuje do Boolean, opcjonalny
-    public static String ATTR_FAILED = "zesp03.servlet.Login.ATTR_FAILED";
+    public static final String ATTR_FAILED = "zesp03.servlet.Login.ATTR_FAILED";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
-
         String username = request.getParameter(POST_USERNAME);
         String password = request.getParameter(POST_PASSWORD);
         if (username != null && password != null) {
@@ -79,7 +77,6 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html");
         request.getRequestDispatcher("/WEB-INF/view/Login.jsp").include(request, response);
     }
 }

@@ -32,12 +32,11 @@ public class ShowControllers extends HttpServlet {
 
         tran.begin();
 
-        List<Controller> attrList = em.createQuery("SELECT c FROM Controller c").getResultList();
+        List<Controller> attrList = em.createQuery("SELECT c FROM Controller c", Controller.class).getResultList();
 
         tran.commit();
         em.close();
 
-        response.setContentType("text/html");
         request.setAttribute("controllers", attrList);
         request.getRequestDispatcher("/WEB-INF/view/ShowControllers.jsp").include( request, response );
     }

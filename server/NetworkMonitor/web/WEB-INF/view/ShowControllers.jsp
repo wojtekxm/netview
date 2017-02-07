@@ -43,12 +43,13 @@
                 kontroler</a>
         </div>
 
-        <% for( int i = 0; i < controllers.size(); ++i ) { %>
+        <% for (Controller controller : controllers) { %>
         <div class="row">
-            <a href="ShowDetailsController?id=<%= controllers.get( i ).getId() %>" class="col-md-4  list-group-item list-group-item-info" >
-                <%= controllers.get( i ).getName() %>
-                <%= controllers.get( i ).getIpv4() %>
-                <%= ( controllers.get( i ).getDescription() != null && !controllers.get( i ).getDescription().isEmpty() ) ? controllers.get( i ).getDescription() : "null" %>
+            <a href="ShowDetailsController?id=<%= controller.getId() %>"
+               class="col-md-4  list-group-item list-group-item-info">
+                <%= controller.getName() %>
+                <%= controller.getIpv4() %>
+                <%= (controller.getDescription() != null && !controller.getDescription().isEmpty()) ? controller.getDescription() : "null" %>
             </a>
         </div>
         <% } %>

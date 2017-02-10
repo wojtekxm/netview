@@ -10,7 +10,7 @@
     </context-param>
     <context-param>
         <param-name>first-admin-reset-password</param-name>
-        <param-value>zer0</param-value>
+        <param-value>pazzwrd</param-value>
     </context-param>
 
     <listener>
@@ -46,6 +46,7 @@
         <servlet-name>Style</servlet-name>
         <servlet-name>AllUsersServlet</servlet-name>
         <servlet-name>UserServlet</servlet-name>
+        <servlet-name>BlockPasswordServlet</servlet-name>
         <url-pattern>/Controllers.jsp</url-pattern>
     </filter-mapping>
     <filter-mapping>
@@ -58,6 +59,7 @@
         <servlet-name>Style</servlet-name>
         <servlet-name>AllUsersServlet</servlet-name>
         <servlet-name>UserServlet</servlet-name>
+        <servlet-name>BlockPasswordServlet</servlet-name>
         <url-pattern>/Controllers.jsp</url-pattern>
     </filter-mapping>
     <filter-mapping>
@@ -117,6 +119,10 @@
         <servlet-name>UserServlet</servlet-name>
         <servlet-class>zesp03.servlet.UserServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BlockPasswordServlet</servlet-name>
+        <servlet-class>zesp03.servlet.BlockPasswordServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>AddController</servlet-name>
@@ -169,5 +175,9 @@
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/user</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BlockPasswordServlet</servlet-name>
+        <url-pattern>/block-password</url-pattern>
     </servlet-mapping>
 </web-app>

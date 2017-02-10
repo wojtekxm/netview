@@ -50,7 +50,7 @@ public class AuthenticationFilter implements Filter {
                         tran = em.getTransaction();
                         tran.begin();
                         User user = em.find(User.class, id);
-                        if (user != null) {
+                        if (user != null && user.getSecret() != null) {
                             Secret secret = Secret.readData(user.getSecret());
                             if (secret.check(hash.toCharArray())) {
                                 userData = new UserData(user);
@@ -67,8 +67,8 @@ public class AuthenticationFilter implements Filter {
 
                 if (userData != null) {
                     cookieUid.setMaxAge(60 * 60 * 24 * 30);
-                    cookieUid.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookieUid);
+                    cookiePass.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookiePass);
                     hreq.setAttribute(ATTR_USERDATA, userData);
                     chain.doFilter(req, resp);
@@ -76,9 +76,9 @@ public class AuthenticationFilter implements Filter {
                 } else {
                     cookieUid.setValue("");
                     cookieUid.setMaxAge(0);
+                    hresp.addCookie(cookieUid);
                     cookiePass.setValue("");
                     cookiePass.setMaxAge(0);
-                    hresp.addCookie(cookieUid);
                     hresp.addCookie(cookiePass);
                 }
             }

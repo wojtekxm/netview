@@ -27,7 +27,7 @@ lista użytkowników:<br>
 <%
     for (UserData u : allUsers) {
         String h = "/user?" + UserServlet.GET_ID + "=" + u.getId();
-%>[id=<%= u.getId() %>] <a href="<%= h %>"><%= u.getName() %>
+%><a href="<%= h %>"><%= u.getName() %>
 </a><br>
 <%
     }

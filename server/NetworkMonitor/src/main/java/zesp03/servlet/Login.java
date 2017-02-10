@@ -44,9 +44,11 @@ public class Login extends HttpServlet {
                         .getResultList();
                 if (!list.isEmpty()) {
                     User user = list.get(0);
-                    Secret secret = Secret.readData(user.getSecret());
-                    if (secret.check(hash.toCharArray()))
-                        userData = new UserData(user);
+                    if (user.getSecret() != null) {
+                        Secret secret = Secret.readData(user.getSecret());
+                        if (secret.check(hash.toCharArray()))
+                            userData = new UserData(user);
+                    }
                 }
                 tran.commit();
             } catch (RuntimeException exc) {

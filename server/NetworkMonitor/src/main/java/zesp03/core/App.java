@@ -1,5 +1,7 @@
 package zesp03.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zesp03.data.DeviceStatus;
 import zesp03.data.SurveyInfo;
 import zesp03.entity.Controller;
@@ -16,8 +18,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * A przynajmniej wkrótce takie będą ;)
  */
 public class App {
+    private static final Logger log = LoggerFactory.getLogger(App.class);
     private static final int USER_NAME_MAX_CHARS = 255;
     private static final int CONTROLLER_NAME_MAX_CHARS = 85;
     private static final int DEVICE_NAME_MAX_CHARS = 85;
@@ -130,7 +131,11 @@ public class App {
         }
 
         for (Controller c : list) {
-            examineOne(c.getId(), c.getIpv4());
+            try {
+                examineOne(c.getId(), c.getIpv4());
+            } catch (RuntimeException exc) {
+                log.error("Failed to examine controller", exc);
+            }
         }
     }
 
@@ -140,7 +145,7 @@ public class App {
             surveyed = filterDevices( snmp.queryDevices(ipv4) );
         }
         catch(SNMPException exc) {
-            log("examineOne", exc);//?
+            log.warn("Failed to query devices", exc);
             return;
         }
         if (surveyed.size() < 1) return;
@@ -175,13 +180,13 @@ public class App {
             for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
                 final String name = e.getKey();
                 if (!existing.containsKey(name)) {
-                    Device d = new Device();
+                    final Device d = new Device();
                     d.setName(name);
                     d.setController(controller);
                     d.setIsKnown(false);
                     em.persist(d);
-                    CurrentSurvey cs = new CurrentSurvey();
-                    cs.setDevice(d);
+                    final CurrentSurvey cs = new CurrentSurvey();
+                    d.addCurrentSurvey(cs);
                     em.persist(cs);
                     existing.put(name, d);
                     if (++x == 50) {
@@ -220,11 +225,7 @@ public class App {
                 }
             }
             tran.commit();
-        } catch (javax.persistence.PersistenceException exc) {
-            log("examineOne", exc);//?
-            if (tran != null && tran.isActive()) tran.rollback();
         } catch (RuntimeException exc) {
-            log("examineOne", exc);//?
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;
         } finally {
@@ -248,13 +249,11 @@ public class App {
             if( ! isCompatibleDeviceName(name) ) {
                 String old = name;
                 name = getCompatibleDeviceName(name);
-                log("filterDevices", "Device name \"" + old + "\" is not compatible.",
-                        "Converted to \"" + name + "\".");
+                log.info("Device name \"{}\" is not compatible, converted to {}", old, name);
             }
             ds.setName(name);
             if( result.containsKey(name) ) {
-                log("filterDevices", "Device name \"" + name + "\" occurs more than once.",
-                        ds.toString() + " will be rejected.");
+                log.info("Device name \"{}\" occurs more than once, {} will be rejected", name, ds.toString());
             }
             else {
                 result.put(name, ds);
@@ -288,21 +287,5 @@ public class App {
         byte[] bin = new byte[randomBytes];
         new SecureRandom().nextBytes(bin);
         return Base64.getUrlEncoder().encodeToString(bin);
-    }
-
-    //TODO zamień na coś lepszego
-    protected static void log(String method, String message, String... extra) {
-        DateTimeFormatter form = DateTimeFormatter.ofPattern("uuuu LLL dd, HH:mm:ss");
-        String dt = LocalDateTime.now().format(form);
-        System.err.println(dt + " App log (invoked by " + method + "):");
-        System.err.println(message);
-        for(String e : extra) {
-            System.err.println(e);
-        }
-        System.err.println();
-    }
-
-    protected static void log(String method, Throwable exception, String... extra) {
-        log(method, exception.toString(), extra);
     }
 }

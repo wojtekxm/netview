@@ -88,6 +88,18 @@ public class Device {
             s.setDevice(null);
     }
 
+    public void addCurrentSurvey(CurrentSurvey s) {
+        this.currentSurvey = s;
+        s.setDevice(this);
+    }
+
+    public void removeCurrentSurvey() {
+        if (currentSurvey != null) {
+            currentSurvey.setDevice(null);
+            currentSurvey = null;
+        }
+    }
+
     public CurrentSurvey getCurrentSurvey() {
         return currentSurvey;
     }

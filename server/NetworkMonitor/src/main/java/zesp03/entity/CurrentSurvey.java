@@ -14,14 +14,16 @@ public class CurrentSurvey {
     @JoinColumn(
             name = "device_id",
             foreignKey = @ForeignKey(name = "currentsurvey_device_fk"),
-            nullable = false
+            nullable = false,
+            unique = true
     )
     private Device device;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "survey_id",
-            foreignKey = @ForeignKey(name = "currentsurvey_devicesurvey_fk")
+            foreignKey = @ForeignKey(name = "currentsurvey_devicesurvey_fk"),
+            unique = true
     )
     private DeviceSurvey survey;
 

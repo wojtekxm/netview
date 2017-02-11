@@ -1,20 +1,19 @@
-<%@ page import="zesp03.data.DeviceStatus"
-%>
-<%@ page import="zesp03.servlet.DetailsServlet"
-%>
-<%@ page import="zesp03.servlet.StatusSmallServlet"
-%><%@ page import="java.util.List"
-%><%@ page contentType="text/html;charset=UTF-8" language="java"
-%><%
+<%@ page import="zesp03.data.DeviceStatus" %>
+<%@ page import="zesp03.servlet.DeviceServlet" %>
+<%@ page import="zesp03.servlet.StatusSmallServlet" %>
+<%@ page import="java.util.List" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
     List<DeviceStatus> states = (List<DeviceStatus>) request.getAttribute(StatusSmallServlet.ATTR_STATES);
     Double time = (Double) request.getAttribute(StatusSmallServlet.ATTR_TIME);
-%><!DOCTYPE html>
+%>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Network Monitor</title>
+    <title>Status sieci (minimalistyczny)</title>
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
@@ -41,8 +40,8 @@
             int sumDisabled = 0;
             for (final DeviceStatus info : states) {
                 String clazz;
-                if( info.getSurvey().isEnabled() ) {
-                    if( info.getSurvey().getClientsSum() > 0 ) {
+                if (info.getDeviceSurvey().isEnabled()) {
+                    if (info.getDeviceSurvey().getClientsSum() > 0) {
                         clazz = "square-green";
                         sumActive++;
                     }
@@ -55,7 +54,7 @@
                     clazz = "square-gray";
                     sumDisabled++;
                 }
-                final String h = "/details?" + DetailsServlet.PARAM_ID + "=" + info.getDevice().getId();
+                final String h = "/device?" + DeviceServlet.GET_ID + "=" + info.getDevice().getId();
                 String t = info.getDevice().getName();
                 if( info.getDevice().getDescription() != null )t += "<br>opis: " + info.getDevice().getDescription();
                 t += "<br>z: " + info.getController().getName();

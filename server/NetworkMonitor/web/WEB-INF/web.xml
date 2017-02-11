@@ -6,11 +6,11 @@
 
     <context-param>
         <param-name>first-admin-name</param-name>
-        <param-value>admin0</param-value>
+        <param-value>root</param-value>
     </context-param>
     <context-param>
         <param-name>first-admin-reset-password</param-name>
-        <param-value>pazzwrd</param-value>
+        <param-value>1234</param-value>
     </context-param>
 
     <listener>
@@ -53,7 +53,7 @@
         <filter-name>ForAnyUserFilter</filter-name>
         <servlet-name>AllControllersServlet</servlet-name>
         <servlet-name>ControllerServlet</servlet-name>
-        <servlet-name>DetailsServlet</servlet-name>
+        <servlet-name>DeviceServlet</servlet-name>
         <servlet-name>StatusServlet</servlet-name>
         <servlet-name>StatusSmallServlet</servlet-name>
         <servlet-name>StyleServlet</servlet-name>
@@ -67,7 +67,6 @@
         <servlet-name>MakeSurveyServlet</servlet-name>
         <servlet-name>RemoveControllerServlet</servlet-name>
         <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/Controllers.jsp</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>DynamicHtmlFilter</filter-name>

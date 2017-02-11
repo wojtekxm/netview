@@ -14,32 +14,42 @@ import java.io.IOException;
 
 @WebServlet(value = "/remove-controller", name = "RemoveControllerServlet")
 public class RemoveControllerServlet extends HttpServlet {
-    @Override
-    protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
-        removeController(request);
-        response.sendRedirect("/all-controllers");
-    }
+    // wymagane, typ long
+    public static final String POST_ID = "id";
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String paramId = request.getParameter(POST_ID);
+        if (paramId == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "id required");
+            return;
+        }
+        long id;
+        try {
+            id = Long.parseLong(paramId);
+        } catch (NumberFormatException exc) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid id");
+            return;
+        }
+
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Controller c = em.find(Controller.class, id);
+            if (c != null) em.remove(c);
+
+            tran.commit();
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
         response.sendRedirect("/all-controllers");
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    private void removeController( HttpServletRequest request ) {
-
-        final EntityManager em = Database.createEntityManager();
-        final EntityTransaction tran = em.getTransaction();
-
-        tran.begin();
-
-        Long id = Long.parseLong(request.getParameter("id"));
-
-        Controller c = em.find( Controller.class, id );
-        em.remove( c );
-
-        tran.commit();
-        em.close();
     }
 }

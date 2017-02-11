@@ -20,25 +20,13 @@
 <div class="container"><%
     if (userData != null) {
 %>
-    <h1>Zalogowany jako: <%= userData.getName() %>
+    <h1>Zalogowany jako: <%= userData.getName() %> <span class="label label-default">administrator</span>
     </h1><%
         }
     %>
     <h1>Network Monitor</h1>
     <div class="row">
         <ul class="nav nav-pills nav-stacked">
-            <li>
-                <a href="/">
-                    strona główna
-                    <span class="label label-default">/</span>
-                </a>
-            </li>
-            <li>
-                <a href="/make-survey">
-                    nowe badania sieci
-                    <span class="label label-default">make-survey</span>
-                </a>
-            </li>
             <li>
                 <a href="/status">
                     stan urządzeń
@@ -52,27 +40,27 @@
                 </a>
             </li>
             <li>
+                <a href="/make-survey">
+                    nowe badania sieci
+                    <span class="label label-default">make-survey</span>
+                </a>
+            </li>
+            <li>
                 <a href="/all-controllers">
                     kontrolery
                     <span class="label label-default">all-controllers</span>
                 </a>
             </li>
             <li>
-                <a href="/Controllers.jsp">
+                <a href="/add-controller">
                     nowy kontroler
-                    <span class="label label-default">Controllers.jsp</span>
+                    <span class="label label-default">add-controller</span>
                 </a>
             </li>
             <li>
                 <a href="/all-users">
                     użytkownicy
                     <span class="label label-default">all-users</span>
-                </a>
-            </li>
-            <li>
-                <a href="/login">
-                    logowanie
-                    <span class="label label-default">login</span>
                 </a>
             </li>
             <li>

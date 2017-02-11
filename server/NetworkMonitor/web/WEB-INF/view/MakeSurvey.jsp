@@ -1,17 +1,17 @@
-<%@ page import="zesp03.servlet.MakeSurveyServlet"
-%><%@ page import="java.util.Locale"
-%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-%><%
-    Double attrTime = (Double) request.getAttribute(MakeSurveyServlet.ATTR_TIME);
+<%@ page import="zesp03.servlet.MakeSurveyServlet" %>
+<%@ page import="java.util.Locale" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    Double time = (Double) request.getAttribute(MakeSurveyServlet.ATTR_TIME);
     Long rows = (Long) request.getAttribute(MakeSurveyServlet.ATTR_ROWS);
-%><!DOCTYPE html>
+%>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Network Monitor</title>
+    <title>Nowe badanie</title>
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
@@ -33,10 +33,10 @@
     </nav>
     <div class="container">
         <%
-            if (attrTime != null && rows != null) {
+            if (time != null && rows != null) {
         %>
         <p>
-            Badanie zostało pomyślnie wykonane w czasie <%= String.format(Locale.US, "%.3f", attrTime) %>s.<br>
+            Badanie zostało pomyślnie wykonane w czasie <%= String.format(Locale.US, "%.3f", time) %>s.<br>
             Tabela device_survey zawiera teraz <%= rows %> rekordów.
         </p>
         <%
@@ -44,8 +44,7 @@
         %>
         <p>Kliknij przycisk poniżej by wykonać nowe badanie sieci</p>
         <form method="post" action="make-survey">
-            <input type="hidden" name="<%= MakeSurveyServlet.PARAM_ACTION %>"
-                   value="<%= MakeSurveyServlet.PARAM_ACTION_UPDATE %>">
+            <input type="hidden" name="<%= MakeSurveyServlet.POST_UPDATE %>" value="1">
             <input type="submit" value="Nowe badanie">
         </form>
     </div>

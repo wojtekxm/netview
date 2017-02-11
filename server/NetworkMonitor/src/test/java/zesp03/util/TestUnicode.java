@@ -1,7 +1,9 @@
 package zesp03.util;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestUnicode {
     // znak "nietoperz" który nie mieści się w jednym char
@@ -87,6 +89,56 @@ public class TestUnicode {
     @Test
     public void isAlphaNum_dot_false() {
         assertFalse( Unicode.isAlphaNum('.') );
+    }
+
+    @Test
+    public void onlyLower_lower_true() {
+        assertTrue(Unicode.onlyLower("a"));
+    }
+
+    @Test
+    public void onlyLower_bat_false() {
+        assertFalse(Unicode.onlyLower(BAT_STRING));
+    }
+
+    @Test
+    public void onlyUpper_upper_true() {
+        assertTrue(Unicode.onlyUpper("A"));
+    }
+
+    @Test
+    public void onlyUpper_bat_false() {
+        assertFalse(Unicode.onlyUpper(BAT_STRING));
+    }
+
+    @Test
+    public void onlyDigit_digit_true() {
+        assertTrue(Unicode.onlyDigit("0"));
+    }
+
+    @Test
+    public void onlyDigit_bat_false() {
+        assertFalse(Unicode.onlyDigit(BAT_STRING));
+    }
+
+    @Test
+    public void onlyAlpha_alpha_true() {
+        assertTrue(Unicode.onlyAlpha("aA"));
+    }
+
+    @Test
+    public void onlyAlpha_bat_false() {
+        assertFalse(Unicode.onlyAlpha(BAT_STRING));
+    }
+
+    @Test
+    public void onlyAlphaNum_alphanum_true() {
+        assertTrue(Unicode.onlyAlphaNum("aA0"));
+    }
+
+    @Test
+    public void onlyAlphaNum_bat_false() {
+        assertFalse(Unicode.onlyAlphaNum(BAT_STRING));
     }
 
     @Test

@@ -33,8 +33,7 @@ public class StyleServlet extends HttpServlet {
             session.setAttribute("logo", "logoo");
         }
 
-        List<DeviceStatus> list;
-        list = App.checkDevs();
+        List<DeviceStatus> list = App.checkDevices();
         request.setAttribute(allDevicesString, list);
         request.getRequestDispatcher("/status").forward(request, response);
     }

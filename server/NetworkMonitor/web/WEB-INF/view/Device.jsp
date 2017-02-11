@@ -1,33 +1,29 @@
-<%@ page import="zesp03.data.ControllerData"
+<%@ page import="zesp03.data.ControllerData" %>
+<%@ page import="zesp03.data.DeviceData" %>
+<%@ page import="zesp03.data.DeviceSurveyData" %>
+<%@ page import="zesp03.servlet.DeviceServlet" %>
+<%@ page import="java.time.Instant" %>
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.ZoneId" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.List" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    DeviceData device = (DeviceData) request.getAttribute(DeviceServlet.ATTR_DEVICE);
+    ControllerData controller = (ControllerData) request.getAttribute(DeviceServlet.ATTR_CONTROLLER);
+    List<DeviceSurveyData> selectedSurveys = (List<DeviceSurveyData>) request.getAttribute(DeviceServlet.ATTR_SELECTED_SURVEYS);
+    Integer totalSurveys = (Integer) request.getAttribute(DeviceServlet.ATTR_TOTAL_SURVEYS);
+    Integer historyLimit = (Integer) request.getAttribute(DeviceServlet.ATTR_HISTORY_LIMIT);
 %>
-<%@ page import="zesp03.data.DeviceData"
-%>
-<%@ page import="zesp03.entity.DeviceSurvey"
-%>
-<%@ page import="zesp03.servlet.DetailsServlet"
-%><%@ page import="java.time.Instant"
-%><%@ page import="java.time.LocalDateTime"
-%><%@ page import="java.time.ZoneId"
-%><%@ page import="java.time.format.DateTimeFormatter"
-%>
-<%@ page import="java.util.ArrayList"
-%><%@ page import="java.util.Collections"
-%><%@ page import="java.util.List"
-%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-%><%
-    DeviceData device = (DeviceData) request.getAttribute(DetailsServlet.ATTR_DEVICE);
-    ControllerData controller = (ControllerData) request.getAttribute(DetailsServlet.ATTR_CONTROLLER);
-    List<DeviceSurvey> selectedSurveys = (List<DeviceSurvey>) request.getAttribute(DetailsServlet.ATTR_SELECTED_SURVEYS);
-    int totalSurveys = (Integer) request.getAttribute(DetailsServlet.ATTR_TOTAL_SURVEYS);
-    int historyLimit = (Integer) request.getAttribute(DetailsServlet.ATTR_HISTORY_LIMIT);
-%><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Network Monitor</title>
+    <title>Informacje o urządzeniu</title>
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
@@ -95,7 +91,7 @@
             </thead>
             <tbody><%
                 int n = 1;
-                for (final DeviceSurvey survey : selectedSurveys) {
+                for (final DeviceSurveyData survey : selectedSurveys) {
                     final Instant instant = Instant.ofEpochSecond(survey.getTimestamp());
                     final ZoneId zone = ZoneId.systemDefault();
                     final LocalDateTime ld = LocalDateTime.ofInstant(instant, zone);
@@ -120,7 +116,7 @@
         <div class="panel-footer">
             Łącznie jest <%= totalSurveys %> wyników.
             Liczba wyników na stronę
-            <form method="get" action="/details" style="display: inline"><%
+            <form method="get" action="/device" style="display: inline"><%
                 final ArrayList<Integer> limits = new ArrayList<>();
                 limits.add(10);
                 limits.add(20);
@@ -134,7 +130,7 @@
                 Collections.sort(limits);
             %>
                 <input type="hidden" name="id" value="<%= device.getId() %>">
-                <select name="<%= DetailsServlet.PARAM_HISTORY_LIMIT %>"><%
+                <select name="<%= DeviceServlet.GET_HISTORY_LIMIT %>"><%
                     for (Integer i : limits) {
                 %>
                     <option value="<%= i %>" <%= i.equals(historyLimit) ? "selected" : "" %>><%= i %>

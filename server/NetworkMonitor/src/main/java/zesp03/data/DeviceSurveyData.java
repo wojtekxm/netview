@@ -2,13 +2,13 @@ package zesp03.data;
 
 import zesp03.entity.DeviceSurvey;
 
-public class SurveyData {
+public class DeviceSurveyData {
     private long id;
     private int timestamp;
     private boolean isEnabled;
     private int clientsSum;
 
-    public SurveyData(DeviceSurvey s) {
+    public DeviceSurveyData(DeviceSurvey s) {
         this.id = s.getId();
         this.timestamp = s.getTimestamp();
         this.isEnabled = s.isEnabled();
@@ -31,7 +31,7 @@ public class SurveyData {
         this.timestamp = timestamp;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return isEnabled;
     }
 

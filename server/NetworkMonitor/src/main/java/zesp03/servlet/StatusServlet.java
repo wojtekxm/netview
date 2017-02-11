@@ -18,12 +18,13 @@ public class StatusServlet extends HttpServlet {
     public static final String allDevicesString = "zesp03.servlet.StatusServlet.allDevices";
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        List<DeviceStatus> list = App.checkDevs();
+        List<DeviceStatus> list = App.checkDevices();
 
         request.setAttribute(allDevicesString, list);
-        request.getRequestDispatcher("WEB-INF/view/Logged.jsp").include(request, response);
+        request.getRequestDispatcher("WEB-INF/view/Status.jsp").include(request, response);
     }
 }
 

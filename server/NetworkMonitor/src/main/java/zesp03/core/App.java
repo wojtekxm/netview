@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * A przynajmniej wkrótce takie będą ;)
  */
 public class App {
+    private static final int USER_NAME_MAX_CHARS = 255;
     private static final int CONTROLLER_NAME_MAX_CHARS = 85;
     private static final int DEVICE_NAME_MAX_CHARS = 85;
     private static final SNMPHandler snmp;
@@ -44,8 +45,17 @@ public class App {
         }
     }
 
+    /**
+     * @param name nazwa użytkownika do sprawdzenia
+     * @return czy nazwa użytkownika składa się z poprawnych znaków (niezależnie od tego czy jest już zajęta)
+     */
+    public static boolean isValidUserName(String name) {
+        if (name == null || name.isEmpty()) return false;
+        return Unicode.onlyAlphaNum(name) && name.length() <= USER_NAME_MAX_CHARS;
+    }
+
     public static boolean isValidControllerName(String name) {
-        if( name.length() < 1 ) return false;
+        if (name == null || name.isEmpty()) return false;
         if( name.length() > CONTROLLER_NAME_MAX_CHARS )return false;
         return Unicode.noSurrogates(name);
     }
@@ -67,27 +77,41 @@ public class App {
         return sb.toString().intern();
     }
 
-    public static List<DeviceStatus> checkDevs() {
-        final EntityManager em = Database.createEntityManager();
-        final EntityTransaction tran = em.getTransaction();
-        tran.begin();
+    public static List<DeviceStatus> checkDevices() {
+        List<DeviceStatus> list;
 
-        final List<DeviceStatus> l = em.createQuery("SELECT c, d, ds, cs FROM CurrentSurvey cs " +
-                "INNER JOIN cs.survey ds " +
-                "INNER JOIN ds.device d " +
-                "INNER JOIN d.controller c", Object[].class)
-                .getResultList()
-                .stream()
-                .map(arr -> new DeviceStatus((Controller) arr[0], (Device) arr[1], (DeviceSurvey) arr[2]))
-                .collect(Collectors.toList());
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
 
-        tran.commit();
-        em.close();
-        return l;
+            list = em.createQuery("SELECT c, d, ds, cs FROM CurrentSurvey cs " +
+                    "INNER JOIN cs.survey ds " +
+                    "INNER JOIN ds.device d " +
+                    "INNER JOIN d.controller c", Object[].class)
+                    .getResultList()
+                    .stream()
+                    .map(arr -> new DeviceStatus(
+                            (Controller) arr[0],
+                            (Device) arr[1],
+                            (DeviceSurvey) arr[2]))
+                    .collect(Collectors.toList());
+
+            tran.commit();
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+        return list;
     }
 
     public static void examineNetwork() {
         List<Controller> list;
+
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -105,10 +129,8 @@ public class App {
             if (em != null) em.close();
         }
 
-        if (list != null) {
-            for (Controller c : list) {
-                examineOne(c.getId(), c.getIpv4());
-            }
+        for (Controller c : list) {
+            examineOne(c.getId(), c.getIpv4());
         }
     }
 
@@ -254,15 +276,6 @@ public class App {
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException exc) {
             throw new IllegalStateException(exc);
         }
-    }
-
-    /**
-     * @param name nazwa użytkownika do sprawdzenia
-     * @return czy nazwa użytkownika składa się z poprawnych znaków (niezależnie od tego czy jest już zajęta)
-     */
-    public static boolean isUserNameValid(String name) {
-        if (name == null || name.isEmpty()) return false;
-        return Unicode.onlyAlphaNum(name);
     }
 
     /**

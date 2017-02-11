@@ -59,7 +59,7 @@ public class ActivateAccountServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "token value required");
             return;
         }
-        int error = 1;
+        boolean success = false;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -69,34 +69,13 @@ public class ActivateAccountServlet extends HttpServlet {
             tran.begin();
 
             Token token = em.find(Token.class, tokenId);
-            if (token != null) {
-                error++;
-                if (token.getAction() != null) {
-                    error++;
-                    if (token.getAction().equals(TokenAction.ACTIVATE_ACCOUNT)) {
-                        error++;
-                        User u = token.getUser();
-                        if (u != null) {
-                            error++;
-                            if (u.getName() == null) {
-                                error++;
-                                if (u.getSecret() == null) {
-                                    error++;
-                                    if (Secret.check(token.getSecret(), paramValue)) {
-                                        error = 0;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-                    /*TokenAction.ACTIVATE_ACCOUNT.equals(token.getAction()) &&
+            if (token != null &&
+                    token.getAction() == TokenAction.ACTIVATE_ACCOUNT &&
                     token.getUser().getName() == null &&
                     token.getUser().getSecret() == null &&
                     Secret.check(token.getSecret(), paramValue) ) {
-                    tokenGood = true;
-            }*/
+                success = true;
+            }
 
             tran.commit();
         } catch (RuntimeException exc) {
@@ -106,8 +85,8 @@ public class ActivateAccountServlet extends HttpServlet {
             if (em != null) em.close();
         }
 
-        if (error != 0) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "error " + Integer.toString(error));
+        if (!success) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
         request.setAttribute(ATTR_TOKEN_ID, tokenId);
@@ -140,7 +119,7 @@ public class ActivateAccountServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "user name required");
             return;
         }
-        if (!App.isUserNameValid(paramUserName)) {
+        if (!App.isValidUserName(paramUserName)) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid name");//????
             return;
         }

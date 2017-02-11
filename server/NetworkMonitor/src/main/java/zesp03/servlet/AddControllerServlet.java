@@ -1,7 +1,9 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
+import zesp03.data.ControllerData;
 import zesp03.entity.Controller;
+import zesp03.util.IPv4;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -11,50 +13,71 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet(value = "/add-controller", name = "AddControllerServlet")
 public class AddControllerServlet extends HttpServlet {
+    // wymagany, typ string
+    public static final String POST_NAME = "name";
+    // wymagany, typ string w formacie IPv4
+    public static final String POST_IP = "ip";
+    // opcjonalny, typ string
+    public static final String POST_DESCRIPTION = "description";
+    //TODO dodaj community string
+
+    // mapuje do ControllerData, nigdy null, tylko dla AddController_Post.jsp
+    public static final String ATTR_CONTROLLERDATA = "zesp03.servlet.AddControllerServlet.ATTR_CONTROLLERDATA";
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final String paramName = req.getParameter("name");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final String paramName = request.getParameter(POST_NAME);
         if(paramName == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "name required");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "name required");
             return;
         }
-        final String paramIP = req.getParameter("ipv4");
+        final String paramIP = request.getParameter(POST_IP);
         if(paramIP == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "IP required");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "IP required");
             return;
         }
-        if( ! isValidIPv4(paramIP) ) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid IP");
+        if (!IPv4.isValid(paramIP)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid IP");
             return;
         }
-        final String paramDesc = req.getParameter("description");
         // opis jest opcjonalny
+        String paramDesc = request.getParameter("description");
+        if (paramDesc.isEmpty()) paramDesc = null;
 
+        ControllerData controllerData;
         //TODO co jeśli taki kontroler już istnieje?
-        final EntityManager em = Database.createEntityManager();
-        final EntityTransaction tran = em.getTransaction();
-        tran.begin();
-        Controller controller = new Controller();
-        controller.setName(paramName);
-        controller.setIpv4(paramIP);
-        controller.setDescription(paramDesc);
-        em.persist(controller);
-        tran.commit();
-        em.close();
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
 
-        try(PrintWriter w = resp.getWriter() ) {
-            w.println("Dodano do bazy kontroler o nazwie=" + controller.getName() +
-                    " adresie IPv4=" + controller.getIpv4() +
-                    " oraz dodatkowym komentarzu=" + controller.getDescription() + ".");
+            Controller controller = new Controller();
+            controller.setName(paramName);
+            controller.setIpv4(paramIP);
+            controller.setDescription(paramDesc);
+            em.persist(controller);
+            controllerData = new ControllerData(controller);
+
+            tran.commit();
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
         }
+
+        request.setAttribute(ATTR_CONTROLLERDATA, controllerData);
+        request.getRequestDispatcher("/WEB-INF/view/AddController_Post.jsp").include(request, response);
     }
 
-    public static boolean isValidIPv4(String ip) {
-        //TODO naiwna implementacja, poprawić
-        return ip.matches("[0-9]{1,3}+\\.[0-9]{1,3}+\\.[0-9]{1,3}+\\.[0-9]{1,3}+");
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/view/AddController_Get.jsp").include(request, response);
     }
 }

@@ -45,7 +45,6 @@ public class Unicode {
         return isAlpha(unicode) || isDigit(unicode);
     }
 
-    // TODO test
     public static boolean onlyLower(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!isLower(s.charAt(i))) return false;
@@ -53,7 +52,6 @@ public class Unicode {
         return true;
     }
 
-    // TODO test
     public static boolean onlyDigit(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!isDigit(s.charAt(i))) return false;
@@ -61,7 +59,6 @@ public class Unicode {
         return true;
     }
 
-    // TODO test
     public static boolean onlyAlpha(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!isAlpha(s.charAt(i))) return false;
@@ -69,7 +66,6 @@ public class Unicode {
         return true;
     }
 
-    // TODO test
     public static boolean onlyAlphaNum(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!isAlphaNum(s.charAt(i))) return false;
@@ -77,7 +73,6 @@ public class Unicode {
         return true;
     }
 
-    // TODO test
     public static boolean onlyUpper(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!isUpper(s.charAt(i))) return false;

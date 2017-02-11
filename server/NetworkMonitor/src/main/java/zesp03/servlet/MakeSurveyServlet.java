@@ -14,11 +14,12 @@ import java.io.IOException;
 
 @WebServlet(value = "/make-survey", name = "MakeSurveyServlet")
 public class MakeSurveyServlet extends HttpServlet {
-    public static final String PARAM_ACTION = "action";
-    public static final String PARAM_ACTION_UPDATE = "update";
-    // mapowany do typu Double
+    // opcjonalny, typ boolean (1/0)
+    public static final String POST_UPDATE = "update";
+
+    // mapowany do typu Double, opcjonalny
     public static final String ATTR_TIME = "zesp03.servlet.MakeSurveyServlet.ATTR_TIME";
-    // mapowany do typu Integer
+    // mapowany do typu Long, opcjonalny
     public static final String ATTR_ROWS = "zesp03.servlet.MakeSurveyServlet.ATTR_ROWS";
 
     @Override
@@ -26,21 +27,29 @@ public class MakeSurveyServlet extends HttpServlet {
         Double time = null;
         Long rows = null;
 
-        String action = request.getParameter(PARAM_ACTION);
-            if( action.equals(PARAM_ACTION_UPDATE) ) {
-                long t0 = System.nanoTime();
-                App.examineNetwork();
-                time = (System.nanoTime() - t0) * 0.000000001;
+        String paramUpdate = request.getParameter(POST_UPDATE);
+        if (paramUpdate != null && paramUpdate.equals("1")) {
+            long t0 = System.nanoTime();
+            App.examineNetwork();
+            time = (System.nanoTime() - t0) * 0.000000001;
 
-                final EntityManager em = Database.createEntityManager();
-                final EntityTransaction tran = em.getTransaction();
+            EntityManager em = null;
+            EntityTransaction tran = null;
+            try {
+                em = Database.createEntityManager();
+                tran = em.getTransaction();
                 tran.begin();
 
                 rows = em.createQuery("SELECT COUNT(id) FROM DeviceSurvey", Long.class).getSingleResult();
 
                 tran.commit();
-                em.close();
+            } catch (RuntimeException exc) {
+                if (tran != null && tran.isActive()) tran.rollback();
+                throw exc;
+            } finally {
+                if (em != null) em.close();
             }
+        }
 
 
         request.setAttribute(ATTR_TIME, time);

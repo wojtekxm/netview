@@ -1,20 +1,19 @@
-<%@ page import="zesp03.entity.Controller"
-%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"
-%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
-%>
+<%@ page import="zesp03.data.ControllerData" %>
+<%@ page import="zesp03.servlet.ControllerServlet" %>
+<%@ page import="zesp03.servlet.RemoveControllerServlet" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    Controller controller = ( Controller )request.getAttribute( "controller" );
-%><!DOCTYPE html>
+    ControllerData controllerData = (ControllerData) request.getAttribute(ControllerServlet.ATTR_CONTROLLERDATA);
+%>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Network Monitor</title>
+    <title>Informacje o kontrolerze</title>
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
@@ -37,7 +36,9 @@
 <div class="container">
     <div class="list-group ">
         <div class="row">
-            <form method="post" action="/remove-controller?id=<%= controller.getId() %>">
+            <form method="post" action="/remove-controller">
+                <input type="hidden" name="<%= RemoveControllerServlet.POST_ID %>"
+                       value="<%= controllerData.getId() %>">
                 <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active" role="button">
             </form>
         </div>
@@ -48,19 +49,23 @@
             <table class="table table-bordered">
                 <tr>
                     <td>ID</td>
-                    <td><%= controller.getId() %></td>
+                    <td><%= controllerData.getId() %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Nazwa</td>
-                    <td><%= controller.getName() %></td>
+                    <td><%= controllerData.getName() %>
+                    </td>
                 </tr>
                 <tr>
                     <td>IP</td>
-                    <td><%= controller.getIpv4() %></td>
+                    <td><%= controllerData.getIpv4() %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Opis</td>
-                    <td><%= ( controller.getDescription() != null && !controller.getDescription().isEmpty() ) ? controller.getDescription() : "(brak)" %></td>
+                    <td><%= controllerData.getDescription() != null ? controllerData.getDescription() : "<em>(brak)</em>" %>
+                    </td>
                 </tr>
             </table>
         </div>

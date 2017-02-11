@@ -11,6 +11,36 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 
 public class TestApp {
+    private static final String TOO_LONG = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" +
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" +
+            "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd";
+
+    @Test
+    public void isValidUserName_empty_false() {
+        assertFalse(App.isValidUserName(""));
+    }
+
+    @Test
+    public void isValidUserName_admin_true() {
+        assertTrue(App.isValidUserName("admin"));
+    }
+
+    @Test
+    public void isValidUserName_colon_false() {
+        assertFalse(App.isValidUserName(":"));
+    }
+
+    @Test
+    public void isValidUserName_tooLong_false() {
+        assertFalse(App.isValidUserName(TOO_LONG));
+    }
+
+    @Test
+    public void isValidUserName_numbers_true() {
+        assertTrue(App.isValidUserName("213475893425"));
+    }
+
     @Test
     public void isValidControllerName_empty_false() {
         assertFalse( App.isValidControllerName("") );
@@ -18,10 +48,7 @@ public class TestApp {
 
     @Test
     public void isValidControllerName_tooLong_false() {
-        String s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" +
-                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc";
-        assertFalse( App.isValidControllerName(s) );
+        assertFalse(App.isValidControllerName(TOO_LONG));
     }
 
     @Test
@@ -47,10 +74,7 @@ public class TestApp {
 
     @Test
     public void isCompatibleDeviceName_tooLong_false() {
-        String s = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" +
-                "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy" +
-                "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-        assertFalse( App.isCompatibleDeviceName(s) );
+        assertFalse(App.isCompatibleDeviceName(TOO_LONG));
     }
 
     @Test

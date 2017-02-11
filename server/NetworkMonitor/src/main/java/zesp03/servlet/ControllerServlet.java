@@ -1,6 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
+import zesp03.data.ControllerData;
 import zesp03.entity.Controller;
 
 import javax.persistence.EntityManager;
@@ -11,37 +12,51 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(value = "/controller", name = "ControllerServlet")
 public class ControllerServlet extends HttpServlet {
+    // wymagane, typ long
+    public static final String GET_ID = "id";
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // mapuje do ControllerData
+    public static final String ATTR_CONTROLLERDATA = "zesp03.servlet.ControllerServlet.ATTR_CONTROLLERDATA";
 
-        handle(request, response);
-    }
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String paramId = request.getParameter(GET_ID);
+        if (paramId == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "id required");
+            return;
+        }
+        long id;
+        try {
+            id = Long.parseLong(paramId);
+        } catch (NumberFormatException exc) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid id");
+            return;
+        }
+        ControllerData controllerData;
 
-        handle(request, response);
-    }
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
 
-    //------------------------------------------------------------------------------------------------------------------
+            Controller c = em.find(Controller.class, id);
+            controllerData = new ControllerData(c);
 
-    protected void handle( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException {
+            tran.commit();
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
 
-        final EntityManager em = Database.createEntityManager();
-        final EntityTransaction tran = em.getTransaction();
-
-        tran.begin();
-
-        int id = Integer.valueOf( request.getParameter( "id" ) );
-        List<Controller> controllers = em.createQuery("SELECT c FROM Controller c", Controller.class).getResultList();
-        Controller controller = controllers.stream().filter( (c) -> c.getId() == id).findFirst().get();
-
-        tran.commit();
-        em.close();
-
-        request.setAttribute("controller", controller );
+        request.setAttribute(ATTR_CONTROLLERDATA, controllerData);
         request.getRequestDispatcher("/WEB-INF/view/Controller.jsp").include(request, response);
     }
 }

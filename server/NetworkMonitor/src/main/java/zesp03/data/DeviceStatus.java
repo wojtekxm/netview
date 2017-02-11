@@ -5,40 +5,43 @@ import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
 
 public class DeviceStatus {
-    private Controller controller;
-    private Device device;
-    private DeviceSurvey survey;
+    private ControllerData controller;
+    private DeviceData device;
+    private DeviceSurveyData deviceSurvey;
 
-    public DeviceStatus() {
+    public DeviceStatus(ControllerData c, DeviceData d, DeviceSurveyData s) {
+        this.controller = c;
+        this.device = d;
+        this.deviceSurvey = s;
     }
 
     public DeviceStatus(Controller c, Device d, DeviceSurvey s) {
-        this.controller = c;
-        this.device = d;
-        this.survey = s;
+        this(new ControllerData(c),
+                new DeviceData(d),
+                new DeviceSurveyData(s));
     }
 
-    public Controller getController() {
+    public ControllerData getController() {
         return controller;
     }
 
-    public void setController(Controller controller) {
+    public void setController(ControllerData controller) {
         this.controller = controller;
     }
 
-    public Device getDevice() {
+    public DeviceData getDevice() {
         return device;
     }
 
-    public void setDevice(Device device) {
+    public void setDevice(DeviceData device) {
         this.device = device;
     }
 
-    public DeviceSurvey getSurvey() {
-        return survey;
+    public DeviceSurveyData getDeviceSurvey() {
+        return deviceSurvey;
     }
 
-    public void setSurvey(DeviceSurvey survey) {
-        this.survey = survey;
+    public void setDeviceSurvey(DeviceSurveyData deviceSurvey) {
+        this.deviceSurvey = deviceSurvey;
     }
 }

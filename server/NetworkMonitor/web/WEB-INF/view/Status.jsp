@@ -1,27 +1,23 @@
-<%@page import="zesp03.data.DeviceStatus"
-%>
-<%@ page import="zesp03.data.UserData"
-%>
-<%@ page import="zesp03.filter.AuthenticationFilter"
-%>
-<%@ page import="zesp03.servlet.DetailsServlet"
-%>
-<%@ page import="zesp03.servlet.StatusServlet"
-%><%@ page import="java.util.List"
-%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-%><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
-%><%
+<%@page import="zesp03.data.DeviceStatus" %>
+<%@ page import="zesp03.data.UserData" %>
+<%@ page import="zesp03.filter.AuthenticationFilter" %>
+<%@ page import="zesp03.servlet.DeviceServlet" %>
+<%@ page import="zesp03.servlet.StatusServlet" %>
+<%@ page import="java.util.List" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
     List<DeviceStatus> list = (List<DeviceStatus>) request.getAttribute(StatusServlet.allDevicesString);
     UserData userData = (UserData) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
     String style = (String) session.getAttribute("style");
     String logo = (String) session.getAttribute("logo");
-%><!DOCTYPE html>
+%>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge; chrome=1"/>
-    <title>Network Monitor</title>
+    <title>Status sieci</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/<%= style %>.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -63,10 +59,10 @@
                     int sumInactive = 0;
                     int sumDisabled = 0;
                         for (final DeviceStatus info : list) {
-                        int sumUsers = info.getSurvey().getClientsSum();
+                            int sumUsers = info.getDeviceSurvey().getClientsSum();
                         String clazz;
-                        if( info.getSurvey().isEnabled() ) {
-                            if( info.getSurvey().getClientsSum() > 0 ) {
+                            if (info.getDeviceSurvey().isEnabled()) {
+                                if (info.getDeviceSurvey().getClientsSum() > 0) {
                                 clazz = "greenDiode";
                                 sumActive++;
                             }
@@ -80,7 +76,7 @@
                             sumDisabled++;
                         }
 
-                            final String h = "/details?" + DetailsServlet.PARAM_ID + "=" + info.getDevice().getId();
+                            final String h = "/device?" + DeviceServlet.GET_ID + "=" + info.getDevice().getId();
                         String t = info.getDevice().getName();
                         if( info.getDevice().getDescription() != null )t += "<br>opis: " + info.getDevice().getDescription();
                         t += "<br>z: " + info.getController().getName();

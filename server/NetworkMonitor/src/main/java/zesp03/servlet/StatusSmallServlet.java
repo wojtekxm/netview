@@ -23,7 +23,7 @@ public class StatusSmallServlet extends HttpServlet {
         List<DeviceStatus> states;
 
         long t0 = System.nanoTime();
-        states = App.checkDevs();
+        states = App.checkDevices();
         double time = (System.nanoTime() - t0) * 0.000000001;
 
         request.setAttribute(ATTR_TIME, time);

@@ -1,22 +1,20 @@
-<%@ page import="zesp03.entity.Controller"
-%>
-<%@ page import="java.util.List"
-%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"
-%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"
-%>
+<%@ page import="zesp03.data.ControllerData" %>
+<%@ page import="zesp03.servlet.AllControllersServlet" %>
+<%@ page import="zesp03.servlet.ControllerServlet" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    List< Controller > controllers = ( List< Controller > )request.getAttribute( "controllers" );
-%><!DOCTYPE html>
+    ArrayList<ControllerData> list = (ArrayList<ControllerData>) request.getAttribute(AllControllersServlet.ATTR_LIST);
+%>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Network Monitor</title>
+    <title>Kontrolery</title>
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
@@ -39,17 +37,19 @@
 <div class="container">
     <div class="list-group ">
         <div class="row">
-            <a href="/Controllers.jsp" class="btn btn-primary btn-default btn-lg active" role="button">Stwórz nowy
+            <a href="/add-controller" class="btn btn-primary btn-default btn-lg active" role="button">Stwórz nowy
                 kontroler</a>
         </div>
 
-        <% for (Controller controller : controllers) { %>
+        <% for (ControllerData c : list) {
+            String href = "/controller?" + ControllerServlet.GET_ID + "=" + c.getId();
+        %>
         <div class="row">
-            <a href="/controller?id=<%= controller.getId() %>"
+            <a href="<%= href %>"
                class="col-md-4  list-group-item list-group-item-info">
-                <%= controller.getName() %>
-                <%= controller.getIpv4() %>
-                <%= (controller.getDescription() != null && !controller.getDescription().isEmpty()) ? controller.getDescription() : "null" %>
+                <%= c.getName() %>
+                <%= c.getIpv4() %>
+                <%= c.getDescription() != null ? c.getDescription() : "<em>(brak)</em>" %>
             </a>
         </div>
         <% } %>

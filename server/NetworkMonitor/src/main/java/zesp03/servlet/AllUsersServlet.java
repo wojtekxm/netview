@@ -31,11 +31,13 @@ public class AllUsersServlet extends HttpServlet {
             em = Database.createEntityManager();
             tran = em.getTransaction();
             tran.begin();
+
             List<User> list = em.createQuery("SELECT u FROM User u", User.class)
                     .getResultList();
             for (User u : list) {
                 allUsers.add(new UserData(u));
             }
+
             tran.commit();
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();

@@ -45,6 +45,46 @@ public class Unicode {
         return isAlpha(unicode) || isDigit(unicode);
     }
 
+    // TODO test
+    public static boolean onlyLower(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!isLower(s.charAt(i))) return false;
+        }
+        return true;
+    }
+
+    // TODO test
+    public static boolean onlyDigit(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!isDigit(s.charAt(i))) return false;
+        }
+        return true;
+    }
+
+    // TODO test
+    public static boolean onlyAlpha(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!isAlpha(s.charAt(i))) return false;
+        }
+        return true;
+    }
+
+    // TODO test
+    public static boolean onlyAlphaNum(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!isAlphaNum(s.charAt(i))) return false;
+        }
+        return true;
+    }
+
+    // TODO test
+    public static boolean onlyUpper(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!isUpper(s.charAt(i))) return false;
+        }
+        return true;
+    }
+
     /**
      * Sprawdza czy argument text ma taką właściwość,
      * że każdy znak (Unicode code point) jest reprezentowany przez tylko jeden char (Unicode code unit).

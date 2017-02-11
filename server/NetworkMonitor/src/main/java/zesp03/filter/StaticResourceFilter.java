@@ -1,13 +1,14 @@
 package zesp03.filter;
 
-import zesp03.data.UserData;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AdminOnlyFilter implements Filter {
+public class StaticResourceFilter implements Filter {
+    // mapuje do Boolean
+    public static final String ATTR_IS_STATIC = "zesp03.filter.StaticResourceFilter.ATTR_IS_STATIC";
+
     @Override
     public void destroy() {
     }
@@ -17,16 +18,15 @@ public class AdminOnlyFilter implements Filter {
         if (req instanceof HttpServletRequest && resp instanceof HttpServletResponse) {
             final HttpServletRequest hreq = (HttpServletRequest) req;
             final HttpServletResponse hresp = (HttpServletResponse) resp;
-            UserData userData = (UserData) hreq.getAttribute(AuthenticationFilter.ATTR_USERDATA);
-            if (userData != null && userData.isAdmin()) {
-                chain.doFilter(hreq, hresp);
-                return;
-            } else {
-                hresp.sendError(HttpServletResponse.SC_FORBIDDEN, "you need to be logged as admin");
-                return;
+            String r = hreq.getRequestURI();
+            String[] prefixes = {"/images/", "/css/", "/js/", "/favicon."};
+            boolean isStatic = false;
+            for (String prefix : prefixes) {
+                if (r.startsWith(prefix)) isStatic = true;
             }
+            hreq.setAttribute(ATTR_IS_STATIC, isStatic);
         }
-        resp.flushBuffer();
+        chain.doFilter(req, resp);
     }
 
     @Override

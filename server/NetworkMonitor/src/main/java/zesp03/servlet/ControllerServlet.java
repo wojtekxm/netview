@@ -6,13 +6,15 @@ import zesp03.entity.Controller;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class ShowDetailsController extends HttpServlet {
+@WebServlet(value = "/controller", name = "ControllerServlet")
+public class ControllerServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -40,6 +42,6 @@ public class ShowDetailsController extends HttpServlet {
         em.close();
 
         request.setAttribute("controller", controller );
-        request.getRequestDispatcher("/WEB-INF/view/ShowDetailsController.jsp").include( request, response );
+        request.getRequestDispatcher("/WEB-INF/view/Controller.jsp").include(request, response);
     }
 }

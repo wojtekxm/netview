@@ -13,7 +13,8 @@ public class CurrentSurvey {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "device_id",
-            foreignKey = @ForeignKey(name = "currentsurvey_device_fk")
+            foreignKey = @ForeignKey(name = "currentsurvey_device_fk"),
+            nullable = false
     )
     private Device device;
 

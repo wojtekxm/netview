@@ -7,6 +7,7 @@ import zesp03.entity.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@WebServlet(value = "/all-users", name = "AllUsersServlet")
 public class AllUsersServlet extends HttpServlet {
     // mapuje do ArrayList<UserData>
     public static final String ATTR_USERS = "zesp03.servlet.AllUsersServlet.ATTR_ALL_USERS";

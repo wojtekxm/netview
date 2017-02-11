@@ -4,7 +4,7 @@
 %>
 <%@ page import="zesp03.entity.DeviceSurvey"
 %>
-<%@ page import="zesp03.servlet.Details"
+<%@ page import="zesp03.servlet.DetailsServlet"
 %><%@ page import="java.time.Instant"
 %><%@ page import="java.time.LocalDateTime"
 %><%@ page import="java.time.ZoneId"
@@ -16,11 +16,11 @@
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 %><%
-    DeviceData device = (DeviceData) request.getAttribute(Details.ATTR_DEVICE);
-    ControllerData controller = (ControllerData) request.getAttribute(Details.ATTR_CONTROLLER);
-    List<DeviceSurvey> selectedSurveys = (List<DeviceSurvey>)request.getAttribute(Details.ATTR_SELECTED_SURVEYS);
-    int totalSurveys = (Integer)request.getAttribute(Details.ATTR_TOTAL_SURVEYS);
-    int historyLimit = (Integer)request.getAttribute(Details.ATTR_HISTORY_LIMIT);
+    DeviceData device = (DeviceData) request.getAttribute(DetailsServlet.ATTR_DEVICE);
+    ControllerData controller = (ControllerData) request.getAttribute(DetailsServlet.ATTR_CONTROLLER);
+    List<DeviceSurvey> selectedSurveys = (List<DeviceSurvey>) request.getAttribute(DetailsServlet.ATTR_SELECTED_SURVEYS);
+    int totalSurveys = (Integer) request.getAttribute(DetailsServlet.ATTR_TOTAL_SURVEYS);
+    int historyLimit = (Integer) request.getAttribute(DetailsServlet.ATTR_HISTORY_LIMIT);
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -36,13 +36,13 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/index.jsp">Network Monitor</a>
+            <a class="navbar-brand" href="/">Network Monitor</a>
         </div>
         <ul class="nav navbar-nav">
             <li><a href="/make-survey">nowe badania</a></li>
             <li><a href="/status-small">urządzenia (mały widok)</a></li>
-            <li><a href="/deviceinfo">urządzenia (średni widok)</a></li>
-            <li><a href="/ShowControllers">kontrolery</a></li>
+            <li><a href="/status">urządzenia (średni widok)</a></li>
+            <li><a href="/all-controllers">kontrolery</a></li>
             <li><a href="/logout">wyloguj</a></li>
         </ul>
     </div>
@@ -134,7 +134,7 @@
                 Collections.sort(limits);
             %>
                 <input type="hidden" name="id" value="<%= device.getId() %>">
-                <select name="<%= Details.PARAM_HISTORY_LIMIT %>"><%
+                <select name="<%= DetailsServlet.PARAM_HISTORY_LIMIT %>"><%
                     for (Integer i : limits) {
                 %>
                     <option value="<%= i %>" <%= i.equals(historyLimit) ? "selected" : "" %>><%= i %>

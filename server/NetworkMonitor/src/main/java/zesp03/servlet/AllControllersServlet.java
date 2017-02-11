@@ -6,18 +6,22 @@ import zesp03.entity.Controller;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class ShowControllers extends HttpServlet {
-
+@WebServlet(value = "/all-controllers", name = "AllControllersServlet")
+public class AllControllersServlet extends HttpServlet {
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         handle(request, response);
     }
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         handle(request, response);
@@ -38,6 +42,6 @@ public class ShowControllers extends HttpServlet {
         em.close();
 
         request.setAttribute("controllers", attrList);
-        request.getRequestDispatcher("/WEB-INF/view/ShowControllers.jsp").include( request, response );
+        request.getRequestDispatcher("/WEB-INF/view/AllControllers.jsp").include(request, response);
     }
 }

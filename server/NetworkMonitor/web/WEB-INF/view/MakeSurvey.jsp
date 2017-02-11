@@ -1,9 +1,10 @@
-<%@ page import="zesp03.servlet.MakeSurvey"
+<%@ page import="zesp03.servlet.MakeSurveyServlet"
 %><%@ page import="java.util.Locale"
-%><%@ page contentType="text/html;charset=UTF-8" language="java"
+%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"
 %><%
-    Double attrTime = (Double)request.getAttribute(MakeSurvey.ATTR_TIME);
-    Long rows = (Long) request.getAttribute(MakeSurvey.ATTR_ROWS);
+    Double attrTime = (Double) request.getAttribute(MakeSurveyServlet.ATTR_TIME);
+    Long rows = (Long) request.getAttribute(MakeSurveyServlet.ATTR_ROWS);
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -18,13 +19,13 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/index.jsp">Network Monitor</a>
+                <a class="navbar-brand" href="/">Network Monitor</a>
             </div>
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/make-survey">nowe badania</a></li>
                 <li><a href="/status-small">urządzenia (mały widok)</a></li>
-                <li><a href="/deviceinfo">urządzenia (średni widok)</a></li>
-                <li><a href="/ShowControllers">kontrolery</a></li>
+                <li><a href="/status">urządzenia (średni widok)</a></li>
+                <li><a href="/all-controllers">kontrolery</a></li>
                 <li><a href="/logout">wyloguj</a></li>
             </ul>
             <hr>
@@ -43,7 +44,8 @@
         %>
         <p>Kliknij przycisk poniżej by wykonać nowe badanie sieci</p>
         <form method="post" action="make-survey">
-            <input type="hidden" name="<%= MakeSurvey.PARAM_ACTION %>" value="<%= MakeSurvey.PARAM_ACTION_UPDATE %>">
+            <input type="hidden" name="<%= MakeSurveyServlet.PARAM_ACTION %>"
+                   value="<%= MakeSurveyServlet.PARAM_ACTION_UPDATE %>">
             <input type="submit" value="Nowe badanie">
         </form>
     </div>

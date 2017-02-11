@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -253,6 +254,27 @@ public class App {
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException exc) {
             throw new IllegalStateException(exc);
         }
+    }
+
+    /**
+     * @param name nazwa użytkownika do sprawdzenia
+     * @return czy nazwa użytkownika składa się z poprawnych znaków (niezależnie od tego czy jest już zajęta)
+     */
+    public static boolean isUserNameValid(String name) {
+        if (name == null || name.isEmpty()) return false;
+        return Unicode.onlyAlphaNum(name);
+    }
+
+    /**
+     * Generuje losowy token w formacie Base64URL, reprezentujący ciąg bajtów o długości randomBytes.
+     *
+     * @param randomBytes liczba losowych bajtów do wygenerowania
+     * @return napis Base64URL reprezentujący losowo wygenerowany token.
+     */
+    public static String generateToken(int randomBytes) {
+        byte[] bin = new byte[randomBytes];
+        new SecureRandom().nextBytes(bin);
+        return Base64.getUrlEncoder().encodeToString(bin);
     }
 
     //TODO zamień na coś lepszego

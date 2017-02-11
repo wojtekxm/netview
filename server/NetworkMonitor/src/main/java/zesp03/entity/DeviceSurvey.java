@@ -22,7 +22,8 @@ public class DeviceSurvey {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "device_id",
-            foreignKey = @ForeignKey(name = "devicesurvey_device_fk")
+            foreignKey = @ForeignKey(name = "devicesurvey_device_fk"),
+            nullable = false
     )
     private Device device;
 

@@ -7,11 +7,13 @@ import zesp03.entity.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@WebServlet(value = "/block-password", name = "BlockPasswordServlet")
 public class BlockPasswordServlet extends HttpServlet {
     public static final String POST_ID = "id";
 

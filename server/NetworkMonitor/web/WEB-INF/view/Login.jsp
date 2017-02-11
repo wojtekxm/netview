@@ -1,11 +1,11 @@
-<%@ page import="zesp03.servlet.Login"
+<%@ page import="zesp03.servlet.LoginServlet"
 %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 %>
 <%
-    Boolean failed = (Boolean) request.getAttribute(Login.ATTR_FAILED);
+    Boolean failed = (Boolean) request.getAttribute(LoginServlet.ATTR_FAILED);
     if (failed == null) failed = false;
-    String error = request.getParameter(Login.GET_ERROR);
+    String error = request.getParameter(LoginServlet.GET_ERROR);
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -34,12 +34,12 @@
             <table style="width:50px;">
                 <tr>
                     <td>Login:&nbsp;</td>
-                    <td><input type="text" name="<%= Login.POST_USERNAME %>"
+                    <td><input type="text" name="<%= LoginServlet.POST_USERNAME %>"
                                style="z-index: 100; font-weight: bold;color:black;"></td>
                 </tr>
                 <tr>
                     <td>Hasło:&nbsp;</td>
-                    <td><input type="password" name="<%= Login.POST_PASSWORD %>"
+                    <td><input type="password" name="<%= LoginServlet.POST_PASSWORD %>"
                                style="z-index: 100;font-weight: bold; color:black;"></td>
                 </tr>
                 <tr>

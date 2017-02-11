@@ -10,10 +10,10 @@ public class User {
     @TableGenerator(name = "user", pkColumnValue = "user")
     private Long id;
 
-    @Column(name = "\"name\"", length = 255, unique = true, nullable = false)
+    @Column(name = "\"name\"", unique = true)
     private String name;
 
-    @Column(name = "secret", length = 132, nullable = true)
+    @Column(length = 132)
     private byte[] secret;
 
     @Column(name = "is_admin", nullable = false)

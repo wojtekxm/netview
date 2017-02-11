@@ -5,14 +5,14 @@ import zesp03.entity.User;
 public class UserData {
     private long id;
     private String name;
+    private byte[] secret;
     private boolean isAdmin;
-    private boolean isBlocked;
 
     public UserData(User user) {
         this.id = user.getId();
         this.name = user.getName();
+        this.secret = user.getSecret();
         this.isAdmin = user.isAdmin();
-        this.isBlocked = user.getSecret() == null;
     }
 
     public long getId() {
@@ -31,6 +31,14 @@ public class UserData {
         this.name = name;
     }
 
+    public byte[] getSecret() {
+        return secret;
+    }
+
+    public void setSecret(byte[] secret) {
+        this.secret = secret;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -40,10 +48,7 @@ public class UserData {
     }
 
     public boolean isBlocked() {
-        return isBlocked;
+        return secret == null;
     }
 
-    public void setIsBlocked(boolean blocked) {
-        this.isBlocked = blocked;
-    }
 }

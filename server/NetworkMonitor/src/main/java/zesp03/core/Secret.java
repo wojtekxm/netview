@@ -45,6 +45,10 @@ public final class Secret {
         return new Secret(data);
     }
 
+    public static boolean check(byte[] secretData, String password) {
+        return Secret.readData(secretData).check(password.toCharArray());
+    }
+
     private final byte[] data;
 
     protected Secret(int iterations, byte[] salt, byte[] key) {

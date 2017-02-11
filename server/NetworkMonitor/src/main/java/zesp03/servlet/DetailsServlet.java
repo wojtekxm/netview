@@ -9,6 +9,7 @@ import zesp03.entity.DeviceSurvey;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,19 +17,20 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Details extends HttpServlet {
+@WebServlet(value = "/details", name = "DetailsServlet")
+public class DetailsServlet extends HttpServlet {
     public static final String PARAM_ID = "id";
     public static final String PARAM_HISTORY_LIMIT = "limit";
     // mapuje do zesp03.data.ControllerData
-    public static final String ATTR_CONTROLLER = "zesp03.servlet.Details.ATTR_CONTROLLER";
+    public static final String ATTR_CONTROLLER = "zesp03.servlet.DetailsServlet.ATTR_CONTROLLER";
     // mapuje do zesp03.data.DeviceData
-    public static final String ATTR_DEVICE = "zesp03.servlet.Details.ATTR_DEVICE";
+    public static final String ATTR_DEVICE = "zesp03.servlet.DetailsServlet.ATTR_DEVICE";
     // mapuje do List<DeviceSurvey> posortowanej: na początku najnowsze
-    public static final String ATTR_SELECTED_SURVEYS = "zesp03.servlet.Details.ATTR_SELECTED_SURVEYS";
+    public static final String ATTR_SELECTED_SURVEYS = "zesp03.servlet.DetailsServlet.ATTR_SELECTED_SURVEYS";
     // mapuje do Integer
-    public static final String ATTR_TOTAL_SURVEYS = "zesp03.servlet.Details.ATTR_TOTAL_SURVEYS";
+    public static final String ATTR_TOTAL_SURVEYS = "zesp03.servlet.DetailsServlet.ATTR_TOTAL_SURVEYS";
     // mapuje do Integer
-    public static final String ATTR_HISTORY_LIMIT = "zesp03.servlet.Details.ATTR_HISTORY_LIMIT";
+    public static final String ATTR_HISTORY_LIMIT = "zesp03.servlet.DetailsServlet.ATTR_HISTORY_LIMIT";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

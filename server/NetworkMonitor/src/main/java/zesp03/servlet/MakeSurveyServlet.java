@@ -6,18 +6,20 @@ import zesp03.core.Database;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class MakeSurvey extends HttpServlet {
+@WebServlet(value = "/make-survey", name = "MakeSurveyServlet")
+public class MakeSurveyServlet extends HttpServlet {
     public static final String PARAM_ACTION = "action";
     public static final String PARAM_ACTION_UPDATE = "update";
     // mapowany do typu Double
-    public static final String ATTR_TIME = "zesp03.servlet.MakeSurvey.ATTR_TIME";
+    public static final String ATTR_TIME = "zesp03.servlet.MakeSurveyServlet.ATTR_TIME";
     // mapowany do typu Integer
-    public static final String ATTR_ROWS = "zesp03.servlet.MakeSurvey.ATTR_ROWS";
+    public static final String ATTR_ROWS = "zesp03.servlet.MakeSurveyServlet.ATTR_ROWS";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

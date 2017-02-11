@@ -22,13 +22,13 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/index.jsp">Network Monitor</a>
+            <a class="navbar-brand" href="/">Network Monitor</a>
         </div>
         <ul class="nav navbar-nav">
             <li><a href="/make-survey">nowe badania</a></li>
             <li><a href="/status-small">urządzenia (mały widok)</a></li>
-            <li><a href="/deviceinfo">urządzenia (średni widok)</a></li>
-            <li><a href="/ShowControllers">kontrolery</a></li>
+            <li><a href="/status">urządzenia (średni widok)</a></li>
+            <li><a href="/all-controllers">kontrolery</a></li>
             <li><a href="/logout">wyloguj</a></li>
         </ul>
     </div>
@@ -37,7 +37,7 @@
 <div class="container">
     <div class="list-group ">
         <div class="row">
-            <form method="post" action="RemoveController?id=<%= controller.getId() %>">
+            <form method="post" action="/remove-controller?id=<%= controller.getId() %>">
                 <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active" role="button">
             </form>
         </div>

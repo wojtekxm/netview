@@ -26,42 +26,50 @@ public class AuthenticationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+        Boolean isStaticResource = (Boolean) req.getAttribute(StaticResourceFilter.ATTR_IS_STATIC);
+        if (isStaticResource) {
+            chain.doFilter(req, resp);
+            return;
+        }
         if (req instanceof HttpServletRequest && resp instanceof HttpServletResponse) {
             final HttpServletRequest hreq = (HttpServletRequest) req;
             final HttpServletResponse hresp = (HttpServletResponse) resp;
             Cookie cookieUid = Cookies.find(hreq, COOKIE_USERID);
             Cookie cookiePass = Cookies.find(hreq, COOKIE_PASSTOKEN);
             if (cookieUid != null && cookiePass != null) {
-                Long id = null;
+                Long userId = null;
                 if (cookieUid.getValue() != null) {
                     try {
-                        id = Long.parseLong(cookieUid.getValue());
+                        userId = Long.parseLong(cookieUid.getValue());
                     } catch (NumberFormatException ignore) {
                     }
                 }
-                final String hash = cookiePass.getValue();
+                final String passToken = cookiePass.getValue();
                 UserData userData = null;
 
-                if (id != null && hash != null) {
+                if (userId != null && passToken != null) {
                     EntityManager em = null;
                     EntityTransaction tran = null;
                     try {
                         em = Database.createEntityManager();
                         tran = em.getTransaction();
                         tran.begin();
-                        User user = em.find(User.class, id);
-                        if (user != null && user.getSecret() != null) {
-                            Secret secret = Secret.readData(user.getSecret());
-                            if (secret.check(hash.toCharArray())) {
-                                userData = new UserData(user);
-                            }
-                        }
+
+                        User user = em.find(User.class, userId);
+                        if (user != null)
+                            userData = new UserData(user);
+
                         tran.commit();
                     } catch (RuntimeException exc) {
                         if (tran != null && tran.isActive()) tran.rollback();
                         throw exc;
                     } finally {
                         if (em != null) em.close();
+                    }
+
+                    if (userData != null && userData.getSecret() != null) {
+                        if (!Secret.check(userData.getSecret(), passToken))
+                            userData = null;
                     }
                 }
 
@@ -71,8 +79,6 @@ public class AuthenticationFilter implements Filter {
                     cookiePass.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookiePass);
                     hreq.setAttribute(ATTR_USERDATA, userData);
-                    chain.doFilter(req, resp);
-                    return;
                 } else {
                     cookieUid.setValue("");
                     cookieUid.setMaxAge(0);
@@ -82,10 +88,8 @@ public class AuthenticationFilter implements Filter {
                     hresp.addCookie(cookiePass);
                 }
             }
-            hresp.sendRedirect("/login?error=1");
-            return;
         }
-        resp.flushBuffer();
+        chain.doFilter(req, resp);
     }
 
     @Override

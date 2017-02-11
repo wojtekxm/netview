@@ -10,6 +10,7 @@ import zesp03.filter.AuthenticationFilter;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class Login extends HttpServlet {
+@WebServlet(value = "/login", name = "LoginServlet")
+public class LoginServlet extends HttpServlet {
     public static final String POST_USERNAME = "u";
     public static final String POST_PASSWORD = "p";
     public static final String GET_ERROR = "error";
     // mapuje do Boolean, opcjonalny
-    public static final String ATTR_FAILED = "zesp03.servlet.Login.ATTR_FAILED";
+    public static final String ATTR_FAILED = "zesp03.servlet.LoginServlet.ATTR_FAILED";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -65,7 +67,7 @@ public class Login extends HttpServlet {
                 Cookie cp = new Cookie(AuthenticationFilter.COOKIE_PASSTOKEN, hash);
                 cu.setMaxAge(60 * 60 * 24 * 30);
                 response.addCookie(cp);
-                response.sendRedirect("/index.jsp");//? home page
+                response.sendRedirect("/");//? home page
                 return;
             } else {
                 request.setAttribute(ATTR_FAILED, Boolean.TRUE);

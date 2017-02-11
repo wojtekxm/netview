@@ -1,12 +1,13 @@
 <%@ page import="zesp03.data.DeviceStatus"
-%><%@ page import="zesp03.servlet.Details"
 %>
-<%@ page import="zesp03.servlet.StatusSmall"
+<%@ page import="zesp03.servlet.DetailsServlet"
+%>
+<%@ page import="zesp03.servlet.StatusSmallServlet"
 %><%@ page import="java.util.List"
 %><%@ page contentType="text/html;charset=UTF-8" language="java"
 %><%
-    List<DeviceStatus> states = (List<DeviceStatus>) request.getAttribute(StatusSmall.ATTR_STATES);
-    Double time = (Double) request.getAttribute(StatusSmall.ATTR_TIME);
+    List<DeviceStatus> states = (List<DeviceStatus>) request.getAttribute(StatusSmallServlet.ATTR_STATES);
+    Double time = (Double) request.getAttribute(StatusSmallServlet.ATTR_TIME);
 %><!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -22,13 +23,13 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/index.jsp">Network Monitor</a>
+                <a class="navbar-brand" href="/">Network Monitor</a>
             </div>
             <ul class="nav navbar-nav">
                 <li><a href="/make-survey">nowe badania</a></li>
                 <li class="active"><a href="/status-small">urządzenia (mały widok)</a></li>
-                <li><a href="/deviceinfo">urządzenia (średni widok)</a></li>
-                <li><a href="/ShowControllers">kontrolery</a></li>
+                <li><a href="/status">urządzenia (średni widok)</a></li>
+                <li><a href="/all-controllers">kontrolery</a></li>
                 <li><a href="/logout">wyloguj</a></li>
             </ul>
         </div>
@@ -54,7 +55,7 @@
                     clazz = "square-gray";
                     sumDisabled++;
                 }
-                final String h = "/details?" + Details.PARAM_ID + "=" + info.getDevice().getId();
+                final String h = "/details?" + DetailsServlet.PARAM_ID + "=" + info.getDevice().getId();
                 String t = info.getDevice().getName();
                 if( info.getDevice().getDescription() != null )t += "<br>opis: " + info.getDevice().getDescription();
                 t += "<br>z: " + info.getController().getName();

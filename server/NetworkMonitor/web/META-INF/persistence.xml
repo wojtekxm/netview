@@ -11,6 +11,7 @@
         <class>zesp03.entity.DeviceSurvey</class>
         <class>zesp03.entity.CurrentSurvey</class>
         <class>zesp03.entity.User</class>
+        <class>zesp03.entity.Token</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url"

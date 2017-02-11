@@ -12,6 +12,8 @@ public class FirstAdminCreation implements ServletContextListener {
         String name = e.getServletContext().getInitParameter("first-admin-name");
         String password = e.getServletContext().getInitParameter("first-admin-reset-password");
         if (name != null && password != null) {
+            if (!App.isUserNameValid(name))
+                throw new IllegalStateException("invalid first-admin-name");
             String hash = App.passwordToHash(password);
             Secret s = Secret.create(hash.toCharArray(), 1);
             Database.run(em -> {

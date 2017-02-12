@@ -1,18 +1,26 @@
-package zesp03.data;
+package zesp03.data.row;
 
 import zesp03.entity.DeviceSurvey;
 
-public class DeviceSurveyData {
+public class DeviceSurveyRow {
     private long id;
     private int timestamp;
-    private boolean isEnabled;
+    private boolean enabled;
     private int clientsSum;
+    private long deviceId;
 
-    public DeviceSurveyData(DeviceSurvey s) {
+    public DeviceSurveyRow() {
+    }
+
+    /**
+     * DeviceSurvey entity should be in managed state.
+     */
+    public DeviceSurveyRow(DeviceSurvey s) {
         this.id = s.getId();
         this.timestamp = s.getTimestamp();
-        this.isEnabled = s.isEnabled();
+        this.enabled = s.isEnabled();
         this.clientsSum = s.getClientsSum();
+        this.deviceId = s.getDevice().getId();
     }
 
     public long getId() {
@@ -32,11 +40,11 @@ public class DeviceSurveyData {
     }
 
     public boolean isEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
     public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
+        this.enabled = enabled;
     }
 
     public int getClientsSum() {
@@ -45,5 +53,13 @@ public class DeviceSurveyData {
 
     public void setClientsSum(int clientsSum) {
         this.clientsSum = clientsSum;
+    }
+
+    public long getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(long deviceId) {
+        this.deviceId = deviceId;
     }
 }

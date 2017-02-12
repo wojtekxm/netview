@@ -1,8 +1,8 @@
-<%@ page import="zesp03.data.ControllerData" %>
+<%@ page import="zesp03.data.row.ControllerRow" %>
 <%@ page import="zesp03.servlet.AddControllerServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    ControllerData controllerData = (ControllerData) request.getAttribute(AddControllerServlet.ATTR_CONTROLLERDATA);
+    ControllerRow controllerRow = (ControllerRow) request.getAttribute(AddControllerServlet.ATTR_CONTROLLERDATA);
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -15,9 +15,9 @@
 </head>
 <body>
 Dodano nowy kontroler<br>
-nazwa: <%= controllerData.getName() %><br>
-adres IP: <%= controllerData.getIpv4() %><br>
-opis: <%= controllerData.getDescription() == null ? "(brak)" : controllerData.getDescription() %><br>
-id: <%= controllerData.getId() %><br>
+nazwa: <%= controllerRow.getName() %><br>
+adres IP: <%= controllerRow.getIpv4() %><br>
+opis: <%= controllerRow.getDescription() == null ? "(brak)" : controllerRow.getDescription() %><br>
+id: <%= controllerRow.getId() %><br>
 </body>
 </html>

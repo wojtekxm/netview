@@ -2,7 +2,7 @@ package zesp03.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zesp03.data.DeviceStatus;
+import zesp03.data.DeviceStatusData;
 import zesp03.data.SurveyInfo;
 import zesp03.entity.Controller;
 import zesp03.entity.CurrentSurvey;
@@ -78,8 +78,8 @@ public class App {
         return sb.toString().intern();
     }
 
-    public static List<DeviceStatus> checkDevices() {
-        List<DeviceStatus> list;
+    public static List<DeviceStatusData> checkDevices() {
+        List<DeviceStatusData> list;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -94,7 +94,7 @@ public class App {
                     "INNER JOIN d.controller c", Object[].class)
                     .getResultList()
                     .stream()
-                    .map(arr -> new DeviceStatus(
+                    .map(arr -> new DeviceStatusData(
                             (Controller) arr[0],
                             (Device) arr[1],
                             (DeviceSurvey) arr[2]))
@@ -183,7 +183,7 @@ public class App {
                     final Device d = new Device();
                     d.setName(name);
                     d.setController(controller);
-                    d.setIsKnown(false);
+                    d.setKnown(false);
                     em.persist(d);
                     final CurrentSurvey cs = new CurrentSurvey();
                     d.addCurrentSurvey(cs);
@@ -204,7 +204,7 @@ public class App {
                 final Device d = existing.get(name);
                 final DeviceSurvey s = new DeviceSurvey();
                 s.setTimestamp(timestamp);
-                s.setIsEnabled(info.isEnabled());
+                s.setEnabled(info.isEnabled());
                 s.setClientsSum(info.getClientsSum());
                 s.setDevice(d);
                 em.persist(s);

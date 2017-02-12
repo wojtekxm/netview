@@ -1,6 +1,6 @@
-<%@ page import="zesp03.data.ControllerData" %>
-<%@ page import="zesp03.data.DeviceData" %>
-<%@ page import="zesp03.data.DeviceSurveyData" %>
+<%@ page import="zesp03.data.row.ControllerRow" %>
+<%@ page import="zesp03.data.row.DeviceRow" %>
+<%@ page import="zesp03.data.row.DeviceSurveyRow" %>
 <%@ page import="zesp03.servlet.DeviceServlet" %>
 <%@ page import="java.time.Instant" %>
 <%@ page import="java.time.LocalDateTime" %>
@@ -11,9 +11,9 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    DeviceData device = (DeviceData) request.getAttribute(DeviceServlet.ATTR_DEVICE);
-    ControllerData controller = (ControllerData) request.getAttribute(DeviceServlet.ATTR_CONTROLLER);
-    List<DeviceSurveyData> selectedSurveys = (List<DeviceSurveyData>) request.getAttribute(DeviceServlet.ATTR_SELECTED_SURVEYS);
+    DeviceRow device = (DeviceRow) request.getAttribute(DeviceServlet.ATTR_DEVICE);
+    ControllerRow controller = (ControllerRow) request.getAttribute(DeviceServlet.ATTR_CONTROLLER);
+    List<DeviceSurveyRow> selectedSurveys = (List<DeviceSurveyRow>) request.getAttribute(DeviceServlet.ATTR_SELECTED_SURVEYS);
     Integer totalSurveys = (Integer) request.getAttribute(DeviceServlet.ATTR_TOTAL_SURVEYS);
     Integer historyLimit = (Integer) request.getAttribute(DeviceServlet.ATTR_HISTORY_LIMIT);
 %>
@@ -91,7 +91,7 @@
             </thead>
             <tbody><%
                 int n = 1;
-                for (final DeviceSurveyData survey : selectedSurveys) {
+                for (final DeviceSurveyRow survey : selectedSurveys) {
                     final Instant instant = Instant.ofEpochSecond(survey.getTimestamp());
                     final ZoneId zone = ZoneId.systemDefault();
                     final LocalDateTime ld = LocalDateTime.ofInstant(instant, zone);

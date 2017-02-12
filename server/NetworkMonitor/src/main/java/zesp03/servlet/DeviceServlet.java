@@ -1,9 +1,10 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
-import zesp03.data.ControllerData;
-import zesp03.data.DeviceData;
-import zesp03.data.DeviceSurveyData;
+import zesp03.data.row.ControllerRow;
+import zesp03.data.row.DeviceRow;
+import zesp03.data.row.DeviceSurveyRow;
+import zesp03.entity.Controller;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
 
@@ -26,11 +27,11 @@ public class DeviceServlet extends HttpServlet {
     // opcjonalny, typ int
     public static final String GET_HISTORY_LIMIT = "limit";
 
-    // mapuje do zesp03.data.ControllerData
+    // mapuje do zesp03.data.row.ControllerRow
     public static final String ATTR_CONTROLLER = "zesp03.servlet.DeviceServlet.ATTR_CONTROLLER";
-    // mapuje do zesp03.data.DeviceData
+    // mapuje do zesp03.data.row.DeviceRow
     public static final String ATTR_DEVICE = "zesp03.servlet.DeviceServlet.ATTR_DEVICE";
-    // mapuje do ArrayList<DeviceSurveyData> posortowanej: na początku najnowsze
+    // mapuje do ArrayList<DeviceSurveyRow> posortowanej: na początku najnowsze
     public static final String ATTR_SELECTED_SURVEYS = "zesp03.servlet.DeviceServlet.ATTR_SELECTED_SURVEYS";
     // mapuje do Integer
     public static final String ATTR_TOTAL_SURVEYS = "zesp03.servlet.DeviceServlet.ATTR_TOTAL_SURVEYS";
@@ -69,9 +70,9 @@ public class DeviceServlet extends HttpServlet {
             }
         }
         int totalSurveys = 0;
-        final ArrayList<DeviceSurveyData> selectedSurveys = new ArrayList<>();
-        ControllerData controllerData = null;
-        DeviceData deviceData = null;
+        final ArrayList<DeviceSurveyRow> selectedSurveys = new ArrayList<>();
+        ControllerRow controllerRow = null;
+        DeviceRow deviceRow = null;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -92,10 +93,11 @@ public class DeviceServlet extends HttpServlet {
                         .limit(historyLimit)
                         .collect(Collectors.toList());
                 for (DeviceSurvey ds : l) {
-                    selectedSurveys.add(new DeviceSurveyData(ds));
+                    selectedSurveys.add(new DeviceSurveyRow(ds));
                 }
-                controllerData = new ControllerData(device.getController());
-                deviceData = new DeviceData(device);
+                Controller controller = device.getController();
+                controllerRow = new ControllerRow(controller);
+                deviceRow = new DeviceRow(device);
             }
 
             tran.commit();
@@ -106,13 +108,13 @@ public class DeviceServlet extends HttpServlet {
             if (em != null) em.close();
         }
 
-        if (deviceData == null) {
+        if (deviceRow == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no such device");
             return;
         }
 
-        request.setAttribute(ATTR_CONTROLLER, controllerData);
-        request.setAttribute(ATTR_DEVICE, deviceData);
+        request.setAttribute(ATTR_CONTROLLER, controllerRow);
+        request.setAttribute(ATTR_DEVICE, deviceRow);
         request.setAttribute(ATTR_SELECTED_SURVEYS, selectedSurveys);
         request.setAttribute(ATTR_TOTAL_SURVEYS, totalSurveys);
         request.setAttribute(ATTR_HISTORY_LIMIT, historyLimit);

@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
-import zesp03.data.UserData;
+import zesp03.data.row.UserRow;
 import zesp03.entity.User;
 
 import javax.persistence.EntityManager;
@@ -17,13 +17,13 @@ import java.util.List;
 
 @WebServlet(value = "/all-users", name = "AllUsersServlet")
 public class AllUsersServlet extends HttpServlet {
-    // mapuje do ArrayList<UserData>
+    // mapuje do ArrayList<UserRow>
     public static final String ATTR_USERS = "zesp03.servlet.AllUsersServlet.ATTR_ALL_USERS";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        final ArrayList<UserData> allUsers = new ArrayList<>();
+        final ArrayList<UserRow> allUsers = new ArrayList<>();
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -35,7 +35,7 @@ public class AllUsersServlet extends HttpServlet {
             List<User> list = em.createQuery("SELECT u FROM User u", User.class)
                     .getResultList();
             for (User u : list) {
-                allUsers.add(new UserData(u));
+                allUsers.add(new UserRow(u));
             }
 
             tran.commit();

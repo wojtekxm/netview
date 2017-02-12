@@ -1,10 +1,10 @@
-<%@ page import="zesp03.data.UserData" %>
+<%@ page import="zesp03.data.row.UserRow" %>
 <%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     session.setAttribute("style", "loggedStyleBlack");
     session.setAttribute("logo", "logoo");
-    UserData userData = (UserData) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -18,9 +18,9 @@
 </head>
 <body>
 <div class="container"><%
-    if (userData != null) {
+    if (userRow != null) {
 %>
-    <h1>Zalogowany jako: <%= userData.getName() %> <span class="label label-default">administrator</span>
+    <h1>Zalogowany jako: <%= userRow.getName() %> <span class="label label-default">administrator</span>
     </h1><%
         }
     %>

@@ -1,12 +1,12 @@
-<%@ page import="zesp03.data.UserData" %>
+<%@ page import="zesp03.data.row.UserRow" %>
 <%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page import="zesp03.servlet.AllUsersServlet" %>
 <%@ page import="zesp03.servlet.UserServlet" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    UserData loggedUser = (UserData) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
-    ArrayList<UserData> allUsers = (ArrayList<UserData>) request.getAttribute(AllUsersServlet.ATTR_USERS);
+    UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+    ArrayList<UserRow> allUsers = (ArrayList<UserRow>) request.getAttribute(AllUsersServlet.ATTR_USERS);
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -21,7 +21,7 @@
 zalogowany: <%= loggedUser.getName() %><br><br>
 lista użytkowników:<br>
 <%
-    for (UserData u : allUsers) {
+    for (UserRow u : allUsers) {
         String href = "/user?" + UserServlet.GET_ID + "=" + u.getId();
         String label = u.getName() != null ? u.getName() : "[" + u.getId() + " - konto nieaktywne]";
 %><a href="<%= href %>"><%= label %>

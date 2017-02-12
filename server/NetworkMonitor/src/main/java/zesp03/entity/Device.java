@@ -16,7 +16,7 @@ public class Device {
     private String name;
 
     @Column(name = "is_known", nullable = false)
-    private Boolean isKnown;
+    private Boolean known;
 
     @Column(length = 1000)
     private String description;
@@ -51,11 +51,11 @@ public class Device {
     }
 
     public Boolean isKnown() {
-        return isKnown;
+        return known;
     }
 
-    public void setIsKnown(Boolean known) {
-        isKnown = known;
+    public void setKnown(Boolean known) {
+        this.known = known;
     }
 
     public String getDescription() {

@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.App;
-import zesp03.data.DeviceStatus;
+import zesp03.data.DeviceStatusData;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,7 +33,7 @@ public class StyleServlet extends HttpServlet {
             session.setAttribute("logo", "logoo");
         }
 
-        List<DeviceStatus> list = App.checkDevices();
+        List<DeviceStatusData> list = App.checkDevices();
         request.setAttribute(allDevicesString, list);
         request.getRequestDispatcher("/status").forward(request, response);
     }

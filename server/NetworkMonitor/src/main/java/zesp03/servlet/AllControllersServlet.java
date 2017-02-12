@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
-import zesp03.data.ControllerData;
+import zesp03.data.row.ControllerRow;
 import zesp03.entity.Controller;
 
 import javax.persistence.EntityManager;
@@ -17,13 +17,13 @@ import java.util.List;
 
 @WebServlet(value = "/all-controllers", name = "AllControllersServlet")
 public class AllControllersServlet extends HttpServlet {
-    // mapuje do ArrayList<ControllerData>
+    // mapuje do ArrayList<ControllerRow>
     public static final String ATTR_LIST = "zesp03.servlet.AllControllersServlet.ATTR_LIST";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        final ArrayList<ControllerData> list = new ArrayList<>();
+        final ArrayList<ControllerRow> list = new ArrayList<>();
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -34,7 +34,7 @@ public class AllControllersServlet extends HttpServlet {
 
             List<Controller> controllers = em.createQuery("SELECT c FROM Controller c", Controller.class).getResultList();
             for (Controller c : controllers) {
-                list.add(new ControllerData(c));
+                list.add(new ControllerRow(c));
             }
 
             tran.commit();

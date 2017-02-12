@@ -1,10 +1,10 @@
-<%@ page import="zesp03.data.UserData" %>
+<%@ page import="zesp03.data.row.UserRow" %>
 <%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page import="zesp03.servlet.ActivateAccountServlet" %>
 <%@ page import="zesp03.servlet.CreateNewUserServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    UserData loggedUser = (UserData) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+    UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
     Long tokenId = (Long) request.getAttribute(CreateNewUserServlet.ATTR_TOKEN_ID);
     String tokenValue = (String) request.getAttribute(CreateNewUserServlet.ATTR_TOKEN_VALUE);
     //TODO...

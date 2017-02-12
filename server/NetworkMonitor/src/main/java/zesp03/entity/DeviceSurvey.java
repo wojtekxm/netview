@@ -14,7 +14,7 @@ public class DeviceSurvey {
     private Integer timestamp;
 
     @Column(name = "is_enabled", nullable = false)
-    private Boolean isEnabled;
+    private Boolean enabled;
 
     @Column(name = "clients_sum", nullable = false)
     private Integer clientsSum;
@@ -44,11 +44,11 @@ public class DeviceSurvey {
     }
 
     public Boolean isEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
-    public void setIsEnabled(Boolean enabled) {
-        isEnabled = enabled;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Integer getClientsSum() {

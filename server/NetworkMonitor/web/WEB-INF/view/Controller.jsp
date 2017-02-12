@@ -1,11 +1,11 @@
-<%@ page import="zesp03.data.ControllerData" %>
+<%@ page import="zesp03.data.row.ControllerRow" %>
 <%@ page import="zesp03.servlet.ControllerServlet" %>
 <%@ page import="zesp03.servlet.RemoveControllerServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    ControllerData controllerData = (ControllerData) request.getAttribute(ControllerServlet.ATTR_CONTROLLERDATA);
+    ControllerRow controllerRow = (ControllerRow) request.getAttribute(ControllerServlet.ATTR_CONTROLLERDATA);
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -38,7 +38,7 @@
         <div class="row">
             <form method="post" action="/remove-controller">
                 <input type="hidden" name="<%= RemoveControllerServlet.POST_ID %>"
-                       value="<%= controllerData.getId() %>">
+                       value="<%= controllerRow.getId() %>">
                 <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active" role="button">
             </form>
         </div>
@@ -49,22 +49,22 @@
             <table class="table table-bordered">
                 <tr>
                     <td>ID</td>
-                    <td><%= controllerData.getId() %>
+                    <td><%= controllerRow.getId() %>
                     </td>
                 </tr>
                 <tr>
                     <td>Nazwa</td>
-                    <td><%= controllerData.getName() %>
+                    <td><%= controllerRow.getName() %>
                     </td>
                 </tr>
                 <tr>
                     <td>IP</td>
-                    <td><%= controllerData.getIpv4() %>
+                    <td><%= controllerRow.getIpv4() %>
                     </td>
                 </tr>
                 <tr>
                     <td>Opis</td>
-                    <td><%= controllerData.getDescription() != null ? controllerData.getDescription() : "<em>(brak)</em>" %>
+                    <td><%= controllerRow.getDescription() != null ? controllerRow.getDescription() : "<em>(brak)</em>" %>
                     </td>
                 </tr>
             </table>

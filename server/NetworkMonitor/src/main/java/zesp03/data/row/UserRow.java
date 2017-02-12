@@ -1,18 +1,24 @@
-package zesp03.data;
+package zesp03.data.row;
 
 import zesp03.entity.User;
 
-public class UserData {
+public class UserRow {
     private long id;
     private String name;
     private byte[] secret;
-    private boolean isAdmin;
+    private boolean admin;
 
-    public UserData(User user) {
+    public UserRow() {
+    }
+
+    /**
+     * User entity should be in managed state.
+     */
+    public UserRow(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.secret = user.getSecret();
-        this.isAdmin = user.isAdmin();
+        this.admin = user.isAdmin();
     }
 
     public long getId() {
@@ -40,15 +46,10 @@ public class UserData {
     }
 
     public boolean isAdmin() {
-        return isAdmin;
+        return admin;
     }
 
-    public void setIsAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
-
-    public boolean isBlocked() {
-        return secret == null;
-    }
-
 }

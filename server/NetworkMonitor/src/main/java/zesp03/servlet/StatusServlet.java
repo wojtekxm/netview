@@ -2,7 +2,7 @@ package zesp03.servlet;
 
 
 import zesp03.core.App;
-import zesp03.data.DeviceStatus;
+import zesp03.data.DeviceStatusData;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +21,7 @@ public class StatusServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<DeviceStatus> list = App.checkDevices();
+        List<DeviceStatusData> list = App.checkDevices();
 
         request.setAttribute(allDevicesString, list);
         request.getRequestDispatcher("WEB-INF/view/Status.jsp").include(request, response);

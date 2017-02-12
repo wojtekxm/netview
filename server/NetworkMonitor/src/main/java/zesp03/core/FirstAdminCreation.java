@@ -24,13 +24,13 @@ public class FirstAdminCreation implements ServletContextListener {
                     User u = new User();
                     u.setName(name);
                     u.setSecret(s.getData());
-                    u.setIsAdmin(true);
+                    u.setAdmin(true);
                     em.persist(u);
                 } else {
                     User u = list.get(0);
                     u.setName(name);
                     u.setSecret(s.getData());
-                    u.setIsAdmin(true);
+                    u.setAdmin(true);
                     em.merge(u);
                 }
             });

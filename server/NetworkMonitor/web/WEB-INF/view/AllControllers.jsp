@@ -1,4 +1,4 @@
-<%@ page import="zesp03.data.ControllerData" %>
+<%@ page import="zesp03.data.row.ControllerRow" %>
 <%@ page import="zesp03.servlet.AllControllersServlet" %>
 <%@ page import="zesp03.servlet.ControllerServlet" %>
 <%@ page import="java.util.ArrayList" %>
@@ -6,7 +6,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    ArrayList<ControllerData> list = (ArrayList<ControllerData>) request.getAttribute(AllControllersServlet.ATTR_LIST);
+    ArrayList<ControllerRow> list = (ArrayList<ControllerRow>) request.getAttribute(AllControllersServlet.ATTR_LIST);
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -41,7 +41,7 @@
                 kontroler</a>
         </div>
 
-        <% for (ControllerData c : list) {
+        <% for (ControllerRow c : list) {
             String href = "/controller?" + ControllerServlet.GET_ID + "=" + c.getId();
         %>
         <div class="row">

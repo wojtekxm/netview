@@ -17,7 +17,7 @@ public class User {
     private byte[] secret;
 
     @Column(name = "is_admin", nullable = false)
-    private Boolean isAdmin;
+    private Boolean admin;
 
     public Long getId() {
         return id;
@@ -44,10 +44,10 @@ public class User {
     }
 
     public Boolean isAdmin() {
-        return isAdmin;
+        return admin;
     }
 
-    public void setIsAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 }

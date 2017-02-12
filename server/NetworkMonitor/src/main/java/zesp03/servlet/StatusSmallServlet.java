@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.App;
-import zesp03.data.DeviceStatus;
+import zesp03.data.DeviceStatusData;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,14 +13,14 @@ import java.util.List;
 
 @WebServlet(value = "/status-small", name = "StatusSmallServlet")
 public class StatusSmallServlet extends HttpServlet {
-    // mapuje do List<DeviceStatus>
+    // mapuje do List<DeviceStatusData>
     public static final String ATTR_STATES = "zesp03.servlet.StatusSmallServlet.ATTR_STATES";
     // mapuje do Double
     public static final String ATTR_TIME = "zesp03.servlet.StatusSmallServlet.ATTR_TIME";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<DeviceStatus> states;
+        List<DeviceStatusData> states;
 
         long t0 = System.nanoTime();
         states = App.checkDevices();

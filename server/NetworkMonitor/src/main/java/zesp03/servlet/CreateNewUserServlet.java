@@ -47,7 +47,7 @@ public class CreateNewUserServlet extends HttpServlet {
             User u = new User();
             u.setName(null);
             u.setSecret(null);
-            u.setIsAdmin(isAdmin);
+            u.setAdmin(isAdmin);
             em.persist(u);
 
             Token t = new Token();

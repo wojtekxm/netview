@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
-import zesp03.data.ControllerData;
+import zesp03.data.row.ControllerRow;
 import zesp03.entity.Controller;
 import zesp03.util.IPv4;
 
@@ -24,7 +24,7 @@ public class AddControllerServlet extends HttpServlet {
     public static final String POST_DESCRIPTION = "description";
     //TODO dodaj community string
 
-    // mapuje do ControllerData, nigdy null, tylko dla AddController_Post.jsp
+    // mapuje do ControllerRow, nigdy null, tylko dla AddController_Post.jsp
     public static final String ATTR_CONTROLLERDATA = "zesp03.servlet.AddControllerServlet.ATTR_CONTROLLERDATA";
 
     @Override
@@ -47,7 +47,7 @@ public class AddControllerServlet extends HttpServlet {
         String paramDesc = request.getParameter("description");
         if (paramDesc.isEmpty()) paramDesc = null;
 
-        ControllerData controllerData;
+        ControllerRow controllerRow;
         //TODO co jeśli taki kontroler już istnieje?
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -61,7 +61,7 @@ public class AddControllerServlet extends HttpServlet {
             controller.setIpv4(paramIP);
             controller.setDescription(paramDesc);
             em.persist(controller);
-            controllerData = new ControllerData(controller);
+            controllerRow = new ControllerRow(controller);
 
             tran.commit();
         } catch (RuntimeException exc) {
@@ -71,7 +71,7 @@ public class AddControllerServlet extends HttpServlet {
             if (em != null) em.close();
         }
 
-        request.setAttribute(ATTR_CONTROLLERDATA, controllerData);
+        request.setAttribute(ATTR_CONTROLLERDATA, controllerRow);
         request.getRequestDispatcher("/WEB-INF/view/AddController_Post.jsp").include(request, response);
     }
 

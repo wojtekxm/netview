@@ -2,7 +2,7 @@ package zesp03.filter;
 
 import zesp03.core.Database;
 import zesp03.core.Secret;
-import zesp03.data.UserData;
+import zesp03.data.row.UserRow;
 import zesp03.entity.User;
 import zesp03.util.Cookies;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
 public class AuthenticationFilter implements Filter {
     public static final String COOKIE_USERID = "userid";
     public static final String COOKIE_PASSTOKEN = "passtoken";
-    // mapuje do UserData, null jeśli uwierzytelnianie się nie powiodło
+    // mapuje do UserRow, null jeśli uwierzytelnianie się nie powiodło
     public static final String ATTR_USERDATA = "zesp03.filter.AuthenticationFilter.ATTR_USERDATA";
 
     @Override
@@ -45,7 +45,7 @@ public class AuthenticationFilter implements Filter {
                     }
                 }
                 final String passToken = cookiePass.getValue();
-                UserData userData = null;
+                UserRow userRow = null;
 
                 if (userId != null && passToken != null) {
                     EntityManager em = null;
@@ -57,7 +57,7 @@ public class AuthenticationFilter implements Filter {
 
                         User user = em.find(User.class, userId);
                         if (user != null)
-                            userData = new UserData(user);
+                            userRow = new UserRow(user);
 
                         tran.commit();
                     } catch (RuntimeException exc) {
@@ -67,18 +67,18 @@ public class AuthenticationFilter implements Filter {
                         if (em != null) em.close();
                     }
 
-                    if (userData != null && userData.getSecret() != null) {
-                        if (!Secret.check(userData.getSecret(), passToken))
-                            userData = null;
+                    if (userRow != null && userRow.getSecret() != null) {
+                        if (!Secret.check(userRow.getSecret(), passToken))
+                            userRow = null;
                     }
                 }
 
-                if (userData != null) {
+                if (userRow != null) {
                     cookieUid.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookieUid);
                     cookiePass.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookiePass);
-                    hreq.setAttribute(ATTR_USERDATA, userData);
+                    hreq.setAttribute(ATTR_USERDATA, userRow);
                 } else {
                     cookieUid.setValue("");
                     cookieUid.setMaxAge(0);

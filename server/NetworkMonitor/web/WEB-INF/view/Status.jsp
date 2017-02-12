@@ -1,5 +1,5 @@
-<%@page import="zesp03.data.DeviceStatus" %>
-<%@ page import="zesp03.data.UserData" %>
+<%@page import="zesp03.data.DeviceStatusData" %>
+<%@ page import="zesp03.data.row.UserRow" %>
 <%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page import="zesp03.servlet.DeviceServlet" %>
 <%@ page import="zesp03.servlet.StatusServlet" %>
@@ -7,8 +7,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    List<DeviceStatus> list = (List<DeviceStatus>) request.getAttribute(StatusServlet.allDevicesString);
-    UserData userData = (UserData) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+    List<DeviceStatusData> list = (List<DeviceStatusData>) request.getAttribute(StatusServlet.allDevicesString);
+    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
     String style = (String) session.getAttribute("style");
     String logo = (String) session.getAttribute("logo");
 %>
@@ -46,7 +46,7 @@
 <div id="container">
     <div class="welcome">
         <div class="tittle">NETWORK-MONITOR</div>
-        <div class="user">zalogowany: <%= userData.getName() %>
+        <div class="user">zalogowany: <%= userRow.getName() %>
         </div>
         <div class="logo"><img src="/images/<%= logo %>.jpg"></div>
     </div>
@@ -58,7 +58,7 @@
                     int sumActive = 0;
                     int sumInactive = 0;
                     int sumDisabled = 0;
-                        for (final DeviceStatus info : list) {
+                        for (final DeviceStatusData info : list) {
                             int sumUsers = info.getDeviceSurvey().getClientsSum();
                         String clazz;
                             if (info.getDeviceSurvey().isEnabled()) {

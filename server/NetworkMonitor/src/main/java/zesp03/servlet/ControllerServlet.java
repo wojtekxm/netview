@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
-import zesp03.data.ControllerData;
+import zesp03.data.row.ControllerRow;
 import zesp03.entity.Controller;
 
 import javax.persistence.EntityManager;
@@ -18,7 +18,7 @@ public class ControllerServlet extends HttpServlet {
     // wymagane, typ long
     public static final String GET_ID = "id";
 
-    // mapuje do ControllerData
+    // mapuje do ControllerRow
     public static final String ATTR_CONTROLLERDATA = "zesp03.servlet.ControllerServlet.ATTR_CONTROLLERDATA";
 
     @Override
@@ -36,7 +36,7 @@ public class ControllerServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid id");
             return;
         }
-        ControllerData controllerData;
+        ControllerRow controllerRow;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -46,7 +46,7 @@ public class ControllerServlet extends HttpServlet {
             tran.begin();
 
             Controller c = em.find(Controller.class, id);
-            controllerData = new ControllerData(c);
+            controllerRow = new ControllerRow(c);
 
             tran.commit();
         } catch (RuntimeException exc) {
@@ -56,7 +56,7 @@ public class ControllerServlet extends HttpServlet {
             if (em != null) em.close();
         }
 
-        request.setAttribute(ATTR_CONTROLLERDATA, controllerData);
+        request.setAttribute(ATTR_CONTROLLERDATA, controllerRow);
         request.getRequestDispatcher("/WEB-INF/view/Controller.jsp").include(request, response);
     }
 }

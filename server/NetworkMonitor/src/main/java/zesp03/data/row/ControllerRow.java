@@ -1,14 +1,20 @@
-package zesp03.data;
+package zesp03.data.row;
 
 import zesp03.entity.Controller;
 
-public class ControllerData {
+public class ControllerRow {
     private long id;
     private String name;
     private String ipv4;
     private String description;
 
-    public ControllerData(Controller c) {
+    public ControllerRow() {
+    }
+
+    /**
+     * Controller entity should be in managed state.
+     */
+    public ControllerRow(Controller c) {
         this.id = c.getId();
         this.name = c.getName();
         this.ipv4 = c.getIpv4();

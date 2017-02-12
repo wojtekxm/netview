@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
-import zesp03.data.UserData;
+import zesp03.data.row.UserRow;
 import zesp03.entity.User;
 
 import javax.persistence.EntityManager;
@@ -16,7 +16,7 @@ import java.io.IOException;
 @WebServlet(value = "/user", name = "UserServlet")
 public class UserServlet extends HttpServlet {
     public static final String GET_ID = "id";
-    // mapuje do UserData, nigdy null
+    // mapuje do UserRow, nigdy null
     public static final String ATTR_USERDATA = "zesp03.servlet.UserServlet.ATTR_USERDATA";
 
     @Override
@@ -34,7 +34,7 @@ public class UserServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid id");
             return;
         }
-        UserData userData = null;
+        UserRow userRow = null;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -44,7 +44,7 @@ public class UserServlet extends HttpServlet {
             tran.begin();
             User u = em.find(User.class, id);
             if (u != null) {
-                userData = new UserData(u);
+                userRow = new UserRow(u);
             }
             tran.commit();
         } catch (RuntimeException exc) {
@@ -54,11 +54,11 @@ public class UserServlet extends HttpServlet {
             if (em != null) em.close();
         }
 
-        if (userData == null) {
+        if (userRow == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no such user");
             return;
         }
-        request.setAttribute(ATTR_USERDATA, userData);
+        request.setAttribute(ATTR_USERDATA, userRow);
         request.getRequestDispatcher("/WEB-INF/view/User.jsp").include(request, response);
     }
 }

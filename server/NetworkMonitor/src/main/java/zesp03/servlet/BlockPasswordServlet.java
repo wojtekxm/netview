@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.core.Database;
-import zesp03.data.UserData;
+import zesp03.data.row.UserRow;
 import zesp03.entity.User;
 
 import javax.persistence.EntityManager;
@@ -32,7 +32,7 @@ public class BlockPasswordServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid id");
             return;
         }
-        UserData userData = null;
+        UserRow userRow = null;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -45,7 +45,7 @@ public class BlockPasswordServlet extends HttpServlet {
             if (u != null) {
                 u.setSecret(null);
                 em.merge(u);
-                userData = new UserData(u);
+                userRow = new UserRow(u);
             }
 
             tran.commit();
@@ -56,11 +56,11 @@ public class BlockPasswordServlet extends HttpServlet {
             if (em != null) em.close();
         }
 
-        if (userData == null) {
+        if (userRow == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no such user");
             return;
         }
 
-        response.sendRedirect("/user?" + UserServlet.GET_ID + "=" + userData.getId());
+        response.sendRedirect("/user?" + UserServlet.GET_ID + "=" + userRow.getId());
     }
 }

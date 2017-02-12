@@ -3,7 +3,7 @@ package zesp03.servlet;
 import zesp03.core.App;
 import zesp03.core.Database;
 import zesp03.core.Secret;
-import zesp03.data.UserData;
+import zesp03.data.row.UserRow;
 import zesp03.entity.User;
 import zesp03.filter.AuthenticationFilter;
 
@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter(POST_PASSWORD);
         if (username != null && password != null) {
             final String hash = App.passwordToHash(password);
-            UserData userData = null;
+            UserRow userRow = null;
 
             EntityManager em = null;
             EntityTransaction tran = null;
@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet {
                     if (user.getSecret() != null) {
                         Secret secret = Secret.readData(user.getSecret());
                         if (secret.check(hash.toCharArray()))
-                            userData = new UserData(user);
+                            userRow = new UserRow(user);
                     }
                 }
                 tran.commit();
@@ -60,8 +60,8 @@ public class LoginServlet extends HttpServlet {
                 if (em != null) em.close();
             }
 
-            if (userData != null) {
-                Cookie cu = new Cookie(AuthenticationFilter.COOKIE_USERID, Long.toString(userData.getId()));
+            if (userRow != null) {
+                Cookie cu = new Cookie(AuthenticationFilter.COOKIE_USERID, Long.toString(userRow.getId()));
                 cu.setMaxAge(60 * 60 * 24 * 30);
                 response.addCookie(cu);
                 Cookie cp = new Cookie(AuthenticationFilter.COOKIE_PASSTOKEN, hash);

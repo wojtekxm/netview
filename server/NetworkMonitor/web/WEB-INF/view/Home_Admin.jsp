@@ -4,7 +4,7 @@
 <%
     session.setAttribute("style", "loggedStyleBlack");
     session.setAttribute("logo", "logoo");
-    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
 %>
 <!DOCTYPE html>
 <html lang="pl">

@@ -4,7 +4,7 @@
 <%@ page import="zesp03.servlet.CreateNewUserServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+    UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
     Long tokenId = (Long) request.getAttribute(CreateNewUserServlet.ATTR_TOKEN_ID);
     String tokenValue = (String) request.getAttribute(CreateNewUserServlet.ATTR_TOKEN_VALUE);
     //TODO...

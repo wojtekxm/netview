@@ -5,7 +5,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+    UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
     ArrayList<UserRow> allUsers = (ArrayList<UserRow>) request.getAttribute(AllUsersServlet.ATTR_USERS);
 %>
 <!DOCTYPE html>

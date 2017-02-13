@@ -13,9 +13,22 @@
 <body>
 <div class="container">
     <hr>
-    <div class="form-inline">
+    <div>
         <div class="form-group">
-            <label for="textfield">id</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" id="radio_all" name="selection" value="all">
+                    wszystkie
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                    <input type="radio" id="radio_id_only" name="selection" value="id_only" checked>
+                    tylko z wybranym id
+                </label>
+            </div>
             <input type="text" class="form-control" id="textfield">
         </div>
         <button class="btn btn-info" type="submit" id="button_controller">Kontroler</button>
@@ -27,11 +40,11 @@
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script>
-    $("#button_controller").click(function () {
+    $("#button_device").click(function () {
         $("#result > *").remove();
         $("#result").append(
-            $("<div></div>").addClass('panel panel-default').append(
-                $('<div></div>').addClass('panel-body').text('pobieranie...')
+            $("<div></div>").addClass('panel panel-info').append(
+                $('<div></div>').addClass('panel-heading').text('szukanie urządzenia ...')
             )
         );
         var argId = $('#textfield').val();
@@ -45,17 +58,38 @@
             success: function (data) {
                 $("#result > *").remove();
                 $("#result").append(
-                    $("<div></div>").addClass('panel panel-default').append(
+                    $("<div></div>").addClass('panel panel-success').append(
                         $('<div></div>').addClass('panel-heading').text('Urządzenie ' + data.name),
-                        $('<div></div>').addClass('panel-body').append(
-                            $('<ul></ul>').addClass('list-group').append(
-                                $("<li></li>").addClass('list-group-item').text('id = ' + data.id),
-                                $("<li></li>").addClass('list-group-item').text('nazwa = ' + data.name),
-                                $("<li></li>").addClass('list-group-item').text('opis = ' + data.description),
-                                $('<li></li>').addClass('list-group-item').text('znany = ' + data.known),
-                                $("<li></li>").addClass('list-group-item').text('id kontrolera = ' + data.controllerId),
-                                $("<li></li>").addClass('list-group-item').text('uruchomione = ' + data.enabled),
-                                $("<li></li>").addClass('list-group-item').text('aktualna liczba klientów = ' + data.clientsSum)
+                        $('<table></table>').addClass('table table-condensed table-hover').append(
+                            $('<tbody></tbody>').append(
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('id'),
+                                    $('<td></td>').text(data.id)
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('nazwa'),
+                                    $('<td></td>').text(data.name)
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('opis'),
+                                    $('<td></td>').text(data.description)
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('znany'),
+                                    $('<td></td>').text(data.known ? 'tak' : 'nie')
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('id kontrolera'),
+                                    $('<td></td>').text(data.controllerId)
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('uruchomione'),
+                                    $('<td></td>').text(data.enabled ? 'tak' : 'nie')
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('aktualna liczba klientów'),
+                                    $('<td></td>').text(data.clientsSum)
+                                )
                             )
                         )
                     )
@@ -65,8 +99,60 @@
                 $("#result > *").remove();
                 $('#result').append(
                     $('<div></div>').addClass('panel panel-danger').append(
-                        $('<div></div>').addClass('panel-heading').text('error'),
-                        $('<div></div>').addClass('panel-body').text('nie ma takiego urządzenia')
+                        $('<div></div>').addClass('panel-heading').text('nie znaleziono takiego urządzenia')
+                    )
+                );
+            }
+        });
+    });
+    $("#button_controller").click(function () {
+        $("#result > *").remove();
+        $("#result").append(
+            $("<div></div>").addClass('panel panel-info').append(
+                $('<div></div>').addClass('panel-heading').text('szukanie kontrolera ...')
+            )
+        );
+        var argId = $('#textfield').val();
+        $.ajax({
+            type: 'GET',
+            url: '/api/controller',
+            dataType: 'json',
+            data: {
+                id: argId
+            },
+            success: function (data) {
+                $("#result > *").remove();
+                $("#result").append(
+                    $("<div></div>").addClass('panel panel-success').append(
+                        $('<div></div>').addClass('panel-heading').text('Kontroler ' + data.name),
+                        $('<table></table>').addClass('table table-condensed table-hover').append(
+                            $('<tbody></tbody>').append(
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('id'),
+                                    $('<td></td>').text(data.id)
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('nazwa'),
+                                    $('<td></td>').text(data.name)
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('adres IP'),
+                                    $('<td></td>').text(data.ipv4)
+                                ),
+                                $('<tr></tr>').append(
+                                    $('<td></td>').text('opis'),
+                                    $('<td></td>').text(data.description)
+                                )
+                            )
+                        )
+                    )
+                );
+            },
+            error: function () {
+                $("#result > *").remove();
+                $('#result').append(
+                    $('<div></div>').addClass('panel panel-danger').append(
+                        $('<div></div>').addClass('panel-heading').text('nie znaleziono takiego kontrolera')
                     )
                 );
             }

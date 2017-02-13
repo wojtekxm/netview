@@ -15,7 +15,7 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+        UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
         if (userRow != null) {
             if (userRow.isAdmin()) {
                 request.getRequestDispatcher("/WEB-INF/view/Home_Admin.jsp").include(request, response);

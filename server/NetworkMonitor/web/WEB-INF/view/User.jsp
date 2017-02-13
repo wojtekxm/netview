@@ -4,8 +4,8 @@
 <%@ page import="zesp03.servlet.UserServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
-    UserRow selectedUser = (UserRow) request.getAttribute(UserServlet.ATTR_USERDATA);
+    UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
+    UserRow selectedUser = (UserRow) request.getAttribute(UserServlet.ATTR_USERROW);
 %>
 <!DOCTYPE html>
 <html lang="pl">

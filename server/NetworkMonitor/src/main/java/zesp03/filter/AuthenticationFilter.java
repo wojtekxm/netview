@@ -18,7 +18,7 @@ public class AuthenticationFilter implements Filter {
     public static final String COOKIE_USERID = "userid";
     public static final String COOKIE_PASSTOKEN = "passtoken";
     // mapuje do UserRow, null jeśli uwierzytelnianie się nie powiodło
-    public static final String ATTR_USERDATA = "zesp03.filter.AuthenticationFilter.ATTR_USERDATA";
+    public static final String ATTR_USERROW = "zesp03.filter.AuthenticationFilter.ATTR_USERROW";
 
     @Override
     public void destroy() {
@@ -78,7 +78,7 @@ public class AuthenticationFilter implements Filter {
                     hresp.addCookie(cookieUid);
                     cookiePass.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookiePass);
-                    hreq.setAttribute(ATTR_USERDATA, userRow);
+                    hreq.setAttribute(ATTR_USERROW, userRow);
                 } else {
                     cookieUid.setValue("");
                     cookieUid.setMaxAge(0);

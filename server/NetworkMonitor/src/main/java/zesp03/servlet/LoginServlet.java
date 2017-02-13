@@ -81,6 +81,11 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
+        if (userRow != null) {
+            response.sendRedirect("/");
+            return;
+        }
         request.getRequestDispatcher("/WEB-INF/view/Login.jsp").include(request, response);
     }
 }

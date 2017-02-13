@@ -13,7 +13,7 @@ public class ForAnyUserFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
-        UserRow userRow = (UserRow) req.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+        UserRow userRow = (UserRow) req.getAttribute(AuthenticationFilter.ATTR_USERROW);
         if (userRow != null) {
             chain.doFilter(req, resp);
             return;

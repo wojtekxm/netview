@@ -58,9 +58,15 @@
                 </a>
             </li>
             <li>
-                <a href="/all-users">
-                    użytkownicy
-                    <span class="label label-default">all-users</span>
+            <a href="/all-users">
+                użytkownicy
+                <span class="label label-default">all-users</span>
+            </a>
+        </li>
+            <li>
+                <a href="/Charts">
+                    Wykresy
+                    <span class="label label-default">Charts</span>
                 </a>
             </li>
             <li>

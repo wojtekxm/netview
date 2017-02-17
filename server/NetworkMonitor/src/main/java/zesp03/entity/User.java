@@ -16,8 +16,15 @@ public class User {
     @Column(length = 132)
     private byte[] secret;
 
-    @Column(name = "is_admin", nullable = false)
-    private Boolean admin;
+    @Column(name = "is_activated", nullable = false)
+    private Boolean activated;
+
+    @Column(name = "is_blocked", nullable = false)
+    private Boolean blocked;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "ENUM('NORMAL', 'ADMIN', 'ROOT')")
+    private UserRole role;
 
     public Long getId() {
         return id;
@@ -43,11 +50,27 @@ public class User {
         this.secret = secret;
     }
 
-    public Boolean isAdmin() {
-        return admin;
+    public Boolean isActivated() {
+        return activated;
     }
 
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
+
+    public Boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        this.blocked = blocked;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }

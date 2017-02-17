@@ -17,13 +17,10 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
 <body>
-<div class="container"><%
-    if (userRow != null) {
-%>
-    <h1>Zalogowany jako: <%= userRow.getName() %>
-    </h1><%
-        }
-    %>
+<div class="container">
+    <h1>
+        Zalogowany jako: <%= userRow.getName() %>
+    </h1>
     <h1>Network Monitor</h1>
     <div class="row">
         <ul class="nav nav-pills nav-stacked">

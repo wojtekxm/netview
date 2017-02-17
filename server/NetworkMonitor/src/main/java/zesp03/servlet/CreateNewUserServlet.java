@@ -6,6 +6,7 @@ import zesp03.core.Secret;
 import zesp03.entity.Token;
 import zesp03.entity.TokenAction;
 import zesp03.entity.User;
+import zesp03.entity.UserRole;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -47,7 +48,9 @@ public class CreateNewUserServlet extends HttpServlet {
             User u = new User();
             u.setName(null);
             u.setSecret(null);
-            u.setAdmin(isAdmin);
+            u.setActivated(false);
+            u.setBlocked(true);
+            u.setRole(isAdmin ? UserRole.ADMIN : UserRole.NORMAL);
             em.persist(u);
 
             Token t = new Token();

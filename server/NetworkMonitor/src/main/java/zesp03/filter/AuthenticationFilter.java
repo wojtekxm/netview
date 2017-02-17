@@ -25,7 +25,8 @@ public class AuthenticationFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
+            throws ServletException, IOException {
         Boolean isStaticResource = (Boolean) req.getAttribute(StaticResourceFilter.ATTR_IS_STATIC);
         if (isStaticResource) {
             chain.doFilter(req, resp);
@@ -67,8 +68,11 @@ public class AuthenticationFilter implements Filter {
                         if (em != null) em.close();
                     }
 
-                    if (userRow != null && userRow.getSecret() != null) {
-                        if (!Secret.check(userRow.getSecret(), passToken))
+                    if (userRow != null) {
+                        if (userRow.getSecret() == null ||
+                                !Secret.check(userRow.getSecret(), passToken) ||
+                                !userRow.isActivated() ||
+                                userRow.isBlocked())
                             userRow = null;
                     }
                 }

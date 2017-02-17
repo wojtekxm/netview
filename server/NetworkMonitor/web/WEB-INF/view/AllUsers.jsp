@@ -23,7 +23,7 @@ lista użytkowników:<br>
 <%
     for (UserRow u : allUsers) {
         String href = "/user?" + UserServlet.GET_ID + "=" + u.getId();
-        String label = u.getName() != null ? u.getName() : "[" + u.getId() + " - konto nieaktywne]";
+        String label = u.isActivated() ? u.getName() : "[" + u.getId() + " - konto nieaktywne]";
 %><a href="<%= href %>"><%= label %>
 </a><br>
 <%

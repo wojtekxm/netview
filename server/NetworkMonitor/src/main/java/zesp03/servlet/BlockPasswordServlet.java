@@ -43,7 +43,7 @@ public class BlockPasswordServlet extends HttpServlet {
 
             User u = em.find(User.class, id);
             if (u != null) {
-                u.setSecret(null);
+                u.setBlocked(true);
                 em.merge(u);
                 userRow = new UserRow(u);
             }

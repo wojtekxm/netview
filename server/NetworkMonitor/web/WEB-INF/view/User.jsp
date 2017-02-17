@@ -6,6 +6,20 @@
 <%
     UserRow loggedUser = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
     UserRow selectedUser = (UserRow) request.getAttribute(UserServlet.ATTR_USERROW);
+    String role;
+    switch (selectedUser.getRole()) {
+        case ROOT:
+            role = "root";
+            break;
+        case ADMIN:
+            role = "administrator";
+            break;
+        default:
+            role = "zwykły użytkownik";
+    }
+    String status = "konto aktywne";
+    if (selectedUser.isBlocked()) status = "konto zablokowane";
+    if (!selectedUser.isActivated()) status = "konto nieaktywowane";
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -21,13 +35,11 @@ zalogowany: <%= loggedUser.getName() %><br><br>
 informacje o użytkowniku:<br>
 id: <%= selectedUser.getId() %><br>
 nazwa: <%= selectedUser.getName() %><br>
-rola: <%= selectedUser.isAdmin() ? "administrator" : "zwykły użytkownik" %><br>
+rola: <%= role %><br>
+<%= status %><br>
 <%
-    if (selectedUser.getSecret() == null) {
-%>konto zablokowane<br>
-<%
-} else {
-%>konto aktywne<br>
+    if (!selectedUser.isBlocked()) {
+%>
 <form action="/block-password" method="post">
     <input type="hidden" name="<%= BlockPasswordServlet.POST_ID %>" value="<%= selectedUser.getId() %>">
     <button type="submit">Zablokuj dostęp</button>

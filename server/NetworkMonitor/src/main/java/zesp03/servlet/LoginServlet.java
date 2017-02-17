@@ -41,17 +41,21 @@ public class LoginServlet extends HttpServlet {
                 em = Database.createEntityManager();
                 tran = em.getTransaction();
                 tran.begin();
+
                 List<User> list = em.createQuery("SELECT u FROM User u WHERE u.name = :n", User.class)
                         .setParameter("n", username)
                         .getResultList();
                 if (!list.isEmpty()) {
                     User user = list.get(0);
-                    if (user.getSecret() != null) {
+                    if (user.getSecret() != null &&
+                            !user.isBlocked() &&
+                            user.isActivated()) {
                         Secret secret = Secret.readData(user.getSecret());
                         if (secret.check(hash.toCharArray()))
                             userRow = new UserRow(user);
                     }
                 }
+
                 tran.commit();
             } catch (RuntimeException exc) {
                 if (tran != null && tran.isActive()) tran.rollback();

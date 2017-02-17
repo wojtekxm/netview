@@ -9,7 +9,8 @@ public class DynamicHtmlFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
+            throws ServletException, IOException {
         Boolean isStatic = (Boolean) req.getAttribute(StaticResourceFilter.ATTR_IS_STATIC);
         if (!isStatic) {
             req.setCharacterEncoding("utf-8");

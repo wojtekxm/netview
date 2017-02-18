@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.ws.rs.*;
 
-@Path("/user")
+@Path("user")
 @Produces("application/json")
 public class UserResource {
     @GET

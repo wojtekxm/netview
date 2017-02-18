@@ -61,6 +61,10 @@
         <servlet-name>StatusServlet</servlet-name>
         <servlet-name>StatusSmallServlet</servlet-name>
         <servlet-name>StyleServlet</servlet-name>
+        <url-pattern>/api/all-controllers</url-pattern>
+        <url-pattern>/api/all-devices</url-pattern>
+        <url-pattern>/api/controller</url-pattern>
+        <url-pattern>/api/device</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>ForAdminFilter</filter-name>
@@ -72,8 +76,13 @@
         <filter-name>ForRootFilter</filter-name>
         <servlet-name>AllUsersServlet</servlet-name>
         <servlet-name>BlockPasswordServlet</servlet-name>
-        <servlet-name>CreateNewUserServlet</servlet-name>
+        <servlet-name>NewUserServlet</servlet-name>
         <servlet-name>UserServlet</servlet-name>
+        <url-pattern>/api/all-users</url-pattern>
+        <url-pattern>/api/block-user</url-pattern>
+        <url-pattern>/api/create-new-user</url-pattern>
+        <url-pattern>/api/delete-user</url-pattern>
+        <url-pattern>/api/user</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>DynamicHtmlFilter</filter-name>

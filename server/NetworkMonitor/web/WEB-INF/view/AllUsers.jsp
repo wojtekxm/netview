@@ -16,22 +16,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Użytkownicy</title>
     <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
 <body>
-zalogowany: <%= loggedUser.getName() %><br><br>
-lista użytkowników:<br>
-<%
-    for (UserRow u : allUsers) {
-        String href = "/user?" + UserServlet.GET_ID + "=" + u.getId();
-        String label = u.isActivated() ? u.getName() : "[" + u.getId() + " - konto nieaktywne]";
-%><a href="<%= href %>"><%= label %>
+<div class="container">
+    zalogowany: <%= loggedUser.getName() %><br><br>
+    lista użytkowników:<br>
+    <%
+        for (UserRow u : allUsers) {
+            String href = "/user?" + UserServlet.GET_ID + "=" + u.getId();
+            String label = u.isActivated() ? u.getName() : "[" + u.getId() + " - konto nieaktywne]";
+    %><a href="<%= href %>"><%= label %>
 </a><br>
-<%
-    }
-%>
-<hr>
-<form action="/create-new-user" method="post">
-    <button type="submit">Stwórz nowego użytkownika</button>
-</form>
+    <%
+        }
+    %>
+    <hr>
+    <a href="/new-user">Tworzenie nowego użytkownika</a>
+</div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7.min.js"></script>
 </body>
 </html>

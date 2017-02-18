@@ -29,23 +29,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Informacje o użytkowniku</title>
     <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
 <body>
-zalogowany: <%= loggedUser.getName() %><br><br>
-informacje o użytkowniku:<br>
-id: <%= selectedUser.getId() %><br>
-nazwa: <%= selectedUser.getName() %><br>
-rola: <%= role %><br>
-<%= status %><br>
-<%
-    if (!selectedUser.isBlocked()) {
-%>
-<form action="/block-password" method="post">
-    <input type="hidden" name="<%= BlockPasswordServlet.POST_ID %>" value="<%= selectedUser.getId() %>">
-    <button type="submit">Zablokuj dostęp</button>
-</form>
-<%
-    }
-%>
+<div class="container" id="page">
+
+    zalogowany: <%= loggedUser.getName() %><br><br>
+    informacje o użytkowniku:<br>
+    id: <%= selectedUser.getId() %><br>
+    nazwa: <%= selectedUser.getName() %><br>
+    rola: <%= role %><br>
+    <%= status %><br>
+    <%
+        if (!selectedUser.isBlocked()) {
+    %>
+    <form action="/block-password" method="post">
+        <input type="hidden" name="<%= BlockPasswordServlet.POST_ID %>" value="<%= selectedUser.getId() %>">
+        <button type="submit">Zablokuj dostęp</button>
+    </form>
+    <%
+        }
+    %>
+</div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7.min.js"></script>
 </body>
 </html>

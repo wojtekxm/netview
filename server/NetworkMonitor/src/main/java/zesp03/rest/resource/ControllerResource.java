@@ -8,11 +8,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.ws.rs.*;
 
-@Path("/controller")
-@Produces("application/json")
+@Path("controller")
 public class ControllerResource {
     @GET
-    public ControllerRow getController(@QueryParam("id") long id) {
+    @Produces("application/json")
+    public ControllerRow getController(
+            @QueryParam("id") long id) {
         ControllerRow result = null;
 
         EntityManager em = null;

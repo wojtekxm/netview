@@ -9,10 +9,11 @@ import javax.persistence.EntityTransaction;
 import javax.ws.rs.*;
 
 @Path("user")
-@Produces("application/json")
 public class UserResource {
     @GET
-    public UserData getUser(@QueryParam("id") long id) {
+    @Produces("application/json")
+    public UserData getUser(
+            @QueryParam("id") long id) {
         UserData result = null;
 
         EntityManager em = null;

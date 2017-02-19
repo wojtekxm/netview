@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("all-users")
-@Produces("application/json")
 public class AllUsersResource {
     @GET
+    @Produces("application/json")
     public List<UserData> getAllUsers() {
         List<UserData> list;
 

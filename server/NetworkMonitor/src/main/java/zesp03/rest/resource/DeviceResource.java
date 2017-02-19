@@ -10,11 +10,12 @@ import javax.persistence.EntityTransaction;
 import javax.ws.rs.*;
 import java.util.List;
 
-@Path("/device")
-@Produces("application/json")
+@Path("device")
 public class DeviceResource {
     @GET
-    public DeviceData getDevice(@QueryParam("id") long id) {
+    @Produces("application/json")
+    public DeviceData getDevice(
+            @QueryParam("id") long id) {
         DeviceData result = null;
 
         EntityManager em = null;
@@ -25,6 +26,7 @@ public class DeviceResource {
             tran.begin();
 
             //TODO sprawdź wydajność SQL
+            //TODO może left join
             List<Object[]> list = em.createQuery("SELECT c, d, ds, cs FROM CurrentSurvey cs " +
                     "INNER JOIN cs.survey ds " +
                     "INNER JOIN ds.device d " +

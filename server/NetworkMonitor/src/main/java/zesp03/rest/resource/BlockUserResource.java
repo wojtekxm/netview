@@ -12,7 +12,8 @@ public class BlockUserResource {
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public boolean blockUser(@FormParam("id") long id) {
+    public boolean blockUser(
+            @FormParam("id") long id) {
         EntityManager em = null;
         EntityTransaction tran = null;
         try {

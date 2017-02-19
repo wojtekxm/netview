@@ -7,7 +7,6 @@ import zesp03.entity.Token;
 import zesp03.entity.TokenAction;
 import zesp03.entity.User;
 import zesp03.entity.UserRole;
-import zesp03.rest.response.CreateNewUserResponse;
 import zesp03.servlet.ActivateAccountServlet;
 
 import javax.persistence.EntityManager;
@@ -17,12 +16,62 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 
 @Path("create-new-user")
-@Consumes("application/x-www-form-urlencoded")
-@Produces("application/json")
 public class CreateNewUserResource {
+    public static class Response {
+        private boolean success;
+        private long userId;
+        private long tokenId;
+        private String tokenValue;
+        private String activationURL;
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(long userId) {
+            this.userId = userId;
+        }
+
+        public long getTokenId() {
+            return tokenId;
+        }
+
+        public void setTokenId(long tokenId) {
+            this.tokenId = tokenId;
+        }
+
+        public String getTokenValue() {
+            return tokenValue;
+        }
+
+        public void setTokenValue(String tokenValue) {
+            this.tokenValue = tokenValue;
+        }
+
+        public String getActivationURL() {
+            return activationURL;
+        }
+
+        public void setActivationURL(String activationURL) {
+            this.activationURL = activationURL;
+        }
+    }
+
     @POST
-    public CreateNewUserResponse createNewUser(@FormParam("is-admin") boolean isAdmin, @Context HttpServletRequest request) {
-        CreateNewUserResponse result = new CreateNewUserResponse();
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("application/json")
+    public Response createNewUser(
+            @FormParam("is-admin") boolean isAdmin,
+            @Context HttpServletRequest request) {
+        Response result = new Response();
         result.setSuccess(false);
 
         String tokenValue = App.generateToken(32);

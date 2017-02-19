@@ -12,7 +12,8 @@ public class DeleteUserResource {
     @POST
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public boolean deleteUser(@FormParam("id") long id) {
+    public boolean deleteUser(
+            @FormParam("id") long id) {
         EntityManager em = null;
         EntityTransaction tran = null;
         try {

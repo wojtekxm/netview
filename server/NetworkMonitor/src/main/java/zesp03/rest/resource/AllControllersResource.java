@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("all-controllers")
-@Produces("application/json")
 public class AllControllersResource {
     @GET
+    @Produces("application/json")
     public List<ControllerRow> getAllControllers() {
         List<ControllerRow> list;
 

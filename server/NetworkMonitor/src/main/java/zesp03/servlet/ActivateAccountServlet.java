@@ -71,8 +71,7 @@ public class ActivateAccountServlet extends HttpServlet {
             Token token = em.find(Token.class, tokenId);
             if (token != null &&
                     token.getAction() == TokenAction.ACTIVATE_ACCOUNT &&
-                    token.getUser().getName() == null &&
-                    token.getUser().getSecret() == null &&
+                    !token.getUser().isActivated() &&
                     Secret.check(token.getSecret(), paramValue) ) {
                 success = true;
             }
@@ -153,9 +152,11 @@ public class ActivateAccountServlet extends HttpServlet {
                     token.getAction() == TokenAction.ACTIVATE_ACCOUNT &&
                     Secret.check(token.getSecret(), paramTokenValue)) {
                 User u = token.getUser();
-                if (u.getName() == null && u.getSecret() == null) {
+                if (!u.isActivated()) {
                     u.setName(paramUserName);
                     u.setSecret(userSecret);
+                    u.setActivated(true);
+                    u.setBlocked(false);
                     em.merge(u);
                     em.remove(token);
                     success = true;

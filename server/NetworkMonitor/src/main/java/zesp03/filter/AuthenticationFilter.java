@@ -18,14 +18,15 @@ public class AuthenticationFilter implements Filter {
     public static final String COOKIE_USERID = "userid";
     public static final String COOKIE_PASSTOKEN = "passtoken";
     // mapuje do UserRow, null jeśli uwierzytelnianie się nie powiodło
-    public static final String ATTR_USERDATA = "zesp03.filter.AuthenticationFilter.ATTR_USERDATA";
+    public static final String ATTR_USERROW = "zesp03.filter.AuthenticationFilter.ATTR_USERROW";
 
     @Override
     public void destroy() {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
+            throws ServletException, IOException {
         Boolean isStaticResource = (Boolean) req.getAttribute(StaticResourceFilter.ATTR_IS_STATIC);
         if (isStaticResource) {
             chain.doFilter(req, resp);
@@ -67,8 +68,11 @@ public class AuthenticationFilter implements Filter {
                         if (em != null) em.close();
                     }
 
-                    if (userRow != null && userRow.getSecret() != null) {
-                        if (!Secret.check(userRow.getSecret(), passToken))
+                    if (userRow != null) {
+                        if (userRow.getSecret() == null ||
+                                !Secret.check(userRow.getSecret(), passToken) ||
+                                !userRow.isActivated() ||
+                                userRow.isBlocked())
                             userRow = null;
                     }
                 }
@@ -78,7 +82,7 @@ public class AuthenticationFilter implements Filter {
                     hresp.addCookie(cookieUid);
                     cookiePass.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookiePass);
-                    hreq.setAttribute(ATTR_USERDATA, userRow);
+                    hreq.setAttribute(ATTR_USERROW, userRow);
                 } else {
                     cookieUid.setValue("");
                     cookieUid.setMaxAge(0);

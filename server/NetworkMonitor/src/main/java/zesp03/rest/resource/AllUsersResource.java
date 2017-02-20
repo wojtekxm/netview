@@ -1,8 +1,8 @@
 package zesp03.rest.resource;
 
 import zesp03.core.Database;
-import zesp03.data.row.ControllerRow;
-import zesp03.entity.Controller;
+import zesp03.data.UserData;
+import zesp03.entity.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -12,12 +12,12 @@ import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("all-controllers")
-public class AllControllersResource {
+@Path("all-users")
+public class AllUsersResource {
     @GET
     @Produces("application/json")
-    public List<ControllerRow> getAllControllers() {
-        List<ControllerRow> list;
+    public List<UserData> getAllUsers() {
+        List<UserData> list;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -26,10 +26,10 @@ public class AllControllersResource {
             tran = em.getTransaction();
             tran.begin();
 
-            list = em.createQuery("SELECT c FROM Controller c", Controller.class)
+            list = em.createQuery("SELECT u FROM User u", User.class)
                     .getResultList()
                     .stream()
-                    .map(ControllerRow::new)
+                    .map(UserData::new)
                     .collect(Collectors.toList());
 
             tran.commit();

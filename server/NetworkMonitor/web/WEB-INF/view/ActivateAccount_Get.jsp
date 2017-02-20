@@ -12,19 +12,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Aktywacja konta</title>
     <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
 <body>
-<h1>Aktywacja konta użytkownika</h1>
-<form action="/activate-account" method="post">
-    <input type="hidden" name="<%= ActivateAccountServlet.POST_TOKEN_ID %>" value="<%= tokenId %>">
-    <input type="hidden" name="<%= ActivateAccountServlet.POST_TOKEN_VALUE %>" value="<%= tokenValue %>">
-    nazwa użytkownika<br>
-    <input type="text" name="<%= ActivateAccountServlet.POST_USERNAME %>"><br><br>
-    wybierz hasło<br>
-    <input type="password" name="<%= ActivateAccountServlet.POST_PASSWORD1 %>"><br><br>
-    powtórz hasło<br>
-    <input type="password" name="<%= ActivateAccountServlet.POST_PASSWORD2 %>"><br><br>
-    <button type="submit">Aktywuj konto</button>
-</form>
+<div class="container">
+    <h1>Aktywacja konta użytkownika</h1>
+    <form action="/activate-account" method="post">
+        <input type="hidden" name="<%= ActivateAccountServlet.POST_TOKEN_ID %>" value="<%= tokenId %>">
+        <input type="hidden" name="<%= ActivateAccountServlet.POST_TOKEN_VALUE %>" value="<%= tokenValue %>">
+        nazwa użytkownika<br>
+        <input type="text" name="<%= ActivateAccountServlet.POST_USERNAME %>"><br><br>
+        wybierz hasło<br>
+        <input type="password" name="<%= ActivateAccountServlet.POST_PASSWORD1 %>"><br><br>
+        powtórz hasło<br>
+        <input type="password" name="<%= ActivateAccountServlet.POST_PASSWORD2 %>"><br><br>
+        <button type="submit">Aktywuj konto</button>
+    </form>
+</div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7.min.js"></script>
 </body>
 </html>

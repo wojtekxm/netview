@@ -15,15 +15,21 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+        UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
         if (userRow != null) {
-            if (userRow.isAdmin()) {
-                request.getRequestDispatcher("/WEB-INF/view/Home_Admin.jsp").include(request, response);
-            } else {
-                request.getRequestDispatcher("/WEB-INF/view/Home_User.jsp").include(request, response);
+            switch (userRow.getRole()) {
+                case NORMAL:
+                    request.getRequestDispatcher("/WEB-INF/view/Home_Regular.jsp").include(request, response);
+                    break;
+                case ADMIN:
+                    request.getRequestDispatcher("/WEB-INF/view/Home_Admin.jsp").include(request, response);
+                    break;
+                case ROOT:
+                    request.getRequestDispatcher("/WEB-INF/view/Home_Root.jsp").include(request, response);
+                    break;
             }
         } else {
-            request.getRequestDispatcher("/WEB-INF/view/Home_NonUser.jsp").include(request, response);
+            request.getRequestDispatcher("/WEB-INF/view/Home_Stranger.jsp").include(request, response);
         }
     }
 }

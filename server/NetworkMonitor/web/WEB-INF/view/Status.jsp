@@ -8,7 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     List<DeviceStatusData> list = (List<DeviceStatusData>) request.getAttribute(StatusServlet.allDevicesString);
-    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERDATA);
+    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
     String style = (String) session.getAttribute("style");
     String logo = (String) session.getAttribute("logo");
 %>

@@ -19,7 +19,7 @@
 <body>
 <div class="container">
     <h1>
-        Zalogowany jako: <%= userRow.getName() %> <span class="label label-default">administrator</span>
+        Zalogowany jako: <%= userRow.getName() %> <span class="label label-default">root</span>
     </h1>
     <h1>Network Monitor</h1>
     <div class="row">
@@ -52,6 +52,12 @@
                 <a href="/add-controller">
                     nowy kontroler
                     <span class="label label-default">add-controller</span>
+                </a>
+            </li>
+            <li>
+                <a href="/all-users">
+                    użytkownicy
+                    <span class="label label-default">all-users</span>
                 </a>
             </li>
             <li>

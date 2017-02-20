@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("all-devices")
-@Produces("application/json")
 public class AllDevicesResource {
     @GET
+    @Produces("application/json")
     public List<DeviceData> getAllDevices() {
         List<DeviceData> result;
 
@@ -28,6 +28,7 @@ public class AllDevicesResource {
             tran.begin();
 
             //TODO sprawdź wydajność SQL
+            //TODO może left join
             result = em.createQuery("SELECT c, d, ds, cs FROM CurrentSurvey cs " +
                     "INNER JOIN cs.survey ds " +
                     "INNER JOIN ds.device d " +

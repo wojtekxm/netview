@@ -17,7 +17,7 @@ import java.io.IOException;
 public class UserServlet extends HttpServlet {
     public static final String GET_ID = "id";
     // mapuje do UserRow, nigdy null
-    public static final String ATTR_USERDATA = "zesp03.servlet.UserServlet.ATTR_USERDATA";
+    public static final String ATTR_USERROW = "zesp03.servlet.UserServlet.ATTR_USERROW";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -58,7 +58,7 @@ public class UserServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no such user");
             return;
         }
-        request.setAttribute(ATTR_USERDATA, userRow);
+        request.setAttribute(ATTR_USERROW, userRow);
         request.getRequestDispatcher("/WEB-INF/view/User.jsp").include(request, response);
     }
 }

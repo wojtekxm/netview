@@ -30,7 +30,7 @@ public class DeviceData {
     }
 
     /**
-     * Device and DeviceSurvey should be in managed state.
+     * Device and DeviceSurvey entities should be in managed state.
      */
     public DeviceData(Device device, DeviceSurvey survey) {
         this.id = device.getId();

@@ -1,23 +1,20 @@
 package zesp03.rest.resource;
 
 import zesp03.core.Database;
-import zesp03.data.row.ControllerRow;
-import zesp03.entity.Controller;
+import zesp03.data.UserData;
+import zesp03.entity.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.ws.rs.*;
 
-@Path("all-controllers")
-public class AllControllersResource {
+@Path("user")
+public class UserResource {
     @GET
     @Produces("application/json")
-    public List<ControllerRow> getAllControllers() {
-        List<ControllerRow> list;
+    public UserData getUser(
+            @QueryParam("id") long id) {
+        UserData result = null;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -26,11 +23,9 @@ public class AllControllersResource {
             tran = em.getTransaction();
             tran.begin();
 
-            list = em.createQuery("SELECT c FROM Controller c", Controller.class)
-                    .getResultList()
-                    .stream()
-                    .map(ControllerRow::new)
-                    .collect(Collectors.toList());
+            User u = em.find(User.class, id);
+            if (u != null)
+                result = new UserData(u);
 
             tran.commit();
         } catch (RuntimeException exc) {
@@ -40,6 +35,8 @@ public class AllControllersResource {
             if (em != null) em.close();
         }
 
-        return list;
+        if (result == null)
+            throw new NotFoundException();
+        return result;
     }
 }

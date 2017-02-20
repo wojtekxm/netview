@@ -14,7 +14,8 @@ public class StaticResourceFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
+            throws ServletException, IOException {
         if (req instanceof HttpServletRequest && resp instanceof HttpServletResponse) {
             final HttpServletRequest hreq = (HttpServletRequest) req;
             final HttpServletResponse hresp = (HttpServletResponse) resp;

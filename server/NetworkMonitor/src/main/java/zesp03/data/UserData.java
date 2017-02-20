@@ -1,29 +1,36 @@
-package zesp03.data.row;
+package zesp03.data;
 
+import zesp03.data.row.UserRow;
 import zesp03.entity.User;
 import zesp03.entity.UserRole;
 
-public class UserRow {
+public class UserData {
     private long id;
     private String name;
-    private byte[] secret;
     private boolean activated;
     private boolean blocked;
     private UserRole role;
 
-    public UserRow() {
+    public UserData() {
+    }
+
+    public UserData(UserRow u) {
+        this.id = u.getId();
+        this.name = u.getName();
+        this.activated = u.isActivated();
+        this.blocked = u.isBlocked();
+        this.role = u.getRole();
     }
 
     /**
      * User entity should be in managed state.
      */
-    public UserRow(User user) {
-        this.id = user.getId();
-        this.name = user.getName();
-        this.secret = user.getSecret();
-        this.activated = user.isActivated();
-        this.blocked = user.isBlocked();
-        this.role = user.getRole();
+    public UserData(User u) {
+        this.id = u.getId();
+        this.name = u.getName();
+        this.activated = u.isActivated();
+        this.blocked = u.isBlocked();
+        this.role = u.getRole();
     }
 
     public long getId() {
@@ -40,14 +47,6 @@ public class UserRow {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public byte[] getSecret() {
-        return secret;
-    }
-
-    public void setSecret(byte[] secret) {
-        this.secret = secret;
     }
 
     public boolean isActivated() {

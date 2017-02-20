@@ -1,21 +1,19 @@
 package zesp03.rest.resource;
 
 import zesp03.core.Database;
-import zesp03.data.row.ControllerRow;
-import zesp03.entity.Controller;
+import zesp03.entity.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.ws.rs.*;
 
-@Path("controller")
-public class ControllerResource {
-    @GET
+@Path("block-user")
+public class BlockUserResource {
+    @POST
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public ControllerRow getController(
-            @QueryParam("id") long id) {
-        ControllerRow result = null;
-
+    public boolean blockUser(
+            @FormParam("id") long id) {
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -23,9 +21,10 @@ public class ControllerResource {
             tran = em.getTransaction();
             tran.begin();
 
-            Controller c = em.find(Controller.class, id);
-            if (c != null)
-                result = new ControllerRow(c);
+            User u = em.find(User.class, id);
+            if (u == null) throw new NotFoundException();
+            u.setBlocked(true);
+            em.merge(u);
 
             tran.commit();
         } catch (RuntimeException exc) {
@@ -34,9 +33,6 @@ public class ControllerResource {
         } finally {
             if (em != null) em.close();
         }
-
-        if (result == null)
-            throw new NotFoundException();
-        return result;
+        return true;
     }
 }

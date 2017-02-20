@@ -64,12 +64,6 @@
             </a>
         </li>
             <li>
-                <a href="/Charts">
-                    Wykresy
-                    <span class="label label-default">Charts</span>
-                </a>
-            </li>
-            <li>
                 <a href="/logout">
                     wylogowanie
                     <span class="label label-default">logout</span>

@@ -1,8 +1,7 @@
-package zesp03.core;
+package zesp03.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zesp03.data.DeviceData;
 import zesp03.entity.Controller;
 import zesp03.entity.CurrentSurvey;
 import zesp03.entity.Device;
@@ -16,12 +15,12 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Bardzo ważna klasa w naszym projekcie.
@@ -76,42 +75,9 @@ public class App {
         return sb.toString().intern();
     }
 
-    public static List<DeviceData> checkDevices() {
-        List<DeviceData> result;
-
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            //TODO sprawdź wydajność SQL
-            //TODO może left join
-            result = em.createQuery("SELECT c, d, ds, cs FROM CurrentSurvey cs " +
-                    "INNER JOIN cs.survey ds " +
-                    "INNER JOIN ds.device d " +
-                    "INNER JOIN d.controller c", Object[].class)
-                    .getResultList()
-                    .stream()
-                    .map(arr -> new DeviceData(
-                            (Device) arr[1],
-                            (DeviceSurvey) arr[2]
-                    ))
-                    .collect(Collectors.toList());
-
-            tran.commit();
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
-        }
-
-        return result;
-    }
-
     public static void examineNetwork() {
+        final Instant t0 = Instant.now();
+        log.info("network survey begins");
         List<Controller> list;
 
         EntityManager em = null;
@@ -138,6 +104,10 @@ public class App {
                 log.error("Failed to examine controller", exc);
             }
         }
+
+        final Instant t1 = Instant.now();
+        double dur = Duration.between(t0, t1).toMillis() * 0.001;
+        log.info("network survey took {} seconds to examine {} controllers", dur, list.size());
     }
 
     protected static void examineOne(long controllerId, String ipv4) {
@@ -224,6 +194,7 @@ public class App {
                     x = 0;
                 }
             }
+
             tran.commit();
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();

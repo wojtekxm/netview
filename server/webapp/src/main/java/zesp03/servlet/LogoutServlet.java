@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
+import zesp03.config.Cookies;
 import zesp03.filter.AuthenticationFilter;
-import zesp03.util.Cookies;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

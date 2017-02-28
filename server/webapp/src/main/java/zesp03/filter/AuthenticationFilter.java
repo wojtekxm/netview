@@ -1,10 +1,10 @@
 package zesp03.filter;
 
-import zesp03.core.Database;
-import zesp03.core.Secret;
+import zesp03.common.Database;
+import zesp03.config.Cookies;
 import zesp03.data.row.UserRow;
 import zesp03.entity.User;
-import zesp03.util.Cookies;
+import zesp03.util.Secret;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

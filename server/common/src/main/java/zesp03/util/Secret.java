@@ -1,7 +1,5 @@
-package zesp03.core;
+package zesp03.util;
 
-
-import zesp03.util.Bytes;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

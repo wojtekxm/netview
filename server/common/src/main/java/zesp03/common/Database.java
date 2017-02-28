@@ -1,4 +1,4 @@
-package zesp03.core;
+package zesp03.common;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

@@ -1,6 +1,6 @@
 package zesp03.rest.resource;
 
-import zesp03.core.Database;
+import zesp03.common.Database;
 import zesp03.data.UserData;
 import zesp03.entity.User;
 

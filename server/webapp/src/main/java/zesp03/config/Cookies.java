@@ -1,4 +1,4 @@
-package zesp03.util;
+package zesp03.config;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

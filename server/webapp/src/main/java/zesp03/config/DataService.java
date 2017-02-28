@@ -1,4 +1,4 @@
-package zesp03.rest.resource;
+package zesp03.config;
 
 import zesp03.common.Database;
 import zesp03.data.DeviceData;
@@ -7,16 +7,12 @@ import zesp03.entity.DeviceSurvey;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.ws.rs.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Path("device")
-public class DeviceResource {
-    @GET
-    @Produces("application/json")
-    public DeviceData getDevice(
-            @QueryParam("id") long id) {
-        DeviceData result = null;
+public class DataService {
+    public List<DeviceData> checkDevices() {
+        List<DeviceData> result;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -27,19 +23,17 @@ public class DeviceResource {
 
             //TODO sprawdź wydajność SQL
             //TODO może left join
-            List<Object[]> list = em.createQuery("SELECT c, d, ds, cs FROM CurrentSurvey cs " +
+            result = em.createQuery("SELECT c, d, ds, cs FROM CurrentSurvey cs " +
                     "INNER JOIN cs.survey ds " +
                     "INNER JOIN ds.device d " +
-                    "INNER JOIN d.controller c " +
-                    "WHERE d.id = :id", Object[].class)
-                    .setParameter("id", id)
-                    .getResultList();
-            if (!list.isEmpty()) {
-                Object[] arr = list.get(0);
-                Device d = (Device) arr[1];
-                DeviceSurvey ds = (DeviceSurvey) arr[2];
-                result = new DeviceData(d, ds);
-            }
+                    "INNER JOIN d.controller c", Object[].class)
+                    .getResultList()
+                    .stream()
+                    .map(arr -> new DeviceData(
+                            (Device) arr[1],
+                            (DeviceSurvey) arr[2]
+                    ))
+                    .collect(Collectors.toList());
 
             tran.commit();
         } catch (RuntimeException exc) {
@@ -49,8 +43,6 @@ public class DeviceResource {
             if (em != null) em.close();
         }
 
-        if (result == null)
-            throw new NotFoundException();
         return result;
     }
 }

@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
-import zesp03.core.App;
-import zesp03.core.Database;
+import zesp03.common.App;
+import zesp03.common.Database;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

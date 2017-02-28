@@ -1,4 +1,4 @@
-package zesp03.core;
+package zesp03.common;
 
 //TODO zmień tą klasę w App i SNMPHandler
 public class SurveyInfo {

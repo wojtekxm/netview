@@ -14,10 +14,10 @@
     </context-param>
 
     <listener>
-        <listener-class>zesp03.core.DatabaseConfig</listener-class>
+        <listener-class>zesp03.config.DatabaseConfig</listener-class>
     </listener>
     <listener>
-        <listener-class>zesp03.core.RootCreation</listener-class>
+        <listener-class>zesp03.config.RootCreation</listener-class>
     </listener>
 
     <filter>

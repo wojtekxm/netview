@@ -1,11 +1,11 @@
 package zesp03.servlet;
 
-import zesp03.core.App;
-import zesp03.core.Database;
-import zesp03.core.Secret;
+import zesp03.common.App;
+import zesp03.common.Database;
 import zesp03.entity.Token;
 import zesp03.entity.TokenAction;
 import zesp03.entity.User;
+import zesp03.util.Secret;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

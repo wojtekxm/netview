@@ -1,4 +1,4 @@
-package zesp03.core;
+package zesp03.common;
 
 import org.junit.Test;
 import zesp03.util.TestUnicode;

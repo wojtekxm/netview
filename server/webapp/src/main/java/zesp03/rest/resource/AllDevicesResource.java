@@ -1,6 +1,6 @@
 package zesp03.rest.resource;
 
-import zesp03.core.App;
+import zesp03.config.DataService;
 import zesp03.data.DeviceData;
 
 import javax.ws.rs.GET;
@@ -13,6 +13,6 @@ public class AllDevicesResource {
     @GET
     @Produces("application/json")
     public List<DeviceData> getAllDevices() {
-        return App.checkDevices();
+        return new DataService().checkDevices();
     }
 }

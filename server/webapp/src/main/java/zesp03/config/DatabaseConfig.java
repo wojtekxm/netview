@@ -1,4 +1,6 @@
-package zesp03.core;
+package zesp03.config;
+
+import zesp03.common.Database;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

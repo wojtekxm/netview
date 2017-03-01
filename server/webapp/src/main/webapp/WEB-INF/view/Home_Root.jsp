@@ -2,8 +2,8 @@
 <%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    session.setAttribute("style", "loggedStyleBlack");
-    session.setAttribute("logo", "logoo");
+    session.setAttribute("style", "loggedStyleWhite");
+    session.setAttribute("logo", "logooWhite");
     UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
 %>
 <!DOCTYPE html>
@@ -55,11 +55,18 @@
                 </a>
             </li>
             <li>
+                <a href="/building">
+                    budynki
+                    <span class="label label-default">building</span>
+                </a>
+            </li>
+            <li>
                 <a href="/all-users">
                     użytkownicy
                     <span class="label label-default">all-users</span>
                 </a>
             </li>
+
             <li>
                 <a href="/logout">
                     wylogowanie

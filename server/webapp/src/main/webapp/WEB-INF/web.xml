@@ -61,6 +61,7 @@
         <servlet-name>StatusServlet</servlet-name>
         <servlet-name>StatusSmallServlet</servlet-name>
         <servlet-name>StyleServlet</servlet-name>
+        <servlet-name>LinkUnitBuildingServlet</servlet-name>
         <url-pattern>/api/all-controllers</url-pattern>
         <url-pattern>/api/all-devices</url-pattern>
         <url-pattern>/api/controller</url-pattern>

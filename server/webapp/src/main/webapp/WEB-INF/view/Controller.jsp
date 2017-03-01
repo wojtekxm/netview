@@ -28,6 +28,7 @@
             <li><a href="/status-small">urządzenia (mały widok)</a></li>
             <li><a href="/status">urządzenia (średni widok)</a></li>
             <li><a href="/all-controllers">kontrolery</a></li>
+            <li><a href="/building">budynki</a></li>
             <li><a href="/logout">wyloguj</a></li>
         </ul>
     </div>
@@ -39,7 +40,7 @@
             <form method="post" action="/remove-controller">
                 <input type="hidden" name="<%= RemoveControllerServlet.POST_ID %>"
                        value="<%= controllerRow.getId() %>">
-                <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active" role="button">
+                <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active list-group-item-heading" role="button">
             </form>
         </div>
         <div class="panel panel-default">

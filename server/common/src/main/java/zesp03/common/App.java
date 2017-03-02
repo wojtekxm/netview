@@ -175,6 +175,7 @@ public class App {
                 s.setClientsSum(info.getClientsSum());
                 s.setDevice(d);
                 em.persist(s);
+                buildRangeSurvey(s, em);
                 CurrentSurvey cs = s.getDevice().getCurrentSurvey();
                 if (cs == null) {
                     cs = new CurrentSurvey();

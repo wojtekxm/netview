@@ -1,4 +1,4 @@
-package zesp03.config;
+package zesp03.repository;
 
 import zesp03.common.Database;
 import zesp03.data.DeviceData;
@@ -10,7 +10,7 @@ import javax.persistence.EntityTransaction;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DataService {
+public class DeviceRepository {
     public List<DeviceData> checkDevices() {
         List<DeviceData> result;
 

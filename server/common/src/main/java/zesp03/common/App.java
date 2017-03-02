@@ -2,10 +2,7 @@ package zesp03.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zesp03.entity.Controller;
-import zesp03.entity.CurrentSurvey;
-import zesp03.entity.Device;
-import zesp03.entity.DeviceSurvey;
+import zesp03.entity.*;
 import zesp03.util.Unicode;
 
 import javax.persistence.EntityManager;
@@ -201,6 +198,106 @@ public class App {
             throw exc;
         } finally {
             if (em != null) em.close();
+        }
+    }
+
+    /**
+     * @param deviceId identyfikator urządzenia
+     * @throws IllegalArgumentException device with given id does not exist
+     */
+    public static void rebuildRangeSurveys(long deviceId) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Device device = em.find(Device.class, deviceId);
+            if(device == null)
+                throw new IllegalArgumentException("device with given id does not exist");
+
+            em.createQuery("DELETE FROM RangeSurvey rs WHERE rs.device.id = :deviceid")
+                    .setParameter("deviceid", device.getId())
+                    .executeUpdate();
+            List<DeviceSurvey> list = em.createQuery(
+                    "SELECT ds FROM DeviceSurvey ds WHERE ds.device = :device ORDER BY ds.timestamp ASC",
+                    DeviceSurvey.class)
+                    .setParameter("device", device)
+                    .getResultList();
+            for( DeviceSurvey survey : list ) {
+                log.debug("survey id = {}, time = {}, clients = {}", survey.getId(), survey.getTimestamp(), survey.getClientsSum());//!!!
+                buildRangeSurvey(survey, em);
+            }
+
+            tran.commit();
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    private static void buildRangeSurvey(DeviceSurvey survey, EntityManager em) {
+        long time = survey.getTimestamp();
+        List<RangeSurvey> list = em.createQuery(
+                "SELECT rs FROM RangeSurvey rs WHERE rs.surveyRange = 1 AND rs.timeStart = :t AND rs.device = :d",
+                RangeSurvey.class)
+                .setParameter("t", time)
+                .setParameter("d", survey.getDevice())
+                .getResultList();
+        RangeSurvey fresh = null;
+        if(list.isEmpty()) {
+            RangeSurvey rs = new RangeSurvey();
+            rs.setDevice(survey.getDevice());
+            rs.setTimeStart(time);
+            rs.setTimeEnd(time);
+            rs.setTimeRange(0L);
+            rs.setTotalSum((long) survey.getClientsSum());
+            rs.setMin(survey.getClientsSum());
+            rs.setMax(survey.getClientsSum());
+            rs.setSurveyRange(1L);
+            em.persist(rs);
+            fresh = rs;
+        }
+        while(fresh != null) {
+            List<RangeSurvey> allBefore = em.createQuery(
+                    "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND rs.surveyRange = :range " +
+                            "AND rs.timeEnd < :time ORDER BY rs.timeEnd DESC ",
+                    RangeSurvey.class)
+                    .setParameter("device", fresh.getDevice())
+                    .setParameter("range", fresh.getSurveyRange())
+                    .setParameter("time", fresh.getTimeStart())
+                    .setMaxResults(1)
+                    .getResultList();
+            log.debug("allBefore.size = {}", allBefore.size());//!!!
+            if(allBefore.isEmpty())break;
+            RangeSurvey justBefore = allBefore.get(0);
+            List<RangeSurvey> allCovering = em.createQuery(
+                    "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND " +
+                            "rs.surveyRange = :range AND rs.timeEnd = :time",
+                    RangeSurvey.class)
+                    .setParameter("device", justBefore.getDevice())
+                    .setParameter("range", justBefore.getSurveyRange() * 2)
+                    .setParameter("time", justBefore.getTimeEnd())
+                    .getResultList();
+            log.debug("allCovering.size = {}", allCovering.size());//!!!
+            if(!allCovering.isEmpty())break;
+            RangeSurvey x = new RangeSurvey();
+            x.setDevice(fresh.getDevice());
+            x.setTimeStart(justBefore.getTimeStart());
+            x.setTimeEnd(fresh.getTimeEnd());
+            x.setTimeRange( x.getTimeEnd() - x.getTimeStart() );
+            x.setTotalSum( justBefore.getTotalSum() + fresh.getTotalSum() );
+            x.setMin( Integer.min(justBefore.getMin(), fresh.getMin()) );
+            x.setMax( Integer.max(justBefore.getMax(), fresh.getMax()) );
+            x.setSurveyRange( justBefore.getSurveyRange() + fresh.getSurveyRange() );
+            em.persist(x);
+            log.debug("start={} end={} trange={} tsum={} min={} max={} srange={}",
+                    x.getTimeStart(), x.getTimeEnd(), x.getTimeRange(),
+                    x.getTotalSum(), x.getMin(), x.getMax(), x.getSurveyRange());//!!!
+            fresh = x;
         }
     }
 

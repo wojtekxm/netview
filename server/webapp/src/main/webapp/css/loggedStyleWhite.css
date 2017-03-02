@@ -1,15 +1,17 @@
-body {
+body
+{
     padding: 0px;
-    margin: 0px;
+    margin:0px;
     font-family: 'Josefin Sans', sans-serif;
-    font-size: 14px;
+    font-size:14px;
     background-attachment: scroll;
-    background-size: contain;
+    background-size:contain;
     background-color: white;
 }
 
-#container {
-    margin-bottom: 0px;
+#container
+{
+    margin-bottom:0px;
     margin-top: 0px;
     min-width: 400px;
     max-width: 1200px;
@@ -20,6 +22,7 @@ body {
     background-color: white;
 }
 
+
 /*animate css3 function*/
 @keyframes dropHeader {
     0% {
@@ -29,7 +32,6 @@ body {
         transform: translateY(0);
     }
 }
-
 @keyframes dropHeader2 {
     0% {
         transform: translateY(100%);
@@ -39,39 +41,49 @@ body {
     }
 }
 
-.welcome {
+.welcome
+{
     min-width: 400px;
     max-width: 1200px;
     max-height: 150px;
     min-height: 50px;
+    margin-top:50px;
     position: relative;
 }
 
-.logo {
+
+.logo
+{
     min-width: 400px;
     max-width: 100%;
     height: auto;
-    background-color: white; /* rgba(152, 255, 182, 1);*/
+    background-color: white;/* rgba(152, 255, 182, 1);*/
 }
-
-.logo img {
+.logo img
+{
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
     max-width: 100%;
     height: auto;
 }
 
-.tittle {
-    width: 580px;
+.tittle
+{
+    width:580px;
     height: 70px;
     line-height: 70px;
     font-size: 25px;
     text-align: center;
+    border-radius: 10px;
     float: left;
     position: absolute;
+    border: 1px solid #ededed;
+    float: left;
     left: 0px;
     top: 27%;
     z-index: 999;
     background-color: rgba(255, 255, 255, 0.85);
-    color: black;
+    color:black;
     /*animate onload*/
     animation-name: dropHeader;
     animation-iteration-count: 1;
@@ -79,19 +91,24 @@ body {
     animation-duration: 1.3s;
 }
 
-.user {
-    width: 417px;
+
+
+.user
+{
+    width:417px;
     height: 40px;
     line-height: 33px;
     text-align: center;
     font-size: 24px;
     float: left;
     position: absolute;
+    border: 1px solid #ededed;
+    border-radius: 10px;
     right: 0px;
     bottom: 35%;
     z-index: 999;
     background-color: rgba(255, 255, 255, 0.85);
-    color: black;
+    color:black;
     /*animate onload*/
     animation-name: dropHeader2;
     animation-iteration-count: 1;
@@ -99,48 +116,91 @@ body {
     animation-duration: 1.3s;
 }
 
-ul {
-    margin: 0;
-    padding: 0;
-    background-color: rgba(245, 245, 245, 1);
+.tittleStatic
+{
+    width:580px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 25px;
+    text-align: center;
+    border-radius: 10px;
+    float: left;
+    position: absolute;
+    border: 1px solid #ededed;
+    float: left;
+    left: 0px;
+    top: 27%;
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 0.85);
+    color:black;
+}
+
+
+
+.userStatic
+{
+    width:417px;
+    height: 40px;
+    line-height: 33px;
+    text-align: center;
+    font-size: 24px;
+    float: left;
+    position: absolute;
+    border: 1px solid #ededed;
+    border-radius: 10px;
+    right: 0px;
+    bottom: 35%;
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 0.85);
+    color:black;
+}
+
+ul.view
+{
+    margin:0;
+    padding:0;
+    background-color: white;
     display: block;
     float: none;
-    text-shadow: 1px 1px 2px #000000;
+    /*text-shadow: 1px 1px 2px #000000;*/
     font-size: 11px;
     list-style: none;
     min-width: 400px;
     max-width: 1200px;
     height: 100%;
-    color: black;
+    color:black;
     text-align: left;
     z-index: 999;
 }
 
-ul li ul li {
+ul.view li ul li
+{
     position: relative;
     z-index: 998;
-    margin: auto;
-    display: table-cell;
-    text-shadow: 1px 1px 2px #000000;
-    font-size: 12px;
+    margin:auto;
+    display:table-cell;
+    /*text-shadow: 1px 1px 2px #000000;*/
+    font-size:12px;
     list-style: none;
     width: 158px;
 }
-
-ul li ul li:hover {
+ul.view li ul li:hover
+{
     z-index: 999;
 }
 
-ul li ul {
+ul.view li ul
+{
+    border-radius: 10px;
     display: table;
     position: relative;
     min-height: 100px;
     height: auto;
     width: 100%;
-    background-color: rgba(245, 245, 245, 1);
+    background-color: #f5f5f5;
 }
-
-ul li ul li > a {
+ul.view li ul li > a
+{
     display: block;
     width: 100%;
     height: 100%;
@@ -156,7 +216,8 @@ ul li ul li > a {
 /*background-color: rgba(152, 255, 182, 1);*/
 /*}*/
 
-#wydzial {
+#wydzial
+{
     font-size: 20px;
     width: 100%;
     padding-top: 3px;
@@ -165,38 +226,45 @@ ul li ul li > a {
     background-color: white;
 }
 
-#nazwa {
+#nazwa
+{
     margin-top: 6px;
     font-size: 24px;
     text-decoration-style: solid;
-    padding-left: 10px;
-    background-color: white; /*rgba(20, 20, 20, 1);*/
-    color: black;
+    padding-left:10px;
+    background-color: white;/*rgba(20, 20, 20, 1);*/
+    color:black;
 }
 
-ul li ul li.greenDiode {
+ul
+{
+    list-style: none;
+}
+
+ul li ul li.greenDiode
+{
     cursor: pointer;
-    margin: 3px;
-    top: 0;
-    left: 0;
+    margin:3px;
+    top:0;
+    left:0;
     min-width: 25px;
-    max-width: 35px;
+    max-width:35px;
     min-height: 15px;
     max-height: 25px;
     line-height: 25px;
     text-align: center;
-    float: left;
-    color: rgba(1, 1, 1, 1);
+    float:left;
+    color:rgba(1,1,1,1);
     text-decoration-style: solid;
-    background-color: #00ad1d;
-    border-radius: 3px;
-    transition: 0.5s;
+    background-color:#00ad1d;
+    border-radius:3px;
+    transition:  0.5s;
 
 }
-
-ul li ul li.greenDiode:hover {
+ul li ul li.greenDiode:hover
+{
     cursor: pointer;
-    background-color: #00f028;
+    background-color:#00f028;
     transform: scale(1.7, 1.7);
     -moz-transform: scale(1.7, 1.7);
     -ms-transform: scale(1.7, 1.7);
@@ -204,59 +272,31 @@ ul li ul li.greenDiode:hover {
     -o-transform: scale(1.7, 1.7);
 }
 
-ul li ul li.redDiode {
+ul li ul li.redDiode
+{
     cursor: pointer;
-    margin: 3px;
+    margin:3px;
     top: 0;
-    left: 0;
+    left:0;
     min-width: 25px;
-    max-width: 35px;
-    min-height: 15px;
-    max-height: 25px;
-    text-align: center;
-    line-height: 25px;
-    line-break: auto;
-    float: left;
-    color: rgba(1, 1, 1, 1);
-    text-decoration-style: solid;
-    background-color: #d10000;
-    border-radius: 3px;
-    transition: 0.5s;
-}
-
-ul li ul li.redDiode:hover {
-    cursor: pointer;
-    background-color: #ff3333;
-    transform: scale(1.7, 1.7);
-    -moz-transform: scale(1.7, 1.7);
-    -ms-transform: scale(1.7, 1.7);
-    -webkit-transform: scale(1.7, 1.7);
-    -o-transform: scale(1.7, 1.7);
-}
-
-ul li ul li.greyDiode {
-    cursor: pointer;
-    margin: 3px;
-    top: 0;
-    left: 0;
-    min-width: 25px;
-    max-width: 35px;
+    max-width:35px;
     min-height: 15px;
     max-height: 25px;
     text-align: center;
     line-height: 25px;
     line-break: auto;
-    float: left;
-    color: rgba(1, 1, 1, 1);
+    float:left;
+    color:rgba(1,1,1,1);
     text-decoration-style: solid;
-    background-color: #666666;
-    border-radius: 3px;
+    background-color:#d10000;
+    border-radius:3px;
     transition: 0.5s;
 }
 
-ul li ul li.greyDiode:hover {
+ul li ul li.redDiode:hover
+{
     cursor: pointer;
-    background-color: #a6a6a6;
+    background-color:#ff3333;
     transform: scale(1.7, 1.7);
     -moz-transform: scale(1.7, 1.7);
     -ms-transform: scale(1.7, 1.7);
@@ -264,97 +304,139 @@ ul li ul li.greyDiode:hover {
     -o-transform: scale(1.7, 1.7);
 }
 
-ul li#wydzial {
-    font-weight: bold;
-    margin: 0px;
-    z-index: 900;
+ul li ul li.greyDiode
+{
+    cursor: pointer;
+    margin:3px;
+    top:0;
+    left:0;
+    min-width: 25px;
+    max-width:35px;
+    min-height: 15px;
+    max-height: 25px;
+    text-align: center;
+    line-height: 25px;
+    line-break: auto;
+    float:left;
+    color:rgba(1,1,1,1);
+    text-decoration-style: solid;
+    background-color:#666666;
+    border-radius:3px;
+    transition: 0.5s;
 }
 
-#redDiode {
-    float: left;
-    width: 35px;
+ul li ul li.greyDiode:hover
+{
+    cursor: pointer;
+    background-color:#a6a6a6;
+    transform: scale(1.7, 1.7);
+    -moz-transform: scale(1.7, 1.7);
+    -ms-transform: scale(1.7, 1.7);
+    -webkit-transform: scale(1.7, 1.7);
+    -o-transform: scale(1.7, 1.7);
+}
+
+ul li#wydzial
+{
+    margin:0px;
+    z-index:900;
+}
+
+#redDiode
+{
+    float:left;
+    width:35px;
     height: 25px;
-    background-color: #d10000;
-    border-radius: 3px;
+    background-color:#d10000;
+    border-radius:3px;
 }
-
-#greenDiode {
-    float: left;
-    width: 35px;
+#greenDiode
+{
+    float:left;
+    width:35px;
     height: 25px;
-    background-color: #00ad1d;
-    border-radius: 3px;
+    background-color:#00ad1d;
+    border-radius:3px;
 }
-
-#greyDiode {
-    float: left;
-    width: 35px;
+#greyDiode
+{
+    float:left;
+    width:35px;
     height: 25px;
-    background-color: #666666;
-    border-radius: 3px;
+    background-color:#666666;
+    border-radius:3px;
 }
 
-.sticky {
-    width: 100%;
+.sticky
+{
+    width:100%;
     position: fixed;
-    left: 0;
-    right: 0;
+    left:0;
+    right:0;
     z-index: 1000;
 }
-
-.nav {
-    z-index: 1000;
-    min-width: 400px;
-    max-width: 100%;
-    max-height: 100%;
-    padding: 9px 0;
-    background-color: rgba(250, 250, 250, 1);
-    text-align: center;
+.nav-pills {
+    display: flex;
+    justify-content: center;
 }
 
-ol {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-    font-size: 18px;
-    height: 35px;
-    line-height: 215%;
-    display: inline-block;
+
+/*.nav*/
+/*{*/
+/*z-index: 1000;*/
+/*min-width: 400px;*/
+/*max-width: 100%;*/
+/*max-height:100%;*/
+/*padding: 9px 0;*/
+/*background-color: rgba(250, 250, 250, 1);*/
+/*text-align: center;*/
+/*}*/
+/*ol*/
+/*{*/
+/*padding:0;*/
+/*margin:0;*/
+/*list-style-type: none;*/
+/*font-size:18px;*/
+/*height: 35px;*/
+/*line-height: 215%;*/
+/*display: inline-block;*/
+/*}*/
+/*ol a.aNav*/
+/*{*/
+/*text-decoration: none;*/
+/*color:black;*/
+/*display:block;*/
+/*}*/
+/*ol > li*/
+/*{*/
+/*float:left;*/
+/*width: 200px;*/
+/*height:40px;*/
+/*border-right: 0.5px dashed rgb(232,232,232);*/
+/*}*/
+/*ol > li:first-child*/
+/*{*/
+/*border-left: 0.5px dashed rgb(232,232,232);*/
+/*}*/
+/*ol > li:hover*/
+/*{*/
+/*background-color: rgb(245,245,245);*/
+/*cursor:pointer;*/
+/*}*/
+
+/*ol > li:hover > a*/
+/*{*/
+/*color: #2DF2BE;*/
+/*}*/
+
+.summary
+{
+    color:black;font-size:20px;width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;background-color: white;
 }
 
-ol a.aNav {
-    text-decoration: none;
+.nav.nav-pills li a {
     color: black;
-    display: block;
 }
-
-ol > li {
-    float: left;
-    width: 200px;
-    height: 40px;
-    border-right: 0.5px dashed rgb(232, 232, 232);
-}
-
-ol > li:first-child {
-    border-left: 0.5px dashed rgb(232, 232, 232);
-}
-
-ol > li:hover {
-    background-color: rgb(245, 245, 245);
-    cursor: pointer;
-}
-
-ol > li:hover > a {
-    color: #2DF2BE;
-}
-
-.summary {
-    color: black;
-    font-size: 20px;
-    width: 100%;
-    padding: 8px;
-    display: table;
-    margin-right: auto;
-    margin-left: auto;
-    background-color: white;
+.nav-pills>li.active>a,.nav-pills>li.active>a:hover{
+    background-color: #e2e2e2;
 }

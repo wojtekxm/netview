@@ -3,10 +3,7 @@ package zesp03.rest.resource;
 import zesp03.data.RangeSurveyData;
 import zesp03.repository.RangeSurveyRepository;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 
 @Path("range-survey")
 public class RangeSurveyResource {
@@ -16,6 +13,11 @@ public class RangeSurveyResource {
             @QueryParam("id") long id,
             @QueryParam("start") long start,
             @QueryParam("end") long end) {
-        return new RangeSurveyRepository().rangeSurvey(id, start, end);
+        if(start > end)
+            throw new BadRequestException("start > end");
+        RangeSurveyData result = new RangeSurveyRepository().rangeSurvey(id, start, end);
+        if(result == null)
+            throw new NotFoundException();
+        return result;
     }
 }

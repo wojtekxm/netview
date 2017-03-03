@@ -4,7 +4,6 @@ public class RangeSurveyData {
     private long deviceId;
     private long timeStart;
     private long timeEnd;
-    private long timeRange;
     private long totalSum;
     private int min;
     private int max;
@@ -32,14 +31,6 @@ public class RangeSurveyData {
 
     public void setTimeEnd(long timeEnd) {
         this.timeEnd = timeEnd;
-    }
-
-    public long getTimeRange() {
-        return timeRange;
-    }
-
-    public void setTimeRange(long timeRange) {
-        this.timeRange = timeRange;
     }
 
     public long getTotalSum() {

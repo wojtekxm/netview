@@ -18,7 +18,9 @@ public class RangeSurveyRepository {
      * @return null jeśli urządzenie o wskazanym id nie istnieje, lub jeśli nie ma badań dla danego urządzenia ze wskazanego okresu.
      */
     public RangeSurveyData rangeSurvey(long deviceId, long timeStart, long timeEnd) {
-        RangeSurveyData result = null;
+        if(timeStart > timeEnd)
+            throw new IllegalArgumentException();
+        RangeSurveyData result;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -31,6 +33,10 @@ public class RangeSurveyRepository {
             if(device == null)return null;
             long timeBegin = timeStart;
 
+            result = new RangeSurveyData();
+            result.setTimeStart(timeStart);
+            result.setTimeEnd(timeEnd);
+            result.setDeviceId( device.getId() );
             for(;;) {
                 List<RangeSurvey> list = em.createQuery("SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND " +
                                 "rs.timeStart >= :t0 AND rs.timeEnd <= :t1 ORDER BY rs.timeStart ASC, rs.surveyRange DESC",
@@ -41,20 +47,13 @@ public class RangeSurveyRepository {
                         .getResultList();
                 if(list.isEmpty())break;
                 RangeSurvey fragment = list.get(0);
-                if(result == null) {
-                    result = new RangeSurveyData();
-                    result.setDeviceId( device.getId() );
-                    result.setTimeStart( fragment.getTimeStart() );
-                    result.setTimeEnd( fragment.getTimeEnd() );
-                    result.setTimeRange( result.getTimeEnd() - result.getTimeStart() );
+                if(result.getSurveyRange() < 1) {
                     result.setTotalSum( fragment.getTotalSum() );
                     result.setMin( fragment.getMin() );
                     result.setMax( fragment.getMax() );
                     result.setSurveyRange( fragment.getSurveyRange() );
                 }
                 else {
-                    result.setTimeEnd( fragment.getTimeEnd() );
-                    result.setTimeRange( result.getTimeEnd() - result.getTimeStart() );
                     result.setTotalSum( result.getTotalSum() + fragment.getTotalSum() );
                     result.setMin( Integer.min( result.getMin(), fragment.getMin() ) );
                     result.setMax( Integer.max( result.getMax(), fragment.getMax() ) );

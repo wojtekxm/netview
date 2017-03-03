@@ -1,5 +1,6 @@
 package zesp03.common;
 
+import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zesp03.entity.*;
@@ -8,16 +9,14 @@ import zesp03.util.Unicode;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Bardzo ważna klasa w naszym projekcie.
@@ -31,10 +30,29 @@ public class App {
     private static final int CONTROLLER_NAME_MAX_CHARS = 85;
     private static final int DEVICE_NAME_MAX_CHARS = 85;
     private static final SNMPHandler snmp;
+    private static final Properties properties = new Properties();
 
     static {
         try {
             snmp = new FakeSNMP();
+
+            InputStream input = App.class.getResourceAsStream("/settings/default.properties");
+            if(input != null) {
+                properties.load(input);
+                input.close();
+            }
+            input = App.class.getResourceAsStream("/settings/modified.properties");
+            if(input != null) {
+                properties.load(input);
+                input.close();
+            }
+            System.getProperties()
+                    .stringPropertyNames()
+                    .forEach( key -> {
+                        if(key.startsWith("zesp03.")) {
+                            properties.setProperty(key, System.getProperties().getProperty(key));
+                        }
+                    } );
         } catch (IOException exc) {
             throw new IllegalStateException(exc);
         }
@@ -70,6 +88,35 @@ public class App {
             else sb.append(c);
         }
         return sb.toString().intern();
+    }
+
+    /**
+     * @return The method returns null if the property is not found.
+     */
+    public static synchronized String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+
+    /**
+     * @return The method returns the default value argument if the property is not found.
+     */
+    public static synchronized String getProperty(String key, String def) {
+        return properties.getProperty(key, def);
+    }
+
+    public static void runFlyway() {
+        boolean clean = getProperty("zesp03.flyway.clean", "0").equals("1");
+        boolean migrate = getProperty("zesp03.flyway.migrate", "1").equals("1");
+        if(clean || migrate) {
+            Flyway f = new Flyway();
+            f.setLocations("classpath:flyway");
+            f.setDataSource(
+                    getProperty("zesp03.mysql.url"),
+                    getProperty("zesp03.flyway.user"),
+                    getProperty("zesp03.flyway.password") );
+            if(clean)f.clean();
+            if(migrate)f.migrate();
+        }
     }
 
     public static void examineNetwork() {
@@ -112,7 +159,7 @@ public class App {
         try {
             surveyed = filterDevices(snmp.queryDevices(ipv4));
         } catch (SNMPException exc) {
-            log.warn("Failed to query devices", exc);
+            log.warn("failed to query devices for controller (id={}, ip={})", controllerId, ipv4, exc);
             return;
         }
         if (surveyed.size() < 1) return;
@@ -194,6 +241,7 @@ public class App {
             }
 
             tran.commit();
+            log.info("survey of controller (id={}, ip={}) has finished successfully", controllerId, ipv4);
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;

@@ -25,6 +25,12 @@
     <div class="row">
         <ul class="nav nav-pills nav-stacked">
             <li>
+                <a href="/account">
+                    zarządzaj kontem
+                    <span class="label label-default">account</span>
+                </a>
+            </li>
+            <li>
                 <a href="/status">
                     stan urządzeń
                     <span class="label label-default">status</span>

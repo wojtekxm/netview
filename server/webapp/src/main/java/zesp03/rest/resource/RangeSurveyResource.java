@@ -15,9 +15,6 @@ public class RangeSurveyResource {
             @QueryParam("end") long end) {
         if(start > end)
             throw new BadRequestException("start > end");
-        RangeSurveyData result = new RangeSurveyRepository().rangeSurvey(id, start, end);
-        if(result == null)
-            throw new NotFoundException();
-        return result;
+        return new RangeSurveyRepository().rangeSurvey(id, start, end);
     }
 }

@@ -7,6 +7,7 @@ import zesp03.entity.RangeSurvey;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 public class RangeSurveyRepository {
@@ -15,9 +16,8 @@ public class RangeSurveyRepository {
      * @param deviceId id urządzenia
      * @param timeStart timestamp w sekundach, inclusive
      * @param timeEnd timestamp w sekundach, inclusive
-     * @return null jeśli urządzenie o wskazanym id nie istnieje, lub jeśli nie ma badań dla danego urządzenia ze wskazanego okresu.
      */
-    public RangeSurveyData rangeSurvey(long deviceId, long timeStart, long timeEnd) {
+    public RangeSurveyData rangeSurvey(long deviceId, long timeStart, long timeEnd) throws NotFoundException {
         if(timeStart > timeEnd)
             throw new IllegalArgumentException();
         RangeSurveyData result;
@@ -30,7 +30,8 @@ public class RangeSurveyRepository {
             tran.begin();
 
             Device device = em.find(Device.class, deviceId);
-            if(device == null)return null;
+            if(device == null)
+                throw new NotFoundException();
             long timeBegin = timeStart;
 
             result = new RangeSurveyData();
@@ -67,7 +68,6 @@ public class RangeSurveyRepository {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;
         } finally {
-            if (tran != null && tran.isActive()) tran.rollback();//???
             if (em != null) em.close();
         }
 

@@ -67,6 +67,10 @@ public class App {
         return Unicode.onlyAlphaNum(name) && name.length() <= USER_NAME_MAX_CHARS;
     }
 
+    public static boolean isValidPassword(String password) {
+        return password != null && ! password.isEmpty();
+    }
+
     public static boolean isValidControllerName(String name) {
         if (name == null || name.isEmpty()) return false;
         if (name.length() > CONTROLLER_NAME_MAX_CHARS) return false;

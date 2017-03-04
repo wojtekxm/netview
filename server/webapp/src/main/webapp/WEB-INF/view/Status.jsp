@@ -1,4 +1,4 @@
-<%@page import="zesp03.data.DeviceData" %>
+<%@ page import="zesp03.data.DeviceData" %>
 <%@ page import="zesp03.data.row.UserRow" %>
 <%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page import="zesp03.servlet.DeviceServlet" %>
@@ -11,8 +11,9 @@
     List<DeviceData> list = (List<DeviceData>) request.getAttribute(StatusServlet.allDevicesString);
     Double time = (Double) request.getAttribute(StatusSmallServlet.ATTR_TIME);
     UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
-    String style = (String) session.getAttribute("style");
-    String logo = (String) session.getAttribute("logo");
+    int surveyTime=list.get(0).getLastSurveyTimestamp();
+    Long longSurveyTime = new Long(surveyTime);
+    longSurveyTime=longSurveyTime*1000;
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -24,7 +25,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/css/<%= style %>.css">
+    <link rel="stylesheet" href="/css/loggedStyleWhite.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 </head>
@@ -42,12 +43,12 @@
             <li role="presentation"><a href="/status-small">Mały widok</a></li>
             <li role="presentation"><a href="/all-controllers">Kontrolery</a></li>
             <li role="presentation"><a href="/all-users">Użytkownicy</a></li>
-            <li role="presentation"><a href="/all-devices">Urządzenia</a></li>
+            <li role="presentation"><a href="/api/all-devices">Urządzenia</a></li>
             <form class="navbar-form nav-pills" style="padding-top: 2px;margin-top:2px;">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" class="form-control" placeholder="Szukaj...">
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
             </form>
         </ul>
         <ul class="nav nav-pills pull-left" style="padding-top: 3px;border-radius: 10px;padding-left:7px;font-size: 17px;">
@@ -62,16 +63,15 @@
 <div id="all" class="container-fluid">
     <div id="container">
         <div class="welcome">
-            <div class="tittle">NETWORK-MONITOR</div>
+            <div class="tittle"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
             <div class="user">zalogowany: <%= userRow.getName() %>
             </div>
-            <div class="logo"><img src="/images/<%= logo %>.jpg"></div>
+            <div class="logo"><img src="/images/logooWhite.jpg"></div>
         </div>
         <div id="content">
             <ul class="view" style="z-index: 1000;top:0;">
-                <li> <div id="wydzial">
-                    Wszystkie kontrolery
-                </div>
+                <li>
+                    <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
                     <ul id="devices" style="padding: 4px;border: 1px solid #e0e0e0;">
                         <%
                             int sumActive = 0;
@@ -97,9 +97,17 @@
 
                                 final String h = "/device?" + DeviceServlet.GET_ID + "=" + info.getId();
                                 String t = info.getName();
+                                if(info.isEnabled()){
                                 if (info.getDescription() != null) t += "<br>opis: " + info.getDescription();
                                     %><li class="<%= clazz %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
-                        ><% } %>
+                                    ><%
+                                }else{
+                                    if (info.getDescription() != null) t += "<br>opis: " + info.getDescription();
+                                    %><li class="<%= clazz %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;">-</a></li
+                                    ><%
+                                }
+                        }
+                        %>
                     </ul>
                 </li>
             </ul>
@@ -107,7 +115,7 @@
 
         <div class="panel panel-default" style="border-radius: 10px;">
             <div class="panel-heading">
-                <h3 class="panel-title" style="font-size: 17px;color:black;">Statystyki:</h3><small>sprawdzanie stanów zajęło <%= String.format("%.3f", time) %> sek.</small>
+                <div id="data"></div><h3 class="panel-title" style="font-size: 17px;color:black; padding-top: 12px;"><span class="glyphicon glyphicon-th-large"></span> Pokaż tylko urządzenia ( Kliknij w wybrany stan ) :</h3>
             </div>
             <div class="panel-body">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
@@ -121,7 +129,7 @@
                         <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div> &emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</div></button>
                     </div>
                     <div class="btn-group" role="group" onclick="allColors()">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div>&emsp;Wszystkie: &nbsp;<%= sumDisabled + sumActive + sumInactive %>&emsp;</div></button>
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;<%= sumDisabled + sumActive + sumInactive %>&emsp;</div></button>
                     </div>
                 </div>
             </div>
@@ -186,7 +194,7 @@
             if(!d.isEnabled()){
                 clazz="greyDiode";
         %>
-        $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'><%= d.getClientsSum() %></a></li>").val();
+        $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'>-</a></li>").val();
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
@@ -218,12 +226,21 @@
                 clazz="greyDiode";
                 sumDisabled++;
             }
+            if(d.isEnabled()){
         %>
         $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'><%= d.getClientsSum() %></a></li>").val();
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
         <%
+            }else{
+            %>
+        $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'>-</a></li>").val();
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        <%
+            }
         }
         %>
     }
@@ -233,6 +250,14 @@
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     })
+</script>
+
+<script>
+    window.onload = function() {
+        var date = new Date(<%= longSurveyTime %>);
+        var n = date.toLocaleString();
+        $( "#data" ).append("Ostatnie badanie przeprowadzono: &emsp; " + n).val();
+    }
 </script>
 
 </body>

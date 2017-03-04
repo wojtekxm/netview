@@ -147,7 +147,6 @@ body
     float: left;
     position: absolute;
     border: 1px solid #ededed;
-    border-radius: 10px;
     right: 0px;
     bottom: 35%;
     z-index: 999;
@@ -220,10 +219,13 @@ ul.view li ul li > a
 {
     font-size: 20px;
     width: 100%;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    padding-left: 8px;
+    padding-top: 9px;
+    padding-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
     background-color: white;
+    border: 1px solid #ededed;
+    border-radius: 10px;
 }
 
 #nazwa
@@ -249,8 +251,7 @@ ul li ul li.greenDiode
     left:0;
     min-width: 25px;
     max-width:35px;
-    min-height: 15px;
-    max-height: 25px;
+    height: 25px;
     line-height: 25px;
     text-align: center;
     float:left;
@@ -280,8 +281,7 @@ ul li ul li.redDiode
     left:0;
     min-width: 25px;
     max-width:35px;
-    min-height: 15px;
-    max-height: 25px;
+    height: 25px;
     text-align: center;
     line-height: 25px;
     line-break: auto;
@@ -312,8 +312,7 @@ ul li ul li.greyDiode
     left:0;
     min-width: 25px;
     max-width:35px;
-    min-height: 15px;
-    max-height: 25px;
+    height: 25px;
     text-align: center;
     line-height: 25px;
     line-break: auto;
@@ -439,4 +438,9 @@ ul li#wydzial
 }
 .nav-pills>li.active>a,.nav-pills>li.active>a:hover{
     background-color: #e2e2e2;
+}
+
+#data
+{
+    color:black;font-size:15px;borderdisplay: inline;border-bottom: 1px solid #e0e0e0;padding-bottom: 7px;
 }

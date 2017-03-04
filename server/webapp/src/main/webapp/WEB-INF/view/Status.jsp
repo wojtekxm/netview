@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/css/loggedStyleWhite.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 </head>
@@ -256,7 +256,7 @@
     window.onload = function() {
         var date = new Date(<%= longSurveyTime %>);
         var n = date.toLocaleString();
-        $( "#data" ).append("Ostatnie badanie przeprowadzono: &emsp; " + n).val();
+        $( "#data" ).append("Ostatnie badanie sieci przeprowadzono: &emsp; " + n).val();
     }
 </script>
 

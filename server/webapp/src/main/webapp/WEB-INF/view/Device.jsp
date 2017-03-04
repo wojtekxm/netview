@@ -29,7 +29,7 @@
     <title>Informacje o urządzeniu</title>
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
-    <link rel="stylesheet" href="/css/loggedStyleWhite.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/status-small.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>

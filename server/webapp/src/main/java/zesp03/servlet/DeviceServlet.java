@@ -1,6 +1,5 @@
 package zesp03.servlet;
 
-import zesp03.common.App;
 import zesp03.common.Database;
 import zesp03.data.row.ControllerRow;
 import zesp03.data.row.DeviceRow;
@@ -110,9 +109,6 @@ public class DeviceServlet extends HttpServlet {
         if (deviceRow == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no such device");
             return;
-        }
-        else {
-            App.rebuildRangeSurveys(deviceRow.getId());//!!!
         }
 
         request.setAttribute(ATTR_CONTROLLER, controllerRow);

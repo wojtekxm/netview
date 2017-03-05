@@ -194,7 +194,6 @@ public class App {
                 existing.put(d.getName(), d);
             }
 
-            int x = 0;
             for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
                 final String name = e.getKey();
                 if (!existing.containsKey(name)) {
@@ -207,15 +206,13 @@ public class App {
                     d.addCurrentSurvey(cs);
                     em.persist(cs);
                     existing.put(name, d);
-                    if (++x == 50) {
-                        em.flush();
-                        em.clear();
-                        x = 0;
-                    }
                 }
             }
 
-            x = 0;
+            final List<DeviceSurvey> ds2persist = new ArrayList<>();
+            final List<CurrentSurvey> cs2persist = new ArrayList<>();
+            final List<CurrentSurvey> cs2merge = new ArrayList<>();
+            final List<RangeSurvey> rs2persist = new ArrayList<>();
             for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
                 final String name = e.getKey();
                 final SurveyInfo info = e.getValue();
@@ -225,23 +222,37 @@ public class App {
                 s.setEnabled(info.isEnabled());
                 s.setClientsSum(info.getClientsSum());
                 s.setDevice(d);
-                em.persist(s);
-                buildRangeSurvey(s, em);
-                CurrentSurvey cs = s.getDevice().getCurrentSurvey();
+                CurrentSurvey cs = d.getCurrentSurvey();
+                ds2persist.add(s);
                 if (cs == null) {
+                    s.setCumulative(0L);
                     cs = new CurrentSurvey();
-                    cs.setDevice(s.getDevice());
+                    cs.setDevice(d);
                     cs.setSurvey(s);
-                    em.persist(cs);
+                    cs2persist.add(cs);
                 } else {
+                    DeviceSurvey before = cs.getSurvey();
+                    if(before == null)s.setCumulative(0L);
+                    else s.setCumulative( before.getCumulative() + before.getClientsSum() *
+                            ( s.getTimestamp() - before.getTimestamp() ) );
                     cs.setSurvey(s);
-                    em.merge(cs);
+                    cs2merge.add(cs);
                 }
-                if (++x == 50) {
-                    em.flush();
-                    em.clear();
-                    x = 0;
-                }
+            }
+            for(DeviceSurvey ds : ds2persist) {
+                em.persist(ds);
+            }
+            for(CurrentSurvey cs : cs2persist) {
+                em.persist(cs);
+            }
+            for(CurrentSurvey cs : cs2merge) {
+                em.merge(cs);
+            }
+            for(DeviceSurvey ds : ds2persist) {
+                buildRangeSurvey(ds, rs2persist, em);
+            }
+            for(RangeSurvey rs : rs2persist) {
+                em.persist(rs);
             }
 
             tran.commit();
@@ -270,8 +281,8 @@ public class App {
             if(device == null)
                 throw new IllegalArgumentException("device with given id does not exist");
 
-            em.createQuery("DELETE FROM RangeSurvey rs WHERE rs.device.id = :deviceid")
-                    .setParameter("deviceid", device.getId())
+            em.createQuery("DELETE FROM RangeSurvey rs WHERE rs.device = :device")
+                    .setParameter("device", device)
                     .executeUpdate();
             List<DeviceSurvey> list = em.createQuery(
                     "SELECT ds FROM DeviceSurvey ds WHERE ds.device = :device ORDER BY ds.timestamp ASC",
@@ -279,8 +290,11 @@ public class App {
                     .setParameter("device", device)
                     .getResultList();
             for( DeviceSurvey survey : list ) {
-                log.debug("survey id = {}, time = {}, clients = {}", survey.getId(), survey.getTimestamp(), survey.getClientsSum());//!!!
-                buildRangeSurvey(survey, em);
+                final List<RangeSurvey> rs2persist = new ArrayList<>();
+                buildRangeSurvey(survey, rs2persist, em);
+                for(RangeSurvey rs : rs2persist) {
+                    em.persist(rs);
+                }
             }
 
             tran.commit();
@@ -292,13 +306,13 @@ public class App {
         }
     }
 
-    private static void buildRangeSurvey(DeviceSurvey survey, EntityManager em) {
+    private static void buildRangeSurvey(DeviceSurvey survey, List<RangeSurvey> rs2persist, EntityManager em) {
         long time = survey.getTimestamp();
         List<RangeSurvey> list = em.createQuery(
-                "SELECT rs FROM RangeSurvey rs WHERE rs.surveyRange = 1 AND rs.timeStart = :t AND rs.device = :d",
+                "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND rs.surveyRange = 1 AND rs.timeStart = :time",
                 RangeSurvey.class)
-                .setParameter("t", time)
-                .setParameter("d", survey.getDevice())
+                .setParameter("time", time)
+                .setParameter("device", survey.getDevice())
                 .getResultList();
         RangeSurvey fresh = null;
         if(list.isEmpty()) {
@@ -311,7 +325,7 @@ public class App {
             rs.setMin(survey.getClientsSum());
             rs.setMax(survey.getClientsSum());
             rs.setSurveyRange(1L);
-            em.persist(rs);
+            rs2persist.add(rs);
             fresh = rs;
         }
         while(fresh != null) {
@@ -324,7 +338,6 @@ public class App {
                     .setParameter("time", fresh.getTimeStart())
                     .setMaxResults(1)
                     .getResultList();
-            log.debug("allBefore.size = {}", allBefore.size());//!!!
             if(allBefore.isEmpty())break;
             RangeSurvey justBefore = allBefore.get(0);
             List<RangeSurvey> allCovering = em.createQuery(
@@ -335,7 +348,6 @@ public class App {
                     .setParameter("range", justBefore.getSurveyRange() * 2)
                     .setParameter("time", justBefore.getTimeEnd())
                     .getResultList();
-            log.debug("allCovering.size = {}", allCovering.size());//!!!
             if(!allCovering.isEmpty())break;
             RangeSurvey x = new RangeSurvey();
             x.setDevice(fresh.getDevice());
@@ -346,10 +358,7 @@ public class App {
             x.setMin( Integer.min(justBefore.getMin(), fresh.getMin()) );
             x.setMax( Integer.max(justBefore.getMax(), fresh.getMax()) );
             x.setSurveyRange( justBefore.getSurveyRange() + fresh.getSurveyRange() );
-            em.persist(x);
-            log.debug("start={} end={} trange={} tsum={} min={} max={} srange={}",
-                    x.getTimeStart(), x.getTimeEnd(), x.getTimeRange(),
-                    x.getTotalSum(), x.getMin(), x.getMax(), x.getSurveyRange());//!!!
+            rs2persist.add(x);
             fresh = x;
         }
     }

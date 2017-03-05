@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dodawanie kontrolera</title>
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
 Dodano nowy kontroler<br>

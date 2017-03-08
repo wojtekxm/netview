@@ -27,7 +27,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js" type="text/javascript"></script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -84,50 +84,93 @@
         <canvas id="mycanvas" width="500px" style="border:1px solid #bce8f1;"></canvas>
     </div>
 
+
     <style>
-        #mycanvas{
+        #mycanvas {
+            /*background-image: url("/images/logooWhite.jpg");*/
             width: 100% !important;
             max-width: 5000px !important;
             height: auto !important;
-            image-rendering: -moz-crisp-edges;         /* Firefox */
-            image-rendering:   -o-crisp-edges;         /* Opera */
-            image-rendering: -webkit-optimize-contrast;/* Webkit (non-standard naming) */
+            image-rendering: -moz-crisp-edges; /* Firefox */
+            image-rendering: -o-crisp-edges; /* Opera */
+            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
             image-rendering: crisp-edges;
-            -ms-interpolation-mode: nearest-neighbor;  /* IE (non-standard property) */
+            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
         }
-
     </style>
+
     <script>
+        var testcontainter = document.getElementById("test");
+        var request = new XMLHttpRequest();
+        var tags = [];
+        var values = [];
+        var options = {
+            tooltips: {
+                mode: 'index'
+            },
+            label:{},
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    },
+                    ticks: {
+                        fixedStepSize: 10,
+                        suggestedMin: 0,
+                        suggestedMax: 50
+                    }
+                }]
+            },
+            responsive: true,
+            pointDotRadius: 3,
+            scaleLineColor:'black',
+            steppedLine: true,
+            elements: {
+                line: {
+                    tension: 0
+                }
+            }
+        };
+        var data = {labels: tags,
+            datasets: [{
+                data: values,
 
-        (function() {
+                fillColor:"rgba(255,255,255,0.5)",
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(0,0,0,1)",
+                pointBackgroundColor: "rgba(255,0,0,1)",
+                pointBorderWidth: 5,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(0, 255, 0, 1)",
+                pointHoverBorderColor: "rgba(255,255, 0, 1)",
+                pointHoverBorderWidth: 5,
+                pointRadius: 5,
+                tension:0
+
+            }]};
+
+        request.open('Get','http://localhost:8080/api/chart?id='+<%=device.getId()%> );
+        request.onload =function () {
+            var jsondata = JSON.parse(request.responseText);
+            console.log(jsondata);
+            console.log(jsondata[0][1]);
+            for (i = 0; i < jsondata.length; i++) {
+                tags[i] = jsondata[i][1];
+                values[i] = jsondata[i][0];
+            }
             var chrt = document.getElementById("mycanvas").getContext("2d");
-            var tags=["January", "February", "March", "April", "May", "June", "July"];
-            var values= [424, 59, 80, 81, 56, 55, 40];
-            var data = {labels: tags,datasets: [{data: values}]};
-            var myFirstChart = new Chart(chrt).Line(data,{responsive: true,pointDotRadius: 1});
-            var
-                htmlCanvas = document.getElementById('mycanvas'),
-                context = htmlCanvas.getContext('2d');
-            initialize();
-            function initialize() {
-                window.addEventListener('resize', resizeCanvas, false);
-                resizeCanvas();
-            }
-            function redraw() {
-                if(myFirstChart){myFirstChart.destroy();}
-                var myFirstChart = new Chart(chrt).Line(data,{responsive: true,pointDotRadius: 1});
-                context.strokeStyle = 'blue';
-                context.lineWidth = '1';
-                context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
-            }
-            function resizeCanvas() {
-                htmlCanvas.width = window.innerWidth;
-                htmlCanvas.height = window.innerHeight;
-                redraw();
-            }
-
-        })();
-
+            /*var myFirstChart = new Chart(chrt).Line(data, options);*/
+            var myFirstChart = Chart.Line(chrt, {data:data,options:options});
+        };
+        request.send();
     </script>
 
     <div class="panel panel-default">

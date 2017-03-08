@@ -75,6 +75,7 @@
                     clazz = "square-red";
                     sumInactive++;
                 }
+            }
                 else {
                     clazz = "square-gray";
                     sumDisabled++;

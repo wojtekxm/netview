@@ -18,7 +18,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Informacje o kontrolerze</title>
     <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">

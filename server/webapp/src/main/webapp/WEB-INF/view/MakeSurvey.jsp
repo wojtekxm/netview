@@ -16,11 +16,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nowe badanie</title>
     <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -30,12 +30,13 @@
             <li role="presentation"><a href="/status-small">Mały widok</a></li>
             <li role="presentation"><a href="/all-controllers">Kontrolery</a></li>
             <li role="presentation"><a href="/all-users">Użytkownicy</a></li>
-            <li role="presentation"><a href="/all-devices">Urządzenia</a></li>
+            <li role="presentation"><a href="/api/all-devices">Urządzenia</a></li>
+            <li role="presentation"><a href="/building">Budynki</a></li>
             <form class="navbar-form nav-pills" style="padding-top: 2px;margin-top:2px;">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" class="form-control" placeholder="Szukaj...">
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
             </form>
         </ul>
         <ul class="nav nav-pills pull-left" style="padding-top: 3px;border-radius: 10px;padding-left:7px;font-size: 17px;">

@@ -289,7 +289,8 @@ ul li ul li.greenDiode2
     float:left;
     color:rgba(1,1,1,1);
     text-decoration-style: solid;
-    background-color: #00b91d;
+    /*background-color: #00b91d;*/
+    background-color: #51b824;
     border-radius:3px;
     transition:  0.5s;
 

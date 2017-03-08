@@ -14,6 +14,7 @@
     <title>zarządzanie kontem</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <div class="container" id="page">

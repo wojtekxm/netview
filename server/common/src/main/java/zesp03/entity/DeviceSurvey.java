@@ -19,6 +19,9 @@ public class DeviceSurvey {
     @Column(name = "clients_sum", nullable = false)
     private Integer clientsSum;
 
+    @Column(name = "cumulative", nullable = false)
+    private Long cumulative;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "device_id",
@@ -57,6 +60,14 @@ public class DeviceSurvey {
 
     public void setClientsSum(Integer clientsSum) {
         this.clientsSum = clientsSum;
+    }
+
+    public Long getCumulative() {
+        return cumulative;
+    }
+
+    public void setCumulative(Long cumulative) {
+        this.cumulative = cumulative;
     }
 
     public Device getDevice() {

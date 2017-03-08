@@ -1,26 +1,22 @@
 package zesp03.common;
 
+import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zesp03.entity.Controller;
-import zesp03.entity.CurrentSurvey;
-import zesp03.entity.Device;
-import zesp03.entity.DeviceSurvey;
+import zesp03.entity.*;
 import zesp03.util.Unicode;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Bardzo ważna klasa w naszym projekcie.
@@ -34,10 +30,29 @@ public class App {
     private static final int CONTROLLER_NAME_MAX_CHARS = 85;
     private static final int DEVICE_NAME_MAX_CHARS = 85;
     private static final SNMPHandler snmp;
+    private static final Properties properties = new Properties();
 
     static {
         try {
             snmp = new FakeSNMP();
+
+            InputStream input = App.class.getResourceAsStream("/settings/default.properties");
+            if(input != null) {
+                properties.load(input);
+                input.close();
+            }
+            input = App.class.getResourceAsStream("/settings/modified.properties");
+            if(input != null) {
+                properties.load(input);
+                input.close();
+            }
+            System.getProperties()
+                    .stringPropertyNames()
+                    .forEach( key -> {
+                        if(key.startsWith("zesp03.")) {
+                            properties.setProperty(key, System.getProperties().getProperty(key));
+                        }
+                    } );
         } catch (IOException exc) {
             throw new IllegalStateException(exc);
         }
@@ -50,6 +65,10 @@ public class App {
     public static boolean isValidUserName(String name) {
         if (name == null || name.isEmpty()) return false;
         return Unicode.onlyAlphaNum(name) && name.length() <= USER_NAME_MAX_CHARS;
+    }
+
+    public static boolean isValidPassword(String password) {
+        return password != null && ! password.isEmpty();
     }
 
     public static boolean isValidControllerName(String name) {
@@ -73,6 +92,35 @@ public class App {
             else sb.append(c);
         }
         return sb.toString().intern();
+    }
+
+    /**
+     * @return The method returns null if the property is not found.
+     */
+    public static synchronized String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+
+    /**
+     * @return The method returns the default value argument if the property is not found.
+     */
+    public static synchronized String getProperty(String key, String def) {
+        return properties.getProperty(key, def);
+    }
+
+    public static void runFlyway() {
+        boolean clean = getProperty("zesp03.flyway.clean", "0").equals("1");
+        boolean migrate = getProperty("zesp03.flyway.migrate", "1").equals("1");
+        if(clean || migrate) {
+            Flyway f = new Flyway();
+            f.setLocations("classpath:flyway");
+            f.setDataSource(
+                    getProperty("zesp03.mysql.url"),
+                    getProperty("zesp03.flyway.user"),
+                    getProperty("zesp03.flyway.password") );
+            if(clean)f.clean();
+            if(migrate)f.migrate();
+        }
     }
 
     public static void examineNetwork() {
@@ -115,7 +163,7 @@ public class App {
         try {
             surveyed = filterDevices(snmp.queryDevices(ipv4));
         } catch (SNMPException exc) {
-            log.warn("Failed to query devices", exc);
+            log.warn("failed to query devices for controller (id={}, ip={})", controllerId, ipv4, exc);
             return;
         }
         if (surveyed.size() < 1) return;
@@ -146,7 +194,6 @@ public class App {
                 existing.put(d.getName(), d);
             }
 
-            int x = 0;
             for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
                 final String name = e.getKey();
                 if (!existing.containsKey(name)) {
@@ -159,15 +206,13 @@ public class App {
                     d.addCurrentSurvey(cs);
                     em.persist(cs);
                     existing.put(name, d);
-                    if (++x == 50) {
-                        em.flush();
-                        em.clear();
-                        x = 0;
-                    }
                 }
             }
 
-            x = 0;
+            final List<DeviceSurvey> ds2persist = new ArrayList<>();
+            final List<CurrentSurvey> cs2persist = new ArrayList<>();
+            final List<CurrentSurvey> cs2merge = new ArrayList<>();
+            final List<RangeSurvey> rs2persist = new ArrayList<>();
             for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
                 final String name = e.getKey();
                 final SurveyInfo info = e.getValue();
@@ -177,21 +222,78 @@ public class App {
                 s.setEnabled(info.isEnabled());
                 s.setClientsSum(info.getClientsSum());
                 s.setDevice(d);
-                em.persist(s);
-                CurrentSurvey cs = s.getDevice().getCurrentSurvey();
+                CurrentSurvey cs = d.getCurrentSurvey();
+                ds2persist.add(s);
                 if (cs == null) {
+                    s.setCumulative(0L);
                     cs = new CurrentSurvey();
-                    cs.setDevice(s.getDevice());
+                    cs.setDevice(d);
                     cs.setSurvey(s);
-                    em.persist(cs);
+                    cs2persist.add(cs);
                 } else {
+                    DeviceSurvey before = cs.getSurvey();
+                    if(before == null)s.setCumulative(0L);
+                    else s.setCumulative( before.getCumulative() + before.getClientsSum() *
+                            ( s.getTimestamp() - before.getTimestamp() ) );
                     cs.setSurvey(s);
-                    em.merge(cs);
+                    cs2merge.add(cs);
                 }
-                if (++x == 50) {
-                    em.flush();
-                    em.clear();
-                    x = 0;
+            }
+            for(DeviceSurvey ds : ds2persist) {
+                em.persist(ds);
+            }
+            for(CurrentSurvey cs : cs2persist) {
+                em.persist(cs);
+            }
+            for(CurrentSurvey cs : cs2merge) {
+                em.merge(cs);
+            }
+            for(DeviceSurvey ds : ds2persist) {
+                buildRangeSurvey(ds, rs2persist, em);
+            }
+            for(RangeSurvey rs : rs2persist) {
+                em.persist(rs);
+            }
+
+            tran.commit();
+            log.info("survey of controller (id={}, ip={}) has finished successfully", controllerId, ipv4);
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    /**
+     * @param deviceId identyfikator urządzenia
+     * @throws IllegalArgumentException device with given id does not exist
+     */
+    public static void rebuildRangeSurveys(long deviceId) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Device device = em.find(Device.class, deviceId);
+            if(device == null)
+                throw new IllegalArgumentException("device with given id does not exist");
+
+            em.createQuery("DELETE FROM RangeSurvey rs WHERE rs.device = :device")
+                    .setParameter("device", device)
+                    .executeUpdate();
+            List<DeviceSurvey> list = em.createQuery(
+                    "SELECT ds FROM DeviceSurvey ds WHERE ds.device = :device ORDER BY ds.timestamp ASC",
+                    DeviceSurvey.class)
+                    .setParameter("device", device)
+                    .getResultList();
+            for( DeviceSurvey survey : list ) {
+                final List<RangeSurvey> rs2persist = new ArrayList<>();
+                buildRangeSurvey(survey, rs2persist, em);
+                for(RangeSurvey rs : rs2persist) {
+                    em.persist(rs);
                 }
             }
 
@@ -201,6 +303,63 @@ public class App {
             throw exc;
         } finally {
             if (em != null) em.close();
+        }
+    }
+
+    private static void buildRangeSurvey(DeviceSurvey survey, List<RangeSurvey> rs2persist, EntityManager em) {
+        long time = survey.getTimestamp();
+        List<RangeSurvey> list = em.createQuery(
+                "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND rs.surveyRange = 1 AND rs.timeStart = :time",
+                RangeSurvey.class)
+                .setParameter("time", time)
+                .setParameter("device", survey.getDevice())
+                .getResultList();
+        RangeSurvey fresh = null;
+        if(list.isEmpty()) {
+            RangeSurvey rs = new RangeSurvey();
+            rs.setDevice(survey.getDevice());
+            rs.setTimeStart(time);
+            rs.setTimeEnd(time);
+            rs.setTimeRange(0L);
+            rs.setTotalSum((long) survey.getClientsSum());
+            rs.setMin(survey.getClientsSum());
+            rs.setMax(survey.getClientsSum());
+            rs.setSurveyRange(1L);
+            rs2persist.add(rs);
+            fresh = rs;
+        }
+        while(fresh != null) {
+            List<RangeSurvey> allBefore = em.createQuery(
+                    "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND rs.surveyRange = :range " +
+                            "AND rs.timeEnd < :time ORDER BY rs.timeEnd DESC ",
+                    RangeSurvey.class)
+                    .setParameter("device", fresh.getDevice())
+                    .setParameter("range", fresh.getSurveyRange())
+                    .setParameter("time", fresh.getTimeStart())
+                    .setMaxResults(1)
+                    .getResultList();
+            if(allBefore.isEmpty())break;
+            RangeSurvey justBefore = allBefore.get(0);
+            List<RangeSurvey> allCovering = em.createQuery(
+                    "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND " +
+                            "rs.surveyRange = :range AND rs.timeEnd = :time",
+                    RangeSurvey.class)
+                    .setParameter("device", justBefore.getDevice())
+                    .setParameter("range", justBefore.getSurveyRange() * 2)
+                    .setParameter("time", justBefore.getTimeEnd())
+                    .getResultList();
+            if(!allCovering.isEmpty())break;
+            RangeSurvey x = new RangeSurvey();
+            x.setDevice(fresh.getDevice());
+            x.setTimeStart(justBefore.getTimeStart());
+            x.setTimeEnd(fresh.getTimeEnd());
+            x.setTimeRange( x.getTimeEnd() - x.getTimeStart() );
+            x.setTotalSum( justBefore.getTotalSum() + fresh.getTotalSum() );
+            x.setMin( Integer.min(justBefore.getMin(), fresh.getMin()) );
+            x.setMax( Integer.max(justBefore.getMax(), fresh.getMax()) );
+            x.setSurveyRange( justBefore.getSurveyRange() + fresh.getSurveyRange() );
+            rs2persist.add(x);
+            fresh = x;
         }
     }
 

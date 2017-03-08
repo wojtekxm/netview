@@ -15,6 +15,7 @@ public class Daemon {
     private static boolean shutdown = false;
 
     public static void main(String[] args) throws NamingException {
+        App.runFlyway();
         Database.init();
         Thread t = new Thread(() -> shutdown = true);
         Runtime.getRuntime().addShutdownHook(t);

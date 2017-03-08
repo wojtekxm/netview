@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
-import zesp03.config.DataService;
 import zesp03.data.DeviceData;
+import zesp03.repository.DeviceRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +23,7 @@ public class StatusSmallServlet extends HttpServlet {
         List<DeviceData> list;
 
         long t0 = System.nanoTime();
-        list = new DataService().checkDevices();
+        list = new DeviceRepository().checkDevices();
         double time = (System.nanoTime() - t0) * 0.000000001;
 
         request.setAttribute(ATTR_TIME, time);

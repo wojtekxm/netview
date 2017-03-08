@@ -4,15 +4,9 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <context-param>
-        <param-name>root-name</param-name>
-        <param-value>root</param-value>
-    </context-param>
-    <context-param>
-        <param-name>root-password</param-name>
-        <param-value>1234</param-value>
-    </context-param>
-
+    <listener>
+        <listener-class>zesp03.config.FlywayConfig</listener-class>
+    </listener>
     <listener>
         <listener-class>zesp03.config.DatabaseConfig</listener-class>
     </listener>
@@ -61,10 +55,13 @@
         <servlet-name>StatusServlet</servlet-name>
         <servlet-name>StatusSmallServlet</servlet-name>
         <servlet-name>StyleServlet</servlet-name>
+        <servlet-name>LinkUnitBuildingServlet</servlet-name>
+        <servlet-name>AccountManagementServlet</servlet-name>
         <url-pattern>/api/all-controllers</url-pattern>
         <url-pattern>/api/all-devices</url-pattern>
         <url-pattern>/api/controller</url-pattern>
         <url-pattern>/api/device</url-pattern>
+        <url-pattern>/api/change-password</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>ForAdminFilter</filter-name>

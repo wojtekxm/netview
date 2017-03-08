@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class Database {
@@ -41,12 +43,14 @@ public class Database {
         }
     }
 
-    //TODO ???
     public static synchronized void init() {
-        emf = Persistence.createEntityManagerFactory("CRM");
+        Map<String, String> map = new HashMap<>();
+        map.put("javax.persistence.jdbc.password", App.getProperty("zesp03.mysql.password"));
+        map.put("javax.persistence.jdbc.user", App.getProperty("zesp03.mysql.user"));
+        map.put("javax.persistence.jdbc.url", App.getProperty("zesp03.mysql.url"));
+        emf = Persistence.createEntityManagerFactory("CRM", map);
     }
 
-    //TODO ???
     public static synchronized void destroy() {
         emf.close();
         emf = null;

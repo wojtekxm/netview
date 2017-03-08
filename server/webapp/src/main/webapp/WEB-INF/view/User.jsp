@@ -32,6 +32,8 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/loggedStyleWhite.css.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">

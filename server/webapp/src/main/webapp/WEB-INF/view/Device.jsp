@@ -30,6 +30,8 @@
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -105,26 +107,26 @@
     </div>
 
     <style>
-        #mycanvas {
+        #mycanvas{
             width: 100% !important;
             max-width: 5000px !important;
             height: auto !important;
-            image-rendering: -moz-crisp-edges; /* Firefox */
-            image-rendering: -o-crisp-edges; /* Opera */
-            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+            image-rendering: -moz-crisp-edges;         /* Firefox */
+            image-rendering:   -o-crisp-edges;         /* Opera */
+            image-rendering: -webkit-optimize-contrast;/* Webkit (non-standard naming) */
             image-rendering: crisp-edges;
-            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+            -ms-interpolation-mode: nearest-neighbor;  /* IE (non-standard property) */
         }
 
     </style>
     <script>
 
-        (function () {
+        (function() {
             var chrt = document.getElementById("mycanvas").getContext("2d");
-            var tags = ["January", "February", "March", "April", "May", "June", "July"];
-            var values = [424, 59, 80, 81, 56, 55, 40];
-            var data = {labels: tags, datasets: [{data: values}]};
-            var myFirstChart = new Chart(chrt).Line(data, {responsive: true, pointDotRadius: 1});
+            var tags=["January", "February", "March", "April", "May", "June", "July"];
+            var values= [424, 59, 80, 81, 56, 55, 40];
+            var data = {labels: tags,datasets: [{data: values}]};
+            var myFirstChart = new Chart(chrt).Line(data,{responsive: true,pointDotRadius: 1});
             var
                 htmlCanvas = document.getElementById('mycanvas'),
                 context = htmlCanvas.getContext('2d');
@@ -133,17 +135,13 @@
                 window.addEventListener('resize', resizeCanvas, false);
                 resizeCanvas();
             }
-
             function redraw() {
-                if (myFirstChart) {
-                    myFirstChart.destroy();
-                }
-                var myFirstChart = new Chart(chrt).Line(data, {responsive: true, pointDotRadius: 1});
+                if(myFirstChart){myFirstChart.destroy();}
+                var myFirstChart = new Chart(chrt).Line(data,{responsive: true,pointDotRadius: 1});
                 context.strokeStyle = 'blue';
                 context.lineWidth = '1';
                 context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
             }
-
             function resizeCanvas() {
                 htmlCanvas.width = window.innerWidth;
                 htmlCanvas.height = window.innerHeight;
@@ -222,6 +220,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 
 <script src="/js/jquery-3.1.1.min.js"></script>

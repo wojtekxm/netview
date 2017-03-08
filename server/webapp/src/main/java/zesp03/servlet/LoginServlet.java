@@ -1,14 +1,10 @@
 package zesp03.servlet;
 
-import zesp03.common.App;
-import zesp03.common.Database;
 import zesp03.data.row.UserRow;
-import zesp03.entity.User;
+import zesp03.dto.LoginResultDto;
 import zesp03.filter.AuthenticationFilter;
-import zesp03.util.Secret;
+import zesp03.service.LoginService;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -16,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(value = "/login", name = "LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -32,44 +27,21 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter(POST_USERNAME);
         String password = request.getParameter(POST_PASSWORD);
         if (username != null && password != null) {
-            final String hash = App.passwordToHash(password);
-            UserRow userRow = null;
-
-            EntityManager em = null;
-            EntityTransaction tran = null;
-            try {
-                em = Database.createEntityManager();
-                tran = em.getTransaction();
-                tran.begin();
-
-                List<User> list = em.createQuery("SELECT u FROM User u WHERE u.name = :n", User.class)
-                        .setParameter("n", username)
-                        .getResultList();
-                if (!list.isEmpty()) {
-                    User user = list.get(0);
-                    if (user.getSecret() != null &&
-                            !user.isBlocked() &&
-                            user.isActivated()) {
-                        Secret secret = Secret.readData(user.getSecret());
-                        if (secret.check(hash.toCharArray()))
-                            userRow = new UserRow(user);
-                    }
-                }
-
-                tran.commit();
-            } catch (RuntimeException exc) {
-                if (tran != null && tran.isActive()) tran.rollback();
-                throw exc;
-            } finally {
-                if (em != null) em.close();
-            }
-
-            if (userRow != null) {
-                Cookie cu = new Cookie(AuthenticationFilter.COOKIE_USERID, Long.toString(userRow.getId()));
+            LoginResultDto result = new LoginService().login(username, password);
+            if (result.isSuccess()) {
+                Cookie cu = new Cookie(
+                        AuthenticationFilter.COOKIE_USERID,
+                        Long.toString(result.getUserId())
+                );
                 cu.setMaxAge(60 * 60 * 24 * 30);
+                cu.setPath("/");
                 response.addCookie(cu);
-                Cookie cp = new Cookie(AuthenticationFilter.COOKIE_PASSTOKEN, hash);
-                cu.setMaxAge(60 * 60 * 24 * 30);
+                Cookie cp = new Cookie(
+                        AuthenticationFilter.COOKIE_PASSTOKEN,
+                        result.getPassToken()
+                );
+                cp.setMaxAge(60 * 60 * 24 * 30);
+                cp.setPath("/");
                 response.addCookie(cp);
                 response.sendRedirect("/");//? home page
                 return;

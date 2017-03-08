@@ -17,6 +17,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Informacje o kontrolerze</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
@@ -59,7 +61,7 @@
             <form method="post" action="/remove-controller">
                 <input type="hidden" name="<%= RemoveControllerServlet.POST_ID %>"
                        value="<%= controllerRow.getId() %>">
-                <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active" role="button">
+                <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active list-group-item-heading" role="button">
             </form>
         </div>
         <div class="panel panel-default">

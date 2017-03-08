@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/css/<%= style %>.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 </head>
@@ -48,6 +48,7 @@
             <li role="presentation"><a href="/all-controllers">Kontrolery</a></li>
             <li role="presentation"><a href="/all-users">Użytkownicy</a></li>
             <li role="presentation"><a href="/api/all-devices">Urządzenia</a></li>
+            <li role="presentation"><a href="/building">Budynki</a></li>
             <form class="navbar-form nav-pills" style="padding-top: 2px;margin-top:2px;">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Szukaj...">

@@ -176,7 +176,7 @@ public class App {
 
             Controller c = em.find(Controller.class, controllerId);
             if(c == null)
-                throw new IllegalArgumentException("no such controller");
+                throw new IllegalArgumentException("no such controller with id=" + controllerId);
             ipv4 = c.getIpv4();
 
             tran.commit();

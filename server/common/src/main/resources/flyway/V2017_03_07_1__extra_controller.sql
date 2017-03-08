@@ -1,1 +1,0 @@
-INSERT INTO controller (`name`, ipv4) VALUES ('WiFi-99', '199.199.199.199');

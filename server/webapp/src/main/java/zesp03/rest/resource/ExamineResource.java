@@ -4,10 +4,7 @@ import zesp03.common.App;
 import zesp03.common.SNMPException;
 import zesp03.dto.ExamineResultDto;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -15,7 +12,8 @@ import java.time.Instant;
 public class ExamineResource {
     @POST
     @Produces("application/json")
-    public ExamineResultDto post(@QueryParam("id") long controllerId) {
+    @Consumes("application/x-www-form-urlencoded")
+    public ExamineResultDto post(@FormParam("id") long controllerId) {
         ExamineResultDto result = new ExamineResultDto();
         try {
             final Instant start = Instant.now();

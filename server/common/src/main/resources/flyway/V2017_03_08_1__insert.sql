@@ -1,11 +1,14 @@
-INSERT INTO controller (id, `name`, ipv4) VALUES
-(1, 'WiFi-2', '102.102.102.102'),
-(2, 'WiFi-3', '103.103.103.103'),
-(3, 'WiFi-5', '105.105.105.105'),
-(4, 'WiFi-6', '106.106.106.106'),
-(5, 'WiFi-7', '107.107.107.107'),
-(6, 'WiFi-10', '110.110.110.110'),
-(7, 'WiFi-11', '111.111.111.111');
+INSERT INTO controller (`name`, ipv4) VALUES
+('WiFi-2', '102.102.102.102'),
+('WiFi-3', '103.103.103.103'),
+('WiFi-5', '105.105.105.105'),
+('WiFi-6', '106.106.106.106'),
+('WiFi-7', '107.107.107.107'),
+('WiFi-10', '110.110.110.110'),
+('WiFi-11', '111.111.111.111');
+
+INSERT INTO controller (`name`, ipv4) VALUES
+('WiFi-99', '199.199.199.199');
 
 INSERT INTO `building` VALUES
 (1,'0600','Wydział Chemii',53.019200,18.569600),
@@ -187,3 +190,14 @@ INSERT INTO link_unit_building (unit_id, building_id) VALUES
 ( (SELECT id FROM unit WHERE code ='9000000000'), (SELECT id FROM building WHERE code = 'REKTORAT') ),
 ( (SELECT id FROM unit WHERE code ='9001410000'), (SELECT id FROM building WHERE code = 'DS-11') ),
 ( (SELECT id FROM unit WHERE code ='9002290000'), (SELECT id FROM building WHERE code = 'CM_DS-3') );
+
+DELETE FROM hibernate_sequences;
+
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
+  ( "controller", ( SELECT MAX(id)+1000 FROM controller ) );
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
+  ( "building", ( SELECT MAX(id)+1000 FROM building ) );
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
+  ( "unit", ( SELECT MAX(id)+1000 FROM unit ) );
+INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
+  ( "link_unit_building", ( SELECT MAX(id)+1000 FROM link_unit_building ) );

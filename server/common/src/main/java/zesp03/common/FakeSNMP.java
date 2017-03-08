@@ -35,6 +35,7 @@ public class FakeSNMP implements SNMPHandler {
         parse("FakeSNMP_wifi07.txt");
         parse("FakeSNMP_wifi10.txt");
         parse("FakeSNMP_wifi11.txt");
+        parse("FakeSNMP_wifi99.txt");
     }
 
     private void parse(String resourceName) throws IOException {

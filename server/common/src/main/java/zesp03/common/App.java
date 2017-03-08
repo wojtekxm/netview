@@ -123,10 +123,10 @@ public class App {
         }
     }
 
-    public static void examineNetwork() {
+    public static void examineAll() {
         final Instant t0 = Instant.now();
         log.info("network survey begins");
-        List<Controller> list;
+        List<Long> list;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -135,7 +135,8 @@ public class App {
             tran = em.getTransaction();
             tran.begin();
 
-            list = em.createQuery("SELECT c FROM Controller c", Controller.class).getResultList();
+            list = em.createQuery("SELECT c.id FROM Controller c", Long.class)
+                    .getResultList();
 
             tran.commit();
         } catch (RuntimeException exc) {
@@ -145,11 +146,11 @@ public class App {
             if (em != null) em.close();
         }
 
-        for (Controller c : list) {
+        for (Long id : list) {
             try {
-                examineOne(c.getId(), c.getIpv4());
-            } catch (RuntimeException exc) {
-                log.error("Failed to examine controller", exc);
+                examineOne(id);
+            } catch (RuntimeException | SNMPException exc) {
+                log.error("failed to examine controller", exc);
             }
         }
 
@@ -158,15 +159,39 @@ public class App {
         log.info("network survey took {} seconds to examine {} controllers", dur, list.size());
     }
 
-    protected static void examineOne(long controllerId, String ipv4) {
-        HashMap<String, SurveyInfo> surveyed;
+    /**
+     * Wykonuje badanie wskazanego kontrolera.
+     * @param controllerId id kontrolera
+     * @return liczba zaktualizowanych urządzeń (liczba nowych zapisanych badań)
+     */
+    public static int examineOne(long controllerId)
+            throws SNMPException {
+        String ipv4;
+        EntityManager em = null;
+        EntityTransaction tran = null;
         try {
-            surveyed = filterDevices(snmp.queryDevices(ipv4));
-        } catch (SNMPException exc) {
-            log.warn("failed to query devices for controller (id={}, ip={})", controllerId, ipv4, exc);
-            return;
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Controller c = em.find(Controller.class, controllerId);
+            if(c == null)
+                throw new IllegalArgumentException("no such controller");
+            ipv4 = c.getIpv4();
+
+            tran.commit();
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
         }
-        if (surveyed.size() < 1) return;
+
+        final HashMap<String, SurveyInfo> surveyed = filterDevices(snmp.queryDevices(ipv4));
+        if (surveyed.size() < 1) {
+            log.info("controller returned no devices");
+            return 0;
+        }
         surveyed.forEach((name, ds) -> ds.setId(-1));
 
         Instant now = Instant.now();
@@ -175,8 +200,8 @@ public class App {
             throw new IllegalStateException("timestamp overflow");
         int timestamp = (int) longTS;
 
-        EntityManager em = null;
-        EntityTransaction tran = null;
+        em = null;
+        tran = null;
         try {
             em = Database.createEntityManager();
             tran = em.getTransaction();
@@ -184,8 +209,8 @@ public class App {
 
             Controller controller = em.find(Controller.class, controllerId);
             if (controller == null) {
-                tran.commit();
-                return;
+                tran.rollback();
+                throw new IllegalArgumentException("no such controller");
             }
 
             List<Device> devices = em.createQuery("SELECT d FROM Device d", Device.class).getResultList();
@@ -256,7 +281,9 @@ public class App {
             }
 
             tran.commit();
-            log.info("survey of controller (id={}, ip={}) has finished successfully", controllerId, ipv4);
+            log.info("survey of controller (id={}, ip={}) has finished successfully with {} updated devices",
+                    controllerId, ipv4, ds2persist.size());
+            return ds2persist.size();
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;

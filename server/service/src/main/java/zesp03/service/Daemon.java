@@ -21,7 +21,7 @@ public class Daemon {
         Runtime.getRuntime().addShutdownHook(t);
         while (!shutdown) {
             final Instant start = Instant.now();
-            App.examineNetwork();
+            App.examineAll();
             long sleep = Duration.between(Instant.now(), start.plusSeconds(5 * 60)).toMillis();
             if (sleep < 1) sleep = 1;
             try {

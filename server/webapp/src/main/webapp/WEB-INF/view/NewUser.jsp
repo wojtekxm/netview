@@ -43,7 +43,7 @@
 </nav>
 <div class="container" id="page">
     <div class="welcome">
-        <div class="tittleStatic">NETWORK-MONITOR</div>
+        <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
         <div class="userStatic">zalogowany: <%= userRow.getName() %>
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>

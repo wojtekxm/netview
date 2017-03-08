@@ -4,12 +4,10 @@
 <%@ page import="zesp03.servlet.DeviceServlet" %>
 <%@ page import="zesp03.servlet.StatusServlet" %>
 <%@ page import="java.util.List" %>
-<%@ page import="zesp03.servlet.StatusSmallServlet" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     List<DeviceData> list = (List<DeviceData>) request.getAttribute(StatusServlet.allDevicesString);
-    Double time = (Double) request.getAttribute(StatusSmallServlet.ATTR_TIME);
     UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
     int surveyTime=list.get(0).getLastSurveyTimestamp();
     Long longSurveyTime = new Long(surveyTime);
@@ -25,6 +23,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//code.angularjs.org/1.2.20/angular.js"></script>
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -81,8 +80,17 @@
                                 int sumUsers = info.getClientsSum();
                                 String clazz;
                                 if (info.isEnabled()) {
-                                    if (info.getClientsSum() > 0) {
-                                        clazz = "greenDiode";
+                                    if (info.getClientsSum() > 0 && info.getClientsSum() <= 10) {
+                                        clazz = "greenDiode1";
+                                        sumActive++;
+                                    } else if (info.getClientsSum() > 10 && info.getClientsSum() <= 30) {
+                                        clazz = "greenDiode2";
+                                        sumActive++;
+                                    } else if (info.getClientsSum() > 30 && info.getClientsSum() <= 47) {
+                                        clazz = "greenDiode3";
+                                        sumActive++;
+                                    } else if (info.getClientsSum() > 47) {
+                                        clazz = "greenDiode4";
                                         sumActive++;
                                     }
                                     else {
@@ -98,14 +106,14 @@
                                 final String h = "/device?" + DeviceServlet.GET_ID + "=" + info.getId();
                                 String t = info.getName();
                                 if(info.isEnabled()){
-                                if (info.getDescription() != null) t += "<br>opis: " + info.getDescription();
-                                    %><li class="<%= clazz %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
-                                    ><%
-                                }else{
                                     if (info.getDescription() != null) t += "<br>opis: " + info.getDescription();
-                                    %><li class="<%= clazz %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;">-</a></li
-                                    ><%
-                                }
+                                        %><li class="<%= clazz %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;"><%= sumUsers %></a></li
+                                        ><%
+                                    }else{
+                                        if (info.getDescription() != null) t += "<br>opis: " + info.getDescription();
+                                        %><li class="<%= clazz %>" title="<%= t %>" data-toggle="tooltip" data-html="true"><a href="<%= h %>" style="text-decoration: none; color: white;">-</a></li
+                                        ><%
+                                    }
                         }
                         %>
                     </ul>
@@ -141,15 +149,53 @@
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 
 
+
+<%--<script>--%>
+    <%--function auto_load(){--%>
+        <%--$.ajax({--%>
+            <%--url: "/api/device",--%>
+            <%--cache: false,--%>
+            <%--success: function(data){--%>
+                <%--$("#devices").html(data);--%>
+            <%--}--%>
+        <%--});--%>
+    <%--}--%>
+
+    <%--$(document).ready(function(){--%>
+
+        <%--auto_load(); //Call auto_load() function when DOM is Ready--%>
+
+    <%--});--%>
+
+    <%--//Refresh auto_load() function after 10000 milliseconds--%>
+    <%--setInterval(auto_load,10000);--%>
+<%--</script>--%>
+
 <script>
     function onlyGreen(){
         $( ".view > li > ul" ).empty();
         <%
         for (DeviceData d : list) {
+            int sumUsers=d.getClientsSum();
             String clazz;
             if(d.isEnabled()){
                 if(d.getClientsSum() > 0){
-                    clazz="greenDiode";
+                    clazz="greenDiode2";
+                    if( sumUsers > 0 && sumUsers <= 10 ){
+                       clazz="greenDiode1";
+                       sumActive++;
+                    }else if( sumUsers > 10 && sumUsers <= 30 ){
+                       clazz="greenDiode2";
+                       sumActive++;
+                    }
+                    else if( sumUsers > 30 && sumUsers <= 47 ){
+                       clazz="greenDiode3";
+                       sumActive++;
+                    }
+                    else if( sumUsers > 47){
+                       clazz="greenDiode4";
+                       sumActive++;
+                    }
         %>
         $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'><%= d.getClientsSum() %></a></li>").val();
         $(function () {
@@ -213,11 +259,26 @@
         sumActive=0;
         sumDisabled=0;
         for (DeviceData d : list) {
+            int sumUsers=d.getClientsSum();
             String clazz;
             if(d.isEnabled()){
                 if(d.getClientsSum() > 0){
-                    clazz="greenDiode";
-                    sumActive++;
+                    clazz="greenDiode2";
+                    if( sumUsers > 0 && sumUsers <= 10 ){
+                       clazz="greenDiode1";
+                       sumActive++;
+                    }else if( sumUsers > 10 && sumUsers <= 30 ){
+                       clazz="greenDiode2";
+                       sumActive++;
+                    }
+                    else if( sumUsers > 30 && sumUsers <= 47 ){
+                       clazz="greenDiode3";
+                       sumActive++;
+                    }
+                    else if( sumUsers > 47){
+                       clazz="greenDiode4";
+                       sumActive++;
+                    }
                 }else{
                     clazz="redDiode";
                     sumInactive++;

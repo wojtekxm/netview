@@ -3,7 +3,13 @@ package zesp03.common;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zesp03.entity.*;
+import zesp03.data.ExamineResult;
+import zesp03.data.SurveyInfo;
+import zesp03.entity.Controller;
+import zesp03.entity.Device;
+import zesp03.entity.DeviceSurvey;
+import zesp03.entity.MinmaxSurvey;
+import zesp03.service.DeviceService;
 import zesp03.util.Unicode;
 
 import javax.persistence.EntityManager;
@@ -17,6 +23,7 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Bardzo ważna klasa w naszym projekcie.
@@ -123,10 +130,12 @@ public class App {
         }
     }
 
-    public static void examineAll() {
-        final Instant t0 = Instant.now();
+    public static ExamineResult examineAll() {
+        final Instant start = Instant.now();
         log.info("network survey begins");
         List<Long> list;
+        final ExamineResult r = new ExamineResult();
+        r.setUpdatedDevices(0);
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -148,15 +157,18 @@ public class App {
 
         for (Long id : list) {
             try {
-                examineOne(id);
+                r.setUpdatedDevices(
+                        r.getUpdatedDevices() + examineOne(id).getUpdatedDevices()
+                );
             } catch (RuntimeException | SNMPException exc) {
                 log.error("failed to examine controller", exc);
             }
         }
 
-        final Instant t1 = Instant.now();
-        double dur = Duration.between(t0, t1).toMillis() * 0.001;
-        log.info("network survey took {} seconds to examine {} controllers", dur, list.size());
+        r.setSeconds(Duration.between(start, Instant.now()).toNanos() * 0.000000001);
+        log.info("network survey examined {} controllers with {} updated devices, in {} seconds",
+                list.size(), r.getUpdatedDevices(), r.getSeconds() );
+        return r;
     }
 
     /**
@@ -164,9 +176,12 @@ public class App {
      * @param controllerId id kontrolera
      * @return liczba zaktualizowanych urządzeń (liczba nowych zapisanych badań)
      */
-    public static int examineOne(long controllerId)
+    public static ExamineResult examineOne(long controllerId)
             throws SNMPException {
+        final Instant start = Instant.now();
+        final int timestamp = (int) start.getEpochSecond();
         String ipv4;
+
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -187,18 +202,19 @@ public class App {
             if (em != null) em.close();
         }
 
-        final HashMap<String, SurveyInfo> surveyed = filterDevices(snmp.queryDevices(ipv4));
-        if (surveyed.size() < 1) {
-            log.info("controller returned no devices");
-            return 0;
+        final HashSet<String> deviceNames = new HashSet<>();
+        final HashMap<String, SurveyInfo> name2info = new HashMap<>();
+        for(SurveyInfo info : snmp.queryDevices(ipv4)) {
+            deviceNames.add(info.getName());
+            name2info.put(info.getName(), info);
         }
-        surveyed.forEach((name, ds) -> ds.setId(-1));
-
-        Instant now = Instant.now();
-        long longTS = now.getEpochSecond();
-        if (longTS <= 0 || longTS > Integer.MAX_VALUE)
-            throw new IllegalStateException("timestamp overflow");
-        int timestamp = (int) longTS;
+        if(name2info.isEmpty()) {
+            log.info("survey of controller (id={}, ip={}) returned no devices", controllerId, ipv4);
+            final ExamineResult r = new ExamineResult();
+            r.setSeconds(Duration.between(start, Instant.now()).toNanos() * 0.000000001);
+            r.setUpdatedDevices(0);
+            return r;
+        }
 
         em = null;
         tran = null;
@@ -209,81 +225,59 @@ public class App {
 
             Controller controller = em.find(Controller.class, controllerId);
             if (controller == null) {
-                tran.rollback();
-                throw new IllegalArgumentException("no such controller");
+                throw new IllegalArgumentException("no such controller with id=" + controllerId);
             }
 
-            List<Device> devices = em.createQuery("SELECT d FROM Device d", Device.class).getResultList();
-            final HashMap<String, Device> existing = new HashMap<>();
-            for (Device d : devices) {
-                existing.put(d.getName(), d);
-            }
-
-            for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
-                final String name = e.getKey();
-                if (!existing.containsKey(name)) {
-                    final Device d = new Device();
-                    d.setName(name);
-                    d.setController(controller);
-                    d.setKnown(false);
-                    em.persist(d);
-                    final CurrentSurvey cs = new CurrentSurvey();
-                    d.addCurrentSurvey(cs);
-                    em.persist(cs);
-                    existing.put(name, d);
-                }
-            }
-
+            final HashMap<String, Device> name2device = makeDevices(deviceNames, controller, em);
+            em.flush();
+            final HashMap<Long, DeviceSurvey> devid2survey = new HashMap<>();
+            new DeviceService().checkSome(
+                    name2device
+                            .entrySet()
+                            .stream()
+                            .map( e -> e.getValue().getId() )
+                            .collect(Collectors.toSet()),
+                    em
+            ).forEach( dsd -> {
+                devid2survey.put(dsd.getDevice().getId(), dsd.getSurvey());
+            } );
             final List<DeviceSurvey> ds2persist = new ArrayList<>();
-            final List<CurrentSurvey> cs2persist = new ArrayList<>();
-            final List<CurrentSurvey> cs2merge = new ArrayList<>();
-            final List<RangeSurvey> rs2persist = new ArrayList<>();
-            for (Map.Entry<String, SurveyInfo> e : surveyed.entrySet()) {
-                final String name = e.getKey();
-                final SurveyInfo info = e.getValue();
-                final Device d = existing.get(name);
-                final DeviceSurvey s = new DeviceSurvey();
-                s.setTimestamp(timestamp);
-                s.setEnabled(info.isEnabled());
-                s.setClientsSum(info.getClientsSum());
-                s.setDevice(d);
-                CurrentSurvey cs = d.getCurrentSurvey();
-                ds2persist.add(s);
-                if (cs == null) {
-                    s.setCumulative(0L);
-                    cs = new CurrentSurvey();
-                    cs.setDevice(d);
-                    cs.setSurvey(s);
-                    cs2persist.add(cs);
-                } else {
-                    DeviceSurvey before = cs.getSurvey();
-                    if(before == null)s.setCumulative(0L);
-                    else s.setCumulative( before.getCumulative() + before.getClientsSum() *
-                            ( s.getTimestamp() - before.getTimestamp() ) );
-                    cs.setSurvey(s);
-                    cs2merge.add(cs);
+            final List<MinmaxSurvey> ms2persist = new ArrayList<>();
+            for(String name : deviceNames) {
+                final SurveyInfo info = name2info.get(name);
+                final Device device = name2device.get(name);
+                final DeviceSurvey sur = new DeviceSurvey();
+                sur.setTimestamp(timestamp);
+                sur.setEnabled(info.isEnabled());
+                sur.setClientsSum(info.getClientsSum());
+                sur.setDevice(device);
+                final DeviceSurvey before = devid2survey.get(device.getId());
+                if(before == null) {
+                    sur.setCumulative(0L);
                 }
+                else {
+                    sur.setCumulative( before.getCumulative() + before.getClientsSum() *
+                            ( sur.getTimestamp() - before.getTimestamp() ) );
+                }
+                ds2persist.add(sur);
             }
             for(DeviceSurvey ds : ds2persist) {
                 em.persist(ds);
             }
-            for(CurrentSurvey cs : cs2persist) {
-                em.persist(cs);
-            }
-            for(CurrentSurvey cs : cs2merge) {
-                em.merge(cs);
-            }
             for(DeviceSurvey ds : ds2persist) {
-                buildRangeSurvey(ds, rs2persist, em);
+                buildMinmaxSurvey(ds, ms2persist, em);
             }
-            for(RangeSurvey rs : rs2persist) {
-                em.persist(rs);
+            for(MinmaxSurvey ms : ms2persist) {
+                em.persist(ms);
             }
 
             tran.commit();
-            log.info("survey of controller (id={}, ip={}) has finished successfully with {} updated devices",
-                    controllerId, ipv4, ds2persist.size());
-            return ds2persist.size();
+            final ExamineResult r = new ExamineResult();
+            r.setUpdatedDevices(ds2persist.size());
+            r.setSeconds(Duration.between(start, Instant.now()).toNanos() * 0.000000001);
+            log.info("survey of controller (id={}, ip={}) has finished successfully with {} updated devices, in {} seconds",
+                    controllerId, ipv4, r.getUpdatedDevices(), r.getSeconds());
+            return r;
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;
@@ -293,10 +287,40 @@ public class App {
     }
 
     /**
+     * Dla każdej nazwy z <code>list</code> wstawia do bazy nowe urządzenie jeśli takie nie istnieje.
+     * @return mapa [nazwa urządzenia => urządzenie z bazy]
+     */
+    protected static HashMap<String, Device> makeDevices(Set<String> deviceNames, Controller controller, EntityManager em) {
+        if(deviceNames.isEmpty())return new HashMap<>();
+        final HashMap<String, Device> existing = new HashMap<>();
+        for(String name : deviceNames) {
+            existing.put(name, null);
+        }
+        em.createQuery("SELECT d FROM Device d WHERE d.name IN (:names)", Device.class)
+                .setParameter("names", deviceNames)
+                .getResultList()
+                .forEach( device -> existing.put(device.getName(), device) );
+        final HashMap<String, Device> result = new HashMap<>();
+        existing.forEach( (name, device) -> {
+            if(device == null) {
+                Device d = new Device();
+                d.setName(name);
+                d.setController(controller);
+                d.setKnown(false);
+                d.setDescription(null);
+                em.persist(d);
+                result.put(name, d);
+            }
+            else result.put(name, device);
+        } );
+        return result;
+    }
+
+    /**
      * @param deviceId identyfikator urządzenia
      * @throws IllegalArgumentException device with given id does not exist
      */
-    public static void rebuildRangeSurveys(long deviceId) {
+    public static void rebuildMinmaxSurveys(long deviceId) {
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -304,23 +328,19 @@ public class App {
             tran = em.getTransaction();
             tran.begin();
 
-            Device device = em.find(Device.class, deviceId);
-            if(device == null)
-                throw new IllegalArgumentException("device with given id does not exist");
-
-            em.createQuery("DELETE FROM RangeSurvey rs WHERE rs.device = :device")
-                    .setParameter("device", device)
+            em.createQuery("DELETE FROM MinmaxSurvey ms WHERE ms.device.id = :did")
+                    .setParameter("did", deviceId)
                     .executeUpdate();
             List<DeviceSurvey> list = em.createQuery(
-                    "SELECT ds FROM DeviceSurvey ds WHERE ds.device = :device ORDER BY ds.timestamp ASC",
+                    "SELECT ds FROM DeviceSurvey ds WHERE ds.device.id = :did ORDER BY ds.timestamp ASC",
                     DeviceSurvey.class)
-                    .setParameter("device", device)
+                    .setParameter("did", deviceId)
                     .getResultList();
             for( DeviceSurvey survey : list ) {
-                final List<RangeSurvey> rs2persist = new ArrayList<>();
-                buildRangeSurvey(survey, rs2persist, em);
-                for(RangeSurvey rs : rs2persist) {
-                    em.persist(rs);
+                final List<MinmaxSurvey> ms2persist = new ArrayList<>();
+                buildMinmaxSurvey(survey, ms2persist, em);
+                for(MinmaxSurvey ms : ms2persist) {
+                    em.persist(ms);
                 }
             }
 
@@ -333,90 +353,78 @@ public class App {
         }
     }
 
-    private static void buildRangeSurvey(DeviceSurvey survey, List<RangeSurvey> rs2persist, EntityManager em) {
-        long time = survey.getTimestamp();
-        List<RangeSurvey> list = em.createQuery(
-                "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND rs.surveyRange = 1 AND rs.timeStart = :time",
-                RangeSurvey.class)
-                .setParameter("time", time)
+    /**
+     *
+     * @param survey badanie które właśnie zostało wstawione do bazy
+     * @param ms2persist lista do której zostaną dodane encje które należy zapisać w bazie
+     * @param em
+     */
+    private static void buildMinmaxSurvey(DeviceSurvey survey, List<MinmaxSurvey> ms2persist, EntityManager em) {
+        List<DeviceSurvey> list = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
+                "ds.device = :device AND ds.timestamp < :time ORDER BY ds.timestamp DESC",
+                DeviceSurvey.class)
+                .setParameter("time", survey.getTimestamp())
                 .setParameter("device", survey.getDevice())
+                .setMaxResults(1)
                 .getResultList();
-        RangeSurvey fresh = null;
-        if(list.isEmpty()) {
-            RangeSurvey rs = new RangeSurvey();
-            rs.setDevice(survey.getDevice());
-            rs.setTimeStart(time);
-            rs.setTimeEnd(time);
-            rs.setTimeRange(0L);
-            rs.setTotalSum((long) survey.getClientsSum());
-            rs.setMin(survey.getClientsSum());
-            rs.setMax(survey.getClientsSum());
-            rs.setSurveyRange(1L);
-            rs2persist.add(rs);
-            fresh = rs;
+        log.debug("list.isEmpty={}", list.isEmpty());
+        if(list.isEmpty())return;
+        DeviceSurvey dsBefore = list.get(0);
+        if( em.createQuery("SELECT COUNT(ms) FROM MinmaxSurvey ms WHERE " +
+                "ms.device = :device AND ms.lastSurvey = :time AND ms.surveySpan = :span",
+                Long.class)
+                .setParameter("device", survey.getDevice())
+                .setParameter("time", dsBefore.getTimestamp() )
+                .setParameter("span", 2)
+                .getSingleResult() > 0L ) {
+            log.debug("first select is false");
+            return;
         }
+        MinmaxSurvey fresh = new MinmaxSurvey();
+        fresh.setDevice(survey.getDevice());
+        fresh.setFirstSurvey(dsBefore.getTimestamp());
+        fresh.setLastSurvey(survey.getTimestamp());
+        fresh.setMin( Integer.min( dsBefore.getClientsSum(), survey.getClientsSum() ) );
+        fresh.setMax( Integer.max( dsBefore.getClientsSum(), survey.getClientsSum() ) );
+        fresh.setSurveySpan(2);
+        ms2persist.add(fresh);
+        log.debug("added fresh: first={} last={} min={} max={} span={}",
+                fresh.getFirstSurvey(), fresh.getLastSurvey(),
+                fresh.getMin(), fresh.getMax(), fresh.getSurveySpan());
         while(fresh != null) {
-            List<RangeSurvey> allBefore = em.createQuery(
-                    "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND rs.surveyRange = :range " +
-                            "AND rs.timeEnd < :time ORDER BY rs.timeEnd DESC ",
-                    RangeSurvey.class)
-                    .setParameter("device", fresh.getDevice())
-                    .setParameter("range", fresh.getSurveyRange())
-                    .setParameter("time", fresh.getTimeStart())
+            List<MinmaxSurvey> lminmax = em.createQuery("SELECT ms FROM MinmaxSurvey ms WHERE ms.device = :device AND " +
+                    "ms.lastSurvey < :last AND ms.surveySpan = :span ORDER BY ms.lastSurvey DESC",
+                    MinmaxSurvey.class)
+                    .setParameter("device", survey.getDevice())
+                    .setParameter("last", fresh.getFirstSurvey())
+                    .setParameter("span", fresh.getSurveySpan() )
                     .setMaxResults(1)
                     .getResultList();
-            if(allBefore.isEmpty())break;
-            RangeSurvey justBefore = allBefore.get(0);
-            List<RangeSurvey> allCovering = em.createQuery(
-                    "SELECT rs FROM RangeSurvey rs WHERE rs.device = :device AND " +
-                            "rs.surveyRange = :range AND rs.timeEnd = :time",
-                    RangeSurvey.class)
-                    .setParameter("device", justBefore.getDevice())
-                    .setParameter("range", justBefore.getSurveyRange() * 2)
-                    .setParameter("time", justBefore.getTimeEnd())
-                    .getResultList();
-            if(!allCovering.isEmpty())break;
-            RangeSurvey x = new RangeSurvey();
-            x.setDevice(fresh.getDevice());
-            x.setTimeStart(justBefore.getTimeStart());
-            x.setTimeEnd(fresh.getTimeEnd());
-            x.setTimeRange( x.getTimeEnd() - x.getTimeStart() );
-            x.setTotalSum( justBefore.getTotalSum() + fresh.getTotalSum() );
-            x.setMin( Integer.min(justBefore.getMin(), fresh.getMin()) );
-            x.setMax( Integer.max(justBefore.getMax(), fresh.getMax()) );
-            x.setSurveyRange( justBefore.getSurveyRange() + fresh.getSurveyRange() );
-            rs2persist.add(x);
-            fresh = x;
-        }
-    }
-
-    /**
-     * Transformuje listę urządzeń w mapę gdzie kluczem jest nazwa urządzenia.
-     * Nazwy urządzeń w mapie będą przekształcone do kompatybilnej postaci za pomocą getCompatibleDeviceName.
-     * W przypadku wielokrotnego wystąpienia nazwy w liscie, w mapie zostanie wpisany pierwszy element listy z daną nazwą.
-     * Id każdego urządzenia w mapie będzie mieć wartość domyślną czyli -1.
-     *
-     * @param list lista informacji o urządzeniach zwrócona przez SNMPHandler.
-     *             Lista nie będzie modyfikowana przez tą metodę.
-     * @return mapa utworzona na podstawie przefiltrowanej listy urządzeń
-     */
-    protected static HashMap<String, SurveyInfo> filterDevices(List<SurveyInfo> list) {
-        final HashMap<String, SurveyInfo> result = new HashMap<>();
-        for (SurveyInfo ds : list) {
-            String name = ds.getName();
-            if (!isCompatibleDeviceName(name)) {
-                String old = name;
-                name = getCompatibleDeviceName(name);
-                log.info("Device name \"{}\" is not compatible, converted to {}", old, name);
+            if(lminmax.isEmpty())break;
+            MinmaxSurvey msBefore = lminmax.get(0);
+            if( em.createQuery("SELECT COUNT(ms) FROM MinmaxSurvey ms WHERE ms.device = :device AND " +
+                    "ms.lastSurvey = :last AND ms.surveySpan = :span",
+                    Long.class)
+                    .setParameter("device", survey.getDevice())
+                    .setParameter("last", msBefore.getLastSurvey())
+                    .setParameter("span", msBefore.getSurveySpan() * 2)
+                    .getSingleResult() > 0L ) {
+                log.debug("next select is false");
+                break;
             }
-            ds.setName(name);
-            if (result.containsKey(name)) {
-                log.info("Device name \"{}\" occurs more than once, {} will be rejected", name, ds.toString());
-            } else {
-                result.put(name, ds);
-            }
+            MinmaxSurvey msLater = fresh;
+            fresh = new MinmaxSurvey();
+            fresh.setDevice(survey.getDevice());
+            fresh.setFirstSurvey(msBefore.getFirstSurvey());
+            fresh.setLastSurvey(msLater.getLastSurvey());
+            fresh.setMin( Integer.min( msBefore.getMin(), msLater.getMin() ) );
+            fresh.setMax( Integer.max( msBefore.getMax(), msLater.getMax() ) );
+            fresh.setSurveySpan( msBefore.getSurveySpan() + msLater.getSurveySpan() );
+            ms2persist.add(fresh);
+            log.debug("added fresh: first={} last={} min={} max={} span={}",
+                    fresh.getFirstSurvey(), fresh.getLastSurvey(),
+                    fresh.getMin(), fresh.getMax(), fresh.getSurveySpan());
         }
-        return result;
     }
 
     /**

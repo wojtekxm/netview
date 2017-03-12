@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @WebServlet(value = "/device", name = "DeviceServlet")
 public class DeviceServlet extends HttpServlet {
@@ -81,15 +80,17 @@ public class DeviceServlet extends HttpServlet {
 
             Device device = em.find(Device.class, deviceId);
             if (device != null) {
-                totalSurveys = device.getDeviceSurveys().size();
-                final List<DeviceSurvey> l = device.getDeviceSurveys().stream()
-                        .sorted((s1, s2) -> {
-                            if (s1.getTimestamp().equals(s2.getTimestamp())) {
-                                return s1.getId() > s2.getId() ? -1 : 1;
-                            } else return s1.getTimestamp() > s2.getTimestamp() ? -1 : 1;
-                        })
-                        .limit(historyLimit)
-                        .collect(Collectors.toList());
+                totalSurveys = (int)(long)em.createQuery("SELECT COUNT(ds) FROM DeviceSurvey ds WHERE ds.device = :device",
+                        Long.class)
+                        .setParameter("device", device)
+                        .setMaxResults(1)
+                        .getSingleResult();
+                List<DeviceSurvey> l = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
+                        "ds.device = :device ORDER BY ds.timestamp DESC",
+                        DeviceSurvey.class)
+                        .setParameter("device", device)
+                        .setMaxResults(historyLimit)
+                        .getResultList();
                 for (DeviceSurvey ds : l) {
                     selectedSurveys.add(new DeviceSurveyRow(ds));
                 }

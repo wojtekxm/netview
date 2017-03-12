@@ -37,6 +37,9 @@
         </div>
         <div id="box" style="display: none">
             <ul id="list_controllers" class="list-group"></ul>
+            <button id="btn_all"     type="button">zaznacz wszystkie</button>
+            <button id="btn_none"    type="button">odznacz wszystkie</button>
+            <button id="btn_inverse" type="button">odwróć zaznaczenie</button><br>
             <button id="btn_examine" type="button">zbadaj</button>
         </div>
 
@@ -76,8 +79,29 @@
                               .data('controller_id', listOfControllerRow[i].id)
                         );
                     }
+                    $('#btn_all').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            $(this).find('input').prop('checked', true);
+                        } );
+                    } );
+                    $('#btn_none').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            $(this).find('input').prop('checked', false);
+                        } );
+                    } );
+                    $('#btn_inverse').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            var checkbox = $(this).find('input');
+                            if( checkbox.prop('checked') ) {
+                                checkbox.prop('checked', false);
+                            }
+                            else {
+                                checkbox.prop('checked', true);
+                            }
+                        } );
+                    } );
                     $('#btn_examine').click( function() {
-                        $('#list_controllers > li').each( function() {
+                        $('#list_controllers').find('> li').each( function() {
                             var li = $(this);
                             var resultField = li.find('span:nth-of-type(1)');
                             var checkbox = li.find('input');

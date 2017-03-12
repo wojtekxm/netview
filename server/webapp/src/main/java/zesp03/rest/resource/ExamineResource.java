@@ -2,11 +2,10 @@ package zesp03.rest.resource;
 
 import zesp03.common.App;
 import zesp03.common.SNMPException;
+import zesp03.data.ExamineResult;
 import zesp03.dto.ExamineResultDto;
 
 import javax.ws.rs.*;
-import java.time.Duration;
-import java.time.Instant;
 
 @Path("examine")
 public class ExamineResource {
@@ -16,12 +15,10 @@ public class ExamineResource {
     public ExamineResultDto post(@FormParam("id") long controllerId) {
         ExamineResultDto result = new ExamineResultDto();
         try {
-            final Instant start = Instant.now();
-            int updated = App.examineOne(controllerId);
-            final Instant end = Instant.now();
+            ExamineResult er = App.examineOne(controllerId);
             result.setControllerId(controllerId);
-            result.setUpdatedDevices(updated);
-            result.setTimeElapsed( Duration.between(start, end).toNanos() * 0.000000001 );
+            result.setUpdatedDevices(er.getUpdatedDevices());
+            result.setTimeElapsed( er.getSeconds() );
         }
         catch(SNMPException exc) {
             result.setSuccess(false);

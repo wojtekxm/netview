@@ -5,9 +5,7 @@ INSERT INTO controller (`name`, ipv4) VALUES
 ('WiFi-6', '106.106.106.106'),
 ('WiFi-7', '107.107.107.107'),
 ('WiFi-10', '110.110.110.110'),
-('WiFi-11', '111.111.111.111');
-
-INSERT INTO controller (`name`, ipv4) VALUES
+('WiFi-11', '111.111.111.111'),
 ('WiFi-99', '199.199.199.199');
 
 INSERT INTO `building` VALUES

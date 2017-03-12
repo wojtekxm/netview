@@ -1,5 +1,7 @@
 package zesp03.common;
 
+import zesp03.data.SurveyInfo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,7 +80,6 @@ public class FakeSNMP implements SNMPHandler {
             ds.setEnabled(random.nextInt(5) < 4);
             // losowa liczba klientów z przedziału 0 .. 49
             ds.setClientsSum(random.nextInt(50));
-            ds.setId(-1);
             result.add(ds);
         }
         return result;

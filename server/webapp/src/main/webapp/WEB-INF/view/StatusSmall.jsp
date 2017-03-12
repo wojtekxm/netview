@@ -1,10 +1,10 @@
-<%@ page import="zesp03.data.DeviceData" %>
+<%@ page import="zesp03.dto.DeviceStateDto" %>
 <%@ page import="zesp03.servlet.DeviceServlet" %>
 <%@ page import="zesp03.servlet.StatusSmallServlet" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<DeviceData> list = (List<DeviceData>) request.getAttribute(StatusSmallServlet.ATTR_LIST);
+    List<DeviceStateDto> list = (List<DeviceStateDto>) request.getAttribute(StatusSmallServlet.ATTR_LIST);
     Double time = (Double) request.getAttribute(StatusSmallServlet.ATTR_TIME);
 %>
 <!DOCTYPE html>
@@ -39,7 +39,7 @@
             int sumActive = 0;
             int sumInactive = 0;
             int sumDisabled = 0;
-            for (final DeviceData d : list) {
+            for (final DeviceStateDto d : list) {
                 String clazz;
                 if (d.isEnabled()) {
                     if (d.getClientsSum() > 0) {

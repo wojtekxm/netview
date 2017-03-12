@@ -1,5 +1,5 @@
-<%@ page import="zesp03.data.DeviceData" %>
 <%@ page import="zesp03.data.row.UserRow" %>
+<%@ page import="zesp03.dto.DeviceStateDto" %>
 <%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page import="zesp03.servlet.DeviceServlet" %>
 <%@ page import="zesp03.servlet.StatusServlet" %>
@@ -7,7 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    List<DeviceData> list = (List<DeviceData>) request.getAttribute(StatusServlet.allDevicesString);
+    List<DeviceStateDto> list = (List<DeviceStateDto>) request.getAttribute(StatusServlet.allDevicesString);
     UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
     String style = (String) session.getAttribute("style");
     String logo = (String) session.getAttribute("logo");
@@ -67,7 +67,7 @@
                     int sumActive = 0;
                     int sumInactive = 0;
                     int sumDisabled = 0;
-                        for (final DeviceData d : list) {
+                        for (final DeviceStateDto d : list) {
                             int sumUsers = d.getClientsSum();
                         String clazz;
                             if (d.isEnabled()) {

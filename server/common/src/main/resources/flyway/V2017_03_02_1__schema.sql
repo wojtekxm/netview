@@ -21,20 +21,13 @@ id BIGINT AUTO_INCREMENT,
 `timestamp` INT NOT NULL,
 is_enabled TINYINT(1) NOT NULL,
 clients_sum INT NOT NULL,
+cumulative BIGINT NOT NULL,
 device_id BIGINT NOT NULL,
 PRIMARY KEY (id),
 FOREIGN KEY FK_device_survey_device (device_id) REFERENCES device (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE INDEX KEY_timestamp USING BTREE ON device_survey (`timestamp`);
-
-CREATE TABLE current_survey (
-id BIGINT AUTO_INCREMENT,
-device_id BIGINT UNIQUE NOT NULL,
-survey_id BIGINT UNIQUE,
-PRIMARY KEY (id),
-FOREIGN KEY FK_current_survey_device (device_id) REFERENCES device (id) ON DELETE CASCADE ON UPDATE CASCADE,
-FOREIGN KEY FK_current_survey_device_survey (survey_id) REFERENCES device_survey (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+ALTER TABLE device_survey ADD UNIQUE UQ_device_id_timestamp (device_id, `timestamp`);
 
 CREATE TABLE hibernate_sequences (
 sequence_name VARCHAR(255) COLLATE ascii_bin NOT NULL,
@@ -88,19 +81,17 @@ FOREIGN KEY FK_link_unit_building_unit (unit_id)	REFERENCES unit (id) ON DELETE 
 FOREIGN KEY FK_link_unit_building_building (building_id) REFERENCES building(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE range_survey (
-id BIGINT PRIMARY KEY,
-time_start BIGINT NOT NULL,
-time_end BIGINT NOT NULL,
-time_range BIGINT NOT NULL,
-total_sum BIGINT NOT NULL,
+CREATE TABLE minmax_survey (
+id BIGINT AUTO_INCREMENT,
+first_survey INT NOT NULL,
+last_survey INT NOT NULL,
+survey_span INT NOT NULL,
 `min` INT NOT NULL,
 `max` INT NOT NULL,
-survey_range BIGINT NOT NULL,
 device_id BIGINT NOT NULL,
-FOREIGN KEY FK_range_survey_device (device_id) REFERENCES device (id) ON DELETE CASCADE ON UPDATE CASCADE
+PRIMARY KEY (id),
+FOREIGN KEY FK_minmax_survey_device (device_id) REFERENCES device (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-CREATE INDEX key_time_start USING BTREE ON range_survey (`time_start`);
-CREATE INDEX key_time_end USING BTREE ON range_survey (`time_end`);
-CREATE INDEX key_time_range USING BTREE ON range_survey (`time_range`);
-CREATE INDEX key_survey_range USING BTREE ON range_survey (`survey_range`);
+CREATE INDEX KEY_first_survey USING BTREE ON minmax_survey (`first_survey`);
+CREATE INDEX KEY_last_survey USING BTREE ON minmax_survey (`last_survey`);
+CREATE INDEX KEY_survey_span USING BTREE ON minmax_survey (`survey_span`);

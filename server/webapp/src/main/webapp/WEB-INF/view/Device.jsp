@@ -227,7 +227,7 @@
                 ]
             };
 
-            request.open('Get', 'http://localhost:8080/api/chart?id=' + id);
+            request.open('Get', 'http://localhost:8081/api/chart?id=' + id);
             request.onload = function () {
                 var jsondata = JSON.parse(request.responseText);
                 for (i = 0; i < jsondata.length; i++) {

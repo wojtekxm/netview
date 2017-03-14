@@ -1,5 +1,7 @@
 package zesp03.common;
 
+import zesp03.data.SurveyInfo;
+
 import java.util.List;
 
 /**

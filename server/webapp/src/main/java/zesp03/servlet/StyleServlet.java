@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
-import zesp03.data.DeviceData;
-import zesp03.repository.DeviceRepository;
+import zesp03.dto.DeviceStateDto;
+import zesp03.service.DeviceService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static zesp03.servlet.StatusServlet.allDevicesString;
 
@@ -33,7 +34,15 @@ public class StyleServlet extends HttpServlet {
             session.setAttribute("logo", "logoo");
         }
 
-        List<DeviceData> list = new DeviceRepository().checkDevices();
+        List<DeviceStateDto> list = new DeviceService()
+                .checkAll()
+                .stream()
+                .map( data -> {
+                    DeviceStateDto dto = new DeviceStateDto();
+                    dto.wrap(data);
+                    return dto;
+                })
+                .collect(Collectors.toList());
         request.setAttribute(allDevicesString, list);
         request.getRequestDispatcher("/status").forward(request, response);
     }

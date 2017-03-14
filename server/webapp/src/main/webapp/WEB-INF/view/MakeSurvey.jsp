@@ -1,12 +1,8 @@
 <%@ page import="zesp03.servlet.MakeSurveyServlet" %>
-<%@ page import="java.util.Locale" %>
-<%@ page import="zesp03.filter.AuthenticationFilter" %>
-<%@ page import="zesp03.data.row.UserRow" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Double time = (Double) request.getAttribute(MakeSurveyServlet.ATTR_TIME);
     Long rows = (Long) request.getAttribute(MakeSurveyServlet.ATTR_ROWS);
-    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -15,63 +11,136 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nowe badanie</title>
-    <link rel="icon" href="/favicon.png">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
-    <link rel="stylesheet" href="/css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-        <ul class="nav nav-pills" style="padding-top: 3px;font-size: 17px;position: absolute;width: 100%;left: 0;text-align: center;margin:0 auto;">
-            <li role="presentation"><a href="/make-survey">Nowe badanie</a></li>
-            <li role="presentation"><a href="/status-small">Mały widok</a></li>
-            <li role="presentation"><a href="/all-controllers">Kontrolery</a></li>
-            <li role="presentation"><a href="/all-users">Użytkownicy</a></li>
-            <li role="presentation"><a href="/api/all-devices">Urządzenia</a></li>
-            <li role="presentation"><a href="/building">Budynki</a></li>
-            <form class="navbar-form nav-pills" style="padding-top: 2px;margin-top:2px;">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Szukaj...">
-                </div>
-                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-            </form>
-        </ul>
-        <ul class="nav nav-pills pull-left" style="padding-top: 3px;border-radius: 10px;padding-left:7px;font-size: 17px;">
-            <li role="presentation" class="active"><a href="/"><span class="glyphicon glyphicon-home"></span>  Strona główna</a></li>
-        </ul>
-        <ul class="nav nav-pills pull-right" style="padding-top: 3px;padding-right:3px;font-size: 17px;">
-            <li role="presentation"><a href="#"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
-            <li role="presentation"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
-        </ul>
-    </div>
-</nav>
-<div class="container">
-    <div class="welcome">
-        <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-        <div class="userStatic">zalogowany: <%= userRow.getName() %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Network Monitor</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/make-survey">nowe badania</a></li>
+                <li><a href="/status-small">urządzenia (mały widok)</a></li>
+                <li><a href="/status">urządzenia (średni widok)</a></li>
+                <li><a href="/all-controllers">kontrolery</a></li>
+                <li><a href="/building">budynki</a></li>
+                <li><a href="/logout">wyloguj</a></li>
+            </ul>
+            <hr>
         </div>
-        <div class="logo"><img src="/images/logooWhite.jpg"></div>
+    </nav>
+    <div class="container">
+        <div id="loading">
+            <em>pobieranie listy kontrolerów...</em>
+        </div>
+        <div id="box" style="display: none">
+            <ul id="list_controllers" class="list-group"></ul>
+            <button id="btn_all"     type="button">zaznacz wszystkie</button>
+            <button id="btn_none"    type="button">odznacz wszystkie</button>
+            <button id="btn_inverse" type="button">odwróć zaznaczenie</button><br>
+            <button id="btn_examine" type="button">zbadaj</button>
+        </div>
+
     </div>
-    <%
-        if (time != null && rows != null) {
-    %>
-    <p>
-        Badanie zostało pomyślnie wykonane w czasie <%= String.format(Locale.US, "%.3f", time) %>s.<br>
-        Tabela device_survey zawiera teraz <%= rows %> rekordów.
-    </p>
-    <%
-        }
-    %>
-    <p>Kliknij przycisk poniżej by wykonać nowe badanie sieci</p>
-    <form method="post" action="make-survey">
-        <input type="hidden" name="<%= MakeSurveyServlet.POST_UPDATE %>" value="1">
-        <input type="submit" value="Nowe badanie">
-    </form>
-</div>
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script>
+        $(document).ready( function() {
+            $.ajax( {
+                type: 'get',
+                url: '/api/all-controllers',
+                dataType: 'json',
+                success: function(listOfControllerRow) {
+                    var i;
+                    for(i = 0; i < listOfControllerRow.length; i++) {
+                        $('#list_controllers').append(
+                          $('<li></li>')
+                              .addClass('list-group-item row')
+                              .append(
+                                  $('<div></div>')
+                                      .addClass('col-sm-2')
+                                      .append(
+                                          $('<input type="checkbox">')
+                                              .prop('checked', true)
+                                      ),
+                                  $('<div></div>')
+                                      .addClass('col-sm-4')
+                                      .append(
+                                          $('<strong></strong>').text(listOfControllerRow[i].name)
+                                      ),
+                                  $('<div></div>')
+                                      .addClass('col-sm-6')
+                                      .append(
+                                          $('<span></span>')
+                                      )
+                              )
+                              .data('controller_id', listOfControllerRow[i].id)
+                        );
+                    }
+                    $('#btn_all').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            $(this).find('input').prop('checked', true);
+                        } );
+                    } );
+                    $('#btn_none').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            $(this).find('input').prop('checked', false);
+                        } );
+                    } );
+                    $('#btn_inverse').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            var checkbox = $(this).find('input');
+                            if( checkbox.prop('checked') ) {
+                                checkbox.prop('checked', false);
+                            }
+                            else {
+                                checkbox.prop('checked', true);
+                            }
+                        } );
+                    } );
+                    $('#btn_examine').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            var li = $(this);
+                            var resultField = li.find('span:nth-of-type(1)');
+                            var checkbox = li.find('input');
+                            resultField.text('');
+                            if(! checkbox.is(':checked') ) {
+                                return;
+                            }
+                            resultField.text('badanie...');
+                            $.ajax( {
+                                type: 'post',
+                                url: '/api/examine',
+                                dataType: 'json',
+                                data: {
+                                    id: li.data('controller_id')
+                                },
+                                success: function(examineResultDto) {
+                                    if(examineResultDto.success) {
+                                        resultField.text('OK, ' +
+                                            examineResultDto.timeElapsed.toFixed(2) + ' s, ' +
+                                            examineResultDto.updatedDevices + ' zaktualizowanych urządzeń');
+                                    }
+                                    else {
+                                        resultField.text('ERROR (server)');
+                                    }
+                                },
+                                error: function() {
+                                    resultField.text('ERROR (HTTP)');
+                                }
+                            } );
+                        } );
+                    } );
+                    $('#loading').hide(400);
+                    $('#box').show(400);
+                },
+                error: function() {
+                    $('#loading').text('Fatal error');
+                }
+            } );
+        } );
+    </script>
 </body>
 </html>

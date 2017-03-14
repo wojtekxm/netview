@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 import zesp03.common.Database;
 import zesp03.common.NotFoundException;
 import zesp03.dto.AverageSurveyDto;
+import zesp03.dto.MinmaxSurveyDto;
 import zesp03.dto.OriginalSurveyDto;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
+import zesp03.entity.MinmaxSurvey;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -51,7 +53,8 @@ public class SurveyService {
                     .stream()
                     .map(ds -> {
                         OriginalSurveyDto dto = new OriginalSurveyDto();
-                        dto.setTimestamp(ds.getTimestamp());
+                        dto.setDeviceId(deviceId);
+                        dto.setTime(ds.getTimestamp());
                         dto.setClientsSum(ds.getClientsSum());
                         return dto;
                     })
@@ -85,6 +88,10 @@ public class SurveyService {
         if(start >= end)
             throw new IllegalArgumentException("start >= end");
 
+        final AverageSurveyDto result = new AverageSurveyDto();
+        result.setDeviceId(deviceId);
+        result.setTimeStart(start);
+        result.setTimeEnd(end);
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -104,7 +111,6 @@ public class SurveyService {
                     .getResultList();
             if(listEnd.isEmpty()) {
                 tran.rollback();
-                AverageSurveyDto result = new AverageSurveyDto();
                 result.setAvgClients(0.0);
                 return result;
             }
@@ -129,7 +135,6 @@ public class SurveyService {
             log.debug("cumulativeStart = {}", cumulativeStart);
 
             long num = cumulativeEnd - cumulativeStart;
-            AverageSurveyDto result = new AverageSurveyDto();
             result.setAvgClients( (double)num / (end - start) );
 
             tran.commit();
@@ -140,5 +145,210 @@ public class SurveyService {
         } finally {
             if (em != null) em.close();
         }
+    }
+
+    /**
+     * @param deviceId
+     * @param start timestamp w sekundach,  inclusive
+     * @param end timestamp w sekundach, exclusive
+     * @return
+     */
+    public MinmaxSurveyDto getMinmaxSimple(long deviceId, int start, int end)
+            throws NotFoundException {
+        if(start < 0)
+            throw new IllegalArgumentException("start < 0");
+        if(end < 0)
+            throw new IllegalArgumentException("end < 0");
+        if(start >= end)
+            throw new IllegalArgumentException("start >= end");
+
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            final MinmaxSurveyDto result = new MinmaxSurveyDto();
+            result.setDeviceId(deviceId);
+            result.setTimeStart(start);
+            result.setTimeEnd(end);
+            List<Integer> begins = em.createQuery("SELECT ds.timestamp FROM DeviceSurvey ds WHERE " +
+                            "ds.device.id = :did AND ds.timestamp <= :start ORDER BY ds.timestamp DESC",
+                    Integer.class)
+                    .setParameter("did", deviceId)
+                    .setParameter("start", start)
+                    .setMaxResults(1)
+                    .getResultList();
+            int begin = start;
+            if(!begins.isEmpty())begin = begins.get(0);
+            Object[] mm = em.createQuery("SELECT MIN(ds.clientsSum), MAX(ds.clientsSum), " +
+                    "COUNT(ds) FROM DeviceSurvey ds WHERE ds.device.id = :did AND " +
+                    "ds.timestamp >= :begin AND ds.timestamp < :end", Object[].class)
+                    .setParameter("did", deviceId)
+                    .setParameter("begin", begin)
+                    .setParameter("end", end)
+                    .getSingleResult();
+            Integer min = (Integer)mm[0];
+            Integer max = (Integer)mm[1];
+            Long span = (Long)mm[2];
+            if(min == null || max == null || span == null)
+                throw new NotFoundException("no results for device with id=" + deviceId);
+            result.setMin(min);
+            result.setMax(max);
+            result.setSurveySpan((int)(long)span);
+            tran.commit();
+            return result;
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    /**
+     * @param deviceId
+     * @param start timestamp w sekundach,  inclusive
+     * @param end timestamp w sekundach, exclusive
+     * @return
+     */
+    public MinmaxSurveyDto getMinmaxComplex(long deviceId, int start, int end)
+            throws NotFoundException {
+        if(start < 0)
+            throw new IllegalArgumentException("start < 0");
+        if(end < 0)
+            throw new IllegalArgumentException("end < 0");
+        if(start >= end)
+            throw new IllegalArgumentException("start >= end");
+
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            final MinmaxSurveyDto result = new MinmaxSurveyDto();
+            result.setDeviceId(deviceId);
+            result.setTimeStart(start);
+            result.setTimeEnd(end);
+            log.debug("getMinmaxSurvey({}, {}, {})", deviceId, start, end);
+            MinmaxPartial p = getFirstMinmax(deviceId, start, end, em);
+            if(p == null) {
+                log.debug("first minmax partial is null");
+                p = getNextMinmax(deviceId, start, end, em);
+            }
+            if(p == null)
+                throw new NotFoundException("no results for device with id=" + deviceId);
+            log.debug("first partial min={} max={} last={} span={}",
+                    p.min, p.max, p.lastSurvey, p.surveySpan);
+            result.setMin( p.min );
+            result.setMax( p.max );
+            result.setSurveySpan( p.surveySpan );
+            int after = p.lastSurvey;
+            log.debug("first after={}", after);
+            for(;;) {
+                p = getNextMinmax(deviceId, after, end, em);
+                if(p == null) {
+                    log.debug("next partial is null");
+                    break;
+                }
+                log.debug("next partial min={} max={} last={} span={}",
+                        p.min, p.max, p.lastSurvey, p.surveySpan);
+                result.setMin( Integer.min( result.getMin(), p.min ) );
+                result.setMax( Integer.max( result.getMax(), p.max ) );
+                result.setSurveySpan( result.getSurveySpan() + p.surveySpan );
+                after = p.lastSurvey;
+                log.debug("next after={}", after);
+            }
+            tran.commit();
+            return result;
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    /**
+     * @return null jak nie znajdzie
+     */
+    private MinmaxPartial getFirstMinmax(long deviceId, int start, int end, EntityManager em) {
+        final List<MinmaxSurvey> lminmax = em.createQuery("SELECT ms FROM MinmaxSurvey ms WHERE " +
+                        "ms.device.id = :did AND ms.firstSurvey <= :start AND ms.lastSurvey > :start AND " +
+                        "ms.lastSurvey < :end ORDER BY ms.firstSurvey DESC, ms.surveySpan DESC",
+                MinmaxSurvey.class)
+                .setParameter("did", deviceId)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .setMaxResults(1)
+                .getResultList();
+        if(lminmax.isEmpty()) {
+            final List<DeviceSurvey> ldevice = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
+                            "ds.device.id = :did AND ds.timestamp <= :start ORDER BY ds.timestamp DESC",
+                    DeviceSurvey.class)
+                    .setParameter("did", deviceId)
+                    .setParameter("start", start)
+                    .setMaxResults(1)
+                    .getResultList();
+            if(ldevice.isEmpty())return null;
+            final DeviceSurvey ds = ldevice.get(0);
+            final MinmaxPartial p = new MinmaxPartial();
+            p.min = ds.getClientsSum();
+            p.max = ds.getClientsSum();
+            p.surveySpan = 1;
+            p.lastSurvey = ds.getTimestamp();
+            return p;
+        }
+        final MinmaxSurvey ms = lminmax.get(0);
+        final MinmaxPartial p = new MinmaxPartial();
+        p.min = ms.getMin();
+        p.max = ms.getMax();
+        p.surveySpan = ms.getSurveySpan();
+        p.lastSurvey = ms.getLastSurvey();
+        return p;
+    }
+
+    private MinmaxPartial getNextMinmax(long deviceId, int after, int end, EntityManager em) {
+        final List<MinmaxSurvey> lminmax = em.createQuery("SELECT ms FROM MinmaxSurvey ms WHERE " +
+                        "ms.device.id = :did AND ms.firstSurvey > :after AND ms.lastSurvey < :end " +
+                        "ORDER BY ms.firstSurvey ASC, ms.surveySpan DESC",
+                MinmaxSurvey.class)
+                .setParameter("did", deviceId)
+                .setParameter("after", after)
+                .setParameter("end", end)
+                .setMaxResults(1)
+                .getResultList();
+        if(lminmax.isEmpty()) {
+            final List<DeviceSurvey> ldevice = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
+                            "ds.device.id = :did AND ds.timestamp > :after AND ds.timestamp < :end ORDER BY ds.timestamp ASC",
+                    DeviceSurvey.class)
+                    .setParameter("did", deviceId)
+                    .setParameter("after", after)
+                    .setParameter("end", end)
+                    .setMaxResults(1)
+                    .getResultList();
+            if(ldevice.isEmpty())return null;
+            final DeviceSurvey ds = ldevice.get(0);
+            final MinmaxPartial p = new MinmaxPartial();
+            p.min = ds.getClientsSum();
+            p.max = ds.getClientsSum();
+            p.surveySpan = 1;
+            p.lastSurvey = ds.getTimestamp();
+            return p;
+        }
+        final MinmaxSurvey ms = lminmax.get(0);
+        final MinmaxPartial p = new MinmaxPartial();
+        p.min = ms.getMin();
+        p.max = ms.getMax();
+        p.surveySpan = ms.getSurveySpan();
+        p.lastSurvey = ms.getLastSurvey();
+        return p;
+    }
+
+    private static class MinmaxPartial {
+        int min, max, surveySpan, lastSurvey;
     }
 }

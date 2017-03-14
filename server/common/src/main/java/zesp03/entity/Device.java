@@ -1,8 +1,6 @@
 package zesp03.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "device")
@@ -27,12 +25,6 @@ public class Device {
             foreignKey = @ForeignKey(name = "device_controller_fk")
     )
     private Controller controller;
-
-    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<DeviceSurvey> deviceSurveys = new ArrayList<>();
-
-    @OneToOne(mappedBy = "device", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private CurrentSurvey currentSurvey;
 
     public Long getId() {
         return id;
@@ -72,35 +64,5 @@ public class Device {
 
     public void setController(Controller controller) {
         this.controller = controller;
-    }
-
-    public List<DeviceSurvey> getDeviceSurveys() {
-        return deviceSurveys;
-    }
-
-    public void addDeviceSurvey(DeviceSurvey s) {
-        deviceSurveys.add(s);
-        s.setDevice(this);
-    }
-
-    public void removeDeviceSurvey(DeviceSurvey s) {
-        if (deviceSurveys.remove(s))
-            s.setDevice(null);
-    }
-
-    public void addCurrentSurvey(CurrentSurvey s) {
-        this.currentSurvey = s;
-        s.setDevice(this);
-    }
-
-    public void removeCurrentSurvey() {
-        if (currentSurvey != null) {
-            currentSurvey.setDevice(null);
-            currentSurvey = null;
-        }
-    }
-
-    public CurrentSurvey getCurrentSurvey() {
-        return currentSurvey;
     }
 }

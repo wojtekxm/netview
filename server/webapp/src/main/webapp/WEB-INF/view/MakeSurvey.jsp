@@ -1,5 +1,4 @@
 <%@ page import="zesp03.servlet.MakeSurveyServlet" %>
-<%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Double time = (Double) request.getAttribute(MakeSurveyServlet.ATTR_TIME);
@@ -33,23 +32,115 @@
         </div>
     </nav>
     <div class="container">
-        <%
-            if (time != null && rows != null) {
-        %>
-        <p>
-            Badanie zostało pomyślnie wykonane w czasie <%= String.format(Locale.US, "%.3f", time) %>s.<br>
-            Tabela device_survey zawiera teraz <%= rows %> rekordów.
-        </p>
-        <%
-            }
-        %>
-        <p>Kliknij przycisk poniżej by wykonać nowe badanie sieci</p>
-        <form method="post" action="make-survey">
-            <input type="hidden" name="<%= MakeSurveyServlet.POST_UPDATE %>" value="1">
-            <input type="submit" value="Nowe badanie">
-        </form>
+        <div id="loading">
+            <em>pobieranie listy kontrolerów...</em>
+        </div>
+        <div id="box" style="display: none">
+            <ul id="list_controllers" class="list-group"></ul>
+            <button id="btn_all"     type="button">zaznacz wszystkie</button>
+            <button id="btn_none"    type="button">odznacz wszystkie</button>
+            <button id="btn_inverse" type="button">odwróć zaznaczenie</button><br>
+            <button id="btn_examine" type="button">zbadaj</button>
+        </div>
+
     </div>
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script>
+        $(document).ready( function() {
+            $.ajax( {
+                type: 'get',
+                url: '/api/all-controllers',
+                dataType: 'json',
+                success: function(listOfControllerRow) {
+                    var i;
+                    for(i = 0; i < listOfControllerRow.length; i++) {
+                        $('#list_controllers').append(
+                          $('<li></li>')
+                              .addClass('list-group-item row')
+                              .append(
+                                  $('<div></div>')
+                                      .addClass('col-sm-2')
+                                      .append(
+                                          $('<input type="checkbox">')
+                                              .prop('checked', true)
+                                      ),
+                                  $('<div></div>')
+                                      .addClass('col-sm-4')
+                                      .append(
+                                          $('<strong></strong>').text(listOfControllerRow[i].name)
+                                      ),
+                                  $('<div></div>')
+                                      .addClass('col-sm-6')
+                                      .append(
+                                          $('<span></span>')
+                                      )
+                              )
+                              .data('controller_id', listOfControllerRow[i].id)
+                        );
+                    }
+                    $('#btn_all').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            $(this).find('input').prop('checked', true);
+                        } );
+                    } );
+                    $('#btn_none').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            $(this).find('input').prop('checked', false);
+                        } );
+                    } );
+                    $('#btn_inverse').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            var checkbox = $(this).find('input');
+                            if( checkbox.prop('checked') ) {
+                                checkbox.prop('checked', false);
+                            }
+                            else {
+                                checkbox.prop('checked', true);
+                            }
+                        } );
+                    } );
+                    $('#btn_examine').click( function() {
+                        $('#list_controllers').find('> li').each( function() {
+                            var li = $(this);
+                            var resultField = li.find('span:nth-of-type(1)');
+                            var checkbox = li.find('input');
+                            resultField.text('');
+                            if(! checkbox.is(':checked') ) {
+                                return;
+                            }
+                            resultField.text('badanie...');
+                            $.ajax( {
+                                type: 'post',
+                                url: '/api/examine',
+                                dataType: 'json',
+                                data: {
+                                    id: li.data('controller_id')
+                                },
+                                success: function(examineResultDto) {
+                                    if(examineResultDto.success) {
+                                        resultField.text('OK, ' +
+                                            examineResultDto.timeElapsed.toFixed(2) + ' s, ' +
+                                            examineResultDto.updatedDevices + ' zaktualizowanych urządzeń');
+                                    }
+                                    else {
+                                        resultField.text('ERROR (server)');
+                                    }
+                                },
+                                error: function() {
+                                    resultField.text('ERROR (HTTP)');
+                                }
+                            } );
+                        } );
+                    } );
+                    $('#loading').hide(400);
+                    $('#box').show(400);
+                },
+                error: function() {
+                    $('#loading').text('Fatal error');
+                }
+            } );
+        } );
+    </script>
 </body>
 </html>

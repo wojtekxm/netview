@@ -1,8 +1,9 @@
 package zesp03.servlet;
 
 
-import zesp03.data.DeviceData;
-import zesp03.repository.DeviceRepository;
+
+import zesp03.dto.DeviceStateDto;
+import zesp03.service.DeviceService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet(value = "/status", name = "StatusServlet")
 public class StatusServlet extends HttpServlet {
@@ -21,7 +23,15 @@ public class StatusServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<DeviceData> list = new DeviceRepository().checkDevices();
+        List<DeviceStateDto> list = new DeviceService()
+                .checkAll()
+                .stream()
+                .map( data -> {
+                    DeviceStateDto dto = new DeviceStateDto();
+                    dto.wrap(data);
+                    return dto;
+                })
+                .collect(Collectors.toList());
 
         request.setAttribute(allDevicesString, list);
         request.getRequestDispatcher("WEB-INF/view/Status.jsp").include(request, response);

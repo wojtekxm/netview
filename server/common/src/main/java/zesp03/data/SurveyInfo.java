@@ -1,11 +1,10 @@
-package zesp03.common;
+package zesp03.data;
 
 //TODO zmień tą klasę w App i SNMPHandler
 public class SurveyInfo {
     private String name;
     private boolean enabled;
     private int clientsSum;
-    private int id;
 
     public String getName() {
         return name;
@@ -29,18 +28,5 @@ public class SurveyInfo {
 
     public void setClientsSum(int clientsSum) {
         this.clientsSum = clientsSum;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "{name=\"" + name + "\", enabled=" + enabled + ", clientsSum=" + clientsSum + ", id=" + id + "}";
     }
 }

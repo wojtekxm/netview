@@ -1,47 +1,18 @@
-package zesp03.data;
+package zesp03.dto;
 
-import zesp03.data.row.DeviceRow;
-import zesp03.data.row.DeviceSurveyRow;
+import zesp03.data.DeviceStateData;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
 
-public class DeviceData {
+public class DeviceStateDto {
     private long id;
     private String name;
     private boolean known;
     private String description;
     private long controllerId;
-    private int lastSurveyTimestamp;
+    private int lastSurveyTimestamp; // -1 oznacza brak badań
     private boolean enabled;
     private int clientsSum;
-
-    public DeviceData() {
-    }
-
-    public DeviceData(DeviceRow device, DeviceSurveyRow survey) {
-        this.id = device.getId();
-        this.name = device.getName();
-        this.known = device.isKnown();
-        this.description = device.getDescription();
-        this.controllerId = device.getControllerId();
-        this.lastSurveyTimestamp = survey.getTimestamp();
-        this.enabled = survey.isEnabled();
-        this.clientsSum = survey.getClientsSum();
-    }
-
-    /**
-     * Device and DeviceSurvey entities should be in managed state.
-     */
-    public DeviceData(Device device, DeviceSurvey survey) {
-        this.id = device.getId();
-        this.name = device.getName();
-        this.known = device.isKnown();
-        this.description = device.getDescription();
-        this.controllerId = device.getController().getId();
-        this.lastSurveyTimestamp = survey.getTimestamp();
-        this.enabled = survey.isEnabled();
-        this.clientsSum = survey.getClientsSum();
-    }
 
     public long getId() {
         return id;
@@ -105,5 +76,25 @@ public class DeviceData {
 
     public void setClientsSum(int clientsSum) {
         this.clientsSum = clientsSum;
+    }
+
+    public void wrap(DeviceStateData dsd) {
+        Device dev = dsd.getDevice();
+        DeviceSurvey sur = dsd.getSurvey();
+        this.id = dev.getId();
+        this.name = dev.getName();
+        this.known = dev.isKnown();
+        this.description = dev.getDescription();
+        this.controllerId = dsd.getController().getId();
+        if(sur != null) {
+            this.lastSurveyTimestamp = sur.getTimestamp();
+            this.enabled = sur.isEnabled();
+            this.clientsSum = sur.getClientsSum();
+        }
+        else {
+            this.lastSurveyTimestamp = -1;
+            this.enabled = false;
+            this.clientsSum = 0;
+        }
     }
 }

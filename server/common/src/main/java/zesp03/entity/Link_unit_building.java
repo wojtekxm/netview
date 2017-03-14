@@ -1,9 +1,12 @@
 package zesp03.entity;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "link_unit_building")
+@Proxy(lazy = false)
 public class Link_unit_building {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +18,7 @@ public class Link_unit_building {
     @Column(nullable = false)
     private Long building_id;
 */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "building_id",
             foreignKey = @ForeignKey(name = "building_fk"),
@@ -24,7 +27,7 @@ public class Link_unit_building {
     )
     private Building building;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "unit_id",
             foreignKey = @ForeignKey(name = "unit_fk"),

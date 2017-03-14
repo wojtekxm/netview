@@ -1,15 +1,24 @@
 package zesp03.dto;
 
 public class OriginalSurveyDto {
-    private int timestamp;
+    private long deviceId;
+    private int time; // timestamp w sekundach
     private int clientsSum;
 
-    public int getTimestamp() {
-        return timestamp;
+    public long getDeviceId() {
+        return deviceId;
     }
 
-    public void setTimestamp(int timestamp) {
-        this.timestamp = timestamp;
+    public void setDeviceId(long deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 
     public int getClientsSum() {

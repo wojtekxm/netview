@@ -2,6 +2,8 @@ package zesp03.data.row;
 
 import zesp03.entity.Unit;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Berent on 2017-03-06.
  */
@@ -20,6 +22,12 @@ public class UnitRow {
         this.code = u.getCode();
         this.description = u.getDescription();
 
+    }
+    public UnitRow(long id, String code, String description){
+
+        this.id = id;
+        this.code = code;
+        this.description = description;
     }
 
     public Long getId() {

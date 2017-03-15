@@ -1,8 +1,6 @@
 package zesp03.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "controller")
@@ -20,9 +18,6 @@ public class Controller {
 
     @Column(length = 1000)
     private String description;
-
-    @OneToMany(mappedBy = "controller", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Device> devices = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -54,19 +49,5 @@ public class Controller {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Device> getDevices() {
-        return devices;
-    }
-
-    public void addDevice(Device d) {
-        devices.add(d);
-        d.setController(this);
-    }
-
-    public void removeDevice(Device d) {
-        if (devices.remove(d))
-            d.setController(null);
     }
 }

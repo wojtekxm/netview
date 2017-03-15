@@ -30,7 +30,7 @@ public class MakeSurveyServlet extends HttpServlet {
         String paramUpdate = request.getParameter(POST_UPDATE);
         if (paramUpdate != null && paramUpdate.equals("1")) {
             long t0 = System.nanoTime();
-            App.examineNetwork();
+            App.examineAll();
             time = (System.nanoTime() - t0) * 0.000000001;
 
             EntityManager em = null;

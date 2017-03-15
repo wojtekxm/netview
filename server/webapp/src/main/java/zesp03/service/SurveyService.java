@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import zesp03.common.Database;
 import zesp03.common.NotFoundException;
 import zesp03.dto.AverageSurveyDto;
+import zesp03.dto.MinmaxSurveyDto;
 import zesp03.dto.OriginalSurveyDto;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
@@ -51,7 +52,8 @@ public class SurveyService {
                     .stream()
                     .map(ds -> {
                         OriginalSurveyDto dto = new OriginalSurveyDto();
-                        dto.setTimestamp(ds.getTimestamp());
+                        dto.setDeviceId(deviceId);
+                        dto.setTime(ds.getTimestamp());
                         dto.setClientsSum(ds.getClientsSum());
                         return dto;
                     })
@@ -85,6 +87,10 @@ public class SurveyService {
         if(start >= end)
             throw new IllegalArgumentException("start >= end");
 
+        final AverageSurveyDto result = new AverageSurveyDto();
+        result.setDeviceId(deviceId);
+        result.setTimeStart(start);
+        result.setTimeEnd(end);
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -104,7 +110,6 @@ public class SurveyService {
                     .getResultList();
             if(listEnd.isEmpty()) {
                 tran.rollback();
-                AverageSurveyDto result = new AverageSurveyDto();
                 result.setAvgClients(0.0);
                 return result;
             }
@@ -129,9 +134,68 @@ public class SurveyService {
             log.debug("cumulativeStart = {}", cumulativeStart);
 
             long num = cumulativeEnd - cumulativeStart;
-            AverageSurveyDto result = new AverageSurveyDto();
             result.setAvgClients( (double)num / (end - start) );
 
+            tran.commit();
+            return result;
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    /**
+     * @param deviceId
+     * @param start timestamp w sekundach,  inclusive
+     * @param end timestamp w sekundach, exclusive
+     * @return
+     */
+    public MinmaxSurveyDto getMinmaxSimple(long deviceId, int start, int end)
+            throws NotFoundException {
+        if(start < 0)
+            throw new IllegalArgumentException("start < 0");
+        if(end < 0)
+            throw new IllegalArgumentException("end < 0");
+        if(start >= end)
+            throw new IllegalArgumentException("start >= end");
+
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            final MinmaxSurveyDto result = new MinmaxSurveyDto();
+            result.setDeviceId(deviceId);
+            result.setTimeStart(start);
+            result.setTimeEnd(end);
+            List<Integer> begins = em.createQuery("SELECT ds.timestamp FROM DeviceSurvey ds WHERE " +
+                            "ds.device.id = :did AND ds.timestamp <= :start ORDER BY ds.timestamp DESC",
+                    Integer.class)
+                    .setParameter("did", deviceId)
+                    .setParameter("start", start)
+                    .setMaxResults(1)
+                    .getResultList();
+            int begin = start;
+            if(!begins.isEmpty())begin = begins.get(0);
+            Object[] mm = em.createQuery("SELECT MIN(ds.clientsSum), MAX(ds.clientsSum), " +
+                    "COUNT(ds) FROM DeviceSurvey ds WHERE ds.device.id = :did AND " +
+                    "ds.timestamp >= :begin AND ds.timestamp < :end", Object[].class)
+                    .setParameter("did", deviceId)
+                    .setParameter("begin", begin)
+                    .setParameter("end", end)
+                    .getSingleResult();
+            Integer min = (Integer)mm[0];
+            Integer max = (Integer)mm[1];
+            Long span = (Long)mm[2];
+            if(min == null || max == null || span == null)
+                throw new NotFoundException("no results for device with id=" + deviceId);
+            result.setMin(min);
+            result.setMax(max);
+            result.setSurveySpan((int)(long)span);
             tran.commit();
             return result;
         } catch (RuntimeException exc) {

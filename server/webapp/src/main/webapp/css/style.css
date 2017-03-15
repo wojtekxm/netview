@@ -475,25 +475,10 @@ ul li#wydzial
     right:0;
     z-index: 1000;
 }
-.nav-pills {
-    display: flex;
-    justify-content: center;
-}
-
-
-.summary
-{
-    color:black;font-size:20px;width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;background-color: white;
-}
-
-.nav.nav-pills li a {
-    color: black;
-}
-.nav-pills>li.active>a,.nav-pills>li.active>a:hover{
-    background-color: #e2e2e2;
-}
 
 #data
 {
     color:black;font-size:15px;borderdisplay: inline;border-bottom: 1px solid #e0e0e0;padding-bottom: 7px;
 }
+
+

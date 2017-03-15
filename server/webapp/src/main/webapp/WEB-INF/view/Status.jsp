@@ -1,5 +1,5 @@
-<%@ page import="zesp03.data.DeviceData" %>
 <%@ page import="zesp03.data.row.UserRow" %>
+<%@ page import="zesp03.dto.DeviceStateDto" %>
 <%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page import="zesp03.servlet.DeviceServlet" %>
 <%@ page import="zesp03.servlet.StatusServlet" %>
@@ -7,7 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    List<DeviceData> list = (List<DeviceData>) request.getAttribute(StatusServlet.allDevicesString);
+    List<DeviceStateDto> list = (List<DeviceStateDto>) request.getAttribute(StatusServlet.allDevicesString);
     System.out.println("Number of devices: "+list.size());
     UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
 //    int surveyTime=list.get(0).getLastSurveyTimestamp();
@@ -23,7 +23,6 @@
     <title>Status sieci</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <script src="//code.angularjs.org/1.2.20/angular.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/css/style.css">
@@ -39,27 +38,35 @@
 %>
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
-        <ul class="nav nav-pills" style="padding-top: 3px;font-size: 17px;position: absolute;width: 100%;left: 0;text-align: center;margin:0 auto;">
-            <li role="presentation"><a href="/make-survey">Nowe badanie</a></li>
-            <li role="presentation"><a href="/status-small">Mały widok</a></li>
-            <li role="presentation"><a href="/all-controllers">Kontrolery</a></li>
-            <li role="presentation"><a href="/all-users">Użytkownicy</a></li>
-            <li role="presentation"><a href="/api/all-devices">Urządzenia</a></li>
-            <li role="presentation"><a href="/building">Budynki</a></li>
-            <form class="navbar-form nav-pills" style="padding-top: 2px;margin-top:2px;">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Szukaj...">
-                </div>
-                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-            </form>
-        </ul>
         <ul class="nav nav-pills pull-left" style="padding-top: 3px;border-radius: 10px;padding-left:7px;font-size: 17px;">
             <li role="presentation" class="active"><a href="/"><span class="glyphicon glyphicon-home"></span>  Strona główna</a></li>
         </ul>
-        <ul class="nav nav-pills pull-right" style="padding-top: 3px;padding-right:3px;font-size: 17px;">
-            <li role="presentation"><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
-            <li role="presentation"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
-        </ul>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav nav-pills pull-left" style="padding-top: 3px;font-size: 17px;display:block;margin-left:80px;">
+                <li role="presentation" style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
+                <li role="presentation"><a href="/all-controllers">Kontrolery</a></li>
+                <li role="presentation"><a href="/all-users">Użytkownicy</a></li>
+                <li role="presentation"><a href="/api/all-devices">Urządzenia</a></li>
+                <li role="presentation"><a href="/building">Budynki</a></li>
+                <li role="presentation">
+                    <form class="navbar-form nav-pills" style="padding-top: 2px;margin-top:2px;">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Szukaj...">
+                    </div>
+                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                </form>
+                </li>
+            </ul>
+            <ul class="nav nav-pills pull-right" style="padding-top: 3px;padding-right:3px;font-size: 17px;display: inline;">
+                <li role="presentation"><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
+                <li role="presentation"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
 <div id="all" class="container-fluid">
@@ -74,12 +81,12 @@
             <ul class="view" style="z-index: 1000;top:0;">
                 <li>
                     <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
-                    <ul id="devices" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;">
+                    <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;">
                         <%
                             int sumActive = 0;
                             int sumInactive = 0;
                             int sumDisabled = 0;
-                            for (final DeviceData info : list) {
+                            for (final DeviceStateDto info : list) {
                                 int sumUsers = info.getClientsSum();
                                 String clazz;
                                 if (info.isEnabled()) {
@@ -131,16 +138,16 @@
             <div class="panel-body">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" onclick="onlyGreen()">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="greenDiode"></div> &emsp;aktywne: &nbsp;<%= sumActive %>&emsp;</div></button>
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="greenDiode"></div><span class="countActive">&emsp;aktywne: &nbsp;<%= sumActive %>&emsp;</span></div></button>
                     </div>
                     <div class="btn-group" role="group" onclick="onlyRed()">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="redDiode"></div> &emsp;nieaktywne: &nbsp;<%= sumInactive %>&emsp;</div></button>
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="redDiode"></div><span class="countInactive">&emsp;nieaktywne: &nbsp;<%= sumInactive %>&emsp;</span></div></button>
                     </div>
                     <div class="btn-group" role="group" onclick="onlyGrey()">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div> &emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</div></button>
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div><span class="countOff">&emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</span></div></button>
                     </div>
-                    <div class="btn-group" role="group" onclick="updateDevices()">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;<%= sumDisabled + sumActive + sumInactive %>&emsp;</div></button>
+                    <div class="btn-group" role="group" onclick="allDevices()">
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span><span class="countAll">&emsp;Wszystkie: &nbsp;<%= sumDisabled + sumActive + sumInactive %>&emsp;</span></div></button>
                     </div>
                 </div>
             </div>
@@ -155,9 +162,9 @@
 
 <script>
     var devices = new Array();
+    var inter;
 
-
-    function loadAjax()
+    function allDevices()
     {
         $.ajax({
             type: 'GET',
@@ -171,9 +178,11 @@
         });
     }
 
-    setInterval('loadAjax()', 20000);
-
     function e(){
+        var active=0;
+        var inactive=0;
+        var off=0;
+        var all=0;
         var line = '';
 
         $("#devices li").remove();
@@ -187,28 +196,42 @@
             if (devices[i].enabled == true) {
                 if (sum > 0 && sum <= 10) {
                     clazz = "greenDiode1";
+                    active++;
                 } else if (sum > 10 && sum <= 30) {
                     clazz = "greenDiode2";
+                    active++;
                 } else if (sum > 30 && sum <= 47) {
                     clazz = "greenDiode3";
+                    active++;
                 } else if (sum > 47) {
                     clazz = "greenDiode4";
+                    active++;
                 } else if (sum == 0) {
                     clazz = "redDiode";
+                    inactive++;
                 }
             } else if(devices[i].enabled == false){
                 clazz = "greyDiode";
                 sum='-';
+                off++;
             }
             line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">' + sum + '</a></li>';
         }
 
+        all = active+inactive+off;
+
+        $(".countActive").replaceWith('<span>&emsp;aktywne: &nbsp;'+active+'&emsp;</span>');
+        $(".countInactive").replaceWith('<span>&emsp;nieaktywne: &nbsp;'+inactive+'&emsp;</span>');
+        $(".countOff").replaceWith('<span>&emsp;wyłączone: &nbsp;'+off+'&emsp;</span>');
+        $(".countAll").replaceWith('<span>&emsp;wszystkie: &nbsp;'+all+'&emsp;</span>');
         $("#devices").html(line);
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
     };
+
+    inter = setInterval('allDevices()', 10000);
 
 </script>
 
@@ -235,140 +258,156 @@
 </script>
 
 <script>
-    function onlyGreen(){
-        $( ".view > li > ul" ).empty();
-        <%
-        for (DeviceData d : list) {
-            int sumUsers=d.getClientsSum();
-            String clazz;
-            if(d.isEnabled()){
-                if(d.getClientsSum() > 0){
-                    clazz="greenDiode2";
-                    if( sumUsers > 0 && sumUsers <= 10 ){
-                       clazz="greenDiode1";
-                       sumActive++;
-                    }else if( sumUsers > 10 && sumUsers <= 30 ){
-                       clazz="greenDiode2";
-                       sumActive++;
-                    }
-                    else if( sumUsers > 30 && sumUsers <= 47 ){
-                       clazz="greenDiode3";
-                       sumActive++;
-                    }
-                    else if( sumUsers > 47){
-                       clazz="greenDiode4";
-                       sumActive++;
-                    }
-        %>
-        $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'><%= d.getClientsSum() %></a></li>").val();
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        <%
+    active = 0;
+    function onlyGreen()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/api/all-devices',
+            dataType: 'json',
+
+            success: function(data) {
+                devices = data;
+                green();
+            },
+        });
+    }
+
+
+    function green(){
+        clearInterval(inter);
+        var line = '';
+
+        $("#devices li").remove();
+
+        for(var i = 0; i< devices.length; i++){
+            var h = "/device?id=" + devices[i].id;
+            var t = devices[i].name;
+            var clazz= '';
+            var sum = devices[i].clientsSum;
+
+            if (devices[i].enabled == true) {
+                if (sum > 0 && sum <= 10) {
+                    clazz = "greenDiode1";
+                    active++;
+                    line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">' + sum + '</a></li>';
+                } else if (sum > 10 && sum <= 30) {
+                    clazz = "greenDiode2";
+                    active++;
+                    line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">' + sum + '</a></li>';
+                } else if (sum > 30 && sum <= 47) {
+                    clazz = "greenDiode3";
+                    active++;
+                    line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">' + sum + '</a></li>';
+                } else if (sum > 47) {
+                    clazz = "greenDiode4";
+                    active++;
+                    line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">' + sum + '</a></li>';
                 }
             }
         }
-        %>
-    }
-</script>
 
-<script>
-    function onlyRed(){
-        $( ".view > li > ul" ).empty();
-        <%
-        for (DeviceData d : list) {
-            String clazz;
-            if(d.isEnabled()){
-                if(d.getClientsSum() == 0){
-                    clazz="redDiode";
-        %>
-        $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'><%= d.getClientsSum() %></a></li>").val();
+        $(".countActive").replaceWith('<span>&emsp;aktywne: &nbsp;'+active+'&emsp;</span>');
+        $("#devices").html(line);
+
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
-        <%
+    };
+</script>
+
+<script>
+    inactive=0;
+
+    function onlyRed()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/api/all-devices',
+            dataType: 'json',
+
+            success: function(data) {
+                devices = data;
+                red();
+            },
+        });
+    }
+
+
+    function red(){
+        clearInterval(inter);
+        var line = '';
+
+        $("#devices li").remove();
+
+        for(var i = 0; i< devices.length; i++){
+            var h = "/device?id=" + devices[i].id;
+            var t = devices[i].name;
+            var clazz= '';
+            var sum = devices[i].clientsSum;
+
+            if (devices[i].enabled == true) {
+                if (sum == 0 ) {
+                    clazz = "redDiode";
+                    inactive++;
+                    line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">' + sum + '</a></li>';
                 }
             }
         }
-        %>
-    }
-</script>
 
-<script>
-    function onlyGrey(){
-        $( ".view > li > ul" ).empty();
-        <%
-        for (DeviceData d : list) {
-            String clazz;
-            if(!d.isEnabled()){
-                clazz="greyDiode";
-        %>
-        $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'>-</a></li>").val();
+        $(".countInactive").replaceWith('<span>&emsp;nieaktywne: &nbsp;'+inactive+'&emsp;</span>');
+        $("#devices").html(line);
+
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
-        <%
-            }
-        }
-        %>
-    }
+    };
 </script>
 
-<%--<script>--%>
-    <%--function allColors(){--%>
-        <%--$( ".view > li > ul" ).empty();--%>
-        <%--<%--%>
-        <%--sumInactive=0;--%>
-        <%--sumActive=0;--%>
-        <%--sumDisabled=0;--%>
-        <%--for (DeviceData d : list) {--%>
-            <%--int sumUsers=d.getClientsSum();--%>
-            <%--String clazz;--%>
-            <%--if(d.isEnabled()){--%>
-                <%--if(d.getClientsSum() > 0){--%>
-                    <%--clazz="greenDiode2";--%>
-                    <%--if( sumUsers > 0 && sumUsers <= 10 ){--%>
-                       <%--clazz="greenDiode1";--%>
-                       <%--sumActive++;--%>
-                    <%--}else if( sumUsers > 10 && sumUsers <= 30 ){--%>
-                       <%--clazz="greenDiode2";--%>
-                       <%--sumActive++;--%>
-                    <%--}--%>
-                    <%--else if( sumUsers > 30 && sumUsers <= 47 ){--%>
-                       <%--clazz="greenDiode3";--%>
-                       <%--sumActive++;--%>
-                    <%--}--%>
-                    <%--else if( sumUsers > 47){--%>
-                       <%--clazz="greenDiode4";--%>
-                       <%--sumActive++;--%>
-                    <%--}--%>
-                <%--}else{--%>
-                    <%--clazz="redDiode";--%>
-                    <%--sumInactive++;--%>
-                <%--}--%>
-            <%--}else{--%>
-                <%--clazz="greyDiode";--%>
-                <%--sumDisabled++;--%>
-            <%--}--%>
-            <%--if(d.isEnabled()){--%>
-        <%--%>--%>
-        <%--$( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'><%= d.getClientsSum() %></a></li>").val();--%>
-        <%--$(function () {--%>
-            <%--$('[data-toggle="tooltip"]').tooltip();--%>
-        <%--})--%>
-        <%--<%--%>
-            <%--}else{--%>
-            <%--%>--%>
-        <%--$( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'>-</a></li>").val();--%>
-        <%--$(function () {--%>
-            <%--$('[data-toggle="tooltip"]').tooltip();--%>
-        <%--})--%>
-        <%--<%--%>
-            <%--}--%>
-        <%--}--%>
-        <%--%>--%>
-    <%--}--%>
-<%--</script>--%>
+<script>
+    off=0;
+
+    function onlyGrey()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/api/all-devices',
+            dataType: 'json',
+
+            success: function(data) {
+                devices = data;
+                grey();
+            },
+        });
+    }
+
+
+    function grey(){
+        clearInterval(inter);
+        var line = '';
+
+        $("#devices li").remove();
+
+        for(var i = 0; i< devices.length; i++){
+            var h = "/device?id=" + devices[i].id;
+            var t = devices[i].name;
+            var clazz= '';
+
+            if (devices[i].enabled == false) {
+                    clazz = "greyDiode";
+                    off++;
+                    line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">-</a></li>';
+            }
+        }
+
+        $(".countOff").replaceWith('<span>&emsp;wyłączone: &nbsp;'+off+'&emsp;</span>');
+        $("#devices").html(line);
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    };
+</script>
 
 <script>
     $(function () {

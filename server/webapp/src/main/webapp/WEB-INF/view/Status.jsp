@@ -8,10 +8,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
     List<DeviceData> list = (List<DeviceData>) request.getAttribute(StatusServlet.allDevicesString);
+    System.out.println("Number of devices: "+list.size());
     UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
-    int surveyTime=list.get(0).getLastSurveyTimestamp();
-    Long longSurveyTime = new Long(surveyTime);
-    longSurveyTime=longSurveyTime*1000;
+//    int surveyTime=list.get(0).getLastSurveyTimestamp();
+//    Long longSurveyTime = new Long(surveyTime);
+//    longSurveyTime=longSurveyTime*1000;
 %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -56,7 +57,7 @@
             <li role="presentation" class="active"><a href="/"><span class="glyphicon glyphicon-home"></span>  Strona główna</a></li>
         </ul>
         <ul class="nav nav-pills pull-right" style="padding-top: 3px;padding-right:3px;font-size: 17px;">
-            <li role="presentation"><a href="#"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
+            <li role="presentation"><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
             <li role="presentation"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
         </ul>
     </div>
@@ -73,7 +74,7 @@
             <ul class="view" style="z-index: 1000;top:0;">
                 <li>
                     <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
-                    <ul id="devices" style="padding: 4px;border: 1px solid #e0e0e0;">
+                    <ul id="devices" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;">
                         <%
                             int sumActive = 0;
                             int sumInactive = 0;
@@ -138,7 +139,7 @@
                     <div class="btn-group" role="group" onclick="onlyGrey()">
                         <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div> &emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</div></button>
                     </div>
-                    <div class="btn-group" role="group" onclick="allColors()">
+                    <div class="btn-group" role="group" onclick="updateDevices()">
                         <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;<%= sumDisabled + sumActive + sumInactive %>&emsp;</div></button>
                     </div>
                 </div>
@@ -152,26 +153,86 @@
 
 
 
-<%--<script>--%>
-    <%--function auto_load(){--%>
-        <%--$.ajax({--%>
-            <%--url: "/api/device",--%>
-            <%--cache: false,--%>
-            <%--success: function(data){--%>
-                <%--$("#devices").html(data);--%>
-            <%--}--%>
-        <%--});--%>
-    <%--}--%>
+<script>
+    var devices = new Array();
 
-    <%--$(document).ready(function(){--%>
 
-        <%--auto_load(); //Call auto_load() function when DOM is Ready--%>
+    function loadAjax()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '/api/all-devices',
+            dataType: 'json',
 
-    <%--});--%>
+            success: function(data) {
+                devices = data;
+                e();
+            },
+        });
+    }
 
-    <%--//Refresh auto_load() function after 10000 milliseconds--%>
-    <%--setInterval(auto_load,10000);--%>
-<%--</script>--%>
+    setInterval('loadAjax()', 20000);
+
+    function e(){
+        var line = '';
+
+        $("#devices li").remove();
+
+        for(var i = 0; i< devices.length; i++){
+            var h = "/device?id=" + devices[i].id;
+            var t = devices[i].name;
+            var clazz= '';
+            var sum = devices[i].clientsSum;
+
+            if (devices[i].enabled == true) {
+                if (sum > 0 && sum <= 10) {
+                    clazz = "greenDiode1";
+                } else if (sum > 10 && sum <= 30) {
+                    clazz = "greenDiode2";
+                } else if (sum > 30 && sum <= 47) {
+                    clazz = "greenDiode3";
+                } else if (sum > 47) {
+                    clazz = "greenDiode4";
+                } else if (sum == 0) {
+                    clazz = "redDiode";
+                }
+            } else if(devices[i].enabled == false){
+                clazz = "greyDiode";
+                sum='-';
+            }
+            line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">' + sum + '</a></li>';
+        }
+
+        $("#devices").html(line);
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    };
+
+</script>
+
+<script>
+    function loadDate() {
+        var devices = new Array();
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/all-devices',
+            dataType: 'json',
+
+            success: function(data) {
+                devices=data;
+                var date = new Date(devices[0].lastSurveyTimestamp*1000);
+                var n = date.toLocaleString();
+                $('#data').html('Ostatnie badanie sieci przeprowadzono:     ' + n);
+            }
+        });
+    }
+
+    loadDate();
+    setInterval('loadDate()', 5000);
+</script>
 
 <script>
     function onlyGreen(){
@@ -253,61 +314,61 @@
     }
 </script>
 
-<script>
-    function allColors(){
-        $( ".view > li > ul" ).empty();
-        <%
-        sumInactive=0;
-        sumActive=0;
-        sumDisabled=0;
-        for (DeviceData d : list) {
-            int sumUsers=d.getClientsSum();
-            String clazz;
-            if(d.isEnabled()){
-                if(d.getClientsSum() > 0){
-                    clazz="greenDiode2";
-                    if( sumUsers > 0 && sumUsers <= 10 ){
-                       clazz="greenDiode1";
-                       sumActive++;
-                    }else if( sumUsers > 10 && sumUsers <= 30 ){
-                       clazz="greenDiode2";
-                       sumActive++;
-                    }
-                    else if( sumUsers > 30 && sumUsers <= 47 ){
-                       clazz="greenDiode3";
-                       sumActive++;
-                    }
-                    else if( sumUsers > 47){
-                       clazz="greenDiode4";
-                       sumActive++;
-                    }
-                }else{
-                    clazz="redDiode";
-                    sumInactive++;
-                }
-            }else{
-                clazz="greyDiode";
-                sumDisabled++;
-            }
-            if(d.isEnabled()){
-        %>
-        $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'><%= d.getClientsSum() %></a></li>").val();
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        <%
-            }else{
-            %>
-        $( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'>-</a></li>").val();
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        <%
-            }
-        }
-        %>
-    }
-</script>
+<%--<script>--%>
+    <%--function allColors(){--%>
+        <%--$( ".view > li > ul" ).empty();--%>
+        <%--<%--%>
+        <%--sumInactive=0;--%>
+        <%--sumActive=0;--%>
+        <%--sumDisabled=0;--%>
+        <%--for (DeviceData d : list) {--%>
+            <%--int sumUsers=d.getClientsSum();--%>
+            <%--String clazz;--%>
+            <%--if(d.isEnabled()){--%>
+                <%--if(d.getClientsSum() > 0){--%>
+                    <%--clazz="greenDiode2";--%>
+                    <%--if( sumUsers > 0 && sumUsers <= 10 ){--%>
+                       <%--clazz="greenDiode1";--%>
+                       <%--sumActive++;--%>
+                    <%--}else if( sumUsers > 10 && sumUsers <= 30 ){--%>
+                       <%--clazz="greenDiode2";--%>
+                       <%--sumActive++;--%>
+                    <%--}--%>
+                    <%--else if( sumUsers > 30 && sumUsers <= 47 ){--%>
+                       <%--clazz="greenDiode3";--%>
+                       <%--sumActive++;--%>
+                    <%--}--%>
+                    <%--else if( sumUsers > 47){--%>
+                       <%--clazz="greenDiode4";--%>
+                       <%--sumActive++;--%>
+                    <%--}--%>
+                <%--}else{--%>
+                    <%--clazz="redDiode";--%>
+                    <%--sumInactive++;--%>
+                <%--}--%>
+            <%--}else{--%>
+                <%--clazz="greyDiode";--%>
+                <%--sumDisabled++;--%>
+            <%--}--%>
+            <%--if(d.isEnabled()){--%>
+        <%--%>--%>
+        <%--$( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'><%= d.getClientsSum() %></a></li>").val();--%>
+        <%--$(function () {--%>
+            <%--$('[data-toggle="tooltip"]').tooltip();--%>
+        <%--})--%>
+        <%--<%--%>
+            <%--}else{--%>
+            <%--%>--%>
+        <%--$( ".view > li > ul" ).append( "<li class='<%= clazz %>' title='<%= d.getName() %>' data-toggle='tooltip' data-html='true'><a href='/device?=<%= d.getId() %>' style='text-decoration: none; color: white;'>-</a></li>").val();--%>
+        <%--$(function () {--%>
+            <%--$('[data-toggle="tooltip"]').tooltip();--%>
+        <%--})--%>
+        <%--<%--%>
+            <%--}--%>
+        <%--}--%>
+        <%--%>--%>
+    <%--}--%>
+<%--</script>--%>
 
 <script>
     $(function () {
@@ -315,13 +376,6 @@
     })
 </script>
 
-<script>
-    window.onload = function() {
-        var date = new Date(<%= longSurveyTime %>);
-        var n = date.toLocaleString();
-        $( "#data" ).append("Ostatnie badanie sieci przeprowadzono: &emsp; " + n).val();
-    }
-</script>
 
 </body>
 </html>

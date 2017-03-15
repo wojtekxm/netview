@@ -17,9 +17,9 @@ public class AllDevicesResource {
         return new DeviceService()
                 .checkAll()
                 .stream()
-                .map( data -> {
+                .map( di -> {
                     DeviceStateDto dto = new DeviceStateDto();
-                    dto.wrap(data);
+                    dto.wrap(di);
                     return dto;
                 })
                 .collect(Collectors.toList());

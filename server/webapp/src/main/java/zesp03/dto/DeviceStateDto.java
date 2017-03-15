@@ -1,8 +1,6 @@
 package zesp03.dto;
 
-import zesp03.data.DeviceStateData;
-import zesp03.entity.Device;
-import zesp03.entity.DeviceSurvey;
+import zesp03.data.DeviceNow;
 
 public class DeviceStateDto {
     private long id;
@@ -78,18 +76,16 @@ public class DeviceStateDto {
         this.clientsSum = clientsSum;
     }
 
-    public void wrap(DeviceStateData dsd) {
-        Device dev = dsd.getDevice();
-        DeviceSurvey sur = dsd.getSurvey();
-        this.id = dev.getId();
-        this.name = dev.getName();
-        this.known = dev.isKnown();
-        this.description = dev.getDescription();
-        this.controllerId = dsd.getController().getId();
-        if(sur != null) {
-            this.lastSurveyTimestamp = sur.getTimestamp();
-            this.enabled = sur.isEnabled();
-            this.clientsSum = sur.getClientsSum();
+    public void wrap(DeviceNow d) {
+        this.id = d.getId();
+        this.name = d.getName();
+        this.known = d.isKnown();
+        this.description = d.getDescription();
+        this.controllerId = d.getControllerId();
+        if(d.getSurveyId() != null) {
+            this.lastSurveyTimestamp = d.getSurveyTime();
+            this.enabled = d.isSurveyEnabled();
+            this.clientsSum = d.getSurveyClients();
         }
         else {
             this.lastSurveyTimestamp = -1;

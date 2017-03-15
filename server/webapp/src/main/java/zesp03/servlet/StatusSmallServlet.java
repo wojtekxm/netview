@@ -25,9 +25,9 @@ public class StatusSmallServlet extends HttpServlet {
         List<DeviceStateDto> list = new DeviceService()
                 .checkAll()
                 .stream()
-                .map( data -> {
+                .map( di -> {
                     DeviceStateDto dto = new DeviceStateDto();
-                    dto.wrap(data);
+                    dto.wrap(di);
                     return dto;
                 })
                 .collect(Collectors.toList());

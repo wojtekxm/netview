@@ -3,6 +3,7 @@ package zesp03.common;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zesp03.data.DeviceNow;
 import zesp03.data.ExamineResult;
 import zesp03.data.SurveyInfo;
 import zesp03.entity.Controller;
@@ -229,7 +230,7 @@ public class App {
 
             final HashMap<String, Device> name2device = makeDevices(deviceNames, controller, em);
             em.flush();
-            final HashMap<Long, DeviceSurvey> devid2survey = new HashMap<>();
+            final HashMap<Long, DeviceNow> devid2now = new HashMap<>();
             new DeviceService().checkSome(
                     name2device
                             .entrySet()
@@ -237,8 +238,8 @@ public class App {
                             .map( e -> e.getValue().getId() )
                             .collect(Collectors.toSet()),
                     em
-            ).forEach( dsd -> {
-                devid2survey.put(dsd.getDevice().getId(), dsd.getSurvey());
+            ).forEach( di -> {
+                devid2now.put(di.getId(), di);
             } );
             final List<DeviceSurvey> ds2persist = new ArrayList<>();
             for(String name : deviceNames) {
@@ -249,13 +250,13 @@ public class App {
                 sur.setEnabled(info.isEnabled());
                 sur.setClientsSum(info.getClientsSum());
                 sur.setDevice(device);
-                final DeviceSurvey before = devid2survey.get(device.getId());
+                final DeviceNow before = devid2now.get(device.getId());
                 if(before == null) {
                     sur.setCumulative(0L);
                 }
                 else {
-                    sur.setCumulative( before.getCumulative() + before.getClientsSum() *
-                            ( sur.getTimestamp() - before.getTimestamp() ) );
+                    sur.setCumulative( before.getSurveyCumulative() + before.getSurveyClients() *
+                            ( sur.getTimestamp() - before.getSurveyTime() ) );
                 }
                 ds2persist.add(sur);
             }

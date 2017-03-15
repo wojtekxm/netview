@@ -1,46 +1,16 @@
 package zesp03.service;
 
 import zesp03.common.Database;
-import zesp03.data.DeviceStateData;
-import zesp03.entity.Controller;
-import zesp03.entity.Device;
-import zesp03.entity.DeviceSurvey;
+import zesp03.data.DeviceNow;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DeviceService {
-    //!?
-    public List<DeviceStateData> checkAll(EntityManager em) {
-        return convert(
-                em.createQuery("SELECT dev, sur FROM DeviceSurvey sur " +
-                                "RIGHT JOIN sur.device dev " +
-                                "LEFT JOIN FETCH dev.controller WHERE sur.timestamp = (" +
-                                "SELECT MAX(s.timestamp) FROM DeviceSurvey s WHERE s.device = dev)",
-                        Object[].class)
-                        .getResultList()
-        );
-    }
-
-    //!?
-    public List<DeviceStateData> checkSome(Collection<Long> ids, EntityManager em) {
-        return convert(
-                em.createQuery("SELECT dev, sur FROM DeviceSurvey sur " +
-                                "RIGHT JOIN sur.device dev " +
-                                "LEFT JOIN FETCH dev.controller WHERE sur.timestamp = (" +
-                                "SELECT MAX(s.timestamp) FROM DeviceSurvey s WHERE s.device = dev) AND " +
-                                "dev.id IN (:ids)",
-                        Object[].class)
-                        .setParameter("ids", ids)
-                        .getResultList()
-        );
-    }
-
-    //!?
-    public List<DeviceStateData> checkAll() {
+    public List<DeviceNow> checkAll() {
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -48,8 +18,8 @@ public class DeviceService {
             tran = em.getTransaction();
             tran.begin();
 
-            List<DeviceStateData> r = checkAll(em);
-            tran.commit();
+            List<DeviceNow> r = checkAll(em);
+            tran.rollback();
             return r;
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
@@ -58,40 +28,83 @@ public class DeviceService {
             if (em != null) em.close();
         }
     }
-
-    //!?
-    public List<DeviceStateData> checkSome(Collection<Long> ids) {
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            List<DeviceStateData> r = checkSome(ids, em);
-            tran.commit();
-            return r;
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
+    public List<DeviceNow> checkAll(EntityManager em) {
+        List list = em.createNativeQuery("SELECT device.id AS devid,\n" +
+                "device.name AS devname,\n" +
+                "device.description AS devdesc,\n" +
+                "device.is_known AS devknown,\n" +
+                "device.controller_id AS devcid,\n" +
+                "ds.id AS dsid,\n" +
+                "ds.`timestamp` AS dstime,\n" +
+                "ds.is_enabled AS dsen,\n" +
+                "ds.clients_sum AS dscli,\n" +
+                "ds.device_id AS dsdid,\n" +
+                "ds.cumulative AS dscum FROM\n" +
+                "device LEFT JOIN (\n" +
+                "SELECT ds.id, ds.`timestamp`, ds.is_enabled, ds.clients_sum, ds.device_id, ds.cumulative FROM\n" +
+                "device_survey ds INNER JOIN (\n" +
+                "SELECT device_id, MAX(`timestamp`) AS m FROM device_survey GROUP BY device_id\n" +
+                ") best ON ds.device_id = best.device_id AND ds.timestamp = best.m\n" +
+                ") ds ON device.id = ds.device_id")
+                .getResultList();
+        ArrayList<DeviceNow> result = new ArrayList<>();
+        for(Object obj : list) {
+            Object[] arr = (Object[])obj;
+            result.add( fromRow(arr) );
         }
+        return result;
     }
 
-    private List<DeviceStateData> convert(List<Object[]> list) {
-        return list
-                .stream()
-                .map( arr -> {
-                    Device dev = (Device)arr[0];
-                    DeviceSurvey sur = (DeviceSurvey)arr[1];
-                    Controller con = dev.getController();
-                    DeviceStateData dsd = new DeviceStateData();
-                    dsd.setDevice(dev);
-                    dsd.setSurvey(sur);
-                    dsd.setController(con);
-                    return dsd;
-                } )
-                .collect(Collectors.toList());
+    public List<DeviceNow> checkSome(Collection<Long> ids, EntityManager em) {
+        List list = em.createNativeQuery("SELECT device.id AS devid,\n" +
+                "device.name AS devname,\n" +
+                "device.description AS devdesc,\n" +
+                "device.is_known AS devknown,\n" +
+                "device.controller_id AS devcid,\n" +
+                "ds.id AS dsid,\n" +
+                "ds.`timestamp` AS dstime,\n" +
+                "ds.is_enabled AS dsen,\n" +
+                "ds.clients_sum AS dscli,\n" +
+                "ds.device_id AS dsdid,\n" +
+                "ds.cumulative AS dscum FROM\n" +
+                "device LEFT JOIN (\n" +
+                "SELECT ds.id, ds.`timestamp`, ds.is_enabled, ds.clients_sum, ds.device_id, ds.cumulative FROM\n" +
+                "device_survey ds INNER JOIN (\n" +
+                "SELECT device_id, MAX(`timestamp`) AS m FROM device_survey GROUP BY device_id\n" +
+                ") best ON ds.device_id = best.device_id AND ds.timestamp = best.m\n" +
+                ") ds ON device.id = ds.device_id WHERE device.id IN (:ids)")
+                .setParameter("ids", ids)
+                .getResultList();
+        ArrayList<DeviceNow> result = new ArrayList<>();
+        for(Object obj : list) {
+            Object[] arr = (Object[])obj;
+            result.add( fromRow(arr) );
+        }
+        return result;
+    }
+
+    private static DeviceNow fromRow(Object[] row) {
+        final DeviceNow d = new DeviceNow();
+        d.setId( getLongOrNull(row[0]) );
+        d.setName( (String)row[1] );
+        d.setDescription( (String)row[2] );
+        d.setKnown( (Boolean)row[3] );
+        d.setControllerId( getLongOrNull(row[4]) );
+        d.setSurveyId( getLongOrNull(row[5]) );
+        d.setSurveyTime( getIntegerOrNull(row[6]) );
+        d.setSurveyEnabled( (Boolean)row[7] );
+        d.setSurveyClients( getIntegerOrNull(row[8]) );
+        d.setSurveyCumulative( getLongOrNull(row[9]) );
+        return d;
+    }
+
+    private static Long getLongOrNull(Object o) {
+        if(o == null)return null;
+        else return ((Number)o).longValue();
+    }
+
+    private static Integer getIntegerOrNull(Object o) {
+        if(o == null)return null;
+        else return ((Number)o).intValue();
     }
 }

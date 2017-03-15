@@ -43,4 +43,9 @@ public class LinkUnitBuildingResource {
             throw new NotFoundException();
         return result;
     }
+/*
+    @POST
+    @Consumes()
+    public void add(LinkUnitBuildingRow huhu)
+*/
 }

@@ -27,7 +27,8 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"
+            type="text/javascript"></script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -81,52 +82,167 @@
 
 
     <div class="wykresy">
-        <canvas id="mycanvas" width="500px" style="border:1px solid #bce8f1;"></canvas>
+        <canvas id="mycanvas" width="1000px" style="border:1px solid #bce8f1;"></canvas>
     </div>
 
+
     <style>
-        #mycanvas{
+        #mycanvas {
+            /*background-image: url("/images/logooWhite.jpg");*/
             width: 100% !important;
             max-width: 5000px !important;
             height: auto !important;
-            image-rendering: -moz-crisp-edges;         /* Firefox */
-            image-rendering:   -o-crisp-edges;         /* Opera */
-            image-rendering: -webkit-optimize-contrast;/* Webkit (non-standard naming) */
+            image-rendering: -moz-crisp-edges; /* Firefox */
+            image-rendering: -o-crisp-edges; /* Opera */
+            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
             image-rendering: crisp-edges;
-            -ms-interpolation-mode: nearest-neighbor;  /* IE (non-standard property) */
+            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
         }
 
+        #mycanvas2 {
+            /*background-image: url("/images/logooWhite.jpg");*/
+            width: 100% !important;
+            max-width: 5000px !important;
+            height: auto !important;
+            image-rendering: -moz-crisp-edges; /* Firefox */
+            image-rendering: -o-crisp-edges; /* Opera */
+            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+            image-rendering: crisp-edges;
+            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+        }
     </style>
+
     <script>
+        function convert(time) {
+            var temp = new Date(time * 1000);
+            var Seconds = temp.getSeconds();
+            var Minutes = temp.getMinutes();
+            var Hours = temp.getHours();
+            var WeekDay = temp.getDay();
+            var Month = temp.getMonth();
+            var Day = temp.getDate();
+            var Year = temp.getFullYear();
+            return (Hours > 9 ? '' : '0') + Hours + ":" +
+                (Minutes > 9 ? '' : '0') + Minutes + ":" +
+                (Seconds > 9 ? '' : '0') + Seconds + "    " +
+                Day + " " + MonthName[Month] + " " + Year + " (" + DayName[WeekDay] + ") ";
+        }
+        var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
+        var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
+            "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
+        var now = Date.now();
+        var doba = now - 86400000;       // dzien
+        var tydzien = now - 604800000;   // 7 dni
+        var miesiac = now - 2629743830; //30 dni
+        var kwartal = now - 7889231490; //90 dni
+        var rok = now - 31536000000;   // 365 dni
+        console.log("doba:" + doba);
+        console.log("tydzien:" + tydzien);
+        console.log("miesiac:" + miesiac);
+        console.log("kwartal:" + kwartal);
+        console.log("rok:" + rok);
 
-        (function() {
-            var chrt = document.getElementById("mycanvas").getContext("2d");
-            var tags=["January", "February", "March", "April", "May", "June", "July"];
-            var values= [424, 59, 80, 81, 56, 55, 40];
-            var data = {labels: tags,datasets: [{data: values}]};
-            var myFirstChart = new Chart(chrt).Line(data,{responsive: true,pointDotRadius: 1});
-            var
-                htmlCanvas = document.getElementById('mycanvas'),
-                context = htmlCanvas.getContext('2d');
-            initialize();
-            function initialize() {
-                window.addEventListener('resize', resizeCanvas, false);
-                resizeCanvas();
-            }
-            function redraw() {
-                if(myFirstChart){myFirstChart.destroy();}
-                var myFirstChart = new Chart(chrt).Line(data,{responsive: true,pointDotRadius: 1});
-                context.strokeStyle = 'blue';
-                context.lineWidth = '1';
-                context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
-            }
-            function resizeCanvas() {
-                htmlCanvas.width = window.innerWidth;
-                htmlCanvas.height = window.innerHeight;
-                redraw();
-            }
+        function generateChart(canvas_name, id) {
+            var request = new XMLHttpRequest();
+            var tags = [];      //WSZYSTKO
+            var values = [];    //WSZYSTKO
+            var options = {
+                tooltips: {
+                    /*  callbacks: {
+                     label: function(tooltipItem) {
+                     return tooltipItem.yLabel;
+                     }
+                     },*/
+                    mode: 'index'
+                },
+                legend: {display:false},
+                title: {
+                    display: true,
+                    text: "Wykres aktywnosci"<%-- +<%=device.getId()%> --%>
+                },
+                hover:{intersect:true},
+                animation:{
+                    easing:'linear',
+                    duration:1500
 
-        })();
+                },
+                label: {display: true},
+                scales: {
+                    xAxes: [{
+                        display: false
+                        /*scaleLabel: {
+                         display: true
+                         }*/
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Ilosc klientów'
+                        },
+                        ticks: {
+                            fixedStepSize: 10,
+                            suggestedMin: 0,
+                            suggestedMax: 50
+                        }
+                    }]
+                },
+                responsive: true,
+                scaleLineColor: 'black',
+                steppedLine: true,
+                elements: {
+                    line: {
+                        tension: 0
+                    }
+                }
+            };
+            var chrt = document.getElementById(canvas_name);
+            var ctx = chrt.getContext("2d");
+            var gradient = ctx.createLinearGradient(300, 0, 300, 600);
+            gradient.addColorStop(0, 'black');
+            gradient.addColorStop(0.25, 'red');
+            gradient.addColorStop(0.5, 'orange');
+            gradient.addColorStop(0.75, 'yellow');
+            gradient.addColorStop(1, 'green');
+            var data = {
+                labels: tags,
+                datasets: [{
+                    label: "Ilosc klientow urzadzenia",
+                    data: values,
+                    fill: false,
+                    borderColor: gradient,
+                    // backgroundColor:gradient,
+                    fillStyle: gradient,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "rgba(0,0,0,0)",
+                    pointBackgroundColor: gradient,
+                    pointBorderWidth: 5,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(100, 100, 100, 0)",
+                    pointHoverBorderColor: "rgb(0,0,0,0)",
+                    pointHoverBorderWidth: 5,
+                    pointRadius: 5,
+                    tension: 0
+                }
+                ]
+            };
+
+            request.open('Get', 'http://localhost:8081/api/chart?id=' + id);
+            request.onload = function () {
+                var jsondata = JSON.parse(request.responseText);
+                for (i = 0; i < jsondata.length; i++) {
+                    tags[i] = convert(jsondata[i][1]);
+                    console.log(tags[i]);
+                    values[i] = jsondata[i][0];
+                    console.log(values[i]);
+                }
+                var myFirstChart = Chart.Line(chrt, {data: data, options: options});
+            };
+            request.send();
+        }
+
+        generateChart("mycanvas", <%=device.getId()%>);
+
 
     </script>
 

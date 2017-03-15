@@ -26,7 +26,14 @@ public class BuildingRow {
         this.longitude = b.getLongitude();
 
     }
+    public BuildingRow(long id, String code, String name,BigDecimal latitude,BigDecimal longitude ){
 
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
     public Long getId() {
         return id;
     }

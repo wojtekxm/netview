@@ -44,7 +44,7 @@ public class SurveysResource {
     }
 
     @GET
-    @Path("minmax-simple")
+    @Path("minmax")
     public MinmaxSurveyDto getMinmaxSimple(
             @QueryParam("device") long device,
             @QueryParam("start") int start,
@@ -53,22 +53,6 @@ public class SurveysResource {
             throw new BadRequestException();
         try {
             return new SurveyService().getMinmaxSimple(device, start, end);
-        }
-        catch(zesp03.common.NotFoundException exc) {
-            throw new NotFoundException();
-        }
-    }
-
-    @GET
-    @Path("minmax-complex")
-    public MinmaxSurveyDto getMinmaxComplex(
-            @QueryParam("device") long device,
-            @QueryParam("start") int start,
-            @QueryParam("end") int end) {
-        if (start < 0 || end < 0 || end <= start)
-            throw new BadRequestException();
-        try {
-            return new SurveyService().getMinmaxComplex(device, start, end);
         }
         catch(zesp03.common.NotFoundException exc) {
             throw new NotFoundException();

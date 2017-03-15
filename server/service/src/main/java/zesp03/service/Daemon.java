@@ -19,7 +19,7 @@ public class Daemon {
         Database.init();
         Thread t = new Thread(() -> shutdown = true);
         Runtime.getRuntime().addShutdownHook(t);
-        work2();
+        work1();
         Database.destroy();
     }
 
@@ -27,7 +27,8 @@ public class Daemon {
         while (!shutdown) {
             final Instant start = Instant.now();
             App.examineAll();
-            long sleep = Duration.between(Instant.now(), start.plusSeconds(5 * 60)).toMillis();
+            final int WAIT_SECONDS = 10;
+            long sleep = Duration.between(Instant.now(), start.plusSeconds(WAIT_SECONDS)).toMillis();
             if (sleep < 1) sleep = 1;
             try {
                 Thread.sleep(sleep);

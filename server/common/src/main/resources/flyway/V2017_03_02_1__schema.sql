@@ -80,18 +80,3 @@ PRIMARY KEY (id),
 FOREIGN KEY FK_link_unit_building_unit (unit_id)	REFERENCES unit (id) ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY FK_link_unit_building_building (building_id) REFERENCES building(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-CREATE TABLE minmax_survey (
-id BIGINT AUTO_INCREMENT,
-first_survey INT NOT NULL,
-last_survey INT NOT NULL,
-survey_span INT NOT NULL,
-`min` INT NOT NULL,
-`max` INT NOT NULL,
-device_id BIGINT NOT NULL,
-PRIMARY KEY (id),
-FOREIGN KEY FK_minmax_survey_device (device_id) REFERENCES device (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-CREATE INDEX KEY_first_survey USING BTREE ON minmax_survey (`first_survey`);
-CREATE INDEX KEY_last_survey USING BTREE ON minmax_survey (`last_survey`);
-CREATE INDEX KEY_survey_span USING BTREE ON minmax_survey (`survey_span`);

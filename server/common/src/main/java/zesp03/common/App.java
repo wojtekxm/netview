@@ -8,7 +8,6 @@ import zesp03.data.SurveyInfo;
 import zesp03.entity.Controller;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
-import zesp03.entity.MinmaxSurvey;
 import zesp03.service.DeviceService;
 import zesp03.util.Unicode;
 
@@ -242,7 +241,6 @@ public class App {
                 devid2survey.put(dsd.getDevice().getId(), dsd.getSurvey());
             } );
             final List<DeviceSurvey> ds2persist = new ArrayList<>();
-            final List<MinmaxSurvey> ms2persist = new ArrayList<>();
             for(String name : deviceNames) {
                 final SurveyInfo info = name2info.get(name);
                 final Device device = name2device.get(name);
@@ -263,12 +261,6 @@ public class App {
             }
             for(DeviceSurvey ds : ds2persist) {
                 em.persist(ds);
-            }
-            for(DeviceSurvey ds : ds2persist) {
-                buildMinmaxSurvey(ds, ms2persist, em);
-            }
-            for(MinmaxSurvey ms : ms2persist) {
-                em.persist(ms);
             }
 
             tran.commit();
@@ -314,117 +306,6 @@ public class App {
             else result.put(name, device);
         } );
         return result;
-    }
-
-    /**
-     * @param deviceId identyfikator urządzenia
-     * @throws IllegalArgumentException device with given id does not exist
-     */
-    public static void rebuildMinmaxSurveys(long deviceId) {
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            em.createQuery("DELETE FROM MinmaxSurvey ms WHERE ms.device.id = :did")
-                    .setParameter("did", deviceId)
-                    .executeUpdate();
-            List<DeviceSurvey> list = em.createQuery(
-                    "SELECT ds FROM DeviceSurvey ds WHERE ds.device.id = :did ORDER BY ds.timestamp ASC",
-                    DeviceSurvey.class)
-                    .setParameter("did", deviceId)
-                    .getResultList();
-            for( DeviceSurvey survey : list ) {
-                final List<MinmaxSurvey> ms2persist = new ArrayList<>();
-                buildMinmaxSurvey(survey, ms2persist, em);
-                for(MinmaxSurvey ms : ms2persist) {
-                    em.persist(ms);
-                }
-            }
-
-            tran.commit();
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
-        }
-    }
-
-    /**
-     *
-     * @param survey badanie które właśnie zostało wstawione do bazy
-     * @param ms2persist lista do której zostaną dodane encje które należy zapisać w bazie
-     * @param em
-     */
-    private static void buildMinmaxSurvey(DeviceSurvey survey, List<MinmaxSurvey> ms2persist, EntityManager em) {
-        List<DeviceSurvey> list = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
-                "ds.device = :device AND ds.timestamp < :time ORDER BY ds.timestamp DESC",
-                DeviceSurvey.class)
-                .setParameter("time", survey.getTimestamp())
-                .setParameter("device", survey.getDevice())
-                .setMaxResults(1)
-                .getResultList();
-        log.debug("list.isEmpty={}", list.isEmpty());
-        if(list.isEmpty())return;
-        DeviceSurvey dsBefore = list.get(0);
-        if( em.createQuery("SELECT COUNT(ms) FROM MinmaxSurvey ms WHERE " +
-                "ms.device = :device AND ms.lastSurvey = :time AND ms.surveySpan = :span",
-                Long.class)
-                .setParameter("device", survey.getDevice())
-                .setParameter("time", dsBefore.getTimestamp() )
-                .setParameter("span", 2)
-                .getSingleResult() > 0L ) {
-            log.debug("first select is false");
-            return;
-        }
-        MinmaxSurvey fresh = new MinmaxSurvey();
-        fresh.setDevice(survey.getDevice());
-        fresh.setFirstSurvey(dsBefore.getTimestamp());
-        fresh.setLastSurvey(survey.getTimestamp());
-        fresh.setMin( Integer.min( dsBefore.getClientsSum(), survey.getClientsSum() ) );
-        fresh.setMax( Integer.max( dsBefore.getClientsSum(), survey.getClientsSum() ) );
-        fresh.setSurveySpan(2);
-        ms2persist.add(fresh);
-        log.debug("added fresh: first={} last={} min={} max={} span={}",
-                fresh.getFirstSurvey(), fresh.getLastSurvey(),
-                fresh.getMin(), fresh.getMax(), fresh.getSurveySpan());
-        while(fresh != null) {
-            List<MinmaxSurvey> lminmax = em.createQuery("SELECT ms FROM MinmaxSurvey ms WHERE ms.device = :device AND " +
-                    "ms.lastSurvey < :last AND ms.surveySpan = :span ORDER BY ms.lastSurvey DESC",
-                    MinmaxSurvey.class)
-                    .setParameter("device", survey.getDevice())
-                    .setParameter("last", fresh.getFirstSurvey())
-                    .setParameter("span", fresh.getSurveySpan() )
-                    .setMaxResults(1)
-                    .getResultList();
-            if(lminmax.isEmpty())break;
-            MinmaxSurvey msBefore = lminmax.get(0);
-            if( em.createQuery("SELECT COUNT(ms) FROM MinmaxSurvey ms WHERE ms.device = :device AND " +
-                    "ms.lastSurvey = :last AND ms.surveySpan = :span",
-                    Long.class)
-                    .setParameter("device", survey.getDevice())
-                    .setParameter("last", msBefore.getLastSurvey())
-                    .setParameter("span", msBefore.getSurveySpan() * 2)
-                    .getSingleResult() > 0L ) {
-                log.debug("next select is false");
-                break;
-            }
-            MinmaxSurvey msLater = fresh;
-            fresh = new MinmaxSurvey();
-            fresh.setDevice(survey.getDevice());
-            fresh.setFirstSurvey(msBefore.getFirstSurvey());
-            fresh.setLastSurvey(msLater.getLastSurvey());
-            fresh.setMin( Integer.min( msBefore.getMin(), msLater.getMin() ) );
-            fresh.setMax( Integer.max( msBefore.getMax(), msLater.getMax() ) );
-            fresh.setSurveySpan( msBefore.getSurveySpan() + msLater.getSurveySpan() );
-            ms2persist.add(fresh);
-            log.debug("added fresh: first={} last={} min={} max={} span={}",
-                    fresh.getFirstSurvey(), fresh.getLastSurvey(),
-                    fresh.getMin(), fresh.getMax(), fresh.getSurveySpan());
-        }
     }
 
     /**

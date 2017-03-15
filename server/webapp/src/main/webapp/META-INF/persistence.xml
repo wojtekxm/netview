@@ -14,7 +14,6 @@
         <class>zesp03.entity.Building</class>
         <class>zesp03.entity.Link_unit_building</class>
         <class>zesp03.entity.Unit</class>
-        <class>zesp03.entity.MinmaxSurvey</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <!--

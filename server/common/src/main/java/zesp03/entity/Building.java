@@ -22,15 +22,6 @@ public class Building {
     @Column(precision=8, scale=6)
     private BigDecimal longitude;
 
-    public Building( long id, String code,String name,BigDecimal latitude,BigDecimal longitude ){
-
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
     public Long getId() {
         return id;
     }

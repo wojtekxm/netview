@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.common.Database;
-import zesp03.entity.Link_unit_building;
+import zesp03.entity.LinkUnitBuilding;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -26,7 +26,7 @@ public class LinkUnitBuildingServlet extends HttpServlet {
         EntityTransaction tran = null;
 
 
-        List<Link_unit_building> BuildingList;
+        List<LinkUnitBuilding> BuildingList;
 
         try {
 
@@ -35,7 +35,7 @@ public class LinkUnitBuildingServlet extends HttpServlet {
 
             tran.begin();
 
-            BuildingList = em.createQuery("SELECT lub FROM Link_unit_building lub", Link_unit_building.class).getResultList();
+            BuildingList = em.createQuery("SELECT lub FROM LinkUnitBuilding lub", LinkUnitBuilding.class).getResultList();
 
             request.setAttribute( ATTR_LIST, BuildingList);
             request.getRequestDispatcher( "/WEB-INF/view/LinkUnitBuilding.jsp" ).include( request, response );

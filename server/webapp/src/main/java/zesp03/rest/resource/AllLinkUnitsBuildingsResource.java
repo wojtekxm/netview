@@ -2,7 +2,7 @@ package zesp03.rest.resource;
 
 import zesp03.common.Database;
 import zesp03.data.row.LinkUnitBuildingRow;
-import zesp03.entity.Link_unit_building;
+import zesp03.entity.LinkUnitBuilding;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -30,7 +30,7 @@ public class AllLinkUnitsBuildingsResource {
             tran = em.getTransaction();
             tran.begin();
 
-            list = em.createQuery("SELECT lub FROM Link_unit_building lub ", Link_unit_building.class)
+            list = em.createQuery("SELECT lub FROM LinkUnitBuilding lub ", LinkUnitBuilding.class)
                     .getResultList()
                     .stream()
                     .map(LinkUnitBuildingRow::new)

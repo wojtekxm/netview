@@ -2,14 +2,13 @@ package zesp03.data.row;
 
 import zesp03.entity.Unit;
 
-import java.math.BigDecimal;
 
 /**
  * Created by Berent on 2017-03-06.
  */
 public class UnitRow {
 
-    private Long id;
+    private long id;
     private String code;
     private String description;
 
@@ -30,11 +29,11 @@ public class UnitRow {
         this.description = description;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -54,4 +53,25 @@ public class UnitRow {
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
+            return false;
+
+        UnitRow other = (UnitRow)obj;
+        if( !(Long.valueOf( id ).equals( Long.valueOf( other.getId() ) )) )
+            return false;
+
+        return true;
+    }
+    public int hashCode(){
+        return (int)id;
+    }
 }

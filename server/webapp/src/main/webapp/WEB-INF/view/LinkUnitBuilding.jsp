@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 
-<%@ page import="zesp03.entity.Link_unit_building" %>
+<%@ page import="zesp03.entity.LinkUnitBuilding" %>
 <%@ page import="zesp03.servlet.LinkUnitBuildingServlet" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -14,7 +14,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="lub" %>
 
 <%
-    ArrayList<Link_unit_building> BuildingList= (ArrayList<Link_unit_building>) request.getAttribute(LinkUnitBuildingServlet.ATTR_LIST);
+    ArrayList<LinkUnitBuilding> BuildingList= (ArrayList<LinkUnitBuilding>) request.getAttribute(LinkUnitBuildingServlet.ATTR_LIST);
 %>
 
 <!DOCTYPE html>
@@ -61,12 +61,12 @@
 
             </div>
 
-        <% for (Link_unit_building lub : BuildingList) {
+        <% for (LinkUnitBuilding lub : BuildingList) {
 
         %>
         <div class="row list-group-item list-group-item-info">
-            <div class="col-md-1"><%= lub.getId().toString() %></div>
-            <div class="col-md-1"><%= lub.getBuilding().getId().toString() %></div>
+            <div class="col-md-1"><%= lub.getId() %></div>
+            <div class="col-md-1"><%= lub.getBuilding().getId() %></div>
             <div class="col-md-1"><%= lub.getBuilding().getCode() %></div>
             <div class="col-md-3"><%= lub.getBuilding().getName() %></div>
             <div class="col-md-1"><%= lub.getBuilding().getLatitude().toString() %></div>

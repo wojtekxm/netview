@@ -7,23 +7,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "link_unit_building")
 @Proxy(lazy = false)
-public class Link_unit_building {
+public class LinkUnitBuilding {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "link_unit_building")
+    @TableGenerator(name = "link_unit_building", pkColumnValue = "link_unit_building")
+    private long id;
 
-    /*@Column(nullable = false)
-    private Long unit_id;
-
-    @Column(nullable = false)
-    private Long building_id;
-*/
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = "building_id",
             foreignKey = @ForeignKey(name = "building_fk"),
-            nullable = false,
-            unique = true
+            nullable = false
     )
     private Building building;
 
@@ -31,16 +25,16 @@ public class Link_unit_building {
     @JoinColumn(
             name = "unit_id",
             foreignKey = @ForeignKey(name = "unit_fk"),
-            nullable = false,
-            unique = true
+            nullable = false
+
     )
     private Unit unit;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

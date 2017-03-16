@@ -12,7 +12,7 @@
         <class>zesp03.entity.User</class>
         <class>zesp03.entity.Token</class>
         <class>zesp03.entity.Building</class>
-        <class>zesp03.entity.Link_unit_building</class>
+        <class>zesp03.entity.LinkUnitBuilding</class>
         <class>zesp03.entity.Unit</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>

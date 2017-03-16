@@ -3,13 +3,13 @@ package zesp03.data;
 import zesp03.data.row.BuildingRow;
 import zesp03.data.row.UnitRow;
 import zesp03.entity.Building;
-import zesp03.entity.Link_unit_building;
+import zesp03.entity.LinkUnitBuilding;
 
 /**
  * Created by Berent on 2017-03-13.
  */
 public class BuildingData {
-    private Long id;
+    private long id;
     private String code;
     private String name;
     private Number latitude;
@@ -32,7 +32,7 @@ public BuildingData(BuildingRow building, UnitRow unit) {
         this.unitDescription = unit.getDescription();
 
 }
-    public BuildingData(Building building, Link_unit_building linkunitbuilding) {
+    public BuildingData(Building building, LinkUnitBuilding linkunitbuilding) {
         this.id = building.getId();
         this.code = building.getCode();
         this.name = building.getName();

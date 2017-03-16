@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class Building {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(length = 20, unique = true, nullable = false)
     private String code;
@@ -22,11 +22,11 @@ public class Building {
     @Column(precision=8, scale=6)
     private BigDecimal longitude;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

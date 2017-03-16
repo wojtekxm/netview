@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 
 public class BuildingRow {
-    private Long id;
+    private long id;
     private String code;
     private String name;
     private Number latitude;
@@ -26,7 +26,7 @@ public class BuildingRow {
         this.longitude = b.getLongitude();
 
     }
-    public BuildingRow(long id, String code, String name,BigDecimal latitude,BigDecimal longitude ){
+    public BuildingRow( long id, String code, String name, BigDecimal latitude, BigDecimal longitude ){
 
         this.id = id;
         this.code = code;
@@ -34,11 +34,11 @@ public class BuildingRow {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -62,5 +62,25 @@ public class BuildingRow {
 
     public void setLongitude(BigDecimal longitude) {this.longitude = longitude;}
 
-    }
+    @Override
+    public boolean equals(Object obj) {
 
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
+            return false;
+
+        BuildingRow other = (BuildingRow)obj;
+        if( !(Long.valueOf( id ).equals( Long.valueOf( other.getId() ) )) )
+            return false;
+
+        return true;
+    }
+    public int hashCode(){
+        return (int)id;
+    }
+}

@@ -6,6 +6,7 @@ description VARCHAR(1000) COLLATE 'utf8_general_ci',
 PRIMARY KEY (id)
 );
 
+
 CREATE TABLE device (
 id BIGINT AUTO_INCREMENT,
 `name` VARCHAR(85) NOT NULL COLLATE 'utf8_bin' UNIQUE,
@@ -80,3 +81,11 @@ PRIMARY KEY (id),
 FOREIGN KEY FK_link_unit_building_unit (unit_id)	REFERENCES unit (id) ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY FK_link_unit_building_building (building_id) REFERENCES building(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+ALTER TABLE controller ADD(
+building_id BIGINT NOT NULL);
+
+ALTER TABLE controller ADD(
+ FOREIGN KEY FK_controller_building (building_id)
+ REFERENCES building (id)
+  ON DELETE CASCADE ON UPDATE CASCADE);

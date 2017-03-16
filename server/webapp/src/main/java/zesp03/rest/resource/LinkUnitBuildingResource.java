@@ -2,7 +2,7 @@ package zesp03.rest.resource;
 
 import zesp03.common.Database;
 import zesp03.data.row.LinkUnitBuildingRow;
-import zesp03.entity.Link_unit_building;
+import zesp03.entity.LinkUnitBuilding;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -27,7 +27,7 @@ public class LinkUnitBuildingResource {
             tran = em.getTransaction();
             tran.begin();
 
-            Link_unit_building lub = em.find(Link_unit_building.class, id);
+            LinkUnitBuilding lub = em.find(LinkUnitBuilding.class, id);
             if (lub != null)
                 result = new LinkUnitBuildingRow(lub);
 

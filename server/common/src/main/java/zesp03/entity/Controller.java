@@ -8,7 +8,15 @@ public class Controller {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "controller")
     @TableGenerator(name = "controller", pkColumnValue = "controller")
-    private Long id;
+    private long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "building_id",
+            foreignKey = @ForeignKey(name = "building_fk"),
+            nullable = false
+    )
+    private Building building;
 
     @Column(name = "\"name\"", unique = true, nullable = false, length = 85)
     private String name;
@@ -19,11 +27,11 @@ public class Controller {
     @Column(length = 1000)
     private String description;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -50,4 +58,8 @@ public class Controller {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Building getBuilding(){return building; }
+
+    public void setBuilding(Building building) {this.building = building;}
 }

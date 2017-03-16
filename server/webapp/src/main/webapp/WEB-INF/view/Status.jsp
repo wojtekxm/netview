@@ -185,6 +185,7 @@
         var all=0;
         var line = '';
 
+        $("#devices li").remove();
 
         for(var i = 0; i< devices.length; i++){
             var h = "/device?id=" + devices[i].id;
@@ -224,7 +225,7 @@
         document.getElementById('countOff').innerHTML='<span>&emsp;wyłączone: &nbsp;'+off+'&emsp;</span>';
         document.getElementById('countAll').innerHTML='<span>&emsp;wszystkie: &nbsp;'+all+'&emsp;</span>';
 
-        document.getElementById('devices').innerHTML = line;
+        $("#devices").html(line);
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
@@ -282,6 +283,7 @@
         var off=0;
         var all=0;
 
+        $("#devices li").remove();
 
         for(var i = 0; i< devices.length; i++){
             var h = "/device?id=" + devices[i].id;
@@ -324,7 +326,7 @@
         document.getElementById('countOff').innerHTML='<span>&emsp;wyłączone: &nbsp;'+off+'&emsp;</span>';
         document.getElementById('countAll').innerHTML='<span>&emsp;wszystkie: &nbsp;'+all+'&emsp;</span>';
 
-        document.getElementById('devices').innerHTML = line;
+        $("#devices").html(line);
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
@@ -356,6 +358,7 @@
         var off=0;
         var all=0;
 
+        $("#devices li").remove();
 
         for(var i = 0; i< devices.length; i++){
             var h = "/device?id=" + devices[i].id;
@@ -395,7 +398,7 @@
         document.getElementById('countOff').innerHTML='<span>&emsp;wyłączone: &nbsp;'+off+'&emsp;</span>';
         document.getElementById('countAll').innerHTML='<span>&emsp;wszystkie: &nbsp;'+all+'&emsp;</span>';
 
-        document.getElementById('devices').innerHTML = line;
+        $("#devices").html(line);
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
@@ -427,6 +430,7 @@
         var all=0;
         var line = '';
 
+        $("#devices li").remove();
 
         for(var i = 0; i< devices.length; i++){
             var h = "/device?id=" + devices[i].id;
@@ -466,7 +470,7 @@
         document.getElementById('countOff').innerHTML='<span>&emsp;wyłączone: &nbsp;'+off+'&emsp;</span>';
         document.getElementById('countAll').innerHTML='<span>&emsp;wszystkie: &nbsp;'+all+'&emsp;</span>';
 
-        document.getElementById('devices').innerHTML = line;
+        $("#devices").html(line);
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();

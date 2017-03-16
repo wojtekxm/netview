@@ -2,6 +2,7 @@ package zesp03.service;
 
 import zesp03.common.Database;
 import zesp03.data.DeviceNow;
+import zesp03.entity.DeviceSurvey;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -90,11 +91,17 @@ public class DeviceService {
         d.setDescription( (String)row[2] );
         d.setKnown( (Boolean)row[3] );
         d.setControllerId( getLongOrNull(row[4]) );
-        d.setSurveyId( getLongOrNull(row[5]) );
-        d.setSurveyTime( getIntegerOrNull(row[6]) );
-        d.setSurveyEnabled( (Boolean)row[7] );
-        d.setSurveyClients( getIntegerOrNull(row[8]) );
-        d.setSurveyCumulative( getLongOrNull(row[9]) );
+        final Long sid = getLongOrNull(row[5]);
+        if(sid != null) {
+            final DeviceSurvey s = new DeviceSurvey();
+            s.setId( sid );
+            s.setTimestamp( getIntegerOrNull(row[6]) );
+            s.setEnabled( (Boolean)row[7] );
+            s.setClientsSum( getIntegerOrNull(row[8]) );
+            s.setCumulative( getLongOrNull(row[9]) );
+            d.setSurvey(s);
+        }
+        d.setSurvey(null);
         return d;
     }
 

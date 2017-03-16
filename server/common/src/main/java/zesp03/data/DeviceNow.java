@@ -1,16 +1,14 @@
 package zesp03.data;
 
+import zesp03.entity.DeviceSurvey;
+
 public class DeviceNow {
     private Long id;
     private String name;
     private Boolean known;
     private String description;
     private Long controllerId;
-    private Long surveyId;
-    private Integer surveyTime;
-    private Boolean surveyEnabled;
-    private Integer surveyClients;
-    private Long surveyCumulative;
+    private DeviceSurvey survey;
 
     public Long getId() {
         return id;
@@ -52,43 +50,12 @@ public class DeviceNow {
         this.controllerId = controllerId;
     }
 
-    public Long getSurveyId() {
-        return surveyId;
+    // może być null
+    public DeviceSurvey getSurvey() {
+        return survey;
     }
 
-    public void setSurveyId(Long surveyId) {
-        this.surveyId = surveyId;
-    }
-
-    public Integer getSurveyTime() {
-        return surveyTime;
-    }
-
-    public void setSurveyTime(Integer surveyTime) {
-        this.surveyTime = surveyTime;
-    }
-
-    public Boolean isSurveyEnabled() {
-        return surveyEnabled;
-    }
-
-    public void setSurveyEnabled(Boolean surveyEnabled) {
-        this.surveyEnabled = surveyEnabled;
-    }
-
-    public Integer getSurveyClients() {
-        return surveyClients;
-    }
-
-    public void setSurveyClients(Integer surveyClients) {
-        this.surveyClients = surveyClients;
-    }
-
-    public Long getSurveyCumulative() {
-        return surveyCumulative;
-    }
-
-    public void setSurveyCumulative(Long surveyCumulative) {
-        this.surveyCumulative = surveyCumulative;
+    public void setSurvey(DeviceSurvey survey) {
+        this.survey = survey;
     }
 }

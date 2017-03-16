@@ -251,12 +251,13 @@ public class App {
                 sur.setClientsSum(info.getClientsSum());
                 sur.setDevice(device);
                 final DeviceNow before = devid2now.get(device.getId());
-                if(before == null) {
+                if(before == null || before.getSurvey() == null) {
                     sur.setCumulative(0L);
                 }
                 else {
-                    sur.setCumulative( before.getSurveyCumulative() + before.getSurveyClients() *
-                            ( sur.getTimestamp() - before.getSurveyTime() ) );
+                    DeviceSurvey z = before.getSurvey();
+                    sur.setCumulative( z.getCumulative() + z.getClientsSum() *
+                            ( sur.getTimestamp() - z.getTimestamp() ) );
                 }
                 ds2persist.add(sur);
             }

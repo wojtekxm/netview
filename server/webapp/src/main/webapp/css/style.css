@@ -257,8 +257,9 @@ ul li ul li.greenDiode1
     float:left;
     color:rgba(1,1,1,1);
     text-decoration-style: solid;
+    list-style-type: none;
     /*background-color: #00e320;*/
-    background-color: #83dc00;
+    background-color: #65dc14;
     border-radius:3px;
     transition:  0.5s;
 
@@ -266,7 +267,7 @@ ul li ul li.greenDiode1
 ul li ul li.greenDiode1:hover
 {
     cursor: pointer;
-    background-color: #00ff29;
+    background-color: #71ee14;
     transform: scale(1.7, 1.7);
     -moz-transform: scale(1.7, 1.7);
     -ms-transform: scale(1.7, 1.7);
@@ -289,8 +290,8 @@ ul li ul li.greenDiode2
     float:left;
     color:rgba(1,1,1,1);
     text-decoration-style: solid;
-    /*background-color: #00b91d;*/
-    background-color: #51b824;
+    list-style-type: none;
+    background-color: #4eb02f;
     border-radius:3px;
     transition:  0.5s;
 
@@ -298,7 +299,7 @@ ul li ul li.greenDiode2
 ul li ul li.greenDiode2:hover
 {
     cursor: pointer;
-    background-color: #00f628;
+    background-color: #6ed237;
     transform: scale(1.7, 1.7);
     -moz-transform: scale(1.7, 1.7);
     -ms-transform: scale(1.7, 1.7);
@@ -320,7 +321,8 @@ ul li ul li.greenDiode3
     float:left;
     color:rgba(1,1,1,1);
     text-decoration-style: solid;
-    background-color: #008a1c;
+    list-style-type: none;
+    background-color: #00a625;
     border-radius:3px;
     transition:  0.5s;
 
@@ -328,7 +330,7 @@ ul li ul li.greenDiode3
 ul li ul li.greenDiode3:hover
 {
     cursor: pointer;
-    background-color: #00d027;
+    background-color: #00cf18;
     transform: scale(1.7, 1.7);
     -moz-transform: scale(1.7, 1.7);
     -ms-transform: scale(1.7, 1.7);
@@ -351,7 +353,8 @@ ul li ul li.greenDiode4
     float:left;
     color:rgba(1,1,1,1);
     text-decoration-style: solid;
-    background-color: #00671b;
+    list-style-type: none;
+    background-color: #007e1b;
     border-radius:3px;
     transition:  0.5s;
 
@@ -359,7 +362,7 @@ ul li ul li.greenDiode4
 ul li ul li.greenDiode4:hover
 {
     cursor: pointer;
-    background-color: #00ab26;
+    background-color: #009b1f;
     transform: scale(1.7, 1.7);
     -moz-transform: scale(1.7, 1.7);
     -ms-transform: scale(1.7, 1.7);
@@ -384,6 +387,7 @@ ul li ul li.redDiode
     float:left;
     color:rgba(1,1,1,1);
     text-decoration-style: solid;
+    list-style-type: none;
     background-color:#d10000;
     border-radius:3px;
     transition: 0.5s;
@@ -415,6 +419,7 @@ ul li ul li.greyDiode
     float:left;
     color:rgba(1,1,1,1);
     text-decoration-style: solid;
+    list-style-type: none;
     background-color:#666666;
     border-radius:3px;
     transition: 0.5s;
@@ -470,25 +475,10 @@ ul li#wydzial
     right:0;
     z-index: 1000;
 }
-.nav-pills {
-    display: flex;
-    justify-content: center;
-}
-
-
-.summary
-{
-    color:black;font-size:20px;width:100%;padding: 8px;display: table;margin-right: auto;margin-left: auto;background-color: white;
-}
-
-.nav.nav-pills li a {
-    color: black;
-}
-.nav-pills>li.active>a,.nav-pills>li.active>a:hover{
-    background-color: #e2e2e2;
-}
 
 #data
 {
     color:black;font-size:15px;borderdisplay: inline;border-bottom: 1px solid #e0e0e0;padding-bottom: 7px;
 }
+
+

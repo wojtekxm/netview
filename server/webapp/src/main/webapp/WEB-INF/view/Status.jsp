@@ -260,6 +260,8 @@
 </script>
 
 <script>
+    var interGreen;
+
     function onlyGreen()
     {
         $.ajax({

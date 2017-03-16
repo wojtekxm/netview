@@ -101,7 +101,7 @@ public class DeviceService {
             s.setCumulative( getLongOrNull(row[9]) );
             d.setSurvey(s);
         }
-        d.setSurvey(null);
+        else d.setSurvey(null);
         return d;
     }
 

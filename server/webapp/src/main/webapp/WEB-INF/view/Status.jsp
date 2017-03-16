@@ -137,13 +137,13 @@
             </div>
             <div class="panel-body">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                    <div class="btn-group" role="group" onclick="onlyGreen()">
+                    <div class="btn-group" role="group" onclick="onlyGreen();interGreen = setInterval('onlyGreen()', 10000);">
                         <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="greenDiode"></div><span id="countActive">&emsp;aktywne: &nbsp;<%= sumActive %>&emsp;</span></div></button>
                     </div>
-                    <div class="btn-group" role="group" onclick="onlyRed()">
+                    <div class="btn-group" role="group" onclick="onlyRed();interRed = setInterval('onlyRed()', 10000);">
                         <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="redDiode"></div><span id="countInactive">&emsp;nieaktywne: &nbsp;<%= sumInactive %>&emsp;</span></div></button>
                     </div>
-                    <div class="btn-group" role="group" onclick="onlyGrey()">
+                    <div class="btn-group" role="group" onclick="onlyGrey();interGrey = setInterval('onlyGrey()', 10000);">
                         <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div><span id="countOff">&emsp;wyłączone: &nbsp;<%= sumDisabled %>&emsp;</span></div></button>
                     </div>
                     <div class="btn-group" role="group" onclick="allDevices();inter = setInterval('allDevices()', 10000);">
@@ -179,6 +179,9 @@
     }
 
     function e(){
+        clearInterval(interGreen);
+        clearInterval(interRed);
+        clearInterval(interGrey);
         var active=0;
         var inactive=0;
         var off=0;
@@ -230,6 +233,7 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
+        loadDate();
     };
 
     allDevices();
@@ -254,9 +258,6 @@
             }
         });
     }
-
-    loadDate();
-    setInterval('loadDate()', 10000);
 </script>
 
 <script>
@@ -279,6 +280,8 @@
 
     function green(){
         clearInterval(inter);
+        clearInterval(interRed);
+        clearInterval(interGrey);
         var line = '';
         var active=0;
         var inactive=0;
@@ -333,10 +336,13 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
+        loadDate();
     };
 </script>
 
 <script>
+    var interRed;
+
     function onlyRed()
     {
         $.ajax({
@@ -353,6 +359,8 @@
 
 
     function red(){
+        clearInterval(interGreen);
+        clearInterval(interGrey);
         clearInterval(inter);
         var line = '';
         var active=0;
@@ -405,10 +413,13 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
+        loadDate();
     };
 </script>
 
 <script>
+    var interGrey;
+
     function onlyGrey()
     {
         $.ajax({
@@ -426,6 +437,8 @@
 
     function grey(){
         clearInterval(inter);
+        clearInterval(interGreen);
+        clearInterval(interRed);
         var active=0;
         var inactive=0;
         var off=0;
@@ -477,6 +490,7 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         })
+        loadDate();
     };
 </script>
 

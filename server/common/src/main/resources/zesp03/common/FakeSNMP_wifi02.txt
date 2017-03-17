@@ -19,7 +19,7 @@ FIZ-136_P384
 FIZ-137_P563
 FIZ-138_wahadlo
 FIZ-139_S26
-FIZ-140_P505
+<script>alert("JSP PROBLEM - urządzenie W2")</script>
 SZT-S4-85
 SZT-S6-86
 BA-204_KA24

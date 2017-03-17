@@ -1,72 +1,70 @@
-
-
-
-INSERT INTO `building` VALUES
-(1,'0600','Wydział Chemii',53.019200,18.569600),
-(2,'0700','Wydział Filologiczny (Collegium Maius)',53.011600,18.601100),
-(3,'0801','Wydział Fizyki, Astronomii i Informatyki Stosowanej - Instytut Fizyki',53.017100,18.603000),
-(4,'0802','Wydział Fizyki, Astronomii i Informatyki Stosowanej - Piwnice CA',53.094800,18.560400),
-(5,'0802-CAMK','Rabiańska (CAMK)',53.008600,18.605100),
-(6,'0806','Wydział Fizyki, Astronomii i Informatyki Stosowanej - Studium Politechniczne',53.016900,18.557500),
-(7,'0900','Wydział Humanistyczny (Collegium Minus)',53.010700,18.600600),
-(8,'0904','Wydział Humanistyczny - Katedra Logiki',53.012490,18.593530),
-(9,'1000','Wydział Matematyki i Informatyki',53.010000,18.594200),
-(10,'1100','Wydział Nauk Ekonomicznych i Zarządzania (Collegium Jana Pawła II)',53.021300,18.570600),
-(11,'1201','Wydział Nauk Historycznych - Instytut Archeologii',53.016300,18.556200),
-(12,'1209','Wydział Nauk Historycznych - Katedra Etnologii',53.016300,18.556200),
-(13,'1300','Wydział Prawa i Administracji',53.022800,18.570000),
-(14,'1401-KR','Wydział Sztuk Pięknych - Instytut Artystyczny (Krasińskiego 73/75)',53.010671,18.580584),
-(15,'1401-MCK','Wydział Sztuk Pięknych - Instytut Artystyczny (Mickiewicza 121)',53.011600,18.570200),
-(16,'1401-SK30','Wydział Sztuk Pięknych - Instytut Artystyczny (Sienkiewicza 30/32)',53.014200,18.581100),
-(17,'1401-SK4','Wydział Sztuk Pięknych - Instytut Artystyczny (Sienkiewicza 4)',53.010148,18.580477),
-(18,'1401-SK6','Wydział Sztuk Pięknych - Instytut Artystyczny (Sienkiewicza 6)',53.010264,18.580445),
-(19,'1402','Wydział Sztuk Pięknych - Instytut Zabytkoznawstwa i Konserwatorstwa (Sienkiewicza 30/32)',53.014200,18.581100),
-(20,'1402-SZB','Wydział Sztuk Pięknych - Instytut Zabytkoznawstwa i Konserwatorstwa (Szosa Bydgoska 50/56)',53.015145,18.556938),
-(21,'1500','Wydział Teologiczny',53.018900,18.579700),
-(22,'1900-1','Wydział Nauk Pedagogicznych (Lwowska 1)',53.021300,18.568500),
-(23,'1900-2','Wydział Nauk Pedagogicznych (Gagarina 13a)',53.020800,18.571400),
-(24,'2000','Wydział Politologii i Studiów Międzynarodowych',53.025700,18.620400),
-(25,'2100-2200','Wydziały: Biologii i Ochrony Środowiska, Nauk o Ziemi',53.021300,18.568500),
-(26,'3100','Zamiejscowy Ośrodek Dydaktyczny w Grudziądzu',0.000000,0.000000),
-(27,'3200','Biblioteka Uniwersytecka',53.020334,18.571164),
-(28,'4100','Studium Praktycznej Nauki Języków Obcych',53.018400,18.570700),
-(29,'4300','Ośrodek Alliance Française przy UMK',53.009464,18.603866),
-(30,'4600','Studium Wychowania Fizycznego i Sportu CM',53.132800,18.008800),
-(31,'5700','Uniwersyteckie Centrum Sportowe',53.022390,18.582610),
-(32,'5700-GAG','Uniwersyteckie Centrum Sportowe (Gagarina 35)',53.018600,18.578600),
-(33,'APL','Akademicka Przychodnia Lekarska',53.020100,18.579200),
-(34,'Aula','Aula UMK',53.018391,18.572559),
-(35,'BYD-CKN','Centrum Kształcenia Niewidomych, Bydgoszcz',53.130200,18.035900),
-(36,'BYD-CS_SPIDER','Centrum Wspinaczkowe \"Spider\", Bydgoszcz',53.135205,18.004960),
-(37,'BYD-CWZS','Cywilno Wojskowy Związek Sportowy Zawisza, Bydgoszcz',53.144600,18.022100),
-(38,'BYD-CWZS-BASEN','Astoria, Cywilno Wojskowy Związek Sportowy Zawisza, Bydgoszcz',53.130731,17.993050),
-(39,'BYD-ORK','Ośrodek Rekreacji Konnej - Myślęcinek, Bydgoszcz',53.166600,18.042500),
-(40,'BYD_PSP','Państwowa Straż Pożarna, Bydgoszcz',0.000000,0.000000),
-(41,'BYD_UKW-OS','Obiekty sportowe UKW, Bydgoszcz',53.125700,18.023900),
-(42,'BYD_ZS_15','Zespół Szkół nr 15, Bydgoszcz',0.000000,0.000000),
-(43,'CM_BUD_A','Collegium Medicum - Budynek A - Jagiellońska 13, Bydgoszcz',53.124632,18.007933),
-(44,'CM_BUD_F','Collegium Medicum - Budynek F - Jagiellońska 13, Bydgoszcz',53.124033,18.007858),
-(45,'CM_DS-3','Dom Studencki nr 3 (Collegium Medicum), Bydgoszcz',53.129381,18.034800),
-(46,'COLL_HUM','Collegium Humanisticum',53.022780,18.569158),
-(47,'DS-10','Dom Studencki nr 10',53.018882,18.576765),
-(48,'DS-11','Dom Studencki nr 11',53.019056,18.577655),
-(49,'GiLA','Gimnazjum i Liceum Akademickie',53.023031,18.592794),
-(50,'HOTEL-UMK','Hotel Uniwersytecki',53.023031,18.592794),
-(51,'REKTORAT','Rektorat UMK',53.018514,18.571014),
-(52,'TOR_CSW','Centrum Sztuki Współczesnej \"Znaki Czasu\"',53.011924,18.600765),
-(53,'TOR-CWsp','Centrum Wspinaczkowe \"Gato\"',53.018600,18.591300),
-(54,'TOR-GRAB','Klub Jeździecki Młyńska Struga - Grabowiec',52.965600,18.736100),
-(55,'TOR_LOD','Lodowisko MENTOR',53.019000,18.591700),
-(56,'TOR_MOSIR-HSO','MOSIR: Hala sportowa Olimpijczyk',53.013099,18.576261),
-(57,'TOR_MOWT-RATUSZ','Muzeum Okręgowe w Toruniu - Ratusz',53.010355,18.604542),
-(58,'TOR_NKJO','Nauczycielskie Kolegium Języków Obcych',53.016519,18.580617),
-(59,'TOR_PW','Przystań Sportów Wodnych',53.007300,18.595400),
-(60,'TOR_SP_32','Szkoła Podstawowa Nr 32',53.026100,18.695200),
-(61,'TOR_SP_33','Szkoła Podstawowa Nr 33 im. Toruńskiej Szkoły Terapeutycznej',53.020590,18.688130),
-(62,'TOR-STan','Studio Tańca \"Fantom\"',53.012400,18.581600),
-(63,'TOR-ZSO2','Zespół Szkół Ogólnokształcących nr 2',53.026700,18.691600),
-(64,'TOR-ZSS','Zespół Szkół Samochodowych',53.021800,18.588300),
-(65,'UCNTN','Uniwersyteckie Centrum Nowoczesnych Technologii Nauczania',53.018400,18.575300);
+INSERT INTO `building` (code, name, latitude, longitude) VALUES
+('0600','Wydział Chemii',53.019200,18.569600),
+('0700','Wydział Filologiczny (Collegium Maius)',53.011600,18.601100),
+('0801','Wydział Fizyki, Astronomii i Informatyki Stosowanej - Instytut Fizyki',53.017100,18.603000),
+('0802','Wydział Fizyki, Astronomii i Informatyki Stosowanej - Piwnice CA',53.094800,18.560400),
+('0802-CAMK','Rabiańska (CAMK)',53.008600,18.605100),
+('0806','Wydział Fizyki, Astronomii i Informatyki Stosowanej - Studium Politechniczne',53.016900,18.557500),
+('0900','Wydział Humanistyczny (Collegium Minus)',53.010700,18.600600),
+('0904','Wydział Humanistyczny - Katedra Logiki',53.012490,18.593530),
+('1000','Wydział Matematyki i Informatyki',53.010000,18.594200),
+('1100','Wydział Nauk Ekonomicznych i Zarządzania (Collegium Jana Pawła II)',53.021300,18.570600),
+('1201','Wydział Nauk Historycznych - Instytut Archeologii',53.016300,18.556200),
+('1209','Wydział Nauk Historycznych - Katedra Etnologii',53.016300,18.556200),
+('1300','Wydział Prawa i Administracji',53.022800,18.570000),
+('1401-KR','Wydział Sztuk Pięknych - Instytut Artystyczny (Krasińskiego 73/75)',53.010671,18.580584),
+('1401-MCK','Wydział Sztuk Pięknych - Instytut Artystyczny (Mickiewicza 121)',53.011600,18.570200),
+('1401-SK30','Wydział Sztuk Pięknych - Instytut Artystyczny (Sienkiewicza 30/32)',53.014200,18.581100),
+('1401-SK4','Wydział Sztuk Pięknych - Instytut Artystyczny (Sienkiewicza 4)',53.010148,18.580477),
+('1401-SK6','Wydział Sztuk Pięknych - Instytut Artystyczny (Sienkiewicza 6)',53.010264,18.580445),
+('1402','Wydział Sztuk Pięknych - Instytut Zabytkoznawstwa i Konserwatorstwa (Sienkiewicza 30/32)',53.014200,18.581100),
+('1402-SZB','Wydział Sztuk Pięknych - Instytut Zabytkoznawstwa i Konserwatorstwa (Szosa Bydgoska 50/56)',53.015145,18.556938),
+('1500','Wydział Teologiczny',53.018900,18.579700),
+('1900-1','Wydział Nauk Pedagogicznych (Lwowska 1)',53.021300,18.568500),
+('1900-2','Wydział Nauk Pedagogicznych (Gagarina 13a)',53.020800,18.571400),
+('2000','Wydział Politologii i Studiów Międzynarodowych',53.025700,18.620400),
+('2100-2200','Wydziały: Biologii i Ochrony Środowiska, Nauk o Ziemi',53.021300,18.568500),
+('3100','Zamiejscowy Ośrodek Dydaktyczny w Grudziądzu',0.000000,0.000000),
+('3200','Biblioteka Uniwersytecka',53.020334,18.571164),
+('4100','Studium Praktycznej Nauki Języków Obcych',53.018400,18.570700),
+('4300','Ośrodek Alliance Française przy UMK',53.009464,18.603866),
+('4600','Studium Wychowania Fizycznego i Sportu CM',53.132800,18.008800),
+('5700','Uniwersyteckie Centrum Sportowe',53.022390,18.582610),
+('5700-GAG','Uniwersyteckie Centrum Sportowe (Gagarina 35)',53.018600,18.578600),
+('APL','Akademicka Przychodnia Lekarska',53.020100,18.579200),
+('Aula','Aula UMK',53.018391,18.572559),
+('BYD-CKN','Centrum Kształcenia Niewidomych, Bydgoszcz',53.130200,18.035900),
+('BYD-CS_SPIDER','Centrum Wspinaczkowe \"Spider\", Bydgoszcz',53.135205,18.004960),
+('BYD-CWZS','Cywilno Wojskowy Związek Sportowy Zawisza, Bydgoszcz',53.144600,18.022100),
+('BYD-CWZS-BASEN','Astoria, Cywilno Wojskowy Związek Sportowy Zawisza, Bydgoszcz',53.130731,17.993050),
+('BYD-ORK','Ośrodek Rekreacji Konnej - Myślęcinek, Bydgoszcz',53.166600,18.042500),
+('BYD_PSP','Państwowa Straż Pożarna, Bydgoszcz',0.000000,0.000000),
+('BYD_UKW-OS','Obiekty sportowe UKW, Bydgoszcz',53.125700,18.023900),
+('BYD_ZS_15','Zespół Szkół nr 15, Bydgoszcz',0.000000,0.000000),
+('CM_BUD_A','Collegium Medicum - Budynek A - Jagiellońska 13, Bydgoszcz',53.124632,18.007933),
+('CM_BUD_F','Collegium Medicum - Budynek F - Jagiellońska 13, Bydgoszcz',53.124033,18.007858),
+('CM_DS-3','Dom Studencki nr 3 (Collegium Medicum), Bydgoszcz',53.129381,18.034800),
+('COLL_HUM','Collegium Humanisticum',53.022780,18.569158),
+('DS-10','Dom Studencki nr 10',53.018882,18.576765),
+('DS-11','Dom Studencki nr 11',53.019056,18.577655),
+('GiLA','Gimnazjum i Liceum Akademickie',53.023031,18.592794),
+('HOTEL-UMK','Hotel Uniwersytecki',53.023031,18.592794),
+('REKTORAT','Rektorat UMK',53.018514,18.571014),
+('TOR_CSW','Centrum Sztuki Współczesnej \"Znaki Czasu\"',53.011924,18.600765),
+('TOR-CWsp','Centrum Wspinaczkowe \"Gato\"',53.018600,18.591300),
+('TOR-GRAB','Klub Jeździecki Młyńska Struga - Grabowiec',52.965600,18.736100),
+('TOR_LOD','Lodowisko MENTOR',53.019000,18.591700),
+('TOR_MOSIR-HSO','MOSIR: Hala sportowa Olimpijczyk',53.013099,18.576261),
+('TOR_MOWT-RATUSZ','Muzeum Okręgowe w Toruniu - Ratusz',53.010355,18.604542),
+('TOR_NKJO','Nauczycielskie Kolegium Języków Obcych',53.016519,18.580617),
+('TOR_PW','Przystań Sportów Wodnych',53.007300,18.595400),
+('TOR_SP_32','Szkoła Podstawowa Nr 32',53.026100,18.695200),
+('TOR_SP_33','Szkoła Podstawowa Nr 33 im. Toruńskiej Szkoły Terapeutycznej',53.020590,18.688130),
+('TOR-STan','Studio Tańca \"Fantom\"',53.012400,18.581600),
+('TOR-ZSO2','Zespół Szkół Ogólnokształcących nr 2',53.026700,18.691600),
+('TOR-ZSS','Zespół Szkół Samochodowych',53.021800,18.588300),
+('UCNTN','Uniwersyteckie Centrum Nowoczesnych Technologii Nauczania',53.018400,18.575300),
+('TEST-JSP', '<script>alert("JSP PROBLEM - Testowa jednostka")</script>', 12, 34);
 
 
 INSERT INTO unit (code,description) VALUES
@@ -104,7 +102,8 @@ INSERT INTO unit (code,description) VALUES
 ('5700000000', 'Uniwersyteckie Centrum Sportowe'),
 ('9000000000', 'ADMINISTRACJA UNIWERSYTETU'),
 ('9001410000', 'Biuro Zawodowej Promocji Studentów i Absolwentów UMK'),
-('9002290000', 'Dział Dydaktyki CM');
+('9002290000', 'Dział Dydaktyki CM'),
+('TEST-JSP',   '<script>alert("JSP PROBLEM - Testowy budynek")</script>');
 
 INSERT INTO link_unit_building (unit_id, building_id) VALUES
 ( (SELECT id FROM unit WHERE code = '0000000000'), (SELECT id FROM building WHERE code = 'GiLA') ),
@@ -182,23 +181,24 @@ INSERT INTO link_unit_building (unit_id, building_id) VALUES
 ( (SELECT id FROM unit WHERE code ='9001410000'), (SELECT id FROM building WHERE code = 'DS-11') ),
 ( (SELECT id FROM unit WHERE code ='9002290000'), (SELECT id FROM building WHERE code = 'CM_DS-3') );
 
-INSERT INTO controller (`name`, ipv4, building_id) VALUES
-('WiFi-2', '102.102.102.102', 1),
-('WiFi-3', '103.103.103.103', 2),
-('WiFi-5', '105.105.105.105', 1),
-('WiFi-6', '106.106.106.106', 3),
-('WiFi-7', '107.107.107.107', 5),
-('WiFi-10', '110.110.110.110', 7),
-('WiFi-11', '111.111.111.111', 8),
-('WiFi-99', '199.199.199.199', 7);
+INSERT INTO controller (`name`, ipv4, description, building_id) VALUES
+('WiFi-2',  '102.102.102.102', 'wifi #2', 1),
+('WiFi-3',  '103.103.103.103', NULL, 2),
+('WiFi-5',  '105.105.105.105', NULL, 1),
+('WiFi-6',  '106.106.106.106', NULL, 3),
+('WiFi-7',  '107.107.107.107', '<script>alert("JSP PROBLEM - kontroler")</script>', 5),
+('WiFi-10', '110.110.110.110', '', 7),
+('WiFi-11', '111.111.111.111', '', 8),
+('Wi<script>9',  '199.199.199.199', '', 7);
+
+INSERT INTO `user` (name, secret, is_activated, is_blocked, role) VALUES
+('<script>alert("JSP PROBLEM - Testowy użytkownik")</script>', NULL, TRUE, TRUE, 'NORMAL');
 
 DELETE FROM hibernate_sequences;
 
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
-  ( "controller", ( SELECT MAX(id)+1000 FROM controller ) );
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
-  ( "building", ( SELECT MAX(id)+1000 FROM building ) );
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
-  ( "unit", ( SELECT MAX(id)+1000 FROM unit ) );
-INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
-  ( "link_unit_building", ( SELECT MAX(id)+1000 FROM link_unit_building ) );
+( "controller", ( SELECT MAX(id)+1000 FROM controller ) ),
+( "building", ( SELECT MAX(id)+1000 FROM building ) ),
+( "unit", ( SELECT MAX(id)+1000 FROM unit ) ),
+( "link_unit_building", ( SELECT MAX(id)+1000 FROM link_unit_building ) ),
+( "user", ( SELECT MAX(id)+1000 FROM user ) );

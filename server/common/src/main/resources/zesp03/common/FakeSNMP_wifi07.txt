@@ -25,7 +25,7 @@ HUM-168_P218
 EK-115_AulaVII
 HUM-190_P208
 EK-116_P8A
-HUM-169_P113
+<script>alert("JSP PROBLEM - urządzenie W7")</script>
 EK-40_RW2B
 EK-41_K126
 EK-42_KMM

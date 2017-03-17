@@ -9,7 +9,7 @@ ICNT-155_KB109
 ICNT-156_KB122
 CS-177_H002
 CS-178_G004
-CS-179_G105
+<script>alert("JSP PROBLEM - urządzenie W6")</script>
 CS-180_trybuny
 CS-181_hala
 CS-182_H104

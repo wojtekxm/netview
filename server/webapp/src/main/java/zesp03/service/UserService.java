@@ -1,8 +1,12 @@
 package zesp03.service;
 
-import zesp03.common.*;
+import zesp03.common.App;
+import zesp03.common.Database;
 import zesp03.entity.User;
 import zesp03.entity.UserRole;
+import zesp03.exception.AccessException;
+import zesp03.exception.NotFoundException;
+import zesp03.exception.ValidationException;
 import zesp03.util.Secret;
 
 import javax.persistence.EntityManager;
@@ -10,10 +14,9 @@ import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class UserService {
-    public long makeRoot(String userName)
-            throws ApiException {
+    public long makeRoot(String userName) {
         if( ! App.isValidUserName(userName) ) {
-            throw new RejectedValueException("username", "invalid root username");
+            throw new ValidationException("username", "invalid root username");
         }
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -53,10 +56,9 @@ public class UserService {
         }
     }
 
-    public void setPassword(long userId, String password)
-            throws ApiException {
+    public void setPassword(long userId, String password) {
         if(password == null || password.isEmpty())
-            throw new RejectedValueException("password", "blank password");
+            throw new ValidationException("password", "blank password");
         String hash = App.passwordToHash(password);
         Secret s = Secret.create(hash.toCharArray(), 1);
 
@@ -69,7 +71,7 @@ public class UserService {
 
             User u = em.find(User.class, userId);
             if(u == null)
-                throw new zesp03.common.NotFoundException("no such user");
+                throw new NotFoundException("no such user");
             u.setSecret(s.getData());
             em.merge(u);
 
@@ -88,18 +90,13 @@ public class UserService {
      * @param desired nowe hasło
      * @param repeat powtórzenie nowego hasła
      * @return Passtoken dla nowego hasła jeśli uda się zmienić hasło (jak się nie uda to wyrzuca wyjątek).
-     * @throws RejectedValueException nowe hasło nie może zostać zaakceptowane,
-     * albo <code>repeat</code> nie pasuje do <code>desired</code>.
-     * @throws NotFoundException użytkownik o takim id nie istnieje
-     * @throws AuthenticationException stare hasło się nie zgadza
      */
     public String changePassword(
-            long userId, String old, String desired, String repeat)
-            throws RejectedValueException, NotFoundException, AuthenticationException {
+            long userId, String old, String desired, String repeat) {
         if( ! App.isValidPassword(desired) )
-            throw new RejectedValueException("desired", "blank password");
+            throw new ValidationException("desired", "blank password");
         if( ! desired.equals(repeat) )
-            throw new RejectedValueException("repeat", "passwords do not match");
+            throw new ValidationException("repeat", "passwords do not match");
 
         String oldHash = App.passwordToHash(old);
         String desiredHash = App.passwordToHash(desired);
@@ -114,11 +111,11 @@ public class UserService {
 
             User u = em.find(User.class, userId);
             if(u == null)
-                throw new zesp03.common.NotFoundException("no such user");
+                throw new NotFoundException("no such user");
             if( u.getSecret() == null )
-                throw new AuthenticationException("failed to confirm password, because user don't have one");
+                throw new AccessException("failed to confirm password, because user don't have one");
             if( ! Secret.check( u.getSecret(), oldHash )  )
-                throw new AuthenticationException("invalid old password");
+                throw new AccessException("invalid old password");
             u.setSecret( desiredSecret.getData() );
             em.merge( u );
 

@@ -157,10 +157,8 @@ public class App {
 
         for (Long id : list) {
             try {
-                r.setUpdatedDevices(
-                        r.getUpdatedDevices() + examineOne(id).getUpdatedDevices()
-                );
-            } catch (RuntimeException | SNMPException exc) {
+                r.setUpdatedDevices( r.getUpdatedDevices() + examineOne(id).getUpdatedDevices() );
+            } catch (RuntimeException exc) {
                 log.error("failed to examine controller", exc);
             }
         }
@@ -176,8 +174,7 @@ public class App {
      * @param controllerId id kontrolera
      * @return liczba zaktualizowanych urządzeń (liczba nowych zapisanych badań)
      */
-    public static ExamineResult examineOne(long controllerId)
-            throws SNMPException {
+    public static ExamineResult examineOne(long controllerId) {
         final Instant start = Instant.now();
         final int timestamp = (int) start.getEpochSecond();
         String ipv4;

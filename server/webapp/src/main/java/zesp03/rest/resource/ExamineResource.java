@@ -1,9 +1,9 @@
 package zesp03.rest.resource;
 
 import zesp03.common.App;
-import zesp03.common.SNMPException;
 import zesp03.data.ExamineResult;
 import zesp03.dto.ExamineResultDto;
+import zesp03.exception.SNMPException;
 
 import javax.ws.rs.*;
 

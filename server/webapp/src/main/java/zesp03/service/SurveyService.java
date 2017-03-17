@@ -3,12 +3,12 @@ package zesp03.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zesp03.common.Database;
-import zesp03.common.NotFoundException;
 import zesp03.dto.AverageSurveyDto;
 import zesp03.dto.MinmaxSurveyDto;
 import zesp03.dto.OriginalSurveyDto;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
+import zesp03.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -28,8 +28,7 @@ public class SurveyService {
      * @param start  timestamp w sekundach, dolny limit (włącznie) czasu badań
      * @param end    timestamp w sekundach, górny limit (wyłącznie) czasu badań
      */
-    public List<OriginalSurveyDto> getOriginalSurveys(long deviceId, int start, int end)
-            throws NotFoundException {
+    public List<OriginalSurveyDto> getOriginalSurveys(long deviceId, int start, int end) {
         List<OriginalSurveyDto> result;
 
         EntityManager em = null;

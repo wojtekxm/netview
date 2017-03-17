@@ -1,6 +1,7 @@
 package zesp03.common;
 
 import zesp03.data.SurveyInfo;
+import zesp03.exception.SNMPException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

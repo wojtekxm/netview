@@ -3,9 +3,12 @@ package zesp03.rest.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zesp03.dto.ChangePasswordResultDto;
+import zesp03.exception.AccessException;
+import zesp03.exception.ValidationException;
 import zesp03.service.UserService;
 
 import javax.ws.rs.*;
+
 
 //TODO aktualizacja ciasteczek po zmianie hasła
 @Path("change-password")
@@ -28,17 +31,17 @@ public class ChangePasswordResource {
             result.setPassToken(passtoken);
             return result;
         }
-        catch(zesp03.common.NotFoundException exc) {
+        catch(zesp03.exception.NotFoundException exc) {
             throw new NotFoundException();
         }
-        catch(zesp03.common.AuthenticationException exc) {
+        catch(AccessException exc) {
             ChangePasswordResultDto result = new ChangePasswordResultDto();
             result.setReason(ChangePasswordResultDto.ErrorReason.INVALID_OLD_PASSWORD);
             result.setSuccess(false);
             result.setPassToken(null);
             return result;
         }
-        catch(zesp03.common.RejectedValueException exc) {
+        catch(ValidationException exc) {
             ChangePasswordResultDto result = new ChangePasswordResultDto();
             if( exc.getField().equals("desired") )
                 result.setReason(ChangePasswordResultDto.ErrorReason.REJECTED_NEW_PASSWORD);

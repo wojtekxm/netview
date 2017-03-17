@@ -17,8 +17,6 @@ public interface SNMPHandler {
      *
      * @param controllerIP adres IP kontrolera
      * @return lista zawierająca informacje o wszystkich zarządzanych urządzeniach
-     * @throws SNMPException nie udało się połączyć z kontrolerem o wskazanym IP,
-     *                       lub z innych powodów nie udało się zrealizować zapytania SNMP
      */
-    List<SurveyInfo> queryDevices(String controllerIP) throws SNMPException;
+    List<SurveyInfo> queryDevices(String controllerIP);
 }

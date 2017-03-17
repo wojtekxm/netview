@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zesp03.common.App;
 import zesp03.common.Database;
-import zesp03.common.SNMPException;
+import zesp03.exception.SNMPException;
 
 import java.time.Duration;
 import java.time.Instant;

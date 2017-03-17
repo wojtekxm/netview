@@ -22,7 +22,7 @@ public class SurveysResource {
         try {
             return new SurveyService().getOriginalSurveys(device, start, end);
         }
-        catch(zesp03.common.NotFoundException exc) {
+        catch(zesp03.exception.NotFoundException exc) {
             throw new NotFoundException();
         }
     }
@@ -38,7 +38,7 @@ public class SurveysResource {
         try {
             return new SurveyService().getAverageSurvey(device, start, end);
         }
-        catch(zesp03.common.NotFoundException exc) {
+        catch(zesp03.exception.NotFoundException exc) {
             throw new NotFoundException();
         }
     }
@@ -54,7 +54,7 @@ public class SurveysResource {
         try {
             return new SurveyService().getMinmaxSimple(device, start, end);
         }
-        catch(zesp03.common.NotFoundException exc) {
+        catch(zesp03.exception.NotFoundException exc) {
             throw new NotFoundException();
         }
     }

@@ -1,7 +1,7 @@
 package zesp03.config;
 
-import zesp03.common.ApiException;
 import zesp03.common.App;
+import zesp03.exception.BaseException;
 import zesp03.service.UserService;
 
 import javax.servlet.ServletContextEvent;
@@ -18,7 +18,7 @@ public class RootCreation implements ServletContextListener {
                 long id = ser.makeRoot(name);
                 ser.setPassword(id, password);
             }
-            catch(ApiException exc) {
+            catch(BaseException exc) {
                 throw new IllegalStateException(exc);
             }
         }

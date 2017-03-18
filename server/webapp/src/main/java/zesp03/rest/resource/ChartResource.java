@@ -20,7 +20,11 @@ import java.util.*;
 // WYPOCINY LEKTORA
 public class ChartResource {
     @GET
-    public List<Object[]> getDev(@QueryParam("id") long id) {
+    public List<Object[]> getDev(
+            @QueryParam("id") long id
+            /*@QueryParam("timestamp1") int timestamp1,
+            @QueryParam("timestamp2") int timestamp2*/
+ ) {
         List<Object[]> results=new ArrayList<Object[]>();
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -29,8 +33,12 @@ public class ChartResource {
             tran = em.getTransaction();
             tran.begin();
             results = em.createQuery(" SELECT cs.clientsSum,cs.timestamp FROM DeviceSurvey cs " +
-                    "WHERE cs.device.id= :id", Object[].class)
+                  "WHERE cs.device.id= :id "
+                    /* AND (cs(timestamp) BETWEEN :timestamp1 AND  :timestamp2 */
+                    , Object[].class)
                     .setParameter("id", id)
+                    /*.setParameter("timestamp1", timestamp1)
+                    .setParameter("timestamp2", timestamp2)*/
                     .getResultList();
             tran.commit();
         } catch (RuntimeException exc) {

@@ -29,6 +29,10 @@
     <link rel="stylesheet" href="/css/status-small.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"
             type="text/javascript"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.2.0.min.js"
+            integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -81,9 +85,17 @@
     </div>
 
 
-    <div class="wykresy">
+    <div id="wykresy">
         <canvas id="mycanvas" width="1000px" style="border:1px solid #bce8f1;"></canvas>
     </div>
+
+    <br/>
+    <button type="button" id="onclick1">Dzień</button>
+    <button type="button" id="onclick2">Tydzień</button>
+    <button type="button" id="onclick3">Miesiąc</button>
+    <button type="button" id="onclick4">Kwartał</button>
+    <button type="button" id="onclick5">Rok</button>
+
 
 
     <style>
@@ -98,225 +110,146 @@
             image-rendering: crisp-edges;
             -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
         }
-
-        #mycanvas2 {
-            /*background-image: url("/images/logooWhite.jpg");*/
-            width: 100% !important;
-            max-width: 5000px !important;
-            height: auto !important;
-            image-rendering: -moz-crisp-edges; /* Firefox */
-            image-rendering: -o-crisp-edges; /* Opera */
-            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
-            image-rendering: crisp-edges;
-            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
-        }
     </style>
 
     <script>
-        function convert(time) {
-            var temp = new Date(time * 1000);
-            var Seconds = temp.getSeconds();
-            var Minutes = temp.getMinutes();
-            var Hours = temp.getHours();
-            var WeekDay = temp.getDay();
-            var Month = temp.getMonth();
-            var Day = temp.getDate();
-            var Year = temp.getFullYear();
-            return (Hours > 9 ? '' : '0') + Hours + ":" +
-                (Minutes > 9 ? '' : '0') + Minutes + ":" +
-                (Seconds > 9 ? '' : '0') + Seconds + "    " +
-                Day + " " + MonthName[Month] + " " + Year + " (" + DayName[WeekDay] + ") ";
-        }
-        var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
-        var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
-            "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
+
         var now = Date.now();
         var doba = now - 86400000;       // dzien
         var tydzien = now - 604800000;   // 7 dni
         var miesiac = now - 2629743830; //30 dni
         var kwartal = now - 7889231490; //90 dni
         var rok = now - 31536000000;   // 365 dni
-        console.log("doba:" + doba);
-        console.log("tydzien:" + tydzien);
-        console.log("miesiac:" + miesiac);
-        console.log("kwartal:" + kwartal);
-        console.log("rok:" + rok);
+        var btn1=document.getElementById("onclick1");
+        btn1.addEventListener("click", function(){generateChart(mycanvas, <%=device.getId()%>,doba,now,"Wykres dobowy");});
+       var btn2=document.getElementById("onclick2");
+        btn2.addEventListener("click", function(){generateChart(mycanvas, <%=device.getId()%>,tydzien,now,"Wykres tygodniowy");});
+        var btn3=document.getElementById("onclick3");
+        btn3.addEventListener("click",function(){generateChart(mycanvas, <%=device.getId()%>,miesiac,now,"Wykres miesieczny");});
+        var btn4=document.getElementById("onclick4");
+        btn4.addEventListener("click", function(){generateChart(mycanvas, <%=device.getId()%>,kwartal,now,"Wykres kwartalny");});
+        var btn5=document.getElementById("onclick5");
+        btn5.addEventListener("click", function(){generateChart(mycanvas, <%=device.getId()%>,rok,now,"Wykres roczny");});
 
-        function generateChart(canvas_name, id) {
-            var request = new XMLHttpRequest();
-            var tags = [];      //WSZYSTKO
-            var values = [];    //WSZYSTKO
-            var options = {
-                tooltips: {
-                  /*  callbacks: {
-                    label: function(tooltipItem) {
-                        return tooltipItem.yLabel;
-                    }
-                },*/
-                    mode: 'index'
-                },
-                legend: {display:false},
-                title: {
-                    display: true,
-                    text: "Wykres aktywnosci"<%-- +<%=device.getId()%> --%>
-                },
-                hover:{intersect:true},
-                animation:{
-                    easing:'linear',
-                    duration:1500
+            function convert(time) {
+                var temp = new Date(time * 1000);
+                var Seconds = temp.getSeconds();
+                var Minutes = temp.getMinutes();
+                var Hours = temp.getHours();
+                var WeekDay = temp.getDay();
+                var Month = temp.getMonth();
+                var Day = temp.getDate();
+                var Year = temp.getFullYear();
+                return (Hours > 9 ? '' : '0') + Hours + ":" +
+                    (Minutes > 9 ? '' : '0') + Minutes + ":" +
+                    (Seconds > 9 ? '' : '0') + Seconds + "    " +
+                    Day + " " + MonthName[Month] + " " + Year + " (" + DayName[WeekDay] + ") ";
+            }
 
-                },
-                label: {display: true},
-                scales: {
-                    xAxes: [{
-                        display: false
-                        /*scaleLabel: {
-                            display: true
-                        }*/
-                    }],
-                    yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Ilosc klientów'
+            var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
+            var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
+                "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
+            var now = Date.now();
+            var doba = now - 86400000;       // dzien
+            var tydzien = now - 604800000;   // 7 dni
+            var miesiac = now - 2629743830; //30 dni
+            var kwartal = now - 7889231490; //90 dni
+            var rok = now - 31536000000;   // 365 dni
+            console.log("doba:" + doba);
+            console.log("tydzien:" + tydzien);
+            console.log("miesiac:" + miesiac);
+            console.log("kwartal:" + kwartal);
+            console.log("rok:" + rok);
+            function generateChart(mycanvas, id,timestamp1,timestamp2,etykieta) {
+                var request = new XMLHttpRequest();
+                $('#mycanvas').remove();
+                $('#wykresy').append('<canvas id="mycanvas" width="1000px" style="border:1px solid #bce8f1;"></canvas>');
+                mycanvasbis = document.querySelector('#mycanvas');
+                    var tags = [];      //WSZYSTKO
+                    var values = [];    //WSZYSTKO
+                    var options = {
+                        tooltips: {mode: 'index'},
+                        legend: {display: false},
+                        title: {display: true, text: etykieta},
+                        hover: {intersect: false,
+                                mode:'x'
+
+                        }, animation:false /*{easing: 'linear', duration: 0}*/,
+                        label: {display: true},
+                        scales: {
+                            xAxes: [{display: false}],
+
+                                yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Ilosc klientów'
+                                },
+                                ticks: {
+                                    ticks: {
+                                    fixedStepSize: 10,
+                                    suggestedMin: 0,
+                                    suggestedMax: 50
+                                }
+                            }}]
                         },
-                        ticks: {
-                            fixedStepSize: 10,
-                            suggestedMin: 0,
-                            suggestedMax: 50
+                        responsive: true,
+                        scaleLineColor: 'black',
+                        steppedLine: true,
+                        elements: {line: {tension: 0}}
+                    };
+
+                   /* var ctx = mycanvasbis.getContext("2d");
+                    var gradient = ctx.createLinearGradient(300, 0, 300, 600);
+                    gradient.addColorStop(0, 'black');
+                    gradient.addColorStop(0.25, 'red');
+                    gradient.addColorStop(0.5, 'orange');
+                    gradient.addColorStop(0.75, 'yellow');
+                    gradient.addColorStop(1, 'green');
+                    */
+                    var data = {
+                        labels: tags,
+                        datasets: [{
+                            label: "Ilosc klientow urzadzenia",
+                            data: values,
+                            fill: false,
+                            borderColor: "rgba(0,255,0,1)",
+                            fillStyle: "rgba(0,255,0,1)",
+                            borderJoinStyle: 'miter',
+                            pointBorderColor: "rgba(0,0,0,1)",
+                            pointBackgroundColor: "rgba(0,255,0,1)",
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(0, 0, 0, 1)",
+                            pointHoverBorderColor: "rgb(0,0,0,0)",
+                            pointHoverBorderWidth: 5,
+                            pointRadius: 5,
+                            tension: 0
                         }
-                    }]
-                },
-                responsive: true,
-                scaleLineColor: 'black',
-                steppedLine: true,
-                elements: {
-                    line: {
-                        tension: 0
-                    }
-                }
-            };
-            var chrt = document.getElementById(canvas_name);
-            var ctx = chrt.getContext("2d");
-            var gradient = ctx.createLinearGradient(300, 0, 300, 600);
-            gradient.addColorStop(0, 'black');
-            gradient.addColorStop(0.25, 'red');
-            gradient.addColorStop(0.5, 'orange');
-            gradient.addColorStop(0.75, 'yellow');
-            gradient.addColorStop(1, 'green');
-            var data = {
-                labels: tags,
-                datasets: [{
-                    label: "Ilosc klientow urzadzenia",
-                    data: values,
-                    fill: false,
-                    borderColor: gradient,
-                    // backgroundColor:gradient,
-                    fillStyle: gradient,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "rgba(0,0,0,0)",
-                    pointBackgroundColor: gradient,
-                    pointBorderWidth: 5,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: "rgba(100, 100, 100, 0)",
-                    pointHoverBorderColor: "rgb(0,0,0,0)",
-                    pointHoverBorderWidth: 5,
-                    pointRadius: 5,
-                    tension: 0
-                }
-                ]
-            };
+                        ]
+                    };
+                    request.open('Get', 'http://localhost:8080/api/chart?id=' + id);
+                    request.onload = function () {
+                        var jsondata = JSON.parse(request.responseText);
+                        timestamp1 = timestamp1 / 1000;
+                        timestamp2 = timestamp2 / 1000;
+                        console.log("timestamp1=" + timestamp1);
+                        console.log("timestamp2=" + timestamp2);
+                        for (i = 0; i < jsondata.length; i++) {
+                            if (timestamp1 <= jsondata[i][1] && jsondata[i][1] <= timestamp2) {
+                                tags.push(convert(jsondata[i][1]));
+                                console.log(jsondata[i][1]);
+                                values.push(jsondata[i][0]);
+                                console.log(jsondata[i][0]);
+                            }
+                        }
+                        var myFirstChart = Chart.Line(mycanvasbis, {data: data, options: options});
 
-            request.open('Get', 'http://localhost:8080/api/chart?id=' + id);
-            request.onload = function () {
-                var jsondata = JSON.parse(request.responseText);
-                for (i = 0; i < jsondata.length; i++) {
-                    tags[i] = convert(jsondata[i][1]);
-                    console.log(tags[i]);
-                    values[i] = jsondata[i][0];
-                    console.log(values[i]);
-                }
-                var myFirstChart = Chart.Line(chrt, {data: data, options: options});
-            };
-            request.send();
-        }
-
-        generateChart("mycanvas", <%=device.getId()%>);
-
-
+                    };
+                    request.send();
+            }
+        generateChart(mycanvas, <%=device.getId()%>,1488981558,1488981566,"Wykres kompletny");
     </script>
-
-    <%--  <div class="panel panel-default">
-          <div class="panel-heading">
-              historia badań
-          </div>
-          <table class="table table-condensed table-hover">
-              <thead>
-              <tr>
-                  <th>#</th>
-                  <th>data</th>
-                  <th>uruchomione</th>
-                  <th>liczba klientów</th>
-              </tr>
-              </thead>
-              <tbody><%
-                  int n = 1;
-                  for (final DeviceSurveyRow survey : selectedSurveys) {
-                      final Instant instant = Instant.ofEpochSecond(survey.getTimestamp());
-                      final ZoneId zone = ZoneId.systemDefault();
-                      final LocalDateTime ld = LocalDateTime.ofInstant(instant, zone);
-                      final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                      final String time = ld.format(formatter);
-              %>
-              <tr>
-                  <td><%= n++ %>
-                  </td>
-                  <td><%= time %>
-                  </td>
-                  <td><%= survey.isEnabled() ? "tak" : "nie" %>
-                  </td>
-                  <td><%= survey.getClientsSum() %>
-                  </td>
-              </tr>
-              <%
-                  }
-              %>
-              </tbody>
-          </table>
-          <div class="panel-footer">
-              Łącznie jest <%= totalSurveys %> wyników.
-              Liczba wyników na stronę
-              <form method="get" action="/device" style="display: inline"><%
-                  final ArrayList<Integer> limits = new ArrayList<>();
-                  limits.add(10);
-                  limits.add(20);
-                  limits.add(50);
-                  limits.add(100);
-                  limits.add(200);
-                  limits.add(500);
-                  limits.add(1000);
-                  if (!limits.contains(historyLimit))
-                      limits.add(historyLimit);
-                  Collections.sort(limits);
-              %>
-                  <input type="hidden" name="id" value="<%= device.getId() %>">
-                  <select name="<%= DeviceServlet.GET_HISTORY_LIMIT %>"><%
-                      for (Integer i : limits) {
-                  %>
-                      <option value="<%= i %>" <%= i.equals(historyLimit) ? "selected" : "" %>><%= i %>
-                      </option>
-                      <%
-                          }
-                      %>
-                  </select>
-                  <input type="submit" value="Wyświetl">
-              </form>
-          </div>
-      </div>
-    </div>
-
-
-    --%>
 
 
     <script src="/js/jquery-3.1.1.min.js"></script>

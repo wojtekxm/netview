@@ -12,8 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>nowy użytkownik</title>
     <link rel="icon" href="/favicon.ico">
-    <title></title>
-    <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>

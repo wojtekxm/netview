@@ -19,27 +19,27 @@ public class ExceptionConfig {
     @ExceptionHandler(ValidationException.class)
     public String handleBadRequest(Exception exc) {
         log.warn("exception thrown by controller", exc);
-        return "error_400";
+        return "error-400";
     }
 
     @ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessException.class)
     public String handleForbidden(Exception exc) {
         log.warn("exception thrown by controller", exc);
-        return "error_403";
+        return "error-403";
     }
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public String handleNotFound(Exception exc) {
         log.warn("exception thrown by controller", exc);
-        return "error_404";
+        return "error-404";
     }
 
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(SNMPException.class)
     public String handleInternalServerError(Exception exc) {
         log.warn("exception thrown by controller", exc);
-        return "error_500";
+        return "error-500";
     }
 }

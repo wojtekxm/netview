@@ -2,8 +2,7 @@ package zesp03.page;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import zesp03.common.Database;
 import zesp03.data.row.UserRow;
@@ -15,7 +14,7 @@ import javax.persistence.EntityTransaction;
 
 @Controller
 public class UserPage {
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @GetMapping(value = "/user")
     public String get(
             @RequestParam(value="id") long id,
             ModelMap model) {
@@ -39,7 +38,6 @@ public class UserPage {
             if (em != null) em.close();
         }
 
-        model.put("logged", user);
         model.put("selected", user);
         return "user";
     }

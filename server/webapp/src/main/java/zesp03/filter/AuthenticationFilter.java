@@ -18,7 +18,7 @@ public class AuthenticationFilter implements Filter {
     public static final String COOKIE_USERID = "userid";
     public static final String COOKIE_PASSTOKEN = "passtoken";
     // mapuje do UserRow, null jeśli uwierzytelnianie się nie powiodło
-    public static final String ATTR_USERROW = "zesp03.filter.AuthenticationFilter.ATTR_USERROW";
+    public static final String ATTR_USERROW = "loggedUser";
 
     @Override
     public void destroy() {

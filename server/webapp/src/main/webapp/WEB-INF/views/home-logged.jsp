@@ -1,11 +1,5 @@
-<%@ page import="zesp03.data.row.UserRow" %>
-<%@ page import="zesp03.filter.AuthenticationFilter" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    session.setAttribute("style", "loggedStyleWhite");
-    session.setAttribute("logo", "logooWhite");
-    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
-%>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -19,7 +13,12 @@
 <body>
 <div class="container">
     <h1>
-        Zalogowany jako: <%= userRow.getName() %> <span class="label label-default">administrator</span>
+        Zalogowany jako: <c:out value="${loggedUser.name}"/>
+        <span class="label label-default"><c:choose
+            ><c:when test="${selected.role.name() eq 'ROOT'}">root</c:when
+            ><c:when test="${selected.role.name() eq 'NORMAL'}">zwykły użytkownik</c:when
+            ><c:otherwise>administrator</c:otherwise
+        ></c:choose></span>
     </h1>
     <h1>Network Monitor</h1>
     <div class="row">
@@ -42,12 +41,19 @@
                     <span class="label label-default">status-small</span>
                 </a>
             </li>
-            <li>
+            <c:if test="${loggedUser.role.name() eq 'ROOT' or loggedUser.role.name() eq 'ADMIN'}"><li>
                 <a href="/make-survey">
                     nowe badania sieci
                     <span class="label label-default">make-survey</span>
                 </a>
             </li>
+            <li>
+                <a href="/add-controller">
+                    nowy kontroler
+                    <span class="label label-default">add-controller</span>
+                </a>
+            </li>
+            </c:if>
             <li>
                 <a href="/all-controllers">
                     kontrolery
@@ -57,15 +63,15 @@
             <li>
                 <a href="/building">
                     budynki
-                    <span class="label label-default">all-controllers</span>
+                    <span class="label label-default">building</span>
                 </a>
             </li>
-            <li>
-                <a href="/add-controller">
-                    nowy kontroler
-                    <span class="label label-default">add-controller</span>
+            <c:if test="${loggedUser.role.name() eq 'ROOT'}"><li>
+                <a href="/all-users">
+                    użytkownicy
+                    <span class="label label-default">all-users</span>
                 </a>
-            </li>
+            </li></c:if>
             <li>
                 <a href="/logout">
                     wylogowanie

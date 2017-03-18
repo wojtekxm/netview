@@ -1,9 +1,9 @@
 <%@ page import="zesp03.data.row.ControllerRow" %>
+<%@ page import="zesp03.data.row.UserRow" %>
+<%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page import="zesp03.servlet.AllControllersServlet" %>
 <%@ page import="zesp03.servlet.ControllerServlet" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="zesp03.data.row.UserRow" %>
-<%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -18,7 +18,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kontrolery</title>
-    <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>

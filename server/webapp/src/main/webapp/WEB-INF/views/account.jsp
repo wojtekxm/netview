@@ -1,10 +1,5 @@
-<%@ page import="zesp03.data.row.UserRow" %>
-<%@ page import="zesp03.filter.AuthenticationFilter" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    UserRow logged = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
-%>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -18,7 +13,7 @@
 </head>
 <body>
 <div class="container" id="page">
-    <p>zalogowany: <%= logged.getName() %>
+    <p>zalogowany: <c:out value="${loggedUser.name}"/>
     </p>
     <a href="/">strona główna</a><br>
     <hr>
@@ -47,7 +42,7 @@
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    userId: <%= logged.getId() %>,
+                    userId: ${loggedUser.id},
                     old: $('#old_password').val(),
                     desired: $('#new_password').val(),
                     repeat: $('#repeat_password').val()

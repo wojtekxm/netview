@@ -41,23 +41,25 @@
 <div class="container" id="page">
     <div class="welcome">
         <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-        <div class="userStatic">zalogowany: ${logged.name}
+        <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>
     </div>
-
-    zalogowany: ${logged.name}<br><br>
     informacje o użytkowniku:<br>
-    id: ${selected.id}<br>
-    nazwa: ${selected.name}<br>
-    rola: ${selected.role}<br>
-    <c:choose>
-        <c:when test="${selected.blocked}">konto zablokowane</c:when>
-        <c:when test="${!selected.activated}">konto nieaktywne</c:when>
-        <c:otherwise>konto aktywne</c:otherwise>
-    </c:choose>
-    <c:if test="${!selected.blocked}">
-        <form action="/block-password" method="post">
+    id: <c:out value="${selected.id}"/><br>
+    nazwa: <c:out value="${selected.name}"/><br>
+    rola:
+    <c:choose
+        ><c:when test="${selected.role.name() eq 'ROOT'}">root</c:when
+        ><c:when test="${selected.role.name() eq 'NORMAL'}">zwykły użytkownik</c:when
+        ><c:otherwise>administrator</c:otherwise
+    ></c:choose><br>
+    <c:choose
+    ><c:when test="${selected.blocked}">konto zablokowane</c:when
+        ><c:when test="${not selected.activated}">konto nieaktywne</c:when
+        ><c:otherwise>konto aktywne</c:otherwise
+    ></c:choose>
+    <c:if test="${not selected.blocked}"><form action="/block-password" method="post">
             <input type="hidden" name="id" value="${selected.id}">
             <button type="submit">Zablokuj dostęp</button>
         </form>

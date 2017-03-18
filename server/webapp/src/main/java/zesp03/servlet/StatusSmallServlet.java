@@ -1,7 +1,7 @@
 package zesp03.servlet;
 
 import zesp03.dto.DeviceStateDto;
-import zesp03.service.DeviceService;
+import zesp03.service.SurveyService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,7 +22,7 @@ public class StatusSmallServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long t0 = System.nanoTime();
-        List<DeviceStateDto> list = new DeviceService()
+        List<DeviceStateDto> list = new SurveyService()
                 .checkAll()
                 .stream()
                 .map( di -> {

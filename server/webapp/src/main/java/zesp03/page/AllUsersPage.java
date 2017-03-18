@@ -1,28 +1,21 @@
-package zesp03.servlet;
+package zesp03.page;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import zesp03.common.Database;
 import zesp03.data.row.UserRow;
 import zesp03.entity.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(value = "/all-users", name = "AllUsersServlet")
-public class AllUsersServlet extends HttpServlet {
-    // mapuje do ArrayList<UserRow>
-    public static final String ATTR_USERS = "zesp03.servlet.AllUsersServlet.ATTR_ALL_USERS";
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+@Controller
+public class AllUsersPage {
+    @GetMapping("/all-users")
+    public String get(ModelMap model) {
         final ArrayList<UserRow> allUsers = new ArrayList<>();
 
         EntityManager em = null;
@@ -46,7 +39,7 @@ public class AllUsersServlet extends HttpServlet {
             if (em != null) em.close();
         }
 
-        request.setAttribute(ATTR_USERS, allUsers);
-        request.getRequestDispatcher("/WEB-INF/view/AllUsers.jsp").include(request, response);
+        model.put("list", allUsers);
+        return "all-users";
     }
 }

@@ -3,7 +3,7 @@ package zesp03.servlet;
 
 
 import zesp03.dto.DeviceStateDto;
-import zesp03.service.DeviceService;
+import zesp03.service.SurveyService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +23,7 @@ public class StatusServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<DeviceStateDto> list = new DeviceService()
+        List<DeviceStateDto> list = new SurveyService()
                 .checkAll()
                 .stream()
                 .map( di -> {

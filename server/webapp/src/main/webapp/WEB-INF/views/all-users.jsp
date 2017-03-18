@@ -1,13 +1,5 @@
-<%@ page import="zesp03.data.row.UserRow" %>
-<%@ page import="zesp03.filter.AuthenticationFilter" %>
-<%@ page import="zesp03.servlet.AllUsersServlet" %>
-<%@ page import="zesp03.servlet.UserServlet" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
-    ArrayList<UserRow> allUsers = (ArrayList<UserRow>) request.getAttribute(AllUsersServlet.ATTR_USERS);
-%>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -48,21 +40,16 @@
     </nav>
     <div class="welcome">
         <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-        <div class="userStatic">zalogowany: <%= userRow.getName() %>
+        <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>
     </div>
-    zalogowany: <%= userRow.getName() %><br><br>
     lista użytkowników:<br>
-    <%
-        for (UserRow u : allUsers) {
-            String href = "/user?" + UserServlet.GET_ID + "=" + u.getId();
-            String label = u.isActivated() ? u.getName() : "[" + u.getId() + " - konto nieaktywne]";
-    %><a href="<%= href %>"><%= label %>
-</a><br>
-    <%
-        }
-    %>
+    <c:forEach var="user" items="${list}">
+        <c:url var="href" value="/user?id=${user.id}"/><a href="${href}">
+            <c:out value="${user.activated ? user.name : '[' += user.id += ' - konto nieaktywne]'}"/>
+        </a><br>
+    </c:forEach>
     <hr>
     <a href="/new-user">Tworzenie nowego użytkownika</a>
 </div>

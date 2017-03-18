@@ -9,7 +9,7 @@ import zesp03.data.SurveyInfo;
 import zesp03.entity.Controller;
 import zesp03.entity.Device;
 import zesp03.entity.DeviceSurvey;
-import zesp03.service.DeviceService;
+import zesp03.service.SurveyService;
 import zesp03.util.Unicode;
 
 import javax.persistence.EntityManager;
@@ -228,7 +228,7 @@ public class App {
             final HashMap<String, Device> name2device = makeDevices(deviceNames, controller, em);
             em.flush();
             final HashMap<Long, DeviceNow> devid2now = new HashMap<>();
-            new DeviceService().checkSome(
+            new SurveyService().checkSome(
                     name2device
                             .entrySet()
                             .stream()

@@ -1,16 +1,6 @@
-<%@ page import="zesp03.data.row.ControllerRow" %>
-<%@ page import="zesp03.data.row.UserRow" %>
-<%@ page import="zesp03.filter.AuthenticationFilter" %>
-<%@ page import="zesp03.servlet.AllControllersServlet" %>
-<%@ page import="zesp03.servlet.ControllerServlet" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%
-    ArrayList<ControllerRow> list = (ArrayList<ControllerRow>) request.getAttribute(AllControllersServlet.ATTR_LIST);
-    UserRow userRow = (UserRow) request.getAttribute(AuthenticationFilter.ATTR_USERROW);
-%>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -48,37 +38,30 @@
         </ul>
     </div>
 </nav>
-
 <div class="container">
     <div class="welcome">
         <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-        <div class="userStatic">zalogowany: <%= userRow.getName() %>
+        <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>
     </div>
     <div class="list-group ">
         <div class="row">
-            <a href="/add-controller" class="btn btn-primary btn-default btn-lg active" role="button">Stwórz nowy
-                kontroler</a>
-        </div>
-
-        <% for (ControllerRow c : list) {
-            String href = "/controller?" + ControllerServlet.GET_ID + "=" + c.getId();
-        %>
-        <div class="row">
-            <a href="<%= href %>"
-               class="col-md-4  list-group-item list-group-item-info">
-                <%= c.getName() %>
-                <%= c.getIpv4() %>
-                <%= c.getDescription() != null ? c.getDescription() : "<em>(brak)</em>" %>
+            <a href="/add-controller" class="btn btn-primary btn-default btn-lg active" role="button">
+                Stwórz nowy kontroler
             </a>
         </div>
-        <% } %>
+        <c:forEach items="${list}" var="controller"><div class="row"><c:url
+                var="href" value="/controller?id=${controller.id}"/>
+            <a href="${href}" class="col-md-4  list-group-item list-group-item-info">
+                <c:out value="${controller.name}"/>
+                <c:out value="${controller.ipv4}"/>
+                <c:out value="${controller.description}"/>
+            </a>
+        </div></c:forEach>
     </div>
 </div>
-
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/jquery-3.1.1.min.js"></script>
-
 </body>
 </html>

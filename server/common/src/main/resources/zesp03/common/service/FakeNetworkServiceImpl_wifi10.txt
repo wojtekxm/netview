@@ -23,7 +23,7 @@ WMiI-22
 WMiI-23
 WMiI-24
 WMiI-25
-<script>alert("JSP PROBLEM - urządzenie W10")</script>
+CH-52_KA6
 CH-48_KA20
 CH-54_KA43
 CH-57_KA125

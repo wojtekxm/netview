@@ -41,6 +41,8 @@ public class FakeNetworkServiceImpl implements NetworkService {
         parse("FakeNetworkServiceImpl_wifi10.txt");
         parse("FakeNetworkServiceImpl_wifi11.txt");
         parse("FakeNetworkServiceImpl_wifi99.txt");
+        parse("FakeNetworkServiceImpl_wifi441.txt");
+        parse("FakeNetworkServiceImpl_wifi442.txt");
     }
 
     private void parse(String resourceName) throws IOException {

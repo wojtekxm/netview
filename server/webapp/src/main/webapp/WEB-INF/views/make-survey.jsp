@@ -27,8 +27,8 @@
     </div>
 </nav>
 <div class="container">
-    <div id="loading">
-        <em>pobieranie listy kontrolerów...</em>
+    <div id="progress_area">
+        pobieranie informacji...
     </div>
     <div id="box" style="display: none">
         <ul id="list_controllers" class="list-group"></ul>
@@ -50,28 +50,37 @@
             success: function(listOfControllerRow) {
                 var i;
                 for(i = 0; i < listOfControllerRow.length; i++) {
+                    var controllerRow = listOfControllerRow[i];
                     $('#list_controllers').append(
                         $('<li></li>')
                             .addClass('list-group-item row')
                             .append(
                                 $('<div></div>')
-                                    .addClass('col-sm-2')
+                                    .addClass('col-sm-1')
                                     .append(
                                         $('<input type="checkbox">')
                                             .prop('checked', true)
                                     ),
                                 $('<div></div>')
-                                    .addClass('col-sm-4')
+                                    .addClass('col-sm-2')
                                     .append(
-                                        $('<strong></strong>').text(listOfControllerRow[i].name)
+                                        $('<a></a>').text(controllerRow.name)
+                                            .attr('href', '/controller?id=' + controllerRow.id)
+                                    ),
+                                $('<div></div>')
+                                    .addClass('col-sm-3')
+                                    .append(
+                                        $('<span></span>').text(controllerRow.ipv4)
                                     ),
                                 $('<div></div>')
                                     .addClass('col-sm-6')
                                     .append(
-                                        $('<span></span>')
+                                        '<span></span>',
+                                        ' ',
+                                        '<small></small>'
                                     )
                             )
-                            .data('controller_id', listOfControllerRow[i].id)
+                            .data('controller_id', controllerRow.id)
                     );
                 }
                 $('#btn_all').click( function() {
@@ -98,13 +107,16 @@
                 $('#btn_examine').click( function() {
                     $('#list_controllers').find('> li').each( function() {
                         var li = $(this);
-                        var resultField = li.find('span:nth-of-type(1)');
+                        var div4 = li.children('div:nth-of-type(4)');
+                        var span = div4.children('span:nth-of-type(1)');
+                        var small = div4.children('small:nth-of-type(1)');
                         var checkbox = li.find('input');
-                        resultField.text('');
+                        span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
+                        small.text('');
                         if(! checkbox.is(':checked') ) {
                             return;
                         }
-                        resultField.text('badanie...');
+                        span.addClass('glyphicon glyphicon-hourglass');
                         $.ajax( {
                             type: 'post',
                             url: '/api/examine',
@@ -114,25 +126,27 @@
                             },
                             success: function(examineResultDto) {
                                 if(examineResultDto.success) {
-                                    resultField.text('OK, ' +
-                                        examineResultDto.timeElapsed.toFixed(2) + ' s, ' +
-                                        examineResultDto.updatedDevices + ' zaktualizowanych urządzeń');
+                                    span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
+                                    span.addClass('glyphicon glyphicon-ok-circle');
+                                    small.text(examineResultDto.timeElapsed.toFixed(2) + ' sek.');
                                 }
                                 else {
-                                    resultField.text('ERROR (server)');
+                                    span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
+                                    span.addClass('glyphicon glyphicon-exclamation-sign');
                                 }
                             },
                             error: function() {
-                                resultField.text('ERROR (HTTP)');
+                                span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
+                                span.addClass('glyphicon glyphicon-exclamation-sign');
                             }
                         } );
                     } );
                 } );
-                $('#loading').hide(400);
+                $('#progress_area').hide();
                 $('#box').show(400);
             },
             error: function() {
-                $('#loading').text('Fatal error');
+                $('#progress_area').text('Wystąpił problem');
             }
         } );
     } );

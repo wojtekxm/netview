@@ -15,7 +15,7 @@ public class ChartApi {
     @GetMapping("/api/chart")
     public List<Object[]> getDev(
             @RequestParam("id") long id) {
-        List<Object[]> results=new ArrayList<Object[]>();
+        List<Object[]> results= new ArrayList<>();
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -23,8 +23,12 @@ public class ChartApi {
             tran = em.getTransaction();
             tran.begin();
             results = em.createQuery(" SELECT cs.clientsSum,cs.timestamp FROM DeviceSurvey cs " +
-                    "WHERE cs.device.id= :id", Object[].class)
+                            "WHERE cs.device.id= :id "
+                    /* AND (cs(timestamp) BETWEEN :timestamp1 AND  :timestamp2 */
+                    , Object[].class)
                     .setParameter("id", id)
+                    /*.setParameter("timestamp1", timestamp1)
+                    .setParameter("timestamp2", timestamp2)*/
                     .getResultList();
             tran.commit();
         } catch (RuntimeException exc) {

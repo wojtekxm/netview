@@ -44,14 +44,23 @@
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>
     </div>
-    lista użytkowników:<br>
-    <c:forEach var="user" items="${list}">
-        <c:url var="href" value="/user?id=${user.id}"/><a href="${href}">
-            <c:out value="${user.activated ? user.name : '[' += user.id += ' - konto nieaktywne]'}"/>
-        </a><br>
-    </c:forEach>
-    <hr>
-    <a href="/create-user">Tworzenie nowego użytkownika</a>
+    <div class="content">
+        <div>
+            <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-user"></span> Lista użytkowników: <span style="float:right;">Zalogowany: <c:out value="${loggedUser.name}"/></span></div></div>
+        </div>
+        <div class="panel panel-default" style="padding: 15px;">
+            <c:forEach var="user" items="${list}">
+                <c:url var="href" value="/user?id=${user.id}"/>
+            <a href="${href}" class="list-group-item" style="max-width: 300px;">
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <c:out value="${user.activated ? user.name : '[' += user.id += ' - konto nieaktywne]'}"/>
+            </a>
+            </c:forEach>
+            <div>
+                <a href="/create-user" class="btn btn-success" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Tworzenie nowego użytkownika</a>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

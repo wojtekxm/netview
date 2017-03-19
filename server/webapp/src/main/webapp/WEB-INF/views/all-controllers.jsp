@@ -38,27 +38,37 @@
         </ul>
     </div>
 </nav>
-<div class="container">
-    <div class="welcome">
-        <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-        <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
+<div id="all" class="container-fluid">
+    <div class="container">
+        <div class="welcome">
+            <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
+            <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
+            </div>
+            <div class="logo"><img src="/images/logooWhite.jpg"></div>
         </div>
-        <div class="logo"><img src="/images/logooWhite.jpg"></div>
-    </div>
-    <div class="list-group ">
-        <div class="row">
-            <a href="/create-controller" class="btn btn-primary btn-default btn-lg active" role="button">
-                Stwórz nowy kontroler
-            </a>
+        <div class="content">
+            <div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Akutalna lista kontrolerów:</div></div>
+            </div>
+            <div class="panel panel-default" style="padding: 15px;">
+                <c:forEach items="${list}" var="controller"><c:url var="href" value="/controller?id=${controller.id}"/>
+                    <div>
+                        <a href="${href}" class="list-group-item" style="max-width: 300px;">
+                            <span class="glyphicon glyphicon-menu-right"></span>
+                            <c:out value="${controller.name}"/>
+                            <c:out value="${controller.ipv4}"/>
+                            <c:out value="${controller.description}"/>
+                        </a>
+                    </div>
+                </c:forEach>
+                <div>
+                    <a href="/create-controller" class="btn btn-success" role="button" style="width: 300px;font-size:17px;">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Dodaj nowy kontroler
+                    </a>
+                </div>
+            </div>
         </div>
-        <c:forEach items="${list}" var="controller"><div class="row"><c:url
-                var="href" value="/controller?id=${controller.id}"/>
-            <a href="${href}" class="col-md-4  list-group-item list-group-item-info">
-                <c:out value="${controller.name}"/>
-                <c:out value="${controller.ipv4}"/>
-                <c:out value="${controller.description}"/>
-            </a>
-        </div></c:forEach>
     </div>
 </div>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

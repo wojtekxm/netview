@@ -200,7 +200,7 @@
                 }
                 ]
             };
-            request.open('Get', 'http://localhost:8080/api/chart?id=' + id);
+            request.open('Get', '/api/chart?id=' + id);
             request.onload = function () {
                 var jsondata = JSON.parse(request.responseText);
                 timestamp1 = timestamp1 / 1000;

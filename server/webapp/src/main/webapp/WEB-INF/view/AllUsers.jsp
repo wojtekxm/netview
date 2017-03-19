@@ -53,19 +53,24 @@
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>
     </div>
-    zalogowany: <%= userRow.getName() %><br><br>
-    lista użytkowników:<br>
-    <%
-        for (UserRow u : allUsers) {
-            String href = "/user?" + UserServlet.GET_ID + "=" + u.getId();
-            String label = u.isActivated() ? u.getName() : "[" + u.getId() + " - konto nieaktywne]";
-    %><a href="<%= href %>"><%= label %>
-</a><br>
-    <%
-        }
-    %>
-    <hr>
-    <a href="/new-user">Tworzenie nowego użytkownika</a>
+    <div class="content">
+        <div>
+            <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-user"></span> Lista użytkowników: <span style="float:right;">Zalogowany: <%= userRow.getName() %></span></div></div>
+        </div>
+        <div class="panel panel-default" style="padding: 15px;">
+            <%
+                for (UserRow u : allUsers) {
+                    String href = "/user?" + UserServlet.GET_ID + "=" + u.getId();
+                    String label = u.isActivated() ? u.getName() : "[" + u.getId() + " - konto nieaktywne]";
+            %><a href="<%= href %>" class="list-group-item" style="max-width: 300px;"><span class="glyphicon glyphicon-menu-right"></span><%= label %></a>
+            <%
+                }
+            %>
+            <div>
+                <a href="/new-user" class="btn btn-success" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Tworzenie nowego użytkownika</a>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

@@ -50,26 +50,38 @@
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>
     </div>
-    <p>zalogowany: <%= userRow.getName() %>
-    </p>
-    <a href="/">strona główna</a><br>
-    <a href="/all-users">zobacz wszystkich użytkowników</a><br>
-    <hr>
-    <h4>Tworzenie nowego użytkownika</h4>
-    <div id="settings" class="form-group">
-        <label>
-            <input type="radio" name="is_admin" value="false" checked>
-            zwykły użytkownik
-        </label>
-        <br>
-        <label>
-            <input type="radio" name="is_admin" value="true">
-            administrator
-        </label>
-        <br>
-        <button type="button" id="button_create">Stwórz</button>
+    <div class="content">
+        <div>
+            <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-plus"></span> Tworzenie nowego użytkownika<span style="float:right;">Zalogowany: <%= userRow.getName() %></span></div></div>
+        </div>
+        <div class="panel panel-default" style="padding: 15px;">
+            <div>
+                <a href="/all-users" class="btn btn-info" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-backward"></span> Wszyscy użytkownicy</a>
+            </div>
+            </br>
+            </br>
+                <div id="settings" class="form-group">
+                    <div class="radio">
+                        <label style="font-size:17px;">
+                            <input type="radio" name="is_admin" value="false" checked>
+                            zwykły użytkownik
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label style="font-size:17px;">
+                            <input type="radio" name="is_admin" value="true">
+                            administrator
+                        </label>
+                    </div>
+                    </br>
+                    <div>
+                        <a class="btn btn-success" id="button_create" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj</a>
+                    </div>
+                </div>
+                <div id="result"></div>
+        </div>
+        </div>
     </div>
-    <div id="result"></div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

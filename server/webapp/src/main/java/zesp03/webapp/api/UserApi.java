@@ -1,5 +1,6 @@
 package zesp03.webapp.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,9 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UserApi {
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/api/all-users")
     public List<UserData> getAllUsers() {
         EntityManager em = null;
@@ -185,7 +189,7 @@ public class UserApi {
             @RequestParam("repeat") String repeat,
             HttpServletRequest req) {
         UserRow user = (UserRow)req.getAttribute(AuthenticationFilter.ATTR_USERROW);
-        String passtoken = new UserService().changePassword(user.getId(), old, desired, repeat);
+        String passtoken = userService.changePassword(user.getId(), old, desired, repeat);
         ChangePasswordResultDto result = new ChangePasswordResultDto(true);
         result.setPassToken(passtoken);
         return result;
@@ -198,7 +202,7 @@ public class UserApi {
             @RequestParam("username") String username,
             @RequestParam("password") String password,
             @RequestParam("repeat") String repeatPassword) {
-        new UserService().activateAccount(tokenId, tokenValue, username, password, repeatPassword);
+        userService.activateAccount(tokenId, tokenValue, username, password, repeatPassword);
         return new BaseResultDto(true);
     }
 }

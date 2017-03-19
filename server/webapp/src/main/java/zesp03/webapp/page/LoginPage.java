@@ -19,9 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class LoginPage {
     private static final Logger log = LoggerFactory.getLogger(LoginPage.class);
+    private final LoginService loginService;
 
     @Autowired
-    private LoginService loginService;
+    public LoginPage(LoginService loginService) {
+        this.loginService = loginService;
+    }
 
     @PostMapping("/login")
     public String post(

@@ -15,8 +15,12 @@ import java.util.stream.Collectors;
 
 @RestController("/api/surveys")
 public class SurveysApi {
+    private final SurveyService surveyService;
+
     @Autowired
-    private SurveyService surveyService;
+    public SurveysApi(SurveyService surveyService) {
+        this.surveyService = surveyService;
+    }
 
     @GetMapping("original")
     public List<OriginalSurveyDto> getClientsOriginal(

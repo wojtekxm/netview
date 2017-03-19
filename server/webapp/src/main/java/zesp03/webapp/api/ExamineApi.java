@@ -11,8 +11,12 @@ import zesp03.webapp.dto.ExamineResultDto;
 
 @RestController
 public class ExamineApi {
+    private final SurveyService surveyService;
+
     @Autowired
-    private SurveyService surveyService;
+    public ExamineApi(SurveyService surveyService) {
+        this.surveyService = surveyService;
+    }
 
     @PostMapping(value = "/api/examine", consumes = "application/x-www-form-urlencoded")
     public ExamineResultDto examineOne(

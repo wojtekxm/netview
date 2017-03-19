@@ -20,8 +20,12 @@ import java.util.stream.Collectors;
 
 @RestController
 public class DeviceApi {
+    private final SurveyService surveyService;
+
     @Autowired
-    private SurveyService surveyService;
+    public DeviceApi(SurveyService surveyService) {
+        this.surveyService = surveyService;
+    }
 
     @GetMapping("/api/all-devices")
     public List<DeviceStateDto> getAll() {

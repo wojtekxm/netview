@@ -29,8 +29,12 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UserApi {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserApi(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/api/all-users")
     public List<UserData> getAllUsers() {

@@ -13,9 +13,12 @@ import java.time.Instant;
 public class Work {
     private static final Logger log = LoggerFactory.getLogger(Daemon.class);
     private boolean shutdown = false;
+    private final SurveyService surveyService;
 
     @Autowired
-    SurveyService surveyService;
+    public Work(SurveyService surveyService) {
+        this.surveyService = surveyService;
+    }
 
     public void work() {
         Thread t = new Thread(() -> shutdown = true);

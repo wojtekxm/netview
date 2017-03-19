@@ -9,8 +9,12 @@ import zesp03.webapp.service.UserService;
 
 @Controller
 public class ActivateAccountPage {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public ActivateAccountPage(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/activate-account")
     public String get(

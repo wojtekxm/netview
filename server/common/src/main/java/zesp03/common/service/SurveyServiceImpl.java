@@ -24,9 +24,12 @@ import java.util.stream.Collectors;
 @Service
 public class SurveyServiceImpl implements SurveyService {
     private static final Logger log = LoggerFactory.getLogger(SurveyServiceImpl.class);
+    private final NetworkService networkService;
 
     @Autowired
-    private NetworkService snmp;
+    public SurveyServiceImpl(NetworkService networkService) {
+        this.networkService = networkService;
+    }
 
     @Override
     public List<DeviceSurvey> getOriginalSurveys(long deviceId, int start, int end) {
@@ -392,7 +395,7 @@ public class SurveyServiceImpl implements SurveyService {
 
         final HashSet<String> deviceNames = new HashSet<>();
         final HashMap<String, SurveyInfo> name2info = new HashMap<>();
-        for(SurveyInfo info : snmp.queryDevices(ipv4)) {
+        for(SurveyInfo info : networkService.queryDevices(ipv4)) {
             deviceNames.add(info.getName());
             name2info.put(info.getName(), info);
         }
@@ -425,9 +428,7 @@ public class SurveyServiceImpl implements SurveyService {
                             .map( e -> e.getValue().getId() )
                             .collect(Collectors.toSet()),
                     em
-            ).forEach( di -> {
-                devid2now.put(di.getId(), di);
-            } );
+            ).forEach( di -> devid2now.put(di.getId(), di) );
             final List<DeviceSurvey> ds2persist = new ArrayList<>();
             for(String name : deviceNames) {
                 final SurveyInfo info = name2info.get(name);
@@ -440,13 +441,16 @@ public class SurveyServiceImpl implements SurveyService {
                 final DeviceNow before = devid2now.get(device.getId());
                 if(before == null || before.getSurvey() == null) {
                     sur.setCumulative(0L);
+                    ds2persist.add(sur);
                 }
                 else {
                     DeviceSurvey z = before.getSurvey();
-                    sur.setCumulative( z.getCumulative() + z.getClientsSum() *
-                            ( sur.getTimestamp() - z.getTimestamp() ) );
+                    if(! z.getTimestamp().equals(sur.getTimestamp()) ) {
+                        sur.setCumulative( z.getCumulative() + z.getClientsSum() *
+                                ( sur.getTimestamp() - z.getTimestamp() ) );
+                        ds2persist.add(sur);
+                    }
                 }
-                ds2persist.add(sur);
             }
             for(DeviceSurvey ds : ds2persist) {
                 em.persist(ds);

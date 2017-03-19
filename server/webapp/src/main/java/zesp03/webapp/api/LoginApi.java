@@ -9,8 +9,12 @@ import zesp03.webapp.service.LoginService;
 
 @RestController
 public class LoginApi {
+    private final LoginService loginService;
+
     @Autowired
-    private LoginService loginService;
+    public LoginApi(LoginService loginService) {
+        this.loginService = loginService;
+    }
 
     @PostMapping(value = "/api/login", consumes = "application/x-www-form-urlencoded")
     public LoginResultDto login(

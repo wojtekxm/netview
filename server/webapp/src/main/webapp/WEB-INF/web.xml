@@ -5,38 +5,38 @@
          version="3.1">
 
     <listener>
-        <listener-class>zesp03.config.FlywayConfig</listener-class>
+        <listener-class>zesp03.webapp.config.FlywayConfig</listener-class>
     </listener>
     <listener>
-        <listener-class>zesp03.config.DatabaseConfig</listener-class>
+        <listener-class>zesp03.webapp.config.DatabaseConfig</listener-class>
     </listener>
     <listener>
-        <listener-class>zesp03.config.RootCreation</listener-class>
+        <listener-class>zesp03.webapp.config.RootCreation</listener-class>
     </listener>
 
     <filter>
         <filter-name>StaticResourceFilter</filter-name>
-        <filter-class>zesp03.filter.StaticResourceFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.StaticResourceFilter</filter-class>
     </filter>
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
-        <filter-class>zesp03.filter.AuthenticationFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.AuthenticationFilter</filter-class>
     </filter>
     <filter>
         <filter-name>ForNormalFilter</filter-name>
-        <filter-class>zesp03.filter.ForNormalFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.ForNormalFilter</filter-class>
     </filter>
     <filter>
         <filter-name>ForAdminFilter</filter-name>
-        <filter-class>zesp03.filter.ForAdminFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.ForAdminFilter</filter-class>
     </filter>
     <filter>
         <filter-name>ForRootFilter</filter-name>
-        <filter-class>zesp03.filter.ForRootFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.ForRootFilter</filter-class>
     </filter>
     <filter>
         <filter-name>DynamicHtmlFilter</filter-name>
-        <filter-class>zesp03.filter.DynamicHtmlFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.DynamicHtmlFilter</filter-class>
     </filter>
 
     <filter-mapping>

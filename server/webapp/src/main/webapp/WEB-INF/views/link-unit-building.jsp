@@ -1,6 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="lub" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -46,7 +44,7 @@
 
         </div>
 
-        <c:forEach var="lub" items="list">
+        <c:forEach var="lub" items="${list}">
         <div class="row list-group-item list-group-item-info">
             <div class="col-md-1"><c:out value="${lub.id}"/></div>
             <div class="col-md-1"><c:out value="${lub.building.id}"/></div>

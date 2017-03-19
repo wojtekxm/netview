@@ -51,7 +51,8 @@
                 <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Akutalna lista kontrolerów:</div></div>
             </div>
             <div class="panel panel-default" style="padding: 15px;">
-                <c:forEach items="${list}" var="controller"><c:url var="href" value="/controller?id=${controller.id}"/>
+                <c:forEach items="${list}" var="controller">
+                    <c:url var="href" value="/controller?id=${controller.id}"/>
                     <div>
                         <a href="${href}" class="list-group-item" style="max-width: 300px;">
                             <span class="glyphicon glyphicon-menu-right"></span>

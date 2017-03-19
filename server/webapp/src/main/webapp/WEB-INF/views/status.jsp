@@ -166,9 +166,9 @@
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
-        })
+        });
         loadDate();
-    };
+    }
 
     allDevices();
     inter = setInterval('allDevices()', 10000);

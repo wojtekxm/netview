@@ -40,40 +40,48 @@
 <div class="container" id="page">
     <div class="welcome">
         <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-        <div class="userStatic">zalogowany: <%= userRow.getName() %>
+        <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>
     </div>
     <div class="content">
         <div>
-            <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-plus"></span> Tworzenie nowego użytkownika<span style="float:right;">Zalogowany: ${loggedUser.name}</span></div></div>
+            <div id="wydzial">
+                <div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Tworzenie nowego użytkownika
+                    <span style="float:right;">Zalogowany: <c:out value="${loggedUser.name}"/></span>
+                </div>
+            </div>
         </div>
         <div class="panel panel-default" style="padding: 15px;">
             <div>
-                <a href="/all-users" class="btn btn-info" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-backward"></span> Wszyscy użytkownicy</a>
+                <a href="/all-users" class="btn btn-info" role="button" style="width: 300px;font-size:17px;">
+                    <span class="glyphicon glyphicon-backward"></span>
+                    Wszyscy użytkownicy
+                </a>
             </div>
-            </br>
-            </br>
-                <div id="settings" class="form-group">
-                    <div class="radio">
-                        <label style="font-size:17px;">
-                            <input type="radio" name="is_admin" value="false" checked>
-                            zwykły użytkownik
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label style="font-size:17px;">
-                            <input type="radio" name="is_admin" value="true">
-                            administrator
-                        </label>
-                    </div>
-                    </br>
-                    <div>
-                        <a class="btn btn-success" id="button_create" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj</a>
-                    </div>
+            <br>
+            <br>
+            <div id="settings" class="form-group">
+                <div class="radio">
+                    <label style="font-size:17px;">
+                        <input type="radio" name="is_admin" value="false" checked>
+                        zwykły użytkownik
+                    </label>
                 </div>
-                <div id="result"></div>
-        </div>
+                <div class="radio">
+                    <label style="font-size:17px;">
+                        <input type="radio" name="is_admin" value="true">
+                        administrator
+                    </label>
+                </div>
+                <br>
+                <div>
+                    <a class="btn btn-success" id="button_create" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj</a>
+                </div>
+            </div>
+            <div id="result"></div>
         </div>
     </div>
 </div>

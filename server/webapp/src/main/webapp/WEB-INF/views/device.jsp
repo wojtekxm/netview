@@ -133,7 +133,7 @@
                 legend: {display:false},
                 title: {
                     display: true,
-                    text: "Wykres aktywnosci"<%-- +<%=device.getId()%> --%>
+                    text: "Wykres aktywnosci"
                 },
                 hover:{intersect:true},
                 animation:{

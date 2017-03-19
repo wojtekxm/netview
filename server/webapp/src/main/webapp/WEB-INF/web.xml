@@ -5,38 +5,23 @@
          version="3.1">
 
     <listener>
-        <listener-class>zesp03.config.FlywayConfig</listener-class>
+        <listener-class>zesp03.webapp.config.FlywayConfig</listener-class>
     </listener>
     <listener>
-        <listener-class>zesp03.config.DatabaseConfig</listener-class>
-    </listener>
-    <listener>
-        <listener-class>zesp03.config.RootCreation</listener-class>
+        <listener-class>zesp03.webapp.config.DatabaseConfig</listener-class>
     </listener>
 
     <filter>
         <filter-name>StaticResourceFilter</filter-name>
-        <filter-class>zesp03.filter.StaticResourceFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.StaticResourceFilter</filter-class>
     </filter>
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
-        <filter-class>zesp03.filter.AuthenticationFilter</filter-class>
-    </filter>
-    <filter>
-        <filter-name>ForNormalFilter</filter-name>
-        <filter-class>zesp03.filter.ForNormalFilter</filter-class>
-    </filter>
-    <filter>
-        <filter-name>ForAdminFilter</filter-name>
-        <filter-class>zesp03.filter.ForAdminFilter</filter-class>
-    </filter>
-    <filter>
-        <filter-name>ForRootFilter</filter-name>
-        <filter-class>zesp03.filter.ForRootFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.AuthenticationFilter</filter-class>
     </filter>
     <filter>
         <filter-name>DynamicHtmlFilter</filter-name>
-        <filter-class>zesp03.filter.DynamicHtmlFilter</filter-class>
+        <filter-class>zesp03.webapp.filter.DynamicHtmlFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -48,41 +33,22 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>ForNormalFilter</filter-name>
-        <servlet-name>AllControllersServlet</servlet-name>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-name>DeviceServlet</servlet-name>
-        <servlet-name>StatusServlet</servlet-name>
-        <servlet-name>StatusSmallServlet</servlet-name>
-        <servlet-name>StyleServlet</servlet-name>
-        <servlet-name>LinkUnitBuildingServlet</servlet-name>
-        <servlet-name>AccountManagementServlet</servlet-name>
-        <url-pattern>/api/all-controllers</url-pattern>
-        <url-pattern>/api/all-devices</url-pattern>
-        <url-pattern>/api/controller</url-pattern>
-        <url-pattern>/api/device</url-pattern>
-        <url-pattern>/api/change-password</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>ForAdminFilter</filter-name>
-        <servlet-name>AddControllerServlet</servlet-name>
-        <servlet-name>MakeSurveyServlet</servlet-name>
-        <servlet-name>RemoveControllerServlet</servlet-name>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>ForRootFilter</filter-name>
-        <servlet-name>AllUsersServlet</servlet-name>
-        <servlet-name>BlockPasswordServlet</servlet-name>
-        <servlet-name>NewUserServlet</servlet-name>
-        <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/api/all-users</url-pattern>
-        <url-pattern>/api/block-user</url-pattern>
-        <url-pattern>/api/create-new-user</url-pattern>
-        <url-pattern>/api/delete-user</url-pattern>
-        <url-pattern>/api/user</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
         <filter-name>DynamicHtmlFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <servlet>
+        <servlet-name>Spring Dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>Spring Dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 </web-app>

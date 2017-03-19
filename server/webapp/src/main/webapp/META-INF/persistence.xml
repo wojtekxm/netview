@@ -6,15 +6,14 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="CRM" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>zesp03.entity.Controller</class>
-        <class>zesp03.entity.Device</class>
-        <class>zesp03.entity.DeviceSurvey</class>
-        <class>zesp03.entity.User</class>
-        <class>zesp03.entity.Token</class>
-        <class>zesp03.entity.Building</class>
-        <class>zesp03.entity.Link_unit_building</class>
-        <class>zesp03.entity.Unit</class>
-        <class>zesp03.entity.MinmaxSurvey</class>
+        <class>zesp03.common.entity.Controller</class>
+        <class>zesp03.common.entity.Device</class>
+        <class>zesp03.common.entity.DeviceSurvey</class>
+        <class>zesp03.common.entity.User</class>
+        <class>zesp03.common.entity.Token</class>
+        <class>zesp03.common.entity.Building</class>
+        <class>zesp03.common.entity.LinkUnitBuilding</class>
+        <class>zesp03.common.entity.Unit</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <!--

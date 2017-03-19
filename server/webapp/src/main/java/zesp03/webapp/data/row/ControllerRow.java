@@ -2,6 +2,7 @@ package zesp03.webapp.data.row;
 
 import zesp03.common.entity.Controller;
 
+@Deprecated
 public class ControllerRow {
     private long id;
     private String name;

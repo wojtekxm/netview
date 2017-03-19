@@ -4,6 +4,7 @@ import zesp03.common.entity.Unit;
 
 
 
+@Deprecated
 public class UnitRow {
 
     private long id;

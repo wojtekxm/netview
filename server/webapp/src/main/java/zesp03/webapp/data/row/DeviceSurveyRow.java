@@ -2,6 +2,7 @@ package zesp03.webapp.data.row;
 
 import zesp03.common.entity.DeviceSurvey;
 
+@Deprecated
 public class DeviceSurveyRow {
     private long id;
     private int timestamp;

@@ -5,7 +5,7 @@ import zesp03.common.entity.Building;
 import java.math.BigDecimal;
 
 
-
+@Deprecated
 public class BuildingRow {
     private long id;
     private String code;

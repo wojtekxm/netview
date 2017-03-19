@@ -3,6 +3,7 @@ package zesp03.webapp.data.row;
 import zesp03.common.entity.User;
 import zesp03.common.entity.UserRole;
 
+@Deprecated
 public class UserRow {
     private long id;
     private String name;

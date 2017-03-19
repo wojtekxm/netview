@@ -1,28 +1,13 @@
-package zesp03.webapp.data.row;
+package zesp03.webapp.dto;
 
 import zesp03.common.entity.Device;
 
-@Deprecated
-public class DeviceRow {
+public class DeviceDto {
     private long id;
     private String name;
     private boolean known;
     private String description;
     private long controllerId;
-
-    public DeviceRow() {
-    }
-
-    /**
-     * Device entity should be in managed state.
-     */
-    public DeviceRow(Device d) {
-        this.id = d.getId();
-        this.name = d.getName();
-        this.known = d.isKnown();
-        this.description = d.getDescription();
-        this.controllerId = d.getController().getId();
-    }
 
     public long getId() {
         return id;
@@ -62,5 +47,13 @@ public class DeviceRow {
 
     public void setControllerId(long controllerId) {
         this.controllerId = controllerId;
+    }
+
+    public void wrap(Device d) {
+        this.id = d.getId();
+        this.name = d.getName();
+        this.known = d.isKnown();
+        this.description = d.getDescription();
+        this.controllerId = d.getController().getId();
     }
 }

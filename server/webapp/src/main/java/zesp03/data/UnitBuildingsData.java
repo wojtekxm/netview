@@ -6,9 +6,7 @@ import zesp03.data.row.UnitRow;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Berent on 2017-03-15.
- */
+
     public class UnitBuildingsData {
 
         private UnitRow unit;

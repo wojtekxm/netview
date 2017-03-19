@@ -3,15 +3,10 @@ package zesp03.data;
 import zesp03.data.row.BuildingRow;
 import zesp03.data.row.ControllerRow;
 import zesp03.data.row.UnitRow;
-import zesp03.entity.Building;
-import zesp03.entity.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Berent on 2017-03-14.
- */
 public class BuildingUnitsControllersData {
 
     private BuildingRow building;

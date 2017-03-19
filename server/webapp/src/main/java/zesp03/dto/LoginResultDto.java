@@ -1,16 +1,11 @@
 package zesp03.dto;
 
-public class LoginResultDto {
-    private boolean success;
+public class LoginResultDto extends BaseResultDto {
     private long userId;
     private String passToken;
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public LoginResultDto(boolean success) {
+        super(success);
     }
 
     public long getUserId() {

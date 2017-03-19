@@ -7,9 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Informacje o użytkowniku</title>
-    <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
-    <link rel="stylesheet" href="/css/loggedStyleWhite.css.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/favicon.ico">
 </head>
@@ -45,27 +43,79 @@
         </div>
         <div class="logo"><img src="/images/logooWhite.jpg"></div>
     </div>
-    informacje o użytkowniku:<br>
-    id: <c:out value="${selected.id}"/><br>
-    nazwa: <c:out value="${selected.name}"/><br>
-    rola:
-    <c:choose
-        ><c:when test="${selected.role.name() eq 'ROOT'}">root</c:when
-        ><c:when test="${selected.role.name() eq 'NORMAL'}">zwykły użytkownik</c:when
-        ><c:otherwise>administrator</c:otherwise
-    ></c:choose><br>
-    <c:choose
-    ><c:when test="${selected.blocked}">konto zablokowane</c:when
-        ><c:when test="${not selected.activated}">konto nieaktywne</c:when
-        ><c:otherwise>konto aktywne</c:otherwise
-    ></c:choose>
-    <c:if test="${not selected.blocked}"><form action="/block-password" method="post">
-            <input type="hidden" name="id" value="${selected.id}">
-            <button type="submit">Zablokuj dostęp</button>
-        </form>
-    </c:if>
+    <div id="result" style="display:none">
+        <h1>informacje o użytkowniku</h1>
+        id: <span id="user_id"></span><br>
+        nazwa: <span id="user_name"></span><br>
+        rola: <span id="user_role"></span><br>
+        konto: <span id="user_state"></span><br>
+        <button id="button_block" type="button" style="display:none">Zablokuj dostęp</button>
+    </div>
+    <span id="progress_area">pobieranie informacji...</span>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script>
+    var my = {};
+    my.selectedId = ${selected.id};
+    $(document).ready( function() {
+        $.ajax({
+            type: 'get',
+            url: '/api/user',
+            data: {
+                'id': my.selectedId
+            },
+            dataType: 'json',
+            success: function(userData) {
+                var role = 'zwykły użytkownik';
+                if(userData.role === 'ROOT')role = 'root';
+                else if(userData.role === 'ADMIN')role = 'administrator';
+
+                var st = 'aktywne';
+                if(userData.blocked)st = 'zablokowane';
+                else if(!userData.activated)st = 'nieaktywne';
+
+                $('#user_id').text(userData.id);
+                $('#user_name').text(userData.name);
+                $('#user_role').text(role);
+                $('#user_state').text(st);
+                if(!userData.blocked) {
+                    $('#button_block').show();
+                }
+                $('#result').show();
+                $('#progress_area').hide();
+                $('#button_block').click( function() {
+                    $.ajax({
+                        type: 'post',
+                        url: '/api/block-user',
+                        data: {
+                            id: my.selectedId
+                        },
+                        dataType: 'json',
+                        success: function(baseResultDto) {
+                            if(baseResultDto.success) {
+                                $('#user_state').text('zablokowane');
+                                $('#button_block').hide(400);
+                                $('#progress_area').hide();
+                            }
+                            else {
+                                $('#progress_area').text('RESULT: FAILED');
+                                $('#progress_area').show();
+                            }
+                        },
+                        error: function() {
+                            $('#progress_area').text('FAILED AJAX');
+                            $('#progress_area').show();
+                        }
+                    });
+                } );
+            },
+            error: function() {
+                $('#progress_area').text('Nie udało się pobrać informacji!');
+                $('#progress_area').show();
+            }
+        });
+    } );
+</script>
 </body>
 </html>

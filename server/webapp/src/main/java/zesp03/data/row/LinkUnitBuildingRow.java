@@ -4,9 +4,6 @@ import zesp03.entity.Building;
 import zesp03.entity.LinkUnitBuilding;
 import zesp03.entity.Unit;
 
-/**
- * Created by Berent on 2017-03-06.
- */
 public class LinkUnitBuildingRow {
     private long id;
     private Building building;

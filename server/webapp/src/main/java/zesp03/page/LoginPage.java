@@ -1,31 +1,30 @@
 package zesp03.page;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import zesp03.dto.LoginResultDto;
-import zesp03.exception.ValidationException;
 import zesp03.filter.AuthenticationFilter;
 import zesp03.service.LoginService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.FormParam;
 
 @Controller
 public class LoginPage {
+    private static final Logger log = LoggerFactory.getLogger(LoginPage.class);
+
     @PostMapping("/login")
     public String post(
-            @FormParam("username") String username,
-            @FormParam("password") String password,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
             ModelMap model,
             HttpServletResponse resp) {
-        if(username == null)
-            throw new ValidationException("username", "null");//!?!
-        if(password == null)
-            throw new ValidationException("password", "null");//!?!
         LoginResultDto result = new LoginService().login(username, password);
         if (result.isSuccess()) {
             Cookie cu = new Cookie(

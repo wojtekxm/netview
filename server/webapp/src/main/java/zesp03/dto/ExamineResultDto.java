@@ -5,8 +5,8 @@ public class ExamineResultDto extends BaseResultDto {
     private double timeElapsed; // w sekundach
     private int updatedDevices;
 
-    public ExamineResultDto() {
-        super(true);
+    public ExamineResultDto(boolean success) {
+        super(success);
     }
 
     public long getControllerId() {

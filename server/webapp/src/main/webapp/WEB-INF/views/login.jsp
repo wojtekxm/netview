@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="/css/loginStyle.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet'
           type='text/css'>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 </head>
 <body>
 <div class="container">

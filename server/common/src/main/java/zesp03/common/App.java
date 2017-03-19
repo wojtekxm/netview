@@ -65,25 +65,6 @@ public class App {
         }
     }
 
-    /**
-     * @param name nazwa użytkownika do sprawdzenia
-     * @return czy nazwa użytkownika składa się z poprawnych znaków (niezależnie od tego czy jest już zajęta)
-     */
-    public static boolean isValidUserName(String name) {
-        if (name == null || name.isEmpty()) return false;
-        return Unicode.onlyAlphaNum(name) && name.length() <= USER_NAME_MAX_CHARS;
-    }
-
-    public static boolean isValidPassword(String password) {
-        return password != null && ! password.isEmpty();
-    }
-
-    public static boolean isValidControllerName(String name) {
-        if (name == null || name.isEmpty()) return false;
-        if (name.length() > CONTROLLER_NAME_MAX_CHARS) return false;
-        return Unicode.noSurrogates(name);
-    }
-
     public static boolean isCompatibleDeviceName(String name) {
         if (name.length() > DEVICE_NAME_MAX_CHARS) return false;
         return Unicode.noSurrogates(name);

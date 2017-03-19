@@ -4,9 +4,6 @@ import zesp03.entity.Building;
 
 import java.math.BigDecimal;
 
-/**
- * Created by Berent on 2017-03-06.
- */
 
 
 public class BuildingRow {

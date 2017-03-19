@@ -49,14 +49,6 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>ForNormalFilter</filter-name>
-        <servlet-name>AllControllersServlet</servlet-name>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-name>DeviceServlet</servlet-name>
-        <servlet-name>StatusServlet</servlet-name>
-        <servlet-name>StatusSmallServlet</servlet-name>
-        <servlet-name>StyleServlet</servlet-name>
-        <servlet-name>LinkUnitBuildingServlet</servlet-name>
-        <servlet-name>AccountManagementServlet</servlet-name>
         <url-pattern>/api/all-controllers</url-pattern>
         <url-pattern>/api/all-devices</url-pattern>
         <url-pattern>/api/controller</url-pattern>
@@ -65,19 +57,13 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>ForAdminFilter</filter-name>
-        <servlet-name>AddControllerServlet</servlet-name>
-        <servlet-name>MakeSurveyServlet</servlet-name>
-        <servlet-name>RemoveControllerServlet</servlet-name>
+        <url-pattern>/api/make-survey</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>ForRootFilter</filter-name>
-        <servlet-name>AllUsersServlet</servlet-name>
-        <servlet-name>BlockPasswordServlet</servlet-name>
-        <servlet-name>NewUserServlet</servlet-name>
-        <servlet-name>UserServlet</servlet-name>
         <url-pattern>/api/all-users</url-pattern>
         <url-pattern>/api/block-user</url-pattern>
-        <url-pattern>/api/create-new-user</url-pattern>
+        <url-pattern>/api/create-user</url-pattern>
         <url-pattern>/api/delete-user</url-pattern>
         <url-pattern>/api/user</url-pattern>
     </filter-mapping>
@@ -98,6 +84,6 @@
     
     <servlet-mapping>
         <servlet-name>Spring Dispatcher</servlet-name>
-        <url-pattern>/spring/*</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>

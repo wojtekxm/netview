@@ -18,8 +18,7 @@ public class LoginService {
             throw new IllegalArgumentException("password == null");
 
         final String passToken = App.passwordToHash(password);
-        final LoginResultDto result = new LoginResultDto();
-        result.setSuccess(false);
+        final LoginResultDto result = new LoginResultDto(false);
         result.setUserId(-1);
         result.setPassToken(null);
 

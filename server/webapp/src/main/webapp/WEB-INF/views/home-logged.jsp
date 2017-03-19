@@ -15,8 +15,8 @@
     <h1>
         Zalogowany jako: <c:out value="${loggedUser.name}"/>
         <span class="label label-default"><c:choose
-            ><c:when test="${selected.role.name() eq 'ROOT'}">root</c:when
-            ><c:when test="${selected.role.name() eq 'NORMAL'}">zwykły użytkownik</c:when
+            ><c:when test="${loggedUser.role eq 'ROOT'}">root</c:when
+            ><c:when test="${loggedUser.role eq 'NORMAL'}">zwykły użytkownik</c:when
             ><c:otherwise>administrator</c:otherwise
         ></c:choose></span>
     </h1>
@@ -41,16 +41,16 @@
                     <span class="label label-default">status-small</span>
                 </a>
             </li>
-            <c:if test="${loggedUser.role.name() eq 'ROOT' or loggedUser.role.name() eq 'ADMIN'}"><li>
+            <c:if test="${loggedUser.role == 'ROOT' or loggedUser.role == 'ADMIN'}"><li>
                 <a href="/make-survey">
                     nowe badania sieci
                     <span class="label label-default">make-survey</span>
                 </a>
             </li>
             <li>
-                <a href="/add-controller">
+                <a href="/create-controller">
                     nowy kontroler
-                    <span class="label label-default">add-controller</span>
+                    <span class="label label-default">create-controller</span>
                 </a>
             </li>
             </c:if>

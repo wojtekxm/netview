@@ -3,9 +3,7 @@ package zesp03.data.row;
 import zesp03.entity.Unit;
 
 
-/**
- * Created by Berent on 2017-03-06.
- */
+
 public class UnitRow {
 
     private long id;

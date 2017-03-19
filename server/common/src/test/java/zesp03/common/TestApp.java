@@ -12,52 +12,6 @@ public class TestApp {
             "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd";
 
     @Test
-    public void isValidUserName_empty_false() {
-        assertFalse(App.isValidUserName(""));
-    }
-
-    @Test
-    public void isValidUserName_admin_true() {
-        assertTrue(App.isValidUserName("admin"));
-    }
-
-    @Test
-    public void isValidUserName_colon_false() {
-        assertFalse(App.isValidUserName(":"));
-    }
-
-    @Test
-    public void isValidUserName_tooLong_false() {
-        assertFalse(App.isValidUserName(TOO_LONG));
-    }
-
-    @Test
-    public void isValidUserName_numbers_true() {
-        assertTrue(App.isValidUserName("213475893425"));
-    }
-
-    @Test
-    public void isValidControllerName_empty_false() {
-        assertFalse(App.isValidControllerName(""));
-    }
-
-    @Test
-    public void isValidControllerName_tooLong_false() {
-        assertFalse(App.isValidControllerName(TOO_LONG));
-    }
-
-    @Test
-    public void isValidControllerName_wifi_true() {
-        assertTrue(App.isValidControllerName("wifi"));
-    }
-
-    @Test
-    public void isValidControllerName_withSupplementary_false() {
-        String s = "wifi" + TestUnicode.BAT_STRING + "1234";
-        assertFalse(App.isValidControllerName(s));
-    }
-
-    @Test
     public void isCompatibleDeviceName_abc_true() {
         assertTrue(App.isCompatibleDeviceName("abc"));
     }

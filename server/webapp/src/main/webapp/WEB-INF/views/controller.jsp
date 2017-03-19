@@ -7,11 +7,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kontrolery</title>
+    <title>Kontroler</title>
+    <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -38,27 +38,43 @@
         </ul>
     </div>
 </nav>
-<div class="container">
-    <div class="welcome">
-        <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-        <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
-        </div>
-        <div class="logo"><img src="/images/logooWhite.jpg"></div>
+<div class="welcome">
+    <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
+    <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
     </div>
+    <div class="logo"><img src="/images/logooWhite.jpg"></div>
+</div>
+<div class="container">
     <div class="list-group ">
         <div class="row">
-            <a href="/create-controller" class="btn btn-primary btn-default btn-lg active" role="button">
-                Stwórz nowy kontroler
-            </a>
+            <form method="post" action="/api/remove-controller">
+                <input type="hidden" name="id" value="${controller.id}">
+                <input type="submit" value="Usuń" class="btn btn-primary btn-default btn-lg active list-group-item-heading" role="button">
+            </form>
         </div>
-        <c:forEach items="${list}" var="controller"><div class="row"><c:url
-                var="href" value="/controller?id=${controller.id}"/>
-            <a href="${href}" class="col-md-4  list-group-item list-group-item-info">
-                <c:out value="${controller.name}"/>
-                <c:out value="${controller.ipv4}"/>
-                <c:out value="${controller.description}"/>
-            </a>
-        </div></c:forEach>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                szczegóły urządzenia
+            </div>
+            <table class="table table-bordered">
+                <tr>
+                    <td>ID</td>
+                    <td><c:out value="${controller.id}"/></td>
+                </tr>
+                <tr>
+                    <td>Nazwa</td>
+                    <td><c:out value="${controller.name}"/></td>
+                </tr>
+                <tr>
+                    <td>IP</td>
+                    <td><c:out value="${controller.ipv4}"/></td>
+                </tr>
+                <tr>
+                    <td>Opis</td>
+                    <td><c:out value="${controller.description}"/></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

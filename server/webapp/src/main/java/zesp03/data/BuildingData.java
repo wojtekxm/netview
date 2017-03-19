@@ -5,9 +5,6 @@ import zesp03.data.row.UnitRow;
 import zesp03.entity.Building;
 import zesp03.entity.LinkUnitBuilding;
 
-/**
- * Created by Berent on 2017-03-13.
- */
 public class BuildingData {
     private long id;
     private String code;

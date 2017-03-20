@@ -20,7 +20,7 @@ public interface SurveyService {
      * @param end    timestamp w sekundach, górny limit (wyłącznie) czasu badań.
      *               Musi być większy od <code>start</code>.
      */
-    List<DeviceSurvey> getOriginalSurveys(long deviceId, int start, int end);
+    List<DeviceSurvey> getOriginal(long deviceId, int start, int end);
 
     /**
      * @param start timestamp w sekundach, dolny limit (włącznie) czasu badań
@@ -28,14 +28,28 @@ public interface SurveyService {
      *            Musi być większy od <code>start</code>.
      * @return Średnia liczba klientów dla danego urządzenia w wybranym okresie czasu.
      */
-    double getAverageSurvey(long deviceId, int start, int end);
+    double getAverage(long deviceId, int start, int end);
+
+    /**
+     * @param start timestamp w sekundach, >= 0
+     * @param groups liczba grup, >= 0
+     * @param groupTime czas trwania jednej grupy w sekundach, > 0
+     */
+    List<Double> getMultiAverage(long deviceId, int start, int groups, int groupTime);
 
     /**
      * @param start timestamp w sekundach, dolny limit (włącznie) czasu badań
      * @param end timestamp w sekundach, górny limit (wyłącznie) czasu badań.
      *            Musi być większy od <code>start</code>.
      */
-    MinmaxSurveyData getMinmaxSimple(long deviceId, int start, int end);
+    MinmaxSurveyData getMinmax(long deviceId, int start, int end);
+
+    /**
+     * @param start timestamp w sekundach, >= 0
+     * @param groups liczba grup, >= 0
+     * @param groupTime czas trwania jednej grupy w sekundach, > 0
+     */
+    List<MinmaxSurveyData> getMultiMinmax(long deviceId, int start, int groups, int groupTime);
 
     List<DeviceNow> checkAll();
 

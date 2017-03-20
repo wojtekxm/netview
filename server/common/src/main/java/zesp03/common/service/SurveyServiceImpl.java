@@ -32,7 +32,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public List<DeviceSurvey> getOriginalSurveys(long deviceId, int start, int end) {
+    public List<DeviceSurvey> getOriginal(long deviceId, int start, int end) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
         if(end < 0)
@@ -71,7 +71,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public double getAverageSurvey(long deviceId, int start, int end) {
+    public double getAverage(long deviceId, int start, int end) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
         if(end < 0)
@@ -86,41 +86,84 @@ public class SurveyServiceImpl implements SurveyService {
             tran = em.getTransaction();
             tran.begin();
 
-            Device device = em.find(Device.class, deviceId);
-            if(device == null)
-                throw new NotFoundException("device");
-
-            List<DeviceSurvey> listEnd = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE ds.device = :device AND " +
-                    "ds.timestamp <= :time ORDER BY ds.timestamp DESC ", DeviceSurvey.class)
-                    .setParameter("device", device)
-                    .setParameter("time", end)
-                    .setMaxResults(1)
-                    .getResultList();
-            if(listEnd.isEmpty()) {
-                tran.rollback();
-                return 0.0;
-            }
-            DeviceSurvey surEnd = listEnd.get(0);
-            long cumulativeEnd = surEnd.getCumulative() + (long)surEnd.getClientsSum() * ( end - surEnd.getTimestamp() );
-
-            List<DeviceSurvey> listStart = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE ds.device = :device AND " +
-                    "ds.timestamp <= :time ORDER BY ds.timestamp DESC ", DeviceSurvey.class)
-                    .setParameter("device", device)
-                    .setParameter("time", start)
-                    .setMaxResults(1)
-                    .getResultList();
-            long cumulativeStart;
-            if(listStart.isEmpty()) {
-                cumulativeStart = 0;
-            }
-            else {
-                DeviceSurvey surStart = listStart.get(0);
-                cumulativeStart = surStart.getCumulative() + (long)surStart.getClientsSum() * ( start - surStart.getTimestamp() );
-            }
-
+            double avg = getAverage(deviceId, start, end, em);
             tran.commit();
-            double num = cumulativeEnd - cumulativeStart;
-            return num / (end - start);
+            return avg;
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    protected double getAverage(long deviceId, int start, int end, EntityManager em) {
+        Device device = em.find(Device.class, deviceId);
+        if(device == null)
+            throw new NotFoundException("device");
+
+        List<DeviceSurvey> listEnd = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE ds.device = :device AND " +
+                "ds.timestamp <= :time ORDER BY ds.timestamp DESC ", DeviceSurvey.class)
+                .setParameter("device", device)
+                .setParameter("time", end)
+                .setMaxResults(1)
+                .getResultList();
+        if(listEnd.isEmpty()) {
+            return 0.0;
+        }
+        DeviceSurvey surEnd = listEnd.get(0);
+        long cumulativeEnd = surEnd.getCumulative() + (long)surEnd.getClientsSum() * ( end - surEnd.getTimestamp() );
+
+        List<DeviceSurvey> listStart = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE ds.device = :device AND " +
+                "ds.timestamp <= :time ORDER BY ds.timestamp DESC ", DeviceSurvey.class)
+                .setParameter("device", device)
+                .setParameter("time", start)
+                .setMaxResults(1)
+                .getResultList();
+        long cumulativeStart;
+        if(listStart.isEmpty()) {
+            cumulativeStart = 0;
+        }
+        else {
+            DeviceSurvey surStart = listStart.get(0);
+            cumulativeStart = surStart.getCumulative() + (long) surStart.getClientsSum() * (start - surStart.getTimestamp());
+        }
+        double num = cumulativeEnd - cumulativeStart;
+        double avg = num / (end - start);
+        if(avg < 0.0) {
+            log.warn("avg < 0\n" +
+                    "deviceId={} start={}, end={}" +
+                    "cumulativeStart={} cumulativeEnd={} num={} avg={}",
+                    deviceId, start, end, cumulativeStart, cumulativeEnd, num, avg);
+            avg = 0.0;
+        }
+        return avg;
+    }
+
+    @Override
+    public List<Double> getMultiAverage(long deviceId, int start, int groups, int groupTime) {
+        if(start < 0)
+            throw new IllegalArgumentException("start < 0");
+        if(groups < 0)
+            throw new IllegalArgumentException("groups < 0");
+        if(groupTime < 1)
+            throw new IllegalArgumentException("groupTime < 1");
+
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            int begin = start;
+            List<Double> list = new ArrayList<>();
+            for(int i = 0; i < groups; i++) {
+                list.add( getAverage(deviceId, begin, begin + groupTime, em) );
+                begin += groupTime;
+            }
+            tran.commit();
+            return list;
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;
@@ -130,7 +173,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public MinmaxSurveyData getMinmaxSimple(long deviceId, int start, int end) {
+    public MinmaxSurveyData getMinmax(long deviceId, int start, int end) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
         if(end < 0)
@@ -145,36 +188,73 @@ public class SurveyServiceImpl implements SurveyService {
             tran = em.getTransaction();
             tran.begin();
 
-            final MinmaxSurveyData result = new MinmaxSurveyData();
-            result.setDeviceId(deviceId);
-            result.setTimeStart(start);
-            result.setTimeEnd(end);
-            List<Integer> begins = em.createQuery("SELECT ds.timestamp FROM DeviceSurvey ds WHERE " +
-                            "ds.device.id = :did AND ds.timestamp <= :start ORDER BY ds.timestamp DESC",
-                    Integer.class)
-                    .setParameter("did", deviceId)
-                    .setParameter("start", start)
-                    .setMaxResults(1)
-                    .getResultList();
-            int begin = start;
-            if(!begins.isEmpty())begin = begins.get(0);
-            Object[] mm = em.createQuery("SELECT MIN(ds.clientsSum), MAX(ds.clientsSum), " +
-                    "COUNT(ds) FROM DeviceSurvey ds WHERE ds.device.id = :did AND " +
-                    "ds.timestamp >= :begin AND ds.timestamp < :end", Object[].class)
-                    .setParameter("did", deviceId)
-                    .setParameter("begin", begin)
-                    .setParameter("end", end)
-                    .getSingleResult();
-            Integer min = (Integer)mm[0];
-            Integer max = (Integer)mm[1];
-            Long span = (Long)mm[2];
-            if(min == null || max == null || span == null)
-                throw new NotFoundException("no results for device with id=" + deviceId);
-            result.setMin(min);
-            result.setMax(max);
-            result.setSurveySpan((int)(long)span);
+            final MinmaxSurveyData result = getMinmax(deviceId, start, end, em);
             tran.commit();
             return result;
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    protected MinmaxSurveyData getMinmax(long deviceId, int start, int end, EntityManager em) {
+        final MinmaxSurveyData result = new MinmaxSurveyData();
+        result.setDeviceId(deviceId);
+        result.setTimeStart(start);
+        result.setTimeEnd(end);
+        List<Integer> begins = em.createQuery("SELECT ds.timestamp FROM DeviceSurvey ds WHERE " +
+                        "ds.device.id = :did AND ds.timestamp <= :start ORDER BY ds.timestamp DESC",
+                Integer.class)
+                .setParameter("did", deviceId)
+                .setParameter("start", start)
+                .setMaxResults(1)
+                .getResultList();
+        int begin = start;
+        if(!begins.isEmpty())begin = begins.get(0);
+        Object[] mm = em.createQuery("SELECT MIN(ds.clientsSum), MAX(ds.clientsSum), " +
+                "COUNT(ds) FROM DeviceSurvey ds WHERE ds.device.id = :did AND " +
+                "ds.timestamp >= :begin AND ds.timestamp < :end", Object[].class)
+                .setParameter("did", deviceId)
+                .setParameter("begin", begin)
+                .setParameter("end", end)
+                .getSingleResult();
+        Integer min = (Integer)mm[0];
+        Integer max = (Integer)mm[1];
+        Long span = (Long)mm[2];
+        if(min == null || max == null || span == null)
+            throw new NotFoundException("no results for device with id=" + deviceId);
+        result.setMin(min);
+        result.setMax(max);
+        result.setSurveySpan((int)(long)span);
+        return result;
+    }
+
+    @Override
+    public List<MinmaxSurveyData> getMultiMinmax(long deviceId, int start, int groups, int groupTime) {
+        if(start < 0)
+            throw new IllegalArgumentException("start < 0");
+        if(groups < 0)
+            throw new IllegalArgumentException("groups < 0");
+        if(groupTime < 1)
+            throw new IllegalArgumentException("groupTime < 1");
+
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            int begin = start;
+            List<MinmaxSurveyData> list = new ArrayList<>();
+            for(int i = 0; i < groups; i++) {
+                list.add( getMinmax(deviceId, begin, begin + groupTime, em) );
+                begin += groupTime;
+            }
+            tran.commit();
+            return list;
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;

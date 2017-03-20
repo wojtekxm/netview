@@ -95,4 +95,10 @@ public class DeviceStateDto {
             this.clientsSum = 0;
         }
     }
+
+    public static DeviceStateDto make(DeviceNow d) {
+        DeviceStateDto dto = new DeviceStateDto();
+        dto.wrap(d);
+        return dto;
+    }
 }

@@ -5,7 +5,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import zesp03.common.core.Database;
 import zesp03.common.entity.User;
-import zesp03.webapp.data.row.UserRow;
+import zesp03.webapp.dto.UserDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -16,7 +16,7 @@ import java.util.List;
 public class AllUsersPage {
     @GetMapping("/all-users")
     public String get(ModelMap model) {
-        final ArrayList<UserRow> allUsers = new ArrayList<>();
+        final ArrayList<UserDto> allUsers = new ArrayList<>();
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -28,7 +28,7 @@ public class AllUsersPage {
             List<User> list = em.createQuery("SELECT u FROM User u", User.class)
                     .getResultList();
             for (User u : list) {
-                allUsers.add(new UserRow(u));
+                allUsers.add(UserDto.make(u));
             }
 
             tran.commit();

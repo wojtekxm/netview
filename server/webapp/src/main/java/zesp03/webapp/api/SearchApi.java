@@ -47,11 +47,7 @@ public class SearchApi {
                     .setParameter("anywhere", anywhere)
                     .getResultList()
                     .stream()
-                    .map( device -> {
-                        DeviceDto dto = new DeviceDto();
-                        dto.wrap(device);
-                        return dto;
-                    } )
+                    .map(DeviceDto::make)
                     .collect(Collectors.toList());
 
             final List<ControllerDto> controllers = em.createQuery("SELECT c FROM Controller c WHERE " +
@@ -61,19 +57,7 @@ public class SearchApi {
                     .setParameter("anywhere", anywhere)
                     .getResultList()
                     .stream()
-                    .map( controller -> {
-                        log.warn("controller id {}", controller.getId());//!
-                        log.warn("controller name {}", controller.getName());//!
-                        log.warn("controller desc {}", controller.getDescription());//!
-                        log.warn("controller ipv4 {}", controller.getIpv4());//!
-                        ControllerDto dto = new ControllerDto();
-                        log.warn("dto id {}", dto.getId());//!
-                        log.warn("dto name {}", dto.getName());//!
-                        log.warn("dto desc {}", dto.getDescription());//!
-                        log.warn("dto ipv4 {}", dto.getIpv4());//!
-                        dto.wrap(controller);
-                        return dto;
-                    } )
+                    .map(ControllerDto::make)
                     .collect(Collectors.toList());
 
             final List<BuildingDto> buildings = em.createQuery("SELECT b FROM Building b WHERE " +
@@ -83,11 +67,7 @@ public class SearchApi {
                     .setParameter("anywhere", anywhere)
                     .getResultList()
                     .stream()
-                    .map( building -> {
-                        BuildingDto dto = new BuildingDto();
-                        dto.wrap(building);
-                        return dto;
-                    } )
+                    .map(BuildingDto::make)
                     .collect(Collectors.toList());
 
             final List<UnitDto> units = em.createQuery("SELECT u FROM Unit u WHERE " +
@@ -97,11 +77,7 @@ public class SearchApi {
                     .setParameter("anywhere", anywhere)
                     .getResultList()
                     .stream()
-                    .map( unit -> {
-                        UnitDto dto = new UnitDto();
-                        dto.wrap(unit);
-                        return dto;
-                    } )
+                    .map(UnitDto::make)
                     .collect(Collectors.toList());
 
             final List<UserDto> users = em.createQuery("SELECT u FROM User u WHERE u.name LIKE :begins",
@@ -109,11 +85,7 @@ public class SearchApi {
                     .setParameter("begins", begins)
                     .getResultList()
                     .stream()
-                    .map( user -> {
-                        UserDto dto = new UserDto();
-                        dto.wrap(user);
-                        return dto;
-                    } )
+                    .map(UserDto::make)
                     .collect(Collectors.toList());
 
             final SearchDto result = new SearchDto();

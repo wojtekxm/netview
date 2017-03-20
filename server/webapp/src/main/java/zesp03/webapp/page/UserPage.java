@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import zesp03.common.core.Database;
 import zesp03.common.entity.User;
 import zesp03.common.exception.NotFoundException;
-import zesp03.webapp.data.row.UserRow;
+import zesp03.webapp.dto.UserDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -18,7 +18,6 @@ public class UserPage {
     public String get(
             @RequestParam(value="id") long id,
             ModelMap model) {
-        UserRow user;
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -29,16 +28,15 @@ public class UserPage {
             User u = em.find(User.class, id);
             if(u == null)
                 throw new NotFoundException("user");
-            user = new UserRow(u);
+            UserDto dto = UserDto.make(u);
+            model.put("selected", dto);
             tran.commit();
+            return "user";
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;
         } finally {
             if (em != null) em.close();
         }
-
-        model.put("selected", user);
-        return "user";
     }
 }

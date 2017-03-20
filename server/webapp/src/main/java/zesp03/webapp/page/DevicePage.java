@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import zesp03.common.core.Database;
 import zesp03.common.entity.Device;
 import zesp03.common.exception.NotFoundException;
-import zesp03.webapp.data.row.ControllerRow;
-import zesp03.webapp.data.row.DeviceRow;
+import zesp03.webapp.dto.ControllerDto;
+import zesp03.webapp.dto.DeviceDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -29,10 +29,10 @@ public class DevicePage {
             Device d = em.find(Device.class, id);
             if(d == null)
                 throw new NotFoundException("device");
-            DeviceRow drow = new DeviceRow(d);
-            ControllerRow crow = new ControllerRow(d.getController());
-            model.put("device", drow);
-            model.put("controller", crow);
+            DeviceDto device = DeviceDto.make(d);
+            ControllerDto controller = ControllerDto.make(d.getController());
+            model.put("device", device);
+            model.put("controller", controller);
             tran.commit();
             return "device";
         } catch (RuntimeException exc) {

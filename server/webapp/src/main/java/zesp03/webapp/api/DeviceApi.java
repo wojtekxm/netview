@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import zesp03.common.core.Database;
-import zesp03.common.data.DeviceNow;
 import zesp03.common.entity.Device;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.service.SurveyService;
@@ -31,21 +30,14 @@ public class DeviceApi {
     public List<DeviceStateDto> getAll() {
         return surveyService.checkAll()
                 .stream()
-                .map( dn -> {
-                    DeviceStateDto dto = new DeviceStateDto();
-                    dto.wrap(dn);
-                    return dto;
-                })
+                .map(DeviceStateDto::make)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/api/device")
     public DeviceStateDto getOne(
             @RequestParam("id") long device) {
-        DeviceNow dn = surveyService.checkOne(device);
-        DeviceStateDto dto = new DeviceStateDto();
-        dto.wrap(dn);
-        return dto;
+        return DeviceStateDto.make( surveyService.checkOne(device) );
     }
 
     @PostMapping(value = "/api/remove-device", consumes = "application/x-www-form-urlencoded")

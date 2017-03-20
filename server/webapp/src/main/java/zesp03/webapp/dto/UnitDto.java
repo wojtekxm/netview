@@ -36,4 +36,10 @@ public class UnitDto {
         this.code = u.getCode();
         this.description = u.getDescription();
     }
+
+    public static UnitDto make(Unit u) {
+        UnitDto dto = new UnitDto();
+        dto.wrap(u);
+        return dto;
+    }
 }

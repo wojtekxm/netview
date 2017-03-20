@@ -1,13 +1,10 @@
 package zesp03.webapp.filter;
 
-import zesp03.common.core.Database;
-import zesp03.common.entity.User;
-import zesp03.common.util.Secret;
 import zesp03.webapp.config.Cookies;
-import zesp03.webapp.data.row.UserRow;
+import zesp03.webapp.dto.UserDto;
+import zesp03.webapp.service.LoginService;
+import zesp03.webapp.service.LoginServiceImpl;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +14,15 @@ import java.io.IOException;
 public class AuthenticationFilter implements Filter {
     public static final String COOKIE_USERID = "userid";
     public static final String COOKIE_PASSTOKEN = "passtoken";
-    // mapuje do UserRow, null jeśli uwierzytelnianie się nie powiodło
-    public static final String ATTR_USERROW = "loggedUser";
+    // mapuje do UserDto, null jeśli uwierzytelnianie się nie powiodło
+    public static final String ATTR_USERDTO = "loggedUser";
+
+    private final LoginService loginService;
+
+    public AuthenticationFilter() {
+        //TODO ! spring ?
+        this.loginService = new LoginServiceImpl();
+    }
 
     @Override
     public void destroy() {
@@ -46,43 +50,18 @@ public class AuthenticationFilter implements Filter {
                     }
                 }
                 final String passToken = cookiePass.getValue();
-                UserRow userRow = null;
+                UserDto userDto = null;
 
                 if (userId != null && passToken != null) {
-                    EntityManager em = null;
-                    EntityTransaction tran = null;
-                    try {
-                        em = Database.createEntityManager();
-                        tran = em.getTransaction();
-                        tran.begin();
-
-                        User user = em.find(User.class, userId);
-                        if (user != null)
-                            userRow = new UserRow(user);
-
-                        tran.commit();
-                    } catch (RuntimeException exc) {
-                        if (tran != null && tran.isActive()) tran.rollback();
-                        throw exc;
-                    } finally {
-                        if (em != null) em.close();
-                    }
-
-                    if (userRow != null) {
-                        if (userRow.getSecret() == null ||
-                                !Secret.check(userRow.getSecret(), passToken) ||
-                                !userRow.isActivated() ||
-                                userRow.isBlocked())
-                            userRow = null;
-                    }
+                    userDto = loginService.authenticate(userId, passToken);
                 }
 
-                if (userRow != null) {
+                if (userDto != null) {
                     cookieUid.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookieUid);
                     cookiePass.setMaxAge(60 * 60 * 24 * 30);
                     hresp.addCookie(cookiePass);
-                    hreq.setAttribute(ATTR_USERROW, userRow);
+                    hreq.setAttribute(ATTR_USERDTO, userDto);
                 } else {
                     cookieUid.setValue("");
                     cookieUid.setMaxAge(0);

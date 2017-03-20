@@ -56,4 +56,10 @@ public class ControllerDto {
         this.description = c.getDescription();
         this.buildingId = c.getBuilding().getId();
     }
+
+    public static ControllerDto make(Controller c) {
+        ControllerDto dto = new ControllerDto();
+        dto.wrap(c);
+        return dto;
+    }
 }

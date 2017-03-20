@@ -13,11 +13,10 @@ import zesp03.common.entity.User;
 import zesp03.common.entity.UserRole;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.util.Secret;
-import zesp03.webapp.data.UserData;
-import zesp03.webapp.data.row.UserRow;
 import zesp03.webapp.dto.BaseResultDto;
 import zesp03.webapp.dto.ChangePasswordResultDto;
 import zesp03.webapp.dto.CreateNewUserDto;
+import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.filter.AuthenticationFilter;
 import zesp03.webapp.service.UserService;
 
@@ -37,7 +36,7 @@ public class UserApi {
     }
 
     @GetMapping("/api/all-users")
-    public List<UserData> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -45,10 +44,10 @@ public class UserApi {
             tran = em.getTransaction();
             tran.begin();
 
-            List<UserData> list = em.createQuery("SELECT u FROM User u", User.class)
+            List<UserDto> list = em.createQuery("SELECT u FROM User u", User.class)
                     .getResultList()
                     .stream()
-                    .map(UserData::new)
+                    .map(UserDto::make)
                     .collect(Collectors.toList());
             tran.commit();
             return list;
@@ -61,7 +60,7 @@ public class UserApi {
     }
 
     @GetMapping("/api/user")
-    public UserData getUser(
+    public UserDto getUser(
             @RequestParam("id") long id) {
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -73,9 +72,9 @@ public class UserApi {
             User u = em.find(User.class, id);
             if(u == null)
                 throw new NotFoundException("user");
-            UserData d = new UserData(u);
+            UserDto dto = UserDto.make(u);
             tran.commit();
-            return d;
+            return dto;
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;
@@ -192,7 +191,7 @@ public class UserApi {
             @RequestParam("desired") String desired,
             @RequestParam("repeat") String repeat,
             HttpServletRequest req) {
-        UserRow user = (UserRow)req.getAttribute(AuthenticationFilter.ATTR_USERROW);
+        UserDto user = (UserDto)req.getAttribute(AuthenticationFilter.ATTR_USERDTO);
         String passtoken = userService.changePassword(user.getId(), old, desired, repeat);
         ChangePasswordResultDto result = new ChangePasswordResultDto(true);
         result.setPassToken(passtoken);

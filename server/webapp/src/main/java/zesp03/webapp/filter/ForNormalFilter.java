@@ -1,6 +1,6 @@
 package zesp03.webapp.filter;
 
-import zesp03.webapp.data.row.UserRow;
+import zesp03.webapp.dto.UserDto;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
@@ -14,8 +14,8 @@ public class ForNormalFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws ServletException, IOException {
-        UserRow userRow = (UserRow) req.getAttribute(AuthenticationFilter.ATTR_USERROW);
-        if (userRow != null) {
+        UserDto user = (UserDto) req.getAttribute(AuthenticationFilter.ATTR_USERDTO);
+        if (user != null) {
             chain.doFilter(req, resp);
             return;
         }

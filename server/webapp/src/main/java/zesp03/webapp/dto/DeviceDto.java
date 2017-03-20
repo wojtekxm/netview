@@ -56,4 +56,10 @@ public class DeviceDto {
         this.description = d.getDescription();
         this.controllerId = d.getController().getId();
     }
+
+    public static DeviceDto make(Device d) {
+        DeviceDto dto = new DeviceDto();
+        dto.wrap(d);
+        return dto;
+    }
 }

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import zesp03.common.core.Database;
-import zesp03.webapp.data.row.ControllerRow;
+import zesp03.webapp.dto.ControllerDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -15,7 +15,7 @@ import java.util.List;
 public class AllControllersPage {
     @GetMapping("/all-controllers")
     public String get(ModelMap model) {
-        final ArrayList<ControllerRow> list = new ArrayList<>();
+        final ArrayList<ControllerDto> list = new ArrayList<>();
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -28,7 +28,7 @@ public class AllControllersPage {
                     zesp03.common.entity.Controller.class)
                     .getResultList();
             for (zesp03.common.entity.Controller c : controllers) {
-                list.add(new ControllerRow(c));
+                list.add(ControllerDto.make(c));
             }
 
             tran.commit();

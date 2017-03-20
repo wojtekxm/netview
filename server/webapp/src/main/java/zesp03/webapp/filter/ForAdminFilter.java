@@ -1,7 +1,7 @@
 package zesp03.webapp.filter;
 
 import zesp03.common.entity.UserRole;
-import zesp03.webapp.data.row.UserRow;
+import zesp03.webapp.dto.UserDto;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +15,8 @@ public class ForAdminFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws ServletException, IOException {
-        UserRow userRow = (UserRow) req.getAttribute(AuthenticationFilter.ATTR_USERROW);
-        if (userRow != null && userRow.getRole() != UserRole.NORMAL) {
+        UserDto user = (UserDto) req.getAttribute(AuthenticationFilter.ATTR_USERDTO);
+        if (user != null && user.getRole() != UserRole.NORMAL) {
             chain.doFilter(req, resp);
             return;
         }

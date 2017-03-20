@@ -2,7 +2,7 @@ package zesp03.common.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-
+//TODO equals
 @Entity
 @Table(name = "building")
 public class Building {

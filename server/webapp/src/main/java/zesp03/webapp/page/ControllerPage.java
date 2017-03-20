@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import zesp03.common.core.Database;
 import zesp03.common.exception.NotFoundException;
-import zesp03.webapp.data.row.ControllerRow;
+import zesp03.webapp.dto.ControllerDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -27,8 +27,8 @@ public class ControllerPage {
             zesp03.common.entity.Controller c = em.find(zesp03.common.entity.Controller.class, id);
             if(c == null)
                 throw new NotFoundException("controller");
-            ControllerRow row = new ControllerRow(c);
-            model.put("controller", row);
+            ControllerDto dto = ControllerDto.make(c);
+            model.put("controller", dto);
             tran.commit();
             return "controller";
         } catch (RuntimeException exc) {

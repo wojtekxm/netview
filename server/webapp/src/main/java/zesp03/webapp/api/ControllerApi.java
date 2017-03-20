@@ -9,8 +9,8 @@ import zesp03.common.entity.Controller;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.util.IPv4;
-import zesp03.webapp.data.row.ControllerRow;
 import zesp03.webapp.dto.BaseResultDto;
+import zesp03.webapp.dto.ControllerDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @RestController
 public class ControllerApi {
     @GetMapping("/api/all-controllers")
-    public List<ControllerRow> getAllControllers() {
-        List<ControllerRow> list;
+    public List<ControllerDto> getAllControllers() {
+        List<ControllerDto> list;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -33,7 +33,7 @@ public class ControllerApi {
             list = em.createQuery("SELECT c FROM Controller c", Controller.class)
                     .getResultList()
                     .stream()
-                    .map(ControllerRow::new)
+                    .map(ControllerDto::make)
                     .collect(Collectors.toList());
 
             tran.commit();
@@ -48,7 +48,7 @@ public class ControllerApi {
     }
 
     @GetMapping("/api/controller")
-    public ControllerRow getController(
+    public ControllerDto getController(
             @RequestParam("id") long id) {
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -60,7 +60,7 @@ public class ControllerApi {
             Controller c = em.find(Controller.class, id);
             if(c == null)
                 throw new NotFoundException("controller");
-            ControllerRow r = new ControllerRow(c);
+            ControllerDto r = ControllerDto.make(c);
             tran.commit();
             return r;
         } catch (RuntimeException exc) {

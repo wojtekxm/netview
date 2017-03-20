@@ -7,10 +7,10 @@ import zesp03.common.core.Database;
 import zesp03.common.entity.LinkUnitBuilding;
 import zesp03.common.entity.Unit;
 import zesp03.common.exception.NotFoundException;
-import zesp03.webapp.data.UnitBuildingsData;
-import zesp03.webapp.data.row.BuildingRow;
-import zesp03.webapp.data.row.LinkUnitBuildingRow;
-import zesp03.webapp.data.row.UnitRow;
+import zesp03.webapp.dto.BuildingDto;
+import zesp03.webapp.dto.LinkUnitBuildingDto;
+import zesp03.webapp.dto.UnitBuildingsDto;
+import zesp03.webapp.dto.UnitDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 @RestController
 public class UnitApi {
     @GetMapping("/api/all-units")
-    public List<UnitRow> getAllUnits() {
-        List<UnitRow> list;
+    public List<UnitDto> getAllUnits() {
+        List<UnitDto> list;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -35,7 +35,7 @@ public class UnitApi {
             list = em.createQuery("SELECT u FROM Unit u", Unit.class)
                     .getResultList()
                     .stream()
-                    .map(UnitRow::new)
+                    .map(UnitDto::make)
                     .collect(Collectors.toList());
 
             tran.commit();
@@ -50,10 +50,10 @@ public class UnitApi {
     }
 
     @GetMapping("/api/unit")
-    public UnitBuildingsData getUnit(
+    public UnitBuildingsDto getUnit(
             @RequestParam("id") long id ) {
 
-        UnitBuildingsData result = null;
+        UnitBuildingsDto result;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -69,28 +69,39 @@ public class UnitApi {
                     " AND lub.unit.id = u.id " +
                     "INNER JOIN Building b ON lub.building.id = b.id", Object[].class).getResultList();
 
-            List<BuildingRow> buildings= new ArrayList<>();
-            UnitRow unit = new UnitRow();
+            List<BuildingDto> buildings= new ArrayList<>();
+            UnitDto unit = new UnitDto();
             // list.get(0)[0] = id
 // list.get(0)[1] = code
 // list.get(0)[2] = description
 
 
-            if( !list.isEmpty() )
-                unit = new UnitRow( ((Number)list.get(0)[0]).longValue(), list.get(0)[1].toString(), list.get(0)[2].toString() );
+            if( !list.isEmpty() ) {
+                unit = new UnitDto();
+                unit.setId(((Number)list.get(0)[0]).longValue());
+                unit.setCode(list.get(0)[1].toString());
+                unit.setDescription(list.get(0)[2].toString());
+            }
 // object[3] = id
 // object[4] = code
 // object[5] = name
 // object[6] = latitude
 // object[7] = longitude
 
-            for( Object[] object : list )
-                buildings.add( new BuildingRow ( ((Number)object[3]).longValue(), object[4].toString(), object[5].toString(), (BigDecimal)object[6], (BigDecimal)object[7] ));
+            for( Object[] object : list ) {
+                BuildingDto dto = new BuildingDto();
+                dto.setId(((Number)object[3]).longValue());
+                dto.setCode(object[4].toString());
+                dto.setName(object[5].toString());
+                dto.setLatitude( ((BigDecimal)object[6]).doubleValue() );
+                dto.setLongitude( ((BigDecimal)object[7]).doubleValue() );
+            }
 
 
 
-
-            result = new UnitBuildingsData( unit, buildings );
+            result = new UnitBuildingsDto();
+            result.setUnit(unit);
+            result.setBuildings(buildings);
 
             tran.commit();
 
@@ -107,14 +118,11 @@ public class UnitApi {
                 em.close();
         }
 
-        if (result == null)
-            throw new NotFoundException("");
-
         return result;
     }
 
     @GetMapping("/api/link-unit-building")
-    public LinkUnitBuildingRow getLinkUnitBuilding(
+    public LinkUnitBuildingDto getLinkUnitBuilding(
             @RequestParam("id") long id) {
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -126,9 +134,9 @@ public class UnitApi {
             LinkUnitBuilding lub = em.find(LinkUnitBuilding.class, id);
             if(lub == null)
                 throw new NotFoundException("link-unit-building");
-            LinkUnitBuildingRow r = new LinkUnitBuildingRow(lub);
+            LinkUnitBuildingDto dto = LinkUnitBuildingDto.make(lub);
             tran.commit();
-            return r;
+            return dto;
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;
@@ -138,8 +146,8 @@ public class UnitApi {
     }
 
     @GetMapping("/api/all-link-units-buildings")
-    public List<LinkUnitBuildingRow> getAllLinkUnitsBuildings() {
-        List<LinkUnitBuildingRow> list;
+    public List<LinkUnitBuildingDto> getAllLinkUnitsBuildings() {
+        List<LinkUnitBuildingDto> list;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -151,7 +159,7 @@ public class UnitApi {
             list = em.createQuery("SELECT lub FROM LinkUnitBuilding lub ", LinkUnitBuilding.class)
                     .getResultList()
                     .stream()
-                    .map(LinkUnitBuildingRow::new)
+                    .map(LinkUnitBuildingDto::make)
                     .collect(Collectors.toList());
 
 

@@ -5,11 +5,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import zesp03.common.core.Database;
 import zesp03.common.entity.Building;
-import zesp03.common.exception.NotFoundException;
-import zesp03.webapp.data.BuildingUnitsControllersData;
-import zesp03.webapp.data.row.BuildingRow;
-import zesp03.webapp.data.row.ControllerRow;
-import zesp03.webapp.data.row.UnitRow;
+import zesp03.webapp.dto.BuildingDto;
+import zesp03.webapp.dto.BuildingUnitsControllersDto;
+import zesp03.webapp.dto.ControllerDto;
+import zesp03.webapp.dto.UnitDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -21,8 +20,8 @@ import java.util.stream.Collectors;
 @RestController
 public class BuildingApi {
     @GetMapping("/api/all-buildings")
-    public List<BuildingRow> getAllBuildings() {
-        List<BuildingRow> list;
+    public List<BuildingDto> getAllBuildings() {
+        List<BuildingDto> list;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -34,7 +33,7 @@ public class BuildingApi {
             list = em.createQuery("SELECT b FROM Building b", Building.class)
                     .getResultList()
                     .stream()
-                    .map(BuildingRow::new)
+                    .map(BuildingDto::make)
                     .collect(Collectors.toList());
 
             tran.commit();
@@ -49,10 +48,10 @@ public class BuildingApi {
     }
 
     @GetMapping("/api/building")
-    public BuildingUnitsControllersData getBuilding(
+    public BuildingUnitsControllersDto getBuilding(
             @RequestParam("id") long id ) {
 
-        BuildingUnitsControllersData result = null;
+        BuildingUnitsControllersDto result;
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -69,20 +68,26 @@ public class BuildingApi {
                     "INNER JOIN Unit u ON lub.unit.id = u.id " +
                     "LEFT JOIN Controller c ON c.building.id = b.id ", Object[].class).getResultList();
 
-            ControllerRow controller = null;
-            BuildingRow building = null;
-            UnitRow unit = null;
+            ControllerDto controller;
+            BuildingDto building = null;
+            UnitDto unit;
 
-            List<UnitRow> units = new ArrayList<>();
-            List <ControllerRow> controllers = new ArrayList<>();
+            ArrayList<UnitDto> units = new ArrayList<>();
+            List <ControllerDto> controllers = new ArrayList<>();
 
             // list.get(0)[0] = id
             // list.get(0)[1] = code
             // list.get(0)[2] = name
             // list.get(0)[3] = latitude
             // list.get(0)[4] = longitude
-            if( !list.isEmpty() )
-                building = new BuildingRow( ((Number)list.get(0)[0]).longValue(), list.get(0)[1].toString(), list.get(0)[2].toString(), (BigDecimal) list.get(0)[3], (BigDecimal) list.get(0)[4] );
+            if( !list.isEmpty() ) {
+                building = new BuildingDto();
+                building.setId(((Number) list.get(0)[0]).longValue());
+                building.setCode(list.get(0)[1].toString());
+                building.setName(list.get(0)[2].toString());
+                building.setLatitude(((BigDecimal) list.get(0)[3]).doubleValue());
+                building.setLongitude(((BigDecimal) list.get(0)[4]).doubleValue());
+            }
 
             // object[5] = id
             // object[6] = code
@@ -99,20 +104,31 @@ public class BuildingApi {
 
                 if( object[5] != null ) {
 
-                    unit = new UnitRow( ((long)object[5]), object[6].toString(), object[7].toString() );
+                    unit = new UnitDto();
+                    unit.setId((long)object[5]);
+                    unit.setCode(object[6].toString());
+                    unit.setDescription(object[7].toString());
                     if( !units.contains( unit ) )
                         units.add( unit );
                 }
 
                 if( object[8] != null ) {
 
-                    controller = new ControllerRow( ((long)object[8]), object[9].toString(), object[10].toString(),  object[11] == null ? "" : object[11].toString(),((long)object[12]) );
+                    controller = new ControllerDto();
+                    controller.setId((long)object[8]);
+                    controller.setName(object[9].toString());
+                    controller.setIpv4(object[10].toString());
+                    controller.setDescription(object[11] == null ? null : object[11].toString());
+                    controller.setBuildingId((long)object[12]);
                     if( !controllers.contains( controller ) )
                         controllers.add( controller );
                 }
             }
 
-            result = new BuildingUnitsControllersData( building, units, controllers );
+            result = new BuildingUnitsControllersDto();
+            result.setBuilding(building);
+            result.setUnits(units);
+            result.setControllers(controllers);
 
             tran.commit();
 
@@ -128,9 +144,6 @@ public class BuildingApi {
             if( em != null )
                 em.close();
         }
-
-        if (result == null)
-            throw new NotFoundException("");
 
         return result;
     }

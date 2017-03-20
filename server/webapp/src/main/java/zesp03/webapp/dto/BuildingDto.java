@@ -56,4 +56,10 @@ public class BuildingDto {
         this.latitude = b.getLatitude().doubleValue();
         this.longitude = b.getLongitude().doubleValue();
     }
+
+    public static BuildingDto make(Building b) {
+        BuildingDto dto = new BuildingDto();
+        dto.wrap(b);
+        return dto;
+    }
 }

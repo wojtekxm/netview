@@ -57,4 +57,10 @@ public class UserDto {
         this.blocked = u.isBlocked();
         this.role = u.getRole();
     }
+
+    public static UserDto make(User u) {
+        UserDto dto = new UserDto();
+        dto.wrap(u);
+        return dto;
+    }
 }

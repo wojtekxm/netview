@@ -97,10 +97,10 @@ public class FakeNetworkServiceImpl implements NetworkService {
             int clients;
             int diff;
             if(choose(0.9)) {
-                diff = random.nextInt(9) - 4;
+                diff = random.nextInt(7) - 3;
             }
             else {
-                diff = random.nextInt(41) - 20;
+                diff = random.nextInt(17) - 8;
             }
             if(vd.lastEnabled) {
                 enabled = choose(0.99);

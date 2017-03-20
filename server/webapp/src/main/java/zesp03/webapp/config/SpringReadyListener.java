@@ -26,7 +26,10 @@ public class SpringReadyListener implements ApplicationListener<ContextRefreshed
         if(! rootCreated) {
             String name = App.getProperty("zesp03.web.root.name");
             String password = App.getProperty("zesp03.web.root.password");
-            if (name != null && password != null) {
+            String reset = App.getProperty("zesp03.web.root.reset");
+            if( name != null &&
+                    password != null &&
+                    reset.equals("1") ) {
                 long id = userService.makeRoot(name);
                 userService.setPassword(id, password);
                 rootCreated = true;

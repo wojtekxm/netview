@@ -334,7 +334,6 @@ public class SurveyServiceImpl implements SurveyService {
                 "ds.`timestamp` AS dstime,\n" +
                 "ds.is_enabled AS dsen,\n" +
                 "ds.clients_sum AS dscli,\n" +
-                "ds.device_id AS dsdid,\n" +
                 "ds.cumulative AS dscum FROM\n" +
                 "device LEFT JOIN (\n" +
                 "SELECT ds.id, ds.`timestamp`, ds.is_enabled, ds.clients_sum, ds.device_id, ds.cumulative FROM\n" +
@@ -362,7 +361,6 @@ public class SurveyServiceImpl implements SurveyService {
                 "ds.`timestamp` AS dstime,\n" +
                 "ds.is_enabled AS dsen,\n" +
                 "ds.clients_sum AS dscli,\n" +
-                "ds.device_id AS dsdid,\n" +
                 "ds.cumulative AS dscum FROM\n" +
                 "device LEFT JOIN (\n" +
                 "SELECT ds.id, ds.`timestamp`, ds.is_enabled, ds.clients_sum, ds.device_id, ds.cumulative FROM\n" +
@@ -391,7 +389,6 @@ public class SurveyServiceImpl implements SurveyService {
                 "ds.`timestamp` AS dstime,\n" +
                 "ds.is_enabled AS dsen,\n" +
                 "ds.clients_sum AS dscli,\n" +
-                "ds.device_id AS dsdid,\n" +
                 "ds.cumulative AS dscum FROM\n" +
                 "device LEFT JOIN (\n" +
                 "SELECT ds.id, ds.`timestamp`, ds.is_enabled, ds.clients_sum, ds.device_id, ds.cumulative FROM\n" +

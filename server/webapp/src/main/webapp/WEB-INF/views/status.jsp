@@ -61,7 +61,7 @@
             <ul class="view" style="z-index: 1000;top:0;">
                 <li>
                     <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
-                    <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"></ul>
+                    <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
                 </li>
             </ul>
         </div>
@@ -73,16 +73,16 @@
             <div class="panel-body">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <div class="btn-group" role="group" onclick="onlyGreen();interGreen = setInterval('onlyGreen()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="greenDiode"></div><span id="countActive">&emsp;aktywne: &nbsp;&emsp;</span></div></button>
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="greenDiode"></div>&emsp;aktywne: &nbsp;&emsp;<span id="countActive"></span></div></button>
                     </div>
                     <div class="btn-group" role="group" onclick="onlyRed();interRed = setInterval('onlyRed()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="redDiode"></div><span id="countInactive">&emsp;nieaktywne: &nbsp;&emsp;</span></div></button>
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="redDiode"></div>&emsp;nieaktywne: &nbsp;&emsp;<span id="countInactive"></span></div></button>
                     </div>
                     <div class="btn-group" role="group" onclick="onlyGrey();interGrey = setInterval('onlyGrey()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div><span id="countOff">&emsp;wyłączone: &nbsp;&emsp;</span></div></button>
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div>&emsp;wyłączone: &nbsp;&emsp;<span id="countOff"></span></div></button>
                     </div>
                     <div class="btn-group" role="group" onclick="allDevices();inter = setInterval('allDevices()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span><span id="countAll">&emsp;Wszystkie: &nbsp;&emsp;</span></div></button>
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;&emsp;<span id="countAll"></span></div></button>
                     </div>
                 </div>
             </div>
@@ -109,6 +109,9 @@
                 devices = data;
                 e();
             },
+            error: function() {
+                $('#progress_area').text('Wystąpił problem');
+            }
         });
     }
 
@@ -120,13 +123,12 @@
         var inactive=0;
         var off=0;
         var all=0;
-        var line = '';
+        var style='list-style-type: none;color:white;text-decoration:none;';
 
         $("#devices li").remove();
 
         for(var i = 0; i< devices.length; i++){
             var h = "/device?id=" + devices[i].id;
-            var t = devices[i].name;
             var clazz= '';
             var sum = devices[i].clientsSum;
 
@@ -152,17 +154,24 @@
                 sum='-';
                 off++;
             }
-            line += '<li class="' + clazz + '" title="' + t + '" data-toggle="tooltip" data-html="true"><a href="' + h + '" style="list-style-type: none;color:white;text-decoration:none;">' + sum + '</a></li>';
+            var line = $('<li></li>').addClass(clazz)
+                .attr('title', devices[i].name)
+                .attr('data-toggle', 'tooltip')
+                .append(
+                    $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
+                );
+            $('#devices').append(line);
+            line.tooltip();
         }
 
         all = active+inactive+off;
 
-        document.getElementById('countActive').innerHTML='<span>&emsp;aktywne: &nbsp;'+active+'&emsp;</span>';
-        document.getElementById('countInactive').innerHTML='<span>&emsp;nieaktywne: &nbsp;'+inactive+'&emsp;</span>';
-        document.getElementById('countOff').innerHTML='<span>&emsp;wyłączone: &nbsp;'+off+'&emsp;</span>';
-        document.getElementById('countAll').innerHTML='<span>&emsp;wszystkie: &nbsp;'+all+'&emsp;</span>';
+        $('#countActive').text(active);
+        $('#countInactive').text(inactive);
+        $('#countOff').text(off);
+        $('#countAll').text(all);
 
-        $("#devices").html(line);
+        $('#progress_area').hide();
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
@@ -170,6 +179,7 @@
         loadDate();
     }
 
+    $('#progress_area').attr('style','font-size:18px;').text('Pobieranie danych...');
     allDevices();
     inter = setInterval('allDevices()', 10000);
 </script>

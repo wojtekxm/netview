@@ -16,47 +16,49 @@
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
     <div class="container-fluid">
-        <ul class="nav nav-pills pull-left" style="padding-top: 3px;border-radius: 10px;padding-left:7px;font-size: 17px;">
-            <li role="presentation" class="active"><a href="/"><span class="glyphicon glyphicon-home"></span>  Strona główna</a></li>
-        </ul>
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav nav-pills pull-left" style="padding-top: 3px;font-size: 17px;display:block;margin-left:80px;">
-                <li role="presentation" style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
-                <li role="presentation"><a href="/all-controllers">Kontrolery</a></li>
-                <li role="presentation"><a href="/all-users">Użytkownicy</a></li>
-                <li role="presentation"><a href="/api/all-devices">Urządzenia</a></li>
-                <li role="presentation"><a href="/building">Budynki</a></li>
-                <li role="presentation">
-                    <form class="navbar-form nav-pills" style="padding-top: 2px;margin-top:2px;">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Szukaj...">
-                        </div>
-                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                    </form>
-                </li>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myDiv">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand" title="Control your network">Network Monitor</div>
+        </div>
+
+        <div class="collapse navbar-collapse" id="myDiv">
+            <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
+                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
+                <li><a href="/all-controllers">Kontrolery</a></li>
+                <li><a href="/all-users">Użytkownicy</a></li>
+                <li><a href="/all-devices">Urządzenia</a></li>
+                <li><a href="/building">Budynki</a></li>
             </ul>
-            <ul class="nav nav-pills pull-right" style="padding-top: 3px;padding-right:3px;font-size: 17px;display: inline;">
-                <li role="presentation"><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
-                <li role="presentation"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
+            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Szukaj..." style="max-width: 200px!important;">
+                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                </div>
+            </form>
+            <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
+                <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
     </div>
 </nav>
-<div id="all" class="container-fluid">
+
+<div id="all">
     <div id="container">
-        <div class="welcome">
-            <div class="tittle"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-            <div class="user">zalogowany: <c:out value="${loggedUser.name}"/>
-            </div>
-            <div class="logo"><img src="/images/logooWhite.jpg"></div>
-        </div>
+        <%--<div class="welcome">--%>
+            <%--<div class="tittle"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>--%>
+            <%--<div class="user">zalogowany: <c:out value="${loggedUser.name}"/>--%>
+            <%--</div>--%>
+            <%--<div class="logo"><img src="/images/logooWhite.jpg"></div>--%>
+        <%--</div>--%>
         <div id="content">
             <ul class="view" style="z-index: 1000;top:0;">
                 <li>
@@ -90,9 +92,6 @@
     </div>
 </div>
 
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap-3.3.7.min.js"></script>
-<script src="/js/status.js"></script>
 
 <script>
     var devices = new Array();
@@ -100,6 +99,7 @@
 
     function allDevices()
     {
+        $('[data-toggle="tooltip"]').tooltip('destroy');
         $.ajax({
             type: 'GET',
             url: '/api/all-devices',
@@ -161,8 +161,12 @@
                     $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
                 );
             $('#devices').append(line);
+
             line.tooltip();
         }
+
+
+
 
         all = active+inactive+off;
 
@@ -173,9 +177,6 @@
 
         $('#progress_area').hide();
 
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
         loadDate();
     }
 
@@ -183,6 +184,13 @@
     allDevices();
     inter = setInterval('allDevices()', 10000);
 </script>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
 
 </body>
 </html>

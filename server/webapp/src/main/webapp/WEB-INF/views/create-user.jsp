@@ -13,37 +13,41 @@
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
     <div class="container-fluid">
-        <ul class="nav nav-pills" style="padding-top: 3px;font-size: 17px;position: absolute;width: 100%;left: 0;text-align: center;margin:0 auto;">
-            <li role="presentation"><a href="/make-survey">Nowe badanie</a></li>
-            <li role="presentation"><a href="/status-small">Mały widok</a></li>
-            <li role="presentation"><a href="/all-controllers">Kontrolery</a></li>
-            <li role="presentation"><a href="/all-users">Użytkownicy</a></li>
-            <li role="presentation"><a href="/all-devices">Urządzenia</a></li>
-            <form class="navbar-form nav-pills" style="padding-top: 2px;margin-top:2px;">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myDiv">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand" title="Control your network">Network Monitor</div>
+        </div>
+
+        <div class="collapse navbar-collapse" id="myDiv">
+            <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
+                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
+                <li><a href="/all-controllers">Kontrolery</a></li>
+                <li><a href="/all-users">Użytkownicy</a></li>
+                <li><a href="/all-devices">Urządzenia</a></li>
+                <li><a href="/building">Budynki</a></li>
+            </ul>
+            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" class="form-control" placeholder="Szukaj..." style="max-width: 200px!important;">
+                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
             </form>
-        </ul>
-        <ul class="nav nav-pills pull-left" style="padding-top: 3px;border-radius: 10px;padding-left:7px;font-size: 17px;">
-            <li role="presentation" class="active"><a href="/"><span class="glyphicon glyphicon-home"></span>  Strona główna</a></li>
-        </ul>
-        <ul class="nav nav-pills pull-right" style="padding-top: 3px;padding-right:3px;font-size: 17px;">
-            <li role="presentation"><a href="#"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
-            <li role="presentation"><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
-        </ul>
+            <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
+                <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
-<div class="container" id="page">
-    <div class="welcome">
-        <div class="tittleStatic"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>
-        <div class="userStatic">zalogowany: <c:out value="${loggedUser.name}"/>
-        </div>
-        <div class="logo"><img src="/images/logooWhite.jpg"></div>
-    </div>
+<div id="container" id="page">
     <div class="content">
         <div>
             <div id="wydzial">

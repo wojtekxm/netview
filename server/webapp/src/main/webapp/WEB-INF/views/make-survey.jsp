@@ -8,27 +8,47 @@
     <title>Nowe badanie</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/">Network Monitor</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myDiv">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand" title="Control your network">Network Monitor</div>
         </div>
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="/make-survey">nowe badania</a></li>
-            <li><a href="/status-small">urządzenia (mały widok)</a></li>
-            <li><a href="/status">urządzenia (średni widok)</a></li>
-            <li><a href="/all-controllers">kontrolery</a></li>
-            <li><a href="/building">budynki</a></li>
-            <li><a href="/logout">wyloguj</a></li>
-        </ul>
-        <hr>
+
+        <div class="collapse navbar-collapse" id="myDiv">
+            <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
+                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
+                <li><a href="/all-controllers">Kontrolery</a></li>
+                <li><a href="/all-users">Użytkownicy</a></li>
+                <li><a href="/all-devices">Urządzenia</a></li>
+                <li><a href="/building">Budynki</a></li>
+            </ul>
+            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Szukaj..." style="max-width: 200px!important;">
+                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                </div>
+            </form>
+            <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
+                <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
-<div class="container">
-    <div id="progress_area">
-        pobieranie informacji...
+<div id="container">
+    <div id="loading">
+        <em>pobieranie listy kontrolerów...</em>
     </div>
     <div id="box" style="display: none">
         <ul id="list_controllers" class="list-group"></ul>
@@ -50,37 +70,28 @@
             success: function(listOfControllerRow) {
                 var i;
                 for(i = 0; i < listOfControllerRow.length; i++) {
-                    var controllerRow = listOfControllerRow[i];
                     $('#list_controllers').append(
                         $('<li></li>')
                             .addClass('list-group-item row')
                             .append(
                                 $('<div></div>')
-                                    .addClass('col-sm-1')
+                                    .addClass('col-sm-2')
                                     .append(
                                         $('<input type="checkbox">')
                                             .prop('checked', true)
                                     ),
                                 $('<div></div>')
-                                    .addClass('col-sm-2')
+                                    .addClass('col-sm-4')
                                     .append(
-                                        $('<a></a>').text(controllerRow.name)
-                                            .attr('href', '/controller?id=' + controllerRow.id)
-                                    ),
-                                $('<div></div>')
-                                    .addClass('col-sm-3')
-                                    .append(
-                                        $('<span></span>').text(controllerRow.ipv4)
+                                        $('<strong></strong>').text(listOfControllerRow[i].name)
                                     ),
                                 $('<div></div>')
                                     .addClass('col-sm-6')
                                     .append(
-                                        '<span></span>',
-                                        ' ',
-                                        '<small></small>'
+                                        $('<span></span>')
                                     )
                             )
-                            .data('controller_id', controllerRow.id)
+                            .data('controller_id', listOfControllerRow[i].id)
                     );
                 }
                 $('#btn_all').click( function() {
@@ -107,16 +118,13 @@
                 $('#btn_examine').click( function() {
                     $('#list_controllers').find('> li').each( function() {
                         var li = $(this);
-                        var div4 = li.children('div:nth-of-type(4)');
-                        var span = div4.children('span:nth-of-type(1)');
-                        var small = div4.children('small:nth-of-type(1)');
+                        var resultField = li.find('span:nth-of-type(1)');
                         var checkbox = li.find('input');
-                        span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
-                        small.text('');
+                        resultField.text('');
                         if(! checkbox.is(':checked') ) {
                             return;
                         }
-                        span.addClass('glyphicon glyphicon-hourglass');
+                        resultField.text('badanie...');
                         $.ajax( {
                             type: 'post',
                             url: '/api/examine',
@@ -126,27 +134,25 @@
                             },
                             success: function(examineResultDto) {
                                 if(examineResultDto.success) {
-                                    span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
-                                    span.addClass('glyphicon glyphicon-ok-circle');
-                                    small.text(examineResultDto.timeElapsed.toFixed(2) + ' sek.');
+                                    resultField.text('OK, ' +
+                                        examineResultDto.timeElapsed.toFixed(2) + ' s, ' +
+                                        examineResultDto.updatedDevices + ' zaktualizowanych urządzeń');
                                 }
                                 else {
-                                    span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
-                                    span.addClass('glyphicon glyphicon-exclamation-sign');
+                                    resultField.text('ERROR (server)');
                                 }
                             },
                             error: function() {
-                                span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
-                                span.addClass('glyphicon glyphicon-exclamation-sign');
+                                resultField.text('ERROR (HTTP)');
                             }
                         } );
                     } );
                 } );
-                $('#progress_area').hide();
+                $('#loading').hide(400);
                 $('#box').show(400);
             },
             error: function() {
-                $('#progress_area').text('Wystąpił problem');
+                $('#loading').text('Fatal error');
             }
         } );
     } );

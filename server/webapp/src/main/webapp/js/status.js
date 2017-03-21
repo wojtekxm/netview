@@ -10,7 +10,7 @@ function loadDate() {
             devices=data;
             var date = new Date(devices[0].lastSurveyTimestamp*1000);
             var n = date.toLocaleString();
-            $('#data').html('Ostatnie badanie sieci przeprowadzono:     ' + n);
+            $('#data').replaceWith('Ostatnie badanie sieci przeprowadzono:   ' + n);
         }
     });
 }

@@ -47,6 +47,11 @@
         </div>
     </div>
 </nav>
+
+<!-- kill me pls -->
+<div style="margin-top:100px"></div>
+<!-- I'm not a solution -->
+
 <div class="container">
     <div id="result" style="display:none">
         <ul class="view-small" id="list"></ul>

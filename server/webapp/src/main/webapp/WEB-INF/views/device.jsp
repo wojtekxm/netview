@@ -85,7 +85,7 @@
 
 
     <div id="wykresy">
-        <canvas id="mycanvas" width="1000px" style="border:1px solid #bce8f1;"></canvas>
+        <canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>
     </div>
 
     <br/>
@@ -163,7 +163,7 @@
         function generateChart(mycanvas, id,timestamp1,timestamp2,etykieta) {
             var request = new XMLHttpRequest();
             $('#mycanvas').remove();
-            $('#wykresy').append('<canvas id="mycanvas" width="1000px" style="border:1px solid #bce8f1;"></canvas>');
+            $('#wykresy').append('<canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>');
             mycanvas = document.querySelector('#mycanvas');
 
             var tags = [];      //WSZYSTKO
@@ -209,14 +209,14 @@
                     borderColor: "rgba(0,255,0,1)",
                     fillStyle: "rgba(0,255,0,1)",
                     borderJoinStyle: 'miter',
-                    pointBorderColor: "rgba(0,0,0,1)",
+                    pointBorderColor: "rgba(0,0,0,0)",
                     pointBackgroundColor: "rgba(0,255,0,1)",
                     pointBorderWidth: 1,
-                    pointHoverRadius: 5,
+                    pointHoverRadius: 4,
                     pointHoverBackgroundColor: "rgba(0, 0, 0, 1)",
                     pointHoverBorderColor: "rgb(0,0,0,0)",
-                    pointHoverBorderWidth: 5,
-                    pointRadius: 5,
+                    pointHoverBorderWidth: 4,
+                    pointRadius: 2,
                     tension: 0
                 }
                 ]

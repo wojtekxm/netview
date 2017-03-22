@@ -7,10 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Budynki</title>
+    <link rel="icon" href="/favicon.ico">
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
@@ -35,8 +37,8 @@
                 <li><a href="/building">Budynki</a></li>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="max-width: 200px!important;">
+                <div class="form-group" style="display:flex;">
+                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -82,8 +84,6 @@
     </div>
 </div>
 
-<script src="/js/bootstrap-3.3.7.min.js"></script>
-<script src="/js/jquery-3.1.1.min.js"></script>
 
 </body>
 </html>

@@ -38,8 +38,8 @@
                 <li><a href="/building">Budynki</a></li>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="max-width: 200px!important;">
+                <div class="form-group" style="display:flex;">
+                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -125,7 +125,7 @@
         var all=0;
         var style='list-style-type: none;color:white;text-decoration:none;';
 
-        $("#devices li").remove();
+        $('#devices li').remove();
 
         for(var i = 0; i< devices.length; i++){
             var h = "/device?id=" + devices[i].id;
@@ -166,7 +166,8 @@
         }
 
 
-
+//        $("#devices").fadeOut('slow');
+//        $("#devices").fadeIn('slow');
 
         all = active+inactive+off;
 
@@ -181,7 +182,9 @@
     }
 
     $('#progress_area').attr('style','font-size:18px;').text('Pobieranie danych...');
+
     allDevices();
+    $("#devices").fadeIn('slow');
     inter = setInterval('allDevices()', 10000);
 </script>
 

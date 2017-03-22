@@ -9,6 +9,7 @@
     <title>Użytkownicy</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>

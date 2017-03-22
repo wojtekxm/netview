@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Status sieci</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
-    <script src="//code.angularjs.org/1.2.20/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/js/status.js"></script>

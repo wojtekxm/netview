@@ -75,13 +75,18 @@
             type: 'get',
             url: '/api/all-devices',
             dataType: 'json',
-            success: function(listOfDeviceStateDto) {
+            success: function(listDtoOfDeviceStateDto) {
+                if(!listDtoOfDeviceStateDto.success) {
+                    err();
+                    return;
+                }
                 var i;
                 var sumActive = 0;
                 var sumInactive = 0;
                 var sumDisabled = 0;
-                for(i = 0; i < listOfDeviceStateDto.length; i++) {
-                    var deviceStateDto = listOfDeviceStateDto[i];
+                var arr = listDtoOfDeviceStateDto.list;
+                for(i = 0; i < arr.length; i++) {
+                    var deviceStateDto = arr[i];
                     var clazz;
                     if(deviceStateDto.enabled) {
                         if(deviceStateDto.clientsSum > 0) {
@@ -113,10 +118,11 @@
                 $('#result').show();
                 $('#progress_area').hide();
             },
-            error: function() {
-                $('#progress_area').text('Wystąpił problem');
-            }
+            error: err
         } );
+        function err() {
+            $('#progress_area').text('Wystąpił problem');
+        }
     } );
 </script>
 </body>

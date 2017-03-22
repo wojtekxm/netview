@@ -11,9 +11,11 @@ import zesp03.common.exception.NotFoundException;
 import zesp03.common.service.SurveyService;
 import zesp03.webapp.dto.BaseResultDto;
 import zesp03.webapp.dto.DeviceStateDto;
+import zesp03.webapp.dto.ListDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +29,16 @@ public class DeviceApi {
     }
 
     @GetMapping("/api/all-devices")
-    public List<DeviceStateDto> getAll() {
-        return surveyService.checkAll()
+    public ListDto<DeviceStateDto> getAll() {
+        final Instant t0 = Instant.now();
+        List<DeviceStateDto> list = surveyService.checkAll()
                 .stream()
                 .map(DeviceStateDto::make)
                 .collect(Collectors.toList());
+        ListDto<DeviceStateDto> result = new ListDto<>();
+        result.setList(list);
+        result.makeQueryTime(t0);
+        return result;
     }
 
     @GetMapping("/api/device")

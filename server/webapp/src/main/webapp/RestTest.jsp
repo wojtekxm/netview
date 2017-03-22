@@ -131,11 +131,15 @@
                 type: 'GET',
                 url: '/api/all-devices',
                 dataType: 'json',
-                success: function (data) {
+                success: function (listDtoOfDeviceStateDto) {
+                    if(!listDtoOfDeviceStateDto.success) {
+                        err();
+                        return;
+                    }
                     $("#result > *").remove();
                     var i;
-                    for (i = 0; i < data.length; i++) {
-                        var device = data[i];
+                    for (i = 0; i < listDtoOfDeviceStateDto.list.length; i++) {
+                        var device = listDtoOfDeviceStateDto.list[i];
                         $("#result").append(
                             $("<div></div>").addClass('panel panel-success').append(
                                 $('<div></div>').addClass('panel-heading').text('Urządzenie ' + device.name),
@@ -179,15 +183,16 @@
                         );
                     }
                 },
-                error: function () {
-                    $("#result > *").remove();
-                    $('#result').append(
-                        $('<div></div>').addClass('panel panel-danger').append(
-                            $('<div></div>').addClass('panel-heading').text('wystąpił problem przy szukaniu urządzeń')
-                        )
-                    );
-                }
+                error: err
             });
+            function err() {
+                $("#result > *").remove();
+                $('#result').append(
+                    $('<div></div>').addClass('panel panel-danger').append(
+                        $('<div></div>').addClass('panel-heading').text('wystąpił problem przy szukaniu urządzeń')
+                    )
+                );
+            }
         }
     });
     $("#button_controller").click(function () {

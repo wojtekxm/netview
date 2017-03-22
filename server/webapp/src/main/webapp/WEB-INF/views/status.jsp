@@ -105,14 +105,19 @@
             url: '/api/all-devices',
             dataType: 'json',
 
-            success: function(data) {
-                devices = data;
+            success: function(listDtoOfDeviceStateDto) {
+                if(!listDtoOfDeviceStateDto.success) {
+                    err();
+                    return;
+                }
+                devices = listDtoOfDeviceStateDto.list;
                 e();
             },
-            error: function() {
-                $('#progress_area').text('Wystąpił problem');
-            }
+            error: err
         });
+        function err() {
+            $('#progress_area').text('Wystąpił problem');
+        }
     }
 
     function e(){

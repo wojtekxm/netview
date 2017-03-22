@@ -6,8 +6,8 @@ function loadDate() {
         url: '/api/all-devices',
         dataType: 'json',
 
-        success: function(data) {
-            devices=data;
+        success: function(listDtoOfDeviceStateDto) {
+            devices=listDtoOfDeviceStateDto.list;
             var date = new Date(devices[0].lastSurveyTimestamp*1000);
             var n = date.toLocaleString();
             $('#data').replaceWith('Ostatnie badanie sieci przeprowadzono:   ' + n);
@@ -24,10 +24,11 @@ function onlyGreen()
         url: '/api/all-devices',
         dataType: 'json',
 
-        success: function(data) {
-            devices = data;
+        success: function(listDtoOfDeviceStateDto) {
+            devices = listDtoOfDeviceStateDto.list;
             green();
-        },
+        }
+        /* error ? */
     });
 }
 
@@ -130,8 +131,8 @@ function onlyRed()
         url: '/api/all-devices',
         dataType: 'json',
 
-        success: function(data) {
-            devices = data;
+        success: function(listDtoOfDeviceStateDto) {
+            devices = listDtoOfDeviceStateDto.list;
             red();
         },
     });
@@ -212,8 +213,8 @@ function onlyGrey()
         url: '/api/all-devices',
         dataType: 'json',
 
-        success: function(data) {
-            devices = data;
+        success: function(listDtoOfDeviceStateDto) {
+            devices = listDtoOfDeviceStateDto.list;
             grey();
         },
     });

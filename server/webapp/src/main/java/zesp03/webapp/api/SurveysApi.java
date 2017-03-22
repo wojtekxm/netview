@@ -44,6 +44,7 @@ public class SurveysApi {
                     dto.setDeviceId(device);
                     dto.setClientsSum(ds.getClientsSum());
                     dto.setTime(ds.getTimestamp());
+                    dto.setEnabled(ds.isEnabled());
                     return dto;
                 } )
                 .collect(Collectors.toList());

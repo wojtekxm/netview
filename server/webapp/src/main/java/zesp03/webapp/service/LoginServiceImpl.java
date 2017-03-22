@@ -76,7 +76,6 @@ public class LoginServiceImpl implements LoginService {
             tran = em.getTransaction();
             tran.begin();
 
-            log.info("N {}", (Object)null);//!
             User u = em.find(User.class, userId);
             if (u != null) {
                 byte[] secret = u.getSecret();

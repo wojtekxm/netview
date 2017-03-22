@@ -4,6 +4,7 @@ public class OriginalSurveyDto {
     private long deviceId;
     private int time; // timestamp w sekundach
     private int clientsSum;
+    private boolean enabled;
 
     public long getDeviceId() {
         return deviceId;
@@ -27,5 +28,13 @@ public class OriginalSurveyDto {
 
     public void setClientsSum(int clientsSum) {
         this.clientsSum = clientsSum;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

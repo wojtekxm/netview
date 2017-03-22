@@ -1,14 +1,13 @@
 package zesp03.webapp.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import zesp03.common.core.Database;
 import zesp03.common.entity.Building;
-import zesp03.webapp.dto.BuildingDto;
-import zesp03.webapp.dto.BuildingUnitsControllersDto;
-import zesp03.webapp.dto.ControllerDto;
-import zesp03.webapp.dto.UnitDto;
+import zesp03.common.exception.NotFoundException;
+import zesp03.webapp.dto.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -146,5 +145,59 @@ public class BuildingApi {
         }
 
         return result;
+    }
+
+    @PostMapping(value = "/api/remove-building", consumes = "application/x-www-form-urlencoded")
+    public BaseResultDto remove(
+            @RequestParam("id") long id) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Building b = em.find(Building.class, id);
+            if (b == null)
+                throw new NotFoundException("building");
+            em.remove(b);
+            tran.commit();
+            return new BaseResultDto(true);
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    @PostMapping(value = "/api/create-building", consumes = "application/x-www-form-urlencoded")
+    public BaseResultDto create(
+            @RequestParam("code") String code,
+            @RequestParam("name") String name,
+            @RequestParam("latitude")  BigDecimal latitude,
+            @RequestParam("longitude")  BigDecimal longitude) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Building building = new Building();
+            building.setCode(code);
+            building.setName(name);
+            building.setLatitude(latitude);
+            building.setLongitude(longitude);
+
+            em.persist(building);
+            tran.commit();
+            return new BaseResultDto(true);
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
     }
 }

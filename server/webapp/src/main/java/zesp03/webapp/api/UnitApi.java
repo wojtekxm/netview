@@ -1,16 +1,14 @@
 package zesp03.webapp.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import zesp03.common.core.Database;
 import zesp03.common.entity.LinkUnitBuilding;
 import zesp03.common.entity.Unit;
 import zesp03.common.exception.NotFoundException;
-import zesp03.webapp.dto.BuildingDto;
-import zesp03.webapp.dto.LinkUnitBuildingDto;
-import zesp03.webapp.dto.UnitBuildingsDto;
-import zesp03.webapp.dto.UnitDto;
+import zesp03.webapp.dto.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -173,4 +171,57 @@ public class UnitApi {
 
         return list;
     }
+
+    @PostMapping(value = "/api/create-unit", consumes = "application/x-www-form-urlencoded")
+    public BaseResultDto create(
+            @RequestParam("code") String code,
+            @RequestParam(value = "description", required = false) String description) {
+
+
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Unit unit = new Unit();
+            unit.setCode(code);
+            unit.setDescription(description);
+
+            em.persist(unit);
+            tran.commit();
+            return new BaseResultDto(true);
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    @PostMapping(value = "/api/remove-unit", consumes = "application/x-www-form-urlencoded")
+    public BaseResultDto remove(
+            @RequestParam("id") long id) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Unit u = em.find(Unit.class, id);
+            if (u == null)
+                throw new NotFoundException("unit");
+            em.remove(u);
+            tran.commit();
+            return new BaseResultDto(true);
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
 }

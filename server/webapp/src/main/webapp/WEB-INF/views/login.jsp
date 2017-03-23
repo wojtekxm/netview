@@ -63,7 +63,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Network-Monitor Logowanie</title>
+    <title>Network Monitor</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/loginStyle.css">
     <link rel="stylesheet" href="/css/metisMenu.min.css" media="screen">
@@ -89,10 +89,12 @@
                 <div class="panel-body">
                     <form action="/login" method="post" role="form">
                         <fieldset>
-                            <div class="form-group">
+                            <div class="form-group has-feedback">
+                                <i class="glyphicon glyphicon-user form-control-feedback"></i>
                                 <input class="form-control" placeholder="Nazwa użytkownika" name="username" type="text" autofocus>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group has-feedback">
+                                <i class="glyphicon glyphicon-lock form-control-feedback"></i>
                                 <input class="form-control" placeholder="Hasło" name="password" type="password" value="">
                             </div>
                             <div class="checkbox">

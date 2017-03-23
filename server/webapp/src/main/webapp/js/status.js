@@ -15,6 +15,7 @@ function loadDate() {
     });
 }
 
+
 var interGreen;
 
 function onlyGreen()

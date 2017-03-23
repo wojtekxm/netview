@@ -33,7 +33,11 @@
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
-                <li><a href="/building">Budynki</a></li>
+                <li><a href="/all-buildings">Budynki</a></li>
+                <li><a href="/all-units">Jednostki</a></li>
+                <li><a href="/all-buildings">Budynki</a></li>
+                <li><a href="/all-units">Jednostki</a></li>
+                <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">

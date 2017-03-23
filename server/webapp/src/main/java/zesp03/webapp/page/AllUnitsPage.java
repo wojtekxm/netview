@@ -4,21 +4,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import zesp03.common.core.Database;
-import zesp03.common.entity.LinkUnitBuilding;
+import zesp03.common.entity.Unit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.List;
 
 @Controller
-public class LinkUnitBuildingPage {
-    @GetMapping("/unitsbuildings")
+public class AllUnitsPage {
+    @GetMapping("/all-units")
     public String get(ModelMap model) {
         EntityManager em = null;
         EntityTransaction tran = null;
 
 
-        List<LinkUnitBuilding> BuildingList;
+        List<Unit> UnitList;
 
         try {
 
@@ -27,7 +27,7 @@ public class LinkUnitBuildingPage {
 
             tran.begin();
 
-            BuildingList = em.createQuery("SELECT lub FROM LinkUnitBuilding lub", LinkUnitBuilding.class).getResultList();
+            UnitList = em.createQuery("SELECT u FROM Unit u", Unit.class).getResultList();
             tran.commit();
 
         } catch (RuntimeException exc) {
@@ -39,7 +39,7 @@ public class LinkUnitBuildingPage {
                 em.close();
         }
 
-        model.put("list", BuildingList);
-        return "link-unit-building";
+        model.put("list", UnitList);
+        return "all-units";
     }
 }

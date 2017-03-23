@@ -3,45 +3,39 @@ package zesp03.webapp.page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import zesp03.common.core.Database;
-import zesp03.common.entity.Building;
-import zesp03.common.entity.LinkUnitBuilding;
-import zesp03.common.entity.Unit;
+import zesp03.common.exception.NotFoundException;
+import zesp03.webapp.dto.UnitDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import java.util.List;
 
 @Controller
 public class UnitPage {
-    @GetMapping("/units")
-    public String get(ModelMap model) {
+    @GetMapping("/unit")
+    public String get(
+            @RequestParam("id") long id,
+            ModelMap model) {
         EntityManager em = null;
         EntityTransaction tran = null;
-
-
-        List<Unit> UnitList;
-
         try {
-
             em = Database.createEntityManager();
             tran = em.getTransaction();
-
             tran.begin();
 
-            UnitList = em.createQuery("SELECT u FROM Unit u", Unit.class).getResultList();
+            zesp03.common.entity.Unit u = em.find(zesp03.common.entity.Unit.class, id);
+            if(u == null)
+                throw new NotFoundException("unit");
+            UnitDto dto = UnitDto.make(u);
+            model.put("unit", dto);
             tran.commit();
-
+            return "unit";
         } catch (RuntimeException exc) {
-            if( tran != null && tran.isActive() )
-                tran.rollback();
+            if (tran != null && tran.isActive()) tran.rollback();
             throw exc;
         } finally {
-            if (em != null)
-                em.close();
+            if (em != null) em.close();
         }
-
-        model.put("list", UnitList);
-        return "units";
     }
 }

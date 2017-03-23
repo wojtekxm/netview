@@ -47,7 +47,31 @@ public class BuildingApi {
     }
 
     @GetMapping("/api/building")
-    public BuildingUnitsControllersDto getBuilding(
+    public BuildingDto getBuilding(
+            @RequestParam("id") long id) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Building b = em.find(Building.class, id);
+            if(b == null)
+                throw new NotFoundException("building");
+            BuildingDto r = BuildingDto.make(b);
+            tran.commit();
+            return r;
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    @GetMapping("/api/unitsbuildings")
+    public BuildingUnitsControllersDto getUnitsBuildings(
             @RequestParam("id") long id ) {
 
         BuildingUnitsControllersDto result;
@@ -200,4 +224,8 @@ public class BuildingApi {
             if (em != null) em.close();
         }
     }
+
+
 }
+
+

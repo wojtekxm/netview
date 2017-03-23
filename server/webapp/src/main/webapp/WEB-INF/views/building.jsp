@@ -1,13 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aktywacja konta</title>
+    <title>Budynki</title>
     <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -31,9 +32,7 @@
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
-                <li><a href="/all-buildings">Budynki</a></li>
-                <li><a href="/all-units">Jednostki</a></li>
-                <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
+                <li><a href="/unitsbuildings">Budynki</a></li>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -48,21 +47,45 @@
         </div>
     </div>
 </nav>
+
 <div id="container">
-    <h1>Aktywacja konta użytkownika</h1>
-    <form action="/api/activate-account" method="post">
-        <input type="hidden" name="tid" value="${param.tid}">
-        <input type="hidden" name="tv" value="${param.tv}">
-        nazwa użytkownika<br>
-        <input type="text" name="username"><br><br>
-        wybierz hasło<br>
-        <input type="password" name="password"><br><br>
-        powtórz hasło<br>
-        <input type="password" name="repeat"><br><br>
-        <button type="submit">Aktywuj konto</button>
-    </form>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                szczegóły budynku
+            </div>
+            <table class="table table-bordered">
+                <tr>
+                    <td>ID</td>
+                    <td><c:out value="${building.id}"/></td>
+                </tr>
+                <tr>
+                    <td>Kod</td>
+                    <td><c:out value="${building.code}"/></td>
+                </tr>
+                <tr>
+                    <td>Nazwa</td>
+                    <td><c:out value="${building.name}"/></td>
+                </tr>
+                <tr>
+                    <td>Szerokość geograficzna</td>
+                    <td><c:out value="${building.latitude}"/></td>
+                </tr>
+                <tr>
+                    <td>Długość geograficzna</td>
+                    <td><c:out value="${building.longitude}"/></td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+          <form method="post" action="/api/remove-building">
+            <input type="hidden" name="id" value="${building.id}">
+            <input type="submit" value="Usuń" class="btn btn-danger glyphicon glyphicon-plus" role="button" style="width:150px;font-size:17px;" >
+
+          </form>
+        </div>
 </div>
-<script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/jquery-3.1.1.min.js"></script>
 </body>
 </html>

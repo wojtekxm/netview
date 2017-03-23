@@ -1,13 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aktywacja konta</title>
+    <title>Jednostki</title>
     <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -48,21 +49,37 @@
         </div>
     </div>
 </nav>
+
 <div id="container">
-    <h1>Aktywacja konta użytkownika</h1>
-    <form action="/api/activate-account" method="post">
-        <input type="hidden" name="tid" value="${param.tid}">
-        <input type="hidden" name="tv" value="${param.tv}">
-        nazwa użytkownika<br>
-        <input type="text" name="username"><br><br>
-        wybierz hasło<br>
-        <input type="password" name="password"><br><br>
-        powtórz hasło<br>
-        <input type="password" name="repeat"><br><br>
-        <button type="submit">Aktywuj konto</button>
-    </form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            szczegóły jednostki
+        </div>
+        <table class="table table-bordered">
+            <tr>
+                <td>ID</td>
+                <td><c:out value="${unit.id}"/></td>
+            </tr>
+            <tr>
+                <td>Kod</td>
+                <td><c:out value="${unit.code}"/></td>
+            </tr>
+            <tr>
+                <td>Opis</td>
+                <td><c:out value="${unit.description}"/></td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <form method="post" action="/api/remove-unit">
+            <input type="hidden" name="id" value="${unit.id}">
+            <input type="submit" value="Usuń" class="btn btn-danger glyphicon glyphicon-plus" role="button" style="width:150px;font-size:17px;" >
+
+        </form>
+    </div>
 </div>
-<script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/jquery-3.1.1.min.js"></script>
 </body>
 </html>

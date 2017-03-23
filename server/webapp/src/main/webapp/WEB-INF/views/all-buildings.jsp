@@ -1,17 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aktywacja konta</title>
-    <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <title>Budynki</title>
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
+
 <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -48,21 +51,38 @@
         </div>
     </div>
 </nav>
-<div id="container">
-    <h1>Aktywacja konta użytkownika</h1>
-    <form action="/api/activate-account" method="post">
-        <input type="hidden" name="tid" value="${param.tid}">
-        <input type="hidden" name="tv" value="${param.tv}">
-        nazwa użytkownika<br>
-        <input type="text" name="username"><br><br>
-        wybierz hasło<br>
-        <input type="password" name="password"><br><br>
-        powtórz hasło<br>
-        <input type="password" name="repeat"><br><br>
-        <button type="submit">Aktywuj konto</button>
-    </form>
+<div id="all" class="container-fluid">
+    <div id="container">
+        <div class="content">
+            <div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Akutalna lista budynków:</div></div>
+            </div>
+            <div class="panel panel-default" style="padding: 15px;">
+                <c:forEach items="${list}" var="building">
+                    <c:url var="href" value="/building?id=${building.id}"/>
+
+                    <div>
+                        <a href="${href}" class="list-group-item" style="max-width: 500px;">
+                            <span class="glyphicon glyphicon-menu-right"></span>
+                            <c:out value="${building.code}"/>
+                            <c:out value="${building.name}"/>
+                            <c:out value="${building.latitude}"/>
+                            <c:out value="${building.longitude}"/>
+
+                        </a>
+                    </div>
+                </c:forEach>
+                <div>
+                    <a href="/create-building" class="btn btn-success" role="button" style="width: 500px;font-size:17px;">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Dodaj nowy budynek
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/jquery-3.1.1.min.js"></script>
 </body>
 </html>

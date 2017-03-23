@@ -61,9 +61,21 @@
                 </a>
             </li>
             <li>
-                <a href="/building">
-                    budynki
+                <a href="/unitsbuildings">
+                    jed. bud.
                     <span class="label label-default">building</span>
+                </a>
+            </li>
+            <li>
+                <a href="/all-buildings">
+                    budynki
+                    <span class="label label-default">all-buildings</span>
+                </a>
+            </li>
+            <li>
+                <a href="/all-units">
+                    jednostki
+                    <span class="label label-default">all-units</span>
                 </a>
             </li>
             <c:if test="${loggedUser.role.name() eq 'ROOT'}"><li>

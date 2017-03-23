@@ -187,11 +187,11 @@
         loadDate();
     }
 
-    $('#progress_area').attr('style','font-size:18px;').text('Pobieranie danych...');
+    $('#progress_area').show();
 
     allDevices();
     $("#devices").fadeIn('slow');
-    inter = setInterval('allDevices()', 10000);
+    inter = setInterval('allDevices()', 60000);
 </script>
 
 <script>

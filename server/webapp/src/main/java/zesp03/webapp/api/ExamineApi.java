@@ -37,7 +37,7 @@ public class ExamineApi {
             result.setError("SNMP error");
         }
         result.makeQueryTime(t0);
-        log.warn("controllerId {} queryTime {} updatedDevices {}",
+        log.info("controllerId {} queryTime {} updatedDevices {}",
                 result.getControllerId(),
                 result.getQueryTime(),
                 result.getUpdatedDevices());

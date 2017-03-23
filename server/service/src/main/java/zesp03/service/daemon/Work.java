@@ -8,6 +8,7 @@ import zesp03.common.service.SurveyService;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Locale;
 
 @Component
 public class Work {
@@ -24,10 +25,14 @@ public class Work {
         Thread t = new Thread(() -> shutdown = true);
         Runtime.getRuntime().addShutdownHook(t);
         while(!shutdown) {
-            final Instant start = Instant.now();
-            surveyService.examineAll();
             final int WAIT_SECONDS = 10;
-            long sleep = Duration.between(Instant.now(), start.plusSeconds(WAIT_SECONDS)).toMillis();
+            final Instant t0 = Instant.now();
+            final int updatedDevices = surveyService.examineAll();
+            final Instant t1 = Instant.now();
+            double elapsed = Duration.between(t0, t1).toMillis() * 0.001;
+            log.info("network survey of all devices finished, {} updated devices, {} seconds elapsed",
+                    updatedDevices, String.format(Locale.US, "%.3f", elapsed));
+            long sleep = Duration.between(t1, t0.plusSeconds(WAIT_SECONDS)).toMillis();
             if (sleep < 1) sleep = 1;
             try {
                 Thread.sleep(sleep);

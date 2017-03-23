@@ -35,8 +35,8 @@
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
                 <li><a href="/all-buildings">Budynki</a></li>
-                <li><a href="/all-units">Jednostki</a></li>
-                <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
+                <%--<li><a href="/all-units">Jednostki</a></li>--%>
+                <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -64,7 +64,7 @@
             <ul class="view" style="z-index: 1000;top:0;">
                 <li>
                     <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
-                    <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
+                    <ul id="devices" class="panel panel-default" style="min-height:445px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
                 </li>
             </ul>
         </div>
@@ -117,7 +117,7 @@
             error: err
         });
         function err() {
-            $('#progress_area').text('Wystąpił problem');
+            $('#progress_area').show();
         }
     }
 
@@ -191,7 +191,7 @@
 
     allDevices();
     $("#devices").fadeIn('slow');
-    inter = setInterval('allDevices()', 60000);
+    inter = setInterval('allDevices()', 30000);
 </script>
 
 <script>

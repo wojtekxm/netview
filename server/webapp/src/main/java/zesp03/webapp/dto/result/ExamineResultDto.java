@@ -1,13 +1,9 @@
-package zesp03.webapp.dto;
+package zesp03.webapp.dto.result;
 
 public class ExamineResultDto extends BaseResultDto {
     private long controllerId;
     private double timeElapsed; // w sekundach
     private int updatedDevices;
-
-    public ExamineResultDto(boolean success) {
-        super(success);
-    }
 
     public long getControllerId() {
         return controllerId;

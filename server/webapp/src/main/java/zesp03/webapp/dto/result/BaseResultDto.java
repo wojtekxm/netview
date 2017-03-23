@@ -1,4 +1,4 @@
-package zesp03.webapp.dto;
+package zesp03.webapp.dto.result;
 
 import java.time.Duration;
 import java.time.Instant;

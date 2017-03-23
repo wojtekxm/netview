@@ -1,4 +1,4 @@
-package zesp03.webapp.dto;
+package zesp03.webapp.dto.result;
 
 public class LoginResultDto extends BaseResultDto {
     private long userId;

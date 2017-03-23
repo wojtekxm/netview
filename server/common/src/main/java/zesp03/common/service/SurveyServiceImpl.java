@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zesp03.common.core.Database;
 import zesp03.common.data.DeviceNow;
-import zesp03.common.data.ExamineResult;
 import zesp03.common.data.MinmaxSurveyData;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
@@ -16,7 +15,6 @@ import zesp03.common.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -405,12 +403,9 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public ExamineResult examineAll() {
-        final Instant start = Instant.now();
+    public int examineAll() {
         log.info("network survey begins");
         List<Long> list;
-        final ExamineResult r = new ExamineResult();
-        r.setUpdatedDevices(0);
 
         EntityManager em = null;
         EntityTransaction tran = null;
@@ -430,22 +425,19 @@ public class SurveyServiceImpl implements SurveyService {
             if (em != null) em.close();
         }
 
+        int result = 0;
         for (Long id : list) {
             try {
-                r.setUpdatedDevices( r.getUpdatedDevices() + examineOne(id).getUpdatedDevices() );
+                result += examineOne(id);
             } catch (RuntimeException exc) {
                 log.error("failed to examine controller", exc);
             }
         }
-
-        r.setSeconds(Duration.between(start, Instant.now()).toNanos() * 0.000000001);
-        log.info("network survey examined {} controllers with {} updated devices, in {} seconds",
-                list.size(), r.getUpdatedDevices(), r.getSeconds() );
-        return r;
+        return result;
     }
 
     @Override
-    public ExamineResult examineOne(long controllerId) {
+    public int examineOne(long controllerId) {
         final Instant start = Instant.now();
         final int timestamp = (int) start.getEpochSecond();
         String ipv4;
@@ -478,10 +470,7 @@ public class SurveyServiceImpl implements SurveyService {
         }
         if(name2info.isEmpty()) {
             log.info("survey of controller (id={}, ip={}) returned no devices", controllerId, ipv4);
-            final ExamineResult r = new ExamineResult();
-            r.setSeconds(Duration.between(start, Instant.now()).toNanos() * 0.000000001);
-            r.setUpdatedDevices(0);
-            return r;
+            return 0;
         }
 
         em = null;
@@ -534,12 +523,7 @@ public class SurveyServiceImpl implements SurveyService {
             }
 
             tran.commit();
-            final ExamineResult r = new ExamineResult();
-            r.setUpdatedDevices(ds2persist.size());
-            r.setSeconds(Duration.between(start, Instant.now()).toNanos() * 0.000000001);
-            log.info("survey of controller (id={}, ip={}) has finished successfully with {} updated devices, in {} seconds",
-                    controllerId, ipv4, r.getUpdatedDevices(), r.getSeconds());
-            return r;
+            return ds2persist.size();
         } catch (RuntimeException exc) {
             if (tran != null && tran.isActive()) tran.rollback();
             throw exc;

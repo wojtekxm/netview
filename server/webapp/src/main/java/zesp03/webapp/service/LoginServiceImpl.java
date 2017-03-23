@@ -7,8 +7,8 @@ import zesp03.common.core.App;
 import zesp03.common.core.Database;
 import zesp03.common.entity.User;
 import zesp03.common.util.Secret;
-import zesp03.webapp.dto.LoginResultDto;
 import zesp03.webapp.dto.UserDto;
+import zesp03.webapp.dto.result.LoginResultDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

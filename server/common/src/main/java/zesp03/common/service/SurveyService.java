@@ -1,7 +1,6 @@
 package zesp03.common.service;
 
 import zesp03.common.data.DeviceNow;
-import zesp03.common.data.ExamineResult;
 import zesp03.common.data.MinmaxSurveyData;
 import zesp03.common.entity.DeviceSurvey;
 
@@ -63,12 +62,15 @@ public interface SurveyService {
 
     DeviceNow checkOne(Long id, EntityManager em);
 
-    ExamineResult examineAll();
+    /**
+     * @return liczba zaktualizowanych urządzeń
+     */
+    int examineAll();
 
     /**
      * Wykonuje badanie wskazanego kontrolera.
      * @param controllerId id kontrolera
      * @return liczba zaktualizowanych urządzeń (liczba nowych zapisanych badań)
      */
-    ExamineResult examineOne(long controllerId);
+    int examineOne(long controllerId);
 }

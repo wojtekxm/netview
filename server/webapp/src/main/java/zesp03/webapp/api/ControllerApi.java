@@ -9,8 +9,8 @@ import zesp03.common.entity.Controller;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.util.IPv4;
-import zesp03.webapp.dto.BaseResultDto;
 import zesp03.webapp.dto.ControllerDto;
+import zesp03.webapp.dto.result.BaseResultDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

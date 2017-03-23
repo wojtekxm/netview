@@ -1,14 +1,10 @@
-package zesp03.webapp.dto;
+package zesp03.webapp.dto.result;
 
 public class CreateNewUserDto extends BaseResultDto {
     private long userId;
     private long tokenId;
     private String tokenValue;
     private String activationURL;
-
-    public CreateNewUserDto(boolean success) {
-        super(success);
-    }
 
     public long getUserId() {
         return userId;

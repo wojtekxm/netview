@@ -9,9 +9,9 @@ import zesp03.common.core.Database;
 import zesp03.common.entity.Device;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.service.SurveyService;
-import zesp03.webapp.dto.BaseResultDto;
 import zesp03.webapp.dto.DeviceStateDto;
-import zesp03.webapp.dto.ListDto;
+import zesp03.webapp.dto.result.BaseResultDto;
+import zesp03.webapp.dto.result.ListDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

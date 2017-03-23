@@ -13,10 +13,10 @@ import zesp03.common.entity.User;
 import zesp03.common.entity.UserRole;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.util.Secret;
-import zesp03.webapp.dto.BaseResultDto;
-import zesp03.webapp.dto.ChangePasswordResultDto;
-import zesp03.webapp.dto.CreateNewUserDto;
 import zesp03.webapp.dto.UserDto;
+import zesp03.webapp.dto.result.BaseResultDto;
+import zesp03.webapp.dto.result.ChangePasswordResultDto;
+import zesp03.webapp.dto.result.CreateNewUserDto;
 import zesp03.webapp.filter.AuthenticationFilter;
 import zesp03.webapp.service.UserService;
 
@@ -136,7 +136,7 @@ public class UserApi {
             t.setUser(u);
             em.persist(t);
 
-            CreateNewUserDto r = new CreateNewUserDto(true);
+            CreateNewUserDto r = new CreateNewUserDto();
             r.setTokenId(t.getId());
             r.setTokenValue(tokenValue);
             r.setUserId(u.getId());
@@ -193,7 +193,7 @@ public class UserApi {
             HttpServletRequest req) {
         UserDto user = (UserDto)req.getAttribute(AuthenticationFilter.ATTR_USERDTO);
         String passtoken = userService.changePassword(user.getId(), old, desired, repeat);
-        ChangePasswordResultDto result = new ChangePasswordResultDto(true);
+        ChangePasswordResultDto result = new ChangePasswordResultDto();
         result.setPassToken(passtoken);
         return result;
     }

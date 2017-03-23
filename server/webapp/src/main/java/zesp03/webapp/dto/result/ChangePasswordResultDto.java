@@ -1,11 +1,7 @@
-package zesp03.webapp.dto;
+package zesp03.webapp.dto.result;
 
 public class ChangePasswordResultDto extends BaseResultDto {
     private String passToken;
-
-    public ChangePasswordResultDto(boolean success) {
-        super(success);
-    }
 
     public String getPassToken() {
         return passToken;

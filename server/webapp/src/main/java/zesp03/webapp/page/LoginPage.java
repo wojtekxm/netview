@@ -8,7 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import zesp03.webapp.dto.LoginResultDto;
+import zesp03.webapp.dto.result.LoginResultDto;
 import zesp03.webapp.filter.AuthenticationFilter;
 import zesp03.webapp.service.LoginService;
 

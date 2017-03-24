@@ -34,10 +34,10 @@
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
                 <li><a href="/all-buildings">Budynki</a></li>
-                <li><a href="/all-units">Jednostki</a></li>
-                <li><a href="/all-buildings">Budynki</a></li>
-                <li><a href="/all-units">Jednostki</a></li>
-                <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
+                <%--<li><a href="/all-units">Jednostki</a></li>--%>
+                <%--<li><a href="/all-buildings">Budynki</a></li>--%>
+                <%--<li><a href="/all-units">Jednostki</a></li>--%>
+                <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -55,6 +55,7 @@
 <div id="container">
 
     <div class="content">
+        <div style="height: 10px;"></div>
         <div>
             <div id="wydzial">
                 <div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
@@ -63,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" style="padding: 15px;">
+        <div id="devices" class="panel panel-default" style="padding: 15px;">
             <c:forEach var="user" items="${list}">
                 <c:url var="href" value="/user?id=${user.id}"/>
                 <a href="${href}" class="list-group-item" style="max-width: 300px;">

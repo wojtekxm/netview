@@ -1,6 +1,7 @@
 function loadDate() {
     var devices = new Array();
 
+
     $.ajax({
         type: 'GET',
         url: '/api/all-devices',
@@ -20,6 +21,7 @@ var interGreen;
 
 function onlyGreen()
 {
+    $('[data-toggle="tooltip"]').tooltip('destroy');
     $.ajax({
         type: 'GET',
         url: '/api/all-devices',
@@ -127,6 +129,7 @@ var interRed;
 
 function onlyRed()
 {
+    $('[data-toggle="tooltip"]').tooltip('destroy');
     $.ajax({
         type: 'GET',
         url: '/api/all-devices',
@@ -209,6 +212,7 @@ var interGrey;
 
 function onlyGrey()
 {
+    $('[data-toggle="tooltip"]').tooltip('destroy');
     $.ajax({
         type: 'GET',
         url: '/api/all-devices',

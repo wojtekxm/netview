@@ -32,8 +32,8 @@
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
                 <li><a href="/all-buildings">Budynki</a></li>
-                <li><a href="/all-units">Jednostki</a></li>
-                <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
+                <%--<li><a href="/all-units">Jednostki</a></li>--%>
+                <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -50,12 +50,12 @@
 </nav>
 
 <!-- kill me pls -->
-<div style="margin-top:100px"></div>
+<%--<div style="margin-top:100px"></div>--%>
 <!-- I'm not a solution -->
 
-<div class="container">
+<div id="container">
+    <div style="height: 10px;"></div>
     <div id="progress_area">
-        pobieranie informacji...
     </div>
     <div id="box" style="display: none">
         <ul id="list_controllers" class="list-group"></ul>

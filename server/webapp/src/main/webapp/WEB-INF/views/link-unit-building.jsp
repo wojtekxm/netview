@@ -35,8 +35,8 @@
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
                 <li><a href="/all-buildings">Budynki</a></li>
-                <li><a href="/all-units">Jednostki</a></li>
-                <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
+                <%--<li><a href="/all-units">Jednostki</a></li>--%>
+                <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -53,6 +53,7 @@
 </nav>
 
 <div id="container">
+    <div style="height: 10px;"></div>
     <div class="list-group ">
         <div class="row list-group-item list-group-item-heading list-group-item-success">
             <div class="col-md-1">Id</div>

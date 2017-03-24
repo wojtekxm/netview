@@ -32,8 +32,8 @@
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
                 <li><a href="/all-buildings">Budynki</a></li>
-                <li><a href="/all-units">Jednostki</a></li>
-                <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
+                <%--<li><a href="/all-units">Jednostki</a></li>--%>
+                <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -54,7 +54,7 @@
 <!-- I'm not a solution -->
 
 <div id="container" id="page">
-
+    <div style="height: 10px;"></div>
     <div id="result" style="display:none">
         <h1>informacje o użytkowniku</h1>
         id: <span id="user_id"></span><br>

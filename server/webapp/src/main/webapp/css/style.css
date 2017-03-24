@@ -12,7 +12,7 @@ body
 #container
 {
     margin-bottom:0px;
-    margin-top: 60px;
+    margin-top: 50px;
     min-width: 400px;
     max-width: 100%;
     min-height: 500px;
@@ -22,6 +22,7 @@ body
     /*background-color: rgba(240,240,240,1);*/
     background-color: white;
 }
+
 
 
 /*animate css3 function*/
@@ -167,7 +168,8 @@ ul.view
     list-style: none;
     min-width: 400px;
     max-width: 100%;
-    height: 100%;
+    min-height: 400px;
+    max-height: 100%;
     color:black;
     text-align: left;
     z-index: 999;
@@ -193,13 +195,20 @@ ul.view li ul {
     border-radius: 10px;
     display: table;
     position: relative;
-    min-height: 100px;
-    height: auto;
+    min-height: 400px;
+    max-height: 100%;
     width: 100%;
     background-color: #e9e9e9;
-
 }
 
+#devices{
+    border-radius: 10px;
+    display: table;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: #e9e9e9;
+}
 #devices li{
     animation-iteration-count:1;
 
@@ -517,19 +526,19 @@ ul li#wydzial
 }
 
 #progress_area {
-    border: 8px solid black;
+    border: 4px solid black;
     border-radius: 50%;
-    border-top: 8px solid #2df2be;
-    width: 40px;
-    height: 40px;
+    border-top: 4px solid #2df2be;
+    width: 25px;
+    height: 25px;
     position: absolute;
     margin: auto;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    -webkit-animation: spin 0.35s linear infinite;
-    animation: spin 0.35s linear infinite;
+    -webkit-animation: spin 0.5s linear infinite;
+    animation: spin 0.5s linear infinite;
 }
 
 @-webkit-keyframes spin {

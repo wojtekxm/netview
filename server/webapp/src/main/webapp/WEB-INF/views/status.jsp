@@ -229,7 +229,7 @@
     $('#progress_area').show();
 
     allDevices();
-    $("#devices").fadeIn('slow');
+//    $("#devices").fadeIn('slow');
     inter = setInterval('allDevices()', 30000);
 </script>
 

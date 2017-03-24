@@ -50,6 +50,7 @@
     </div>
 </nav>
 <div id="container" id="page">
+    <div style="height: 10px;"></div>
     <p>zalogowany: <c:out value="${loggedUser.name}"/>
     </p>
     <a href="/">strona główna</a><br>

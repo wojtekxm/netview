@@ -12,10 +12,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/js/status.js"></script>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="css/simple-sidebar.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myDiv">
@@ -29,12 +30,13 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
                 <li><a href="/all-buildings">Budynki</a></li>
+                <li> <a href="#menu-toggle" id="menu-toggle">Filtry</a></li>
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
@@ -52,19 +54,49 @@
     </div>
 </nav>
 
-<div id="all">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav" style="background-color: #080b08;font-size: 16px;">
+            <li class="sidebar-brand">
+                <a href="#">
+                    Filtrowanie
+                </a>
+            </li>
+            <li>
+                <a href="#">Kontrolery</a>
+            </li>
+            <li>
+                <a href="#">Budynki</a>
+            </li>
+            <li>
+                <a href="#">Stan</a>
+            </li>
+            <li>
+                <a href="#">Najwięcej użytkowników</a>
+            </li>
+            <li>
+                <a href="#">Najmniej użytkowników</a>
+            </li>
+            <li>
+                <a href="#">Pozdrawiam</a>
+            </li>
+            <li>
+                <a href="#">Kaceper</a>
+            </li>
+        </ul>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+
+<div id="all" style="margin: 0">
     <div id="container">
-        <%--<div class="welcome">--%>
-            <%--<div class="tittle"><img src="/images/icon.ico" style="padding-bottom: 5px;"> &nbsp; NETWORK-MONITOR</div>--%>
-            <%--<div class="user">zalogowany: <c:out value="${loggedUser.name}"/>--%>
-            <%--</div>--%>
-            <%--<div class="logo"><img src="/images/logooWhite.jpg"></div>--%>
-        <%--</div>--%>
         <div id="content">
             <ul class="view" style="z-index: 1000;top:0;">
                 <li>
+                    <div style="height: 10px;"></div>
                     <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
-                    <ul id="devices" class="panel panel-default" style="min-height:445px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
+                    <ul id="devices" class="panel panel-default" style="min-height:420px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
                 </li>
             </ul>
         </div>
@@ -92,7 +124,14 @@
         </div>
     </div>
 </div>
+</div>
 
+<script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
 
 <script>
     var devices = new Array();
@@ -166,14 +205,16 @@
                 .append(
                     $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
                 );
-            $('#devices').append(line);
+            if(active+inactive+off != 0){
+                $('#devices').append(line);
+                $('#progress_area').hide(500);
+            }else{
+                $('#progress_area').show();
+            }
+
 
             line.tooltip();
         }
-
-
-//        $("#devices").fadeOut('slow');
-//        $("#devices").fadeIn('slow');
 
         all = active+inactive+off;
 
@@ -181,8 +222,6 @@
         $('#countInactive').text(inactive);
         $('#countOff').text(off);
         $('#countAll').text(all);
-
-        $('#progress_area').hide();
 
         loadDate();
     }

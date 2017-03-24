@@ -54,7 +54,7 @@
 <!-- I'm not a solution -->
 
 <div id="container" id="page">
-
+    <div style="height: 10px;"></div>
     <div id="result" style="display:none">
         <h1>informacje o użytkowniku</h1>
         id: <span id="user_id"></span><br>

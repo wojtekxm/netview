@@ -55,6 +55,7 @@
 <!-- I'm not a solution -->
 
 <div class="container">
+    <div style="height: 10px;"></div>
     <div id="result" style="display:none">
         <ul class="view-small" id="list"></ul>
         <hr>

@@ -49,6 +49,7 @@
     </div>
 </nav>
 <div id="container">
+    <div style="height: 10px;"></div>
     <h1>Aktywacja konta użytkownika</h1>
     <form action="/api/activate-account" method="post">
         <input type="hidden" name="tid" value="${param.tid}">

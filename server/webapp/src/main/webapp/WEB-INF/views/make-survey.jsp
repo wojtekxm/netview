@@ -50,10 +50,11 @@
 </nav>
 
 <!-- kill me pls -->
-<div style="margin-top:100px"></div>
+<%--<div style="margin-top:100px"></div>--%>
 <!-- I'm not a solution -->
 
-<div class="container">
+<div id="container">
+    <div style="height: 10px;"></div>
     <div id="progress_area">
     </div>
     <div id="box" style="display: none">

@@ -57,6 +57,7 @@
     </div>
 </nav>
 <div id="container">
+    <div style="height: 10px;"></div>
     <div id="devices" class="panel panel-default">
         <div class="panel-heading">
             szczegóły urządzenia

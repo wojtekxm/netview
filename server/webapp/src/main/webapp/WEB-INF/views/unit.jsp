@@ -51,6 +51,7 @@
 </nav>
 
 <div id="container">
+    <div style="height: 10px;"></div>
     <div class="panel panel-default">
         <div class="panel-heading">
             szczegóły jednostki

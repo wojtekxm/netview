@@ -54,6 +54,7 @@
 <div id="all" class="container-fluid">
     <div id="container">
         <div class="content">
+            <div style="height: 10px;"></div>
             <div>
                 <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Akutalna lista kontrolerów:</div></div>
             </div>

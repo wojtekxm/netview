@@ -29,7 +29,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
@@ -52,38 +52,40 @@
     </div>
 </nav>
 
-<div id="container">
-    <div style="height: 10px;"></div>
-    <div class="list-group ">
-        <div class="row list-group-item list-group-item-heading list-group-item-success">
-            <div class="col-md-1">Id</div>
-            <div class="col-md-1">Id - Budynki</div>
-            <div class="col-md-1">Kod</div>
-            <div class="col-md-3">Nazwa</div>
-            <div class="col-md-1">Szer. Geo</div>
-            <div class="col-md-1">Dł. Geo</div>
-            <div class="col-md-1">Id - Jednostki</div>
-            <div class="col-md-1">Kod</div>
-            <div class="col-md-2">Opis</div>
+<div id="all" class="container-fluid">
+    <div id="container">
+        <div style="height: 10px;"></div>
+        <div class="list-group ">
+            <div class="row list-group-item list-group-item-heading list-group-item-success">
+                <div class="col-md-1">Id</div>
+                <div class="col-md-1">Id - Budynki</div>
+                <div class="col-md-1">Kod</div>
+                <div class="col-md-3">Nazwa</div>
+                <div class="col-md-1">Szer. Geo</div>
+                <div class="col-md-1">Dł. Geo</div>
+                <div class="col-md-1">Id - Jednostki</div>
+                <div class="col-md-1">Kod</div>
+                <div class="col-md-2">Opis</div>
 
 
+            </div>
+
+            <c:forEach var="lub" items="${list}">
+            <div class="row list-group-item list-group-item-info">
+                <div class="col-md-1"><c:out value="${lub.id}"/></div>
+                <div class="col-md-1"><c:out value="${lub.building.id}"/></div>
+                <div class="col-md-1"><c:out value="${lub.building.code}"/></div>
+                <div class="col-md-3"><c:out value="${lub.building.name}"/></div>
+                <div class="col-md-1"><c:out value="${lub.building.latitude}"/></div>
+                <div class="col-md-1"><c:out value="${lub.building.longitude}"/></div>
+
+                <div class="col-md-1"><c:out value="${lub.unit.id}"/></div>
+                <div class="col-md-1"><c:out value="${lub.unit.code}"/></div>
+                <div class="col-md-2"><c:out value="${lub.unit.description}"/></div>
+
+            </div>
+            </c:forEach>
         </div>
-
-        <c:forEach var="lub" items="${list}">
-        <div class="row list-group-item list-group-item-info">
-            <div class="col-md-1"><c:out value="${lub.id}"/></div>
-            <div class="col-md-1"><c:out value="${lub.building.id}"/></div>
-            <div class="col-md-1"><c:out value="${lub.building.code}"/></div>
-            <div class="col-md-3"><c:out value="${lub.building.name}"/></div>
-            <div class="col-md-1"><c:out value="${lub.building.latitude}"/></div>
-            <div class="col-md-1"><c:out value="${lub.building.longitude}"/></div>
-
-            <div class="col-md-1"><c:out value="${lub.unit.id}"/></div>
-            <div class="col-md-1"><c:out value="${lub.unit.code}"/></div>
-            <div class="col-md-2"><c:out value="${lub.unit.description}"/></div>
-
-        </div>
-        </c:forEach>
     </div>
 </div>
 

@@ -16,7 +16,7 @@
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #101410;">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myDiv">
@@ -229,7 +229,7 @@
     $('#progress_area').show();
 
     allDevices();
-    $("#devices").fadeIn('slow');
+
     inter = setInterval('allDevices()', 30000);
 </script>
 

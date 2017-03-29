@@ -28,7 +28,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
@@ -52,35 +52,37 @@
         </div>
     </div>
 </nav>
-<div id="container">
-
-    <div class="content">
-        <div style="height: 10px;"></div>
-        <div>
-            <div id="wydzial">
-                <div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
-                    <span class="glyphicon glyphicon-user"></span>
-                    Lista użytkowników:
+<div id="all" class="container-fluid">
+    <div id="container">
+        <div class="content">
+            <div style="height: 10px;"></div>
+            <div>
+                <div id="wydzial">
+                    <div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
+                        <span class="glyphicon glyphicon-user"></span>
+                        Użytkownicy:
+                    </div>
                 </div>
             </div>
-        </div>
-        <div id="devices" class="panel panel-default" style="padding: 15px;">
-            <c:forEach var="user" items="${list}">
-                <c:url var="href" value="/user?id=${user.id}"/>
-                <a href="${href}" class="list-group-item" style="max-width: 300px;">
-                    <span class="glyphicon glyphicon-menu-right"></span>
-                    <c:out value="${user.activated ? user.name : '[' += user.id += ' - konto nieaktywne]'}"/>
-                </a>
-            </c:forEach>
-            <div>
-                <a href="/create-user" class="btn btn-success" role="button" style="width: 300px;font-size:17px;">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Dodaj nowego użytkownika
-                </a>
+            <div id="devices" class="panel panel-default" style="padding: 15px;">
+                <c:forEach var="user" items="${list}">
+                    <c:url var="href" value="/user?id=${user.id}"/>
+                    <a href="${href}" class="list-group-item" style="max-width: 300px;">
+                        <span class="glyphicon glyphicon-menu-right"></span>
+                        <c:out value="${user.activated ? user.name : '[' += user.id += ' - konto nieaktywne]'}"/>
+                    </a>
+                </c:forEach>
+                <div>
+                    <a href="/create-user" class="btn btn-success" role="button" style="width: 300px;font-size:17px;">
+                        Dodaj nowego użytkownika
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 </body>

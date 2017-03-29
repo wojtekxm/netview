@@ -27,7 +27,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
@@ -48,45 +48,48 @@
     </div>
 </nav>
 
-<div id="container">
-    <div style="height: 10px;"></div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                szczegóły budynku
+<div id="all" class="container-fluid">
+    <div id="container">
+        <div class="content">
+            <div style="height: 10px;"></div>
+            <div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> <c:out value="${building.name}"/>: </div></div>
             </div>
-            <table class="table table-bordered">
-                <tr>
-                    <td>ID</td>
-                    <td><c:out value="${building.id}"/></td>
-                </tr>
-                <tr>
-                    <td>Kod</td>
-                    <td><c:out value="${building.code}"/></td>
-                </tr>
-                <tr>
-                    <td>Nazwa</td>
-                    <td><c:out value="${building.name}"/></td>
-                </tr>
-                <tr>
-                    <td>Szerokość geograficzna</td>
-                    <td><c:out value="${building.latitude}"/></td>
-                </tr>
-                <tr>
-                    <td>Długość geograficzna</td>
-                    <td><c:out value="${building.longitude}"/></td>
-                </tr>
-            </table>
+            <div id="devices" class="panel panel-default" style="padding: 15px;">
+                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+                    Szczegóły budynku:
+                </div>
+                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                    <tr>
+                        <td>ID</td>
+                        <td><c:out value="${building.id}"/></td>
+                    </tr>
+                    <tr>
+                        <td>Kod</td>
+                        <td><c:out value="${building.code}"/></td>
+                    </tr>
+                    <tr>
+                        <td>Szerokość geograficzna</td>
+                        <td><c:out value="${building.latitude}"/></td>
+                    </tr>
+                    <tr>
+                        <td>Długość geograficzna</td>
+                        <td><c:out value="${building.longitude}"/></td>
+                    </tr>
+                </table>
+                <div>
+                    <input type="hidden" name="id" value="${building.id}">
+                    <a href="/api/remove-building" class="btn btn-danger" role="button" style="float:right;width: 300px;font-size:17px;">
+                        <span class="glyphicon glyphicon-trash"></span> Usuń
+                    </a>
+                </div>
+            </div>
         </div>
-
-        <div>
-          <form method="post" action="/api/remove-building">
-            <input type="hidden" name="id" value="${building.id}">
-            <input type="submit" value="Usuń" class="btn btn-danger glyphicon glyphicon-plus" role="button" style="width:150px;font-size:17px;" >
-
-          </form>
-        </div>
+    </div>
 </div>
-<script src="/js/bootstrap-3.3.7.min.js"></script>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7.min.js"></script>
+
 </body>
 </html>

@@ -1,9 +1,6 @@
 package zesp03.webapp.api;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import zesp03.common.core.Database;
 import zesp03.common.entity.Building;
 import zesp03.common.exception.NotFoundException;
@@ -229,6 +226,70 @@ public class BuildingApi {
         }
     }
 
+    @GetMapping("/api/modify-building")
+    public BuildingDto modify(
+            @RequestParam("id") long id) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Building b = em.find(Building.class, id);
+            if(b == null)
+                throw new NotFoundException("modify-building");
+            BuildingDto r = BuildingDto.make(b);
+            tran.commit();
+            return r;
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    @PostMapping(value = "/api/accept-modify-building", consumes = "application/x-www-form-urlencoded")
+    public BaseResultDto acceptModify(
+            @RequestParam("id") long id,
+            @RequestParam("code") String code,
+            @RequestParam("name") String name,
+            @RequestParam("latitude")  BigDecimal latitude,
+            @RequestParam("longitude")  BigDecimal longitude) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Building b = em.find(Building.class, id);
+
+            if(b == null) {
+                if (em != null)
+                    em.close();
+                throw new NotFoundException("building");
+            }
+
+            b.setCode(code);
+            b.setName(name);
+            b.setLatitude(latitude);
+            b.setLongitude(longitude);
+
+            tran.commit();
+
+            return new BaseResultDto(true);
+
+        } catch (RuntimeException exc) {
+            if( tran != null && tran.isActive() )
+                tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null)
+                em.close();
+        }
+    }
 
 }
 

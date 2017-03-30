@@ -5,10 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "unit")
 public class Unit {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(length = 20, unique = true, nullable = false)
     private String code;
@@ -17,11 +16,11 @@ public class Unit {
     private String description;
 
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

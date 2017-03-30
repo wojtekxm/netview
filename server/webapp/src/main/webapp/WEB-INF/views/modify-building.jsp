@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Jednostki</title>
+    <title>Budynki</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
@@ -27,14 +27,12 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
-                <li><a href="/all-buildings">Budynki</a></li>
-                <%--<li><a href="/all-units">Jednostki</a></li>--%>
-                <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
+                <li><a href="/unitsbuildings">Budynki</a></li>
             </ul>
             <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -50,47 +48,60 @@
     </div>
 </nav>
 
-
 <div id="all" class="container-fluid">
     <div id="container">
         <div class="content">
             <div style="height: 10px;"></div>
             <div>
-                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> <c:out value="${unit.description}"/>: </div></div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> <c:out value="${building.name}"/>: </div></div>
+                <form method="post" action="/api/accept-modify-building" id="form1"></form>
             </div>
+
             <div id="devices" class="panel panel-default" style="padding: 15px;">
                 <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-                    Szczegóły jednostki:
+                    Modyfikuj budynek:
                 </div>
-                <c:url var="href" value="/modify-unit?id=${unit.id}"/>
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+
+            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
             <tr>
                 <td>ID</td>
-                <td><c:out value="${unit.id}"/></td>
+                <td width=""><c:out value="${building.id}"/></td>
+                <input form="form1" type="hidden" name="id" value="${building.id}" />
+
             </tr>
             <tr>
                 <td>Kod</td>
-                <td><c:out value="${unit.code}"/></td>
+                <td><input form="form1" type="text" name="code" value="${building.code}" style="width: 30%;"/></td>
             </tr>
+
             <tr>
-                <td>Opis</td>
-                <td><c:out value="${unit.description}"/></td>
+                <td>Nazwa</td>
+                <td><input form="form1" type="text" name="name" value="${building.name}" style="width: 30%;" />
             </tr>
-        </table>
-     <div>
-        <form method="post" action="/api/remove-unit">
-            <input type="hidden" name="id" value="${unit.id}">
-            <input type="submit" value="Usuń" class="btn btn-danger glyphicon glyphicon-plus" role="button" style="float:right;width:150px;font-size:17px;" >
 
-        </form>
+            <tr>
+                <td>Szerokość geograficzna</td>
+                <td><input form="form1" type="text" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
+            </tr>
 
-        <a href="${href}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;" >Modyfikuj</a></div>
+            <tr>
+                <td>Długość geograficzna</td>
+                <td><input form="form1" type="text" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
+
+            </tr>
+
+            </table>
+                <div>
+
+
+                    <input form="form1" type="submit" value="Zatwierdź" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >
+                    <a href="/building?id=${building.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;" >Wróć</a>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
-</div>
-
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/jquery-3.1.1.min.js"></script>
 </body>

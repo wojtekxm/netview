@@ -59,6 +59,7 @@
                 <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
                     Szczegóły budynku:
                 </div>
+                <c:url var="href" value="/modify-building?id=${building.id}"/>
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
                     <tr>
                         <td>ID</td>
@@ -78,10 +79,13 @@
                     </tr>
                 </table>
                 <div>
-                    <input type="hidden" name="id" value="${building.id}">
-                    <a href="/api/remove-building" class="btn btn-danger" role="button" style="float:right;width: 300px;font-size:17px;">
-                        <span class="glyphicon glyphicon-trash"></span> Usuń
-                    </a>
+                    <form method="post" action="/api/remove-building">
+                        <input type="hidden" name="id" value="${building.id}">
+                        <input type="submit" value="Usuń" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >
+
+                    </form>
+                    <a href="${href}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;" >Modyfikuj</a>
+
                 </div>
             </div>
         </div>

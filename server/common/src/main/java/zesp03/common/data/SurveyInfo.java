@@ -1,8 +1,8 @@
 package zesp03.common.data;
 
-//TODO zmień tą klasę w App i NetworkService
 public class SurveyInfo {
     private String name;
+    private int frequencyMhz;
     private boolean enabled;
     private int clientsSum;
 
@@ -12,6 +12,14 @@ public class SurveyInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getFrequencyMhz() {
+        return frequencyMhz;
+    }
+
+    public void setFrequencyMhz(int frequencyMhz) {
+        this.frequencyMhz = frequencyMhz;
     }
 
     public boolean isEnabled() {

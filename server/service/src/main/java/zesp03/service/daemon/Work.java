@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import zesp03.common.service.NetworkService;
 import zesp03.common.service.SurveyService;
 
 import java.time.Duration;
@@ -15,10 +16,12 @@ public class Work {
     private static final Logger log = LoggerFactory.getLogger(Daemon.class);
     private boolean shutdown = false;
     private final SurveyService surveyService;
+    private final NetworkService networkService;
 
     @Autowired
-    public Work(SurveyService surveyService) {
+    public Work(SurveyService surveyService, NetworkService networkService) {
         this.surveyService = surveyService;
+        this.networkService = networkService;
     }
 
     public void work() {

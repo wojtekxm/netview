@@ -10,6 +10,10 @@ public class DeviceSurvey {
     @TableGenerator(name = "device_survey", pkColumnValue = "device_survey")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "frequency_id", nullable = false)
+    private DeviceFrequency frequency;
+
     @Column(name = "\"timestamp\"", nullable = false)
     private Integer timestamp;
 
@@ -22,20 +26,20 @@ public class DeviceSurvey {
     @Column(name = "cumulative", nullable = false)
     private Long cumulative;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "device_id",
-            foreignKey = @ForeignKey(name = "devicesurvey_device_fk"),
-            nullable = false
-    )
-    private Device device;
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public DeviceFrequency getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(DeviceFrequency frequency) {
+        this.frequency = frequency;
     }
 
     public Integer getTimestamp() {
@@ -68,13 +72,5 @@ public class DeviceSurvey {
 
     public void setCumulative(Long cumulative) {
         this.cumulative = cumulative;
-    }
-
-    public Device getDevice() {
-        return device;
-    }
-
-    public void setDevice(Device device) {
-        this.device = device;
     }
 }

@@ -1,8 +1,8 @@
 package zesp03.webapp.dto;
 
-import zesp03.common.data.DeviceNow;
 import zesp03.common.entity.DeviceSurvey;
 
+@Deprecated
 public class DeviceStateDto {
     private long id;
     private String name;

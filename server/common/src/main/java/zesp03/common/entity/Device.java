@@ -1,6 +1,8 @@
 package zesp03.common.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "device")
@@ -20,11 +22,11 @@ public class Device {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "controller_id",
-            foreignKey = @ForeignKey(name = "device_controller_fk")
-    )
+    @JoinColumn(name = "controller_id", nullable = false)
     private Controller controller;
+
+    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
+    private List<DeviceFrequency> frequencyList = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -64,5 +66,13 @@ public class Device {
 
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public List<DeviceFrequency> getFrequencyList() {
+        return frequencyList;
+    }
+
+    public void setFrequencyList(List<DeviceFrequency> frequencyList) {
+        this.frequencyList = frequencyList;
     }
 }

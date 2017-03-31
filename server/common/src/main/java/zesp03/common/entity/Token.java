@@ -18,11 +18,7 @@ public class Token {
     private TokenAction action;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "user_id",
-            foreignKey = @ForeignKey(name = "token_user_fk"),
-            nullable = false
-    )
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Long getId() {

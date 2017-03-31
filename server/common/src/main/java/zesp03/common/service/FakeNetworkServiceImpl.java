@@ -1,5 +1,7 @@
 package zesp03.common.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.exception.SNMPException;
@@ -20,11 +22,7 @@ import java.util.Random;
  */
 @Service
 public class FakeNetworkServiceImpl implements NetworkService {
-    private static class VirtualDevice {
-        String name;
-        int lastClients;
-        boolean lastEnabled;
-    }
+    private static final Logger log = LoggerFactory.getLogger(FakeNetworkServiceImpl.class);
     /**
      * mapuje adres IP kontrolera do listy urządzeń które są zarządzane przez ten kontroler
      */
@@ -69,11 +67,22 @@ public class FakeNetworkServiceImpl implements NetworkService {
                 while ((line = reader.readLine()) != null) {
                     line = line.trim().intern();
                     if (line.length() > 0) {
-                        VirtualDevice vd = new VirtualDevice();
-                        vd.name = line;
-                        vd.lastClients = random.nextInt(50);
-                        vd.lastEnabled = choose(0.8);
-                        devices.add(vd);
+                        String[] split = line.split(" ");
+                        if(split.length < 2) {
+                            throw new IllegalStateException("invalid input line, less than 2 tokens");
+                        }
+                        final String deviceName = split[0].trim().intern();
+                        if(deviceName.isEmpty()) {
+                            throw new IllegalStateException("empty device name");
+                        }
+                        for(int i = 1; i < split.length; i++) {
+                            VirtualDevice vd = new VirtualDevice();
+                            vd.name = deviceName;
+                            vd.frequencyMhz = Integer.parseInt(split[i]);
+                            vd.lastClients = random.nextInt(50);
+                            vd.lastEnabled = choose(0.8);
+                            devices.add(vd);
+                        }
                     }
                 }
                 map.put(controllerIP, devices);
@@ -93,6 +102,7 @@ public class FakeNetworkServiceImpl implements NetworkService {
         for (VirtualDevice vd : devices) {
             SurveyInfo si = new SurveyInfo();
             si.setName(vd.name);
+            si.setFrequencyMhz(vd.frequencyMhz);
             boolean enabled;
             int clients;
             int diff;
@@ -128,5 +138,12 @@ public class FakeNetworkServiceImpl implements NetworkService {
     private boolean choose(double chance) {
         int limit = (int)Math.round(chance * 1000_000_000);
         return random.nextInt(1000_000_000) < limit;
+    }
+
+    private static class VirtualDevice {
+        String name;
+        int frequencyMhz;
+        int lastClients;
+        boolean lastEnabled;
     }
 }

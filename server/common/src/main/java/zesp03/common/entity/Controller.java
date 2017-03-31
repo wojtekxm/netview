@@ -11,11 +11,7 @@ public class Controller {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "building_id",
-            foreignKey = @ForeignKey(name = "building_fk"),
-            nullable = false
-    )
+    @JoinColumn(name = "building_id")
     private Building building;
 
     @Column(name = "\"name\"", unique = true, nullable = false, length = 85)

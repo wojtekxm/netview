@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import zesp03.common.exception.SNMPException;
 import zesp03.common.service.SurveyService;
-import zesp03.webapp.dto.result.ExamineResultDto;
+import zesp03.webapp.dto.ExamineResultDto;
+import zesp03.webapp.dto.result.ContentDto;
 
 import java.time.Instant;
 
@@ -23,24 +24,22 @@ public class ExamineApi {
     }
 
     @PostMapping(value = "/api/examine", consumes = "application/x-www-form-urlencoded")
-    public ExamineResultDto examineOne(
+    public ContentDto<ExamineResultDto> examineOne(
             @RequestParam("id") long controllerId) {
         final Instant t0 = Instant.now();
-        ExamineResultDto result = new ExamineResultDto();
-        result.setControllerId(controllerId);
+        ExamineResultDto e = new ExamineResultDto();
+        ContentDto<ExamineResultDto> result = new ContentDto<>();
+        result.setContent(e);
+        e.setControllerId(controllerId);
         try {
-            result.setUpdatedDevices(surveyService.examineOne(controllerId));
+            e.setUpdatedDevices(surveyService.examineOne(controllerId));
         }
         catch(SNMPException exc) {
-            result.setUpdatedDevices(0);
+            e.setUpdatedDevices(0);
             result.setSuccess(false);
             result.setError("SNMP error");
         }
         result.makeQueryTime(t0);
-        log.info("controllerId {} queryTime {} updatedDevices {}",
-                result.getControllerId(),
-                result.getQueryTime(),
-                result.getUpdatedDevices());
         return result;
     }
 }

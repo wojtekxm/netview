@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
-    <context:component-scan base-package="zesp03.webapp.page;zesp03.webapp.config;zesp03.webapp.api;zesp03.common.service;zesp03.webapp.service" />
+    <context:component-scan base-package="zesp03.common.repository;zesp03.common.service;zesp03.webapp.config;zesp03.webapp.page;zesp03.webapp.api;zesp03.webapp.service" />
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/"/>

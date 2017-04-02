@@ -9,7 +9,7 @@ public class Daemon {
         App.runFlyway();
         Database.init();
         AnnotationConfigApplicationContext acac = new AnnotationConfigApplicationContext();
-        acac.scan("zesp03.common.service", "zesp03.service.daemon");
+        acac.scan("zesp03.common.repository", "zesp03.common.service", "zesp03.service.daemon");
         acac.refresh();
         acac.getBean(Work.class).work();
         Database.destroy();

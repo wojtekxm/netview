@@ -1,8 +1,6 @@
 package zesp03.common.service;
 
-import zesp03.common.data.CurrentDeviceState;
-import zesp03.common.data.MinmaxSurveyData;
-import zesp03.common.entity.DeviceSurvey;
+import zesp03.common.data.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,36 +17,49 @@ public interface SurveyService {
      * @param end    timestamp w sekundach, górny limit (wyłącznie) czasu badań.
      *               Musi być większy od <code>start</code>.
      */
-    List<DeviceSurvey> getOriginal(long deviceId, int frequencyMhz, int start, int end);
+    List<ShortSurvey> getOriginal(long deviceId, int frequencyMhz, int start, int end);
 
     /**
-     * @param start timestamp w sekundach, dolny limit (włącznie) czasu badań
-     * @param end timestamp w sekundach, górny limit (wyłącznie) czasu badań.
-     *            Musi być większy od <code>start</code>.
-     * @return Średnia liczba klientów dla danego urządzenia w wybranym okresie czasu.
+     * @param start timestamp w sekundach, dolny limit (włącznie) czasu badań, start >= 0.
+     * @param end timestamp w sekundach, górny limit (wyłącznie) czasu badań, end > start.
+     * @return Zwraca null jeśli nie będzie żadnych badań na podstawie których można wyliczyć średnią.
      */
-    double getAverage(long deviceId, int frequencyMhz, int start, int end);
+    SurveyPeriodAvg getAverage(long deviceId, int frequencyMhz, int start, int end);
+
+    /**
+     * @param start timestamp w sekundach, dolny limit (włącznie) czasu badań, start >= 0.
+     * @param end timestamp w sekundach, górny limit (wyłącznie) czasu badań, end > start.
+     * @return Zwraca null jeśli nie będzie żadnych badań na podstawie których można wyliczyć min-max.
+     */
+    SurveyPeriodMinMax getMinMax(long deviceId, int frequencyMhz, int start, int end);
+
+    /**
+     * @param start timestamp w sekundach, dolny limit (włącznie) czasu badań, start >= 0.
+     * @param end timestamp w sekundach, górny limit (wyłącznie) czasu badań, end > start.
+     * @return Zwraca null jeśli nie będzie żadnych badań na podstawie których można wyliczyć avg i min-max.
+     */
+    SurveyPeriodAvgMinMax getAvgMinMax(long deviceId, int frequencyMhz, int start, int end);
+
+    /**
+     * @param start timestamp w sekundach, start >= 0
+     * @param end timestamp w sekundach, end > start
+     * @param groupTime czas trwania jednej grupy w sekundach, groupTime > 0
+     */
+    List<SurveyPeriodAvg> getMultiAverage(long deviceId, int frequencyMhz, int start, int end, int groupTime);
 
     /**
      * @param start timestamp w sekundach, >= 0
-     * @param groups liczba grup, >= 0
+     * @param end timestamp w sekundach, end > start
      * @param groupTime czas trwania jednej grupy w sekundach, > 0
      */
-    List<Double> getMultiAverage(long deviceId, int frequencyMhz, int start, int groups, int groupTime);
-
-    /**
-     * @param start timestamp w sekundach, dolny limit (włącznie) czasu badań
-     * @param end timestamp w sekundach, górny limit (wyłącznie) czasu badań.
-     *            Musi być większy od <code>start</code>.
-     */
-    MinmaxSurveyData getMinmax(long deviceId, int frequencyMhz, int start, int end);
+    List<SurveyPeriodMinMax> getMultiMinMax(long deviceId, int frequencyMhz, int start, int end, int groupTime);
 
     /**
      * @param start timestamp w sekundach, >= 0
-     * @param groups liczba grup, >= 0
+     * @param end timestamp w sekundach, end > start
      * @param groupTime czas trwania jednej grupy w sekundach, > 0
      */
-    List<MinmaxSurveyData> getMultiMinmax(long deviceId, int frequencyMhz, int start, int groups, int groupTime);
+    List<SurveyPeriodAvgMinMax> getMultiAvgMinMax(long deviceId, int frequencyMhz, int start, int end, int groupTime);
 
     Map<Long, CurrentDeviceState> xAll();
 

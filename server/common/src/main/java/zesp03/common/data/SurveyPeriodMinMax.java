@@ -1,20 +1,11 @@
 package zesp03.common.data;
 
-public class MinmaxSurveyData {
-    private long deviceId;
+public class SurveyPeriodMinMax {
     private int timeStart;
     private int timeEnd;
     private int min;
     private int max;
     private int surveySpan;
-
-    public long getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(long deviceId) {
-        this.deviceId = deviceId;
-    }
 
     public int getTimeStart() {
         return timeStart;

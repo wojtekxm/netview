@@ -151,11 +151,11 @@
                             data: {
                                 id: li.data('controller_id')
                             },
-                            success: function(examineResultDto) {
-                                if(examineResultDto.success) {
+                            success: function(contentDtoOfExamineResultDto) {
+                                if(contentDtoOfExamineResultDto.success) {
                                     span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
                                     span.addClass('glyphicon glyphicon-ok-circle');
-                                    small.text(examineResultDto.queryTime.toFixed(2) + ' sek.');
+                                    small.text(contentDtoOfExamineResultDto.queryTime.toFixed(2) + ' sek.');
                                 }
                                 else {
                                     span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');

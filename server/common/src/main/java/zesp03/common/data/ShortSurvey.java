@@ -1,8 +1,8 @@
-package zesp03.webapp.dto;
+package zesp03.common.data;
 
 import zesp03.common.entity.DeviceSurvey;
 
-public class ShortSurveyDto {
+public class ShortSurvey {
     private int timestamp;
     private int clients;
     private boolean enabled;
@@ -37,8 +37,8 @@ public class ShortSurveyDto {
         this.enabled = s.isEnabled();
     }
 
-    public static ShortSurveyDto make(DeviceSurvey s) {
-        ShortSurveyDto dto = new ShortSurveyDto();
+    public static ShortSurvey make(DeviceSurvey s) {
+        ShortSurvey dto = new ShortSurvey();
         dto.wrap(s);
         return dto;
     }

@@ -4,18 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.core.Database;
-import zesp03.common.data.CurrentDeviceState;
-import zesp03.common.data.MinmaxSurveyData;
-import zesp03.common.data.SurveyInfo;
+import zesp03.common.data.*;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.entity.DeviceSurvey;
 import zesp03.common.exception.NotFoundException;
+import zesp03.common.repository.DeviceFrequencyRepository;
+import zesp03.common.repository.DeviceRepository;
+import zesp03.common.repository.DeviceSurveyRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,256 +26,277 @@ import java.util.stream.Collectors;
 @Service
 public class SurveyServiceImpl implements SurveyService {
     private static final Logger log = LoggerFactory.getLogger(SurveyServiceImpl.class);
-    private final NetworkService networkService;
 
     @Autowired
-    public SurveyServiceImpl(NetworkService networkService) {
-        this.networkService = networkService;
-    }
+    private DeviceRepository deviceRepository;
+
+    @Autowired
+    private DeviceFrequencyRepository deviceFrequencyRepository;
+
+    @Autowired
+    private DeviceSurveyRepository deviceSurveyRepository;
+
+    @Autowired
+    private DeviceFrequencyService deviceFrequencyService;
+
+    @Autowired
+    private NetworkService networkService;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
-    public List<DeviceSurvey> getOriginal(long deviceId, int frequencyMhz, int start, int end) {
+    @Transactional
+    public List<ShortSurvey> getOriginal(long deviceId, int frequencyMhz, int start, int end) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
-        if(end < 0)
-            throw new IllegalArgumentException("end < 0");
         if(start >= end)
             throw new IllegalArgumentException("start >= end");
 
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            final DeviceFrequency df = getDeviceFrequency(deviceId, frequencyMhz, em);
-
-            List<DeviceSurvey> list = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
-                            "ds.frequency = :df AND ds.timestamp >= :start AND " +
-                            "ds.timestamp < :end ORDER BY ds.timestamp ASC",
-                    DeviceSurvey.class)
-                    .setParameter("df", df)
-                    .setParameter("start", start)
-                    .setParameter("end", end)
-                    .getResultList();
-
-            tran.commit();
-            return list;
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
-        }
-    }
-
-    protected DeviceFrequency getDeviceFrequency(long deviceId, int frequencyMhz, EntityManager em) {
-        List<DeviceFrequency> freqList = em.createQuery("SELECT df FROM DeviceFrequency df WHERE " +
-                "df.frequency = :f AND df.device.id = :d", DeviceFrequency.class)
-                .setParameter("f", frequencyMhz)
-                .setParameter("d", deviceId)
-                .setMaxResults(1)
-                .getResultList();
-        if(freqList.isEmpty()) {
-            throw new NotFoundException("device with this frequency");
-        }
-        return freqList.get(0);
+        Long frequencyId = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
+        return deviceSurveyRepository.findFromPeriod(frequencyId, start, end)
+                .stream()
+                .map(ShortSurvey::make)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public double getAverage(long deviceId, int frequencyMhz, int start, int end) {
+    @Transactional
+    public SurveyPeriodAvg getAverage(long deviceId, int frequencyMhz, int start, int end) {
+        Long frequencyId = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
+        return getAverage(frequencyId, start, end);
+    }
+
+    @Override
+    @Transactional
+    public SurveyPeriodAvgMinMax getAvgMinMax(long deviceId, int frequencyMhz, int start, int end) {
+        Long frequencyId = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
+        return getAvgMinMax(frequencyId, start, end);
+    }
+
+    @Override
+    @Transactional
+    public SurveyPeriodMinMax getMinMax(long deviceId, int frequencyMhz, int start, int end) {
+        Long frequencyId = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
+        return getMinMax(frequencyId, start, end);
+    }
+
+    @Transactional
+    public SurveyPeriodAvg getAverage(Long frequencyId, int start, int end) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
-        if(end < 0)
-            throw new IllegalArgumentException("end < 0");
         if(start >= end)
             throw new IllegalArgumentException("start >= end");
 
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            double avg = getAverage(deviceId, frequencyMhz, start, end, em);
-            tran.commit();
-            return avg;
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
+        final List<DeviceSurvey> listEnd = deviceSurveyRepository.findLastNotAfter(frequencyId, end);
+        if( listEnd.isEmpty() ) {
+            return null;
         }
-    }
-
-    protected double getAverage(long deviceId, int frequencyMhz, int start, int end, EntityManager em) {
-        final DeviceFrequency df = getDeviceFrequency(deviceId, frequencyMhz, em);
-
-        List<DeviceSurvey> listEnd = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
-                "ds.frequency = :df AND ds.timestamp <= :time " +
-                "ORDER BY ds.timestamp DESC ", DeviceSurvey.class)
-                .setParameter("df", df)
-                .setParameter("time", end)
-                .setMaxResults(1)
-                .getResultList();
-        if(listEnd.isEmpty()) {
-            return 0.0;
-        }
-        DeviceSurvey surEnd = listEnd.get(0);
-        long cumulativeEnd = surEnd.getCumulative() + (long)surEnd.getClientsSum() * ( end - surEnd.getTimestamp() );
-
-        List<DeviceSurvey> listStart = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
-                "ds.frequency = :df AND ds.timestamp <= :time " +
-                "ORDER BY ds.timestamp DESC ", DeviceSurvey.class)
-                .setParameter("df", df)
-                .setParameter("time", start)
-                .setMaxResults(1)
-                .getResultList();
-        long cumulativeStart;
-        if(listStart.isEmpty()) {
-            cumulativeStart = 0;
+        final DeviceSurvey dsEnd = listEnd.get(0);
+        final long timeEnd = end;
+        final long cumulativeEnd = dsEnd.getCumulative() + (long)dsEnd.getClientsSum() * (timeEnd - dsEnd.getTimestamp());
+        final List<DeviceSurvey> listStart = deviceSurveyRepository.findLastNotAfter(frequencyId, start);
+        long timeStart, cumulativeStart;
+        if( listStart.isEmpty() ) {
+            final DeviceSurvey first = deviceSurveyRepository.findFirst(frequencyId).get(0);
+            timeStart = first.getTimestamp();
+            cumulativeStart = first.getCumulative();
         }
         else {
-            DeviceSurvey surStart = listStart.get(0);
-            cumulativeStart = surStart.getCumulative() + (long) surStart.getClientsSum() * (start - surStart.getTimestamp());
+            final DeviceSurvey dsStart = listStart.get(0);
+            timeStart = start;
+            cumulativeStart = dsStart.getCumulative() + (long)dsStart.getClientsSum() * (timeStart - dsStart.getTimestamp());
         }
-        double num = cumulativeEnd - cumulativeStart;
-        double avg = num / (end - start);
+        double avg = (double) (cumulativeEnd - cumulativeStart) / (timeEnd - timeStart);
         if(avg < 0.0) {
-            log.warn("avg < 0\n" +
-                    "deviceId={} start={}, end={}" +
-                    "cumulativeStart={} cumulativeEnd={} num={} avg={}",
-                    deviceId, start, end, cumulativeStart, cumulativeEnd, num, avg);
+            log.warn("avg < 0; frequencyId={} start={} end={} cumulativeStart={} cumulativeEnd={} timeStart={} timeEnd={} avg={}",
+                    frequencyId, start, end, cumulativeStart, cumulativeEnd, timeStart, timeEnd, avg);
             avg = 0.0;
         }
-        return avg;
+        SurveyPeriodAvg result = new SurveyPeriodAvg();
+        result.setTimeStart((int)timeStart);
+        result.setTimeEnd((int)timeEnd);
+        result.setAverage(avg);
+        return result;
     }
 
-    @Override
-    public List<Double> getMultiAverage(long deviceId, int frequencyMhz, int start, int groups, int groupTime) {
+    @Transactional
+    public SurveyPeriodMinMax getMinMax(Long frequencyId, int start, int end) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
-        if(groups < 0)
-            throw new IllegalArgumentException("groups < 0");
-        if(groupTime < 1)
-            throw new IllegalArgumentException("groupTime < 1");
-
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            int begin = start;
-            List<Double> list = new ArrayList<>();
-            for(int i = 0; i < groups; i++) {
-                list.add( getAverage(deviceId, frequencyMhz, begin, begin + groupTime, em) );
-                begin += groupTime;
-            }
-            tran.commit();
-            return list;
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
-        }
-    }
-
-    @Override
-    public MinmaxSurveyData getMinmax(long deviceId, int frequencyMhz, int start, int end) {
-        if(start < 0)
-            throw new IllegalArgumentException("start < 0");
-        if(end < 0)
-            throw new IllegalArgumentException("end < 0");
         if(start >= end)
             throw new IllegalArgumentException("start >= end");
 
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            final MinmaxSurveyData result = getMinmax(deviceId, frequencyMhz, start, end, em);
-            tran.commit();
-            return result;
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
+        Integer begin;
+        int timeStart;
+        final List<DeviceSurvey> list = deviceSurveyRepository.findLastNotAfter(frequencyId, start);
+        if( list.isEmpty() ) {
+            List<DeviceSurvey> listFirst = deviceSurveyRepository.findFirst(frequencyId);
+            if( listFirst.isEmpty() ) {
+                return null;
+            }
+            begin = listFirst.get(0).getTimestamp();
+            timeStart = begin;
         }
+        else {
+            begin = list.get(0).getTimestamp();
+            timeStart = start;
+        }
+
+        //TODO COALESCE ?
+        Object[] row = em.createQuery("SELECT MIN(ds.clientsSum), MAX(ds.clientsSum), " +
+                "COUNT(ds) FROM DeviceSurvey ds WHERE ds.frequency.id = :frequencyId AND " +
+                "ds.timestamp >= :t0 AND ds.timestamp < :t1", Object[].class)
+                .setParameter("frequencyId", frequencyId)
+                .setParameter("t0", begin)
+                .setParameter("t1", end)
+                .getSingleResult();
+        Number min = (Number)row[0];
+        Number max = (Number)row[1];
+        Number span = (Number)row[2];
+        if(min == null || max == null || span == null) {
+            return null;
+        }
+        SurveyPeriodMinMax result = new SurveyPeriodMinMax();
+        result.setMin(min.intValue());
+        result.setMax(max.intValue());
+        result.setSurveySpan(span.intValue());
+        result.setTimeStart(timeStart);
+        result.setTimeEnd(end);
+        return result;
     }
 
-    protected MinmaxSurveyData getMinmax(long deviceId, int frequencyMhz, int start, int end, EntityManager em) {
-        final MinmaxSurveyData result = new MinmaxSurveyData();
-        result.setDeviceId(deviceId);
-        result.setTimeStart(start);
-        result.setTimeEnd(end);
+    @Transactional
+    public SurveyPeriodAvgMinMax getAvgMinMax(Long frequencyId, int start, int end) {
+        if(start < 0)
+            throw new IllegalArgumentException("start < 0");
+        if(start >= end)
+            throw new IllegalArgumentException("start >= end");
 
-        final DeviceFrequency df = getDeviceFrequency(deviceId, frequencyMhz, em);
-        List<Integer> begins = em.createQuery("SELECT ds.timestamp FROM DeviceSurvey ds WHERE " +
-                        "ds.frequency = :df AND ds.timestamp <= :start ORDER BY ds.timestamp DESC",
-                Integer.class)
-                .setParameter("df", df)
-                .setParameter("start", start)
-                .setMaxResults(1)
-                .getResultList();
-        int begin = start;
-        if(!begins.isEmpty())begin = begins.get(0);
-        Object[] mm = em.createQuery("SELECT MIN(ds.clientsSum), MAX(ds.clientsSum), " +
-                "COUNT(ds) FROM DeviceSurvey ds WHERE ds.frequency = :df AND " +
-                "ds.timestamp >= :begin AND ds.timestamp < :eee", Object[].class)
-                .setParameter("eee", end)
-                .setParameter("df", df)
-                .setParameter("begin", begin)
+        final List<DeviceSurvey> listEnd = deviceSurveyRepository.findLastNotAfter(frequencyId, end);
+        if( listEnd.isEmpty() ) {
+            return null;
+        }
+        final DeviceSurvey dsEnd = listEnd.get(0);
+        final long timeEnd = end;
+        final long cumulativeEnd = dsEnd.getCumulative() + (long)dsEnd.getClientsSum() * (timeEnd - dsEnd.getTimestamp());
+
+        List<DeviceSurvey> listStart = deviceSurveyRepository.findLastNotAfter(frequencyId, start);
+        if( listStart.isEmpty() ) {
+            listStart = deviceSurveyRepository.findFirst(frequencyId);
+        }
+        final DeviceSurvey dsStart = listStart.get(0);
+        final Integer beginMinMax = dsStart.getTimestamp();
+        long timeStart, cumulativeStart;
+        if(dsStart.getTimestamp() < start) {
+            timeStart = start;
+            cumulativeStart = dsStart.getCumulative() + (long)dsStart.getClientsSum() * (timeStart - dsStart.getTimestamp());
+        }
+        else {
+            timeStart = dsStart.getTimestamp();
+            cumulativeStart = dsStart.getCumulative();
+        }
+        double avg = (double) (cumulativeEnd - cumulativeStart) / (timeEnd - timeStart);
+        if(avg < 0.0) {
+            log.warn("avg < 0; frequencyId={} start={} end={} cumulativeStart={} cumulativeEnd={} timeStart={} timeEnd={} avg={}",
+                    frequencyId, start, end, cumulativeStart, cumulativeEnd, timeStart, timeEnd, avg);
+            avg = 0.0;
+        }
+
+        //TODO COALESCE ?
+        Object[] row = em.createQuery("SELECT MIN(ds.clientsSum), MAX(ds.clientsSum), " +
+                "COUNT(ds) FROM DeviceSurvey ds WHERE ds.frequency.id = :frequencyId AND " +
+                "ds.timestamp >= :t0 AND ds.timestamp < :t1", Object[].class)
+                .setParameter("frequencyId", frequencyId)
+                .setParameter("t0", beginMinMax)
+                .setParameter("t1", (int)timeEnd)
                 .getSingleResult();
-        Integer min = (Integer)mm[0];
-        Integer max = (Integer)mm[1];
-        Long span = (Long)mm[2];
-        if(min == null || max == null || span == null)
-            throw new NotFoundException("no results for device with id=" + deviceId);
-        result.setMin(min);
-        result.setMax(max);
-        result.setSurveySpan((int)(long)span);
+        Number min = (Number)row[0];
+        Number max = (Number)row[1];
+        Number span = (Number)row[2];
+        if(min == null || max == null || span == null) {
+            return null;
+        }
+        SurveyPeriodAvgMinMax result = new SurveyPeriodAvgMinMax();
+        result.setMin(min.intValue());
+        result.setMax(max.intValue());
+        result.setSurveySpan(span.intValue());
+        result.setTimeStart((int)timeStart);
+        result.setTimeEnd((int)timeEnd);
+        result.setAverage(avg);
         return result;
     }
 
     @Override
-    public List<MinmaxSurveyData> getMultiMinmax(long deviceId, int frequencyMhz, int start, int groups, int groupTime) {
+    @Transactional
+    public List<SurveyPeriodAvg> getMultiAverage(long deviceId, int frequencyMhz, int start, int end, int groupTime) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
-        if(groups < 0)
-            throw new IllegalArgumentException("groups < 0");
+        if(start >= end)
+            throw new IllegalArgumentException("start >= end");
         if(groupTime < 1)
             throw new IllegalArgumentException("groupTime < 1");
 
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            int begin = start;
-            List<MinmaxSurveyData> list = new ArrayList<>();
-            for(int i = 0; i < groups; i++) {
-                list.add( getMinmax(deviceId, frequencyMhz, begin, begin + groupTime, em) );
-                begin += groupTime;
+        final Long frequencyId = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
+        int begin = start;
+        final List<SurveyPeriodAvg> list = new ArrayList<>();
+        while(begin < end) {
+            if(begin < 0) {
+                throw new IllegalArgumentException("start time overflow");
             }
-            tran.commit();
-            return list;
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
+            final SurveyPeriodAvg a = getAverage(frequencyId, begin, begin + groupTime);
+            if(a != null) {
+                list.add(a);
+            }
+            begin += groupTime;
         }
+        return list;
+    }
+
+    @Override
+    @Transactional
+    public List<SurveyPeriodMinMax> getMultiMinMax(long deviceId, int frequencyMhz, int start, int end, int groupTime) {
+        if(start < 0)
+            throw new IllegalArgumentException("start < 0");
+        if(start >= end)
+            throw new IllegalArgumentException("start >= end");
+        if(groupTime < 1)
+            throw new IllegalArgumentException("groupTime < 1");
+
+        final Long frequencyId = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
+        int begin = start;
+        final List<SurveyPeriodMinMax> list = new ArrayList<>();
+        while(begin < end) {
+            final SurveyPeriodMinMax m = getMinMax(frequencyId, begin, begin + groupTime);
+            if(m != null) {
+                list.add(m);
+            }
+            begin += groupTime;
+        }
+        return list;
+    }
+
+    @Override
+    @Transactional
+    public List<SurveyPeriodAvgMinMax> getMultiAvgMinMax(long deviceId, int frequencyMhz, int start, int end, int groupTime) {
+        if(start < 0)
+            throw new IllegalArgumentException("start < 0");
+        if(start >= end)
+            throw new IllegalArgumentException("start >= end");
+        if(groupTime < 1)
+            throw new IllegalArgumentException("groupTime < 1");
+
+        final Long frequencyId = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
+        int begin = start;
+        final List<SurveyPeriodAvgMinMax> list = new ArrayList<>();
+        while(begin < end) {
+            final SurveyPeriodAvgMinMax x = getAvgMinMax(frequencyId, begin, begin + groupTime);
+            if(x != null) {
+                list.add(x);
+            }
+            begin += groupTime;
+        }
+        return list;
     }
 
     @Override
@@ -372,7 +396,7 @@ public class SurveyServiceImpl implements SurveyService {
         List<Long> bestSurveys = getBestDeviceSurveys(em);
         if(bestSurveys.isEmpty())bestSurveys.add(-1L);//!
         HashMap<Long, CurrentDeviceState> map = new HashMap<>();
-        //! left join i where in best
+        //TODO ! left join i where in best
         //TODO czy to będzie szybko działać przy wielu badaniach?
         //TODO fetch join controller
         List<Object[]> list = em.createQuery("SELECT dev, freq, sur " +
@@ -384,7 +408,6 @@ public class SurveyServiceImpl implements SurveyService {
                 .setParameter("devices", devices)
                 .setParameter("best", bestSurveys)
                 .getResultList();
-        log.info("list.size={}", list.size());
         list.forEach( arr -> {
             Device dev = (Device)arr[0];
             DeviceFrequency freq = (DeviceFrequency)arr[1];
@@ -431,7 +454,6 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public int examineAll() {
-        log.info("network survey begins");
         List<Long> list;
 
         EntityManager em = null;
@@ -494,12 +516,10 @@ public class SurveyServiceImpl implements SurveyService {
             log.info("survey of controller (id={}, ip={}) returned no devices", controllerId, ipv4);
             return 0;
         }
-        final TreeSet<SurveyInfo> uniqueSurveys = new TreeSet<>(new NameFrequencyUnique());
+        final TreeSet<SurveyInfo> uniqueSurveys = new TreeSet<>(new SurveyInfo.NameFrequencyUnique());
         for(SurveyInfo info : originalSurveys) {
             uniqueSurveys.add(info);
         }
-        log.info("originalSurveys.size = {}", originalSurveys.size());
-        log.info("uniqueSurveys.size = {}", uniqueSurveys.size());
 
         em = null;
         tran = null;
@@ -521,7 +541,6 @@ public class SurveyServiceImpl implements SurveyService {
                             .collect(Collectors.toSet()),
                     em
             );
-            log.info("id2current.size() = {}", id2current.size());
             final List<DeviceSurvey> ds2persist = new ArrayList<>();
             for(final SurveyInfo info : uniqueSurveys) {
                 final Device device = name2device.get(info.getName());
@@ -622,15 +641,5 @@ public class SurveyServiceImpl implements SurveyService {
         }
         em.flush();
         return result;
-    }
-
-    public static class NameFrequencyUnique implements Comparator<SurveyInfo> {
-        @Override
-        public int compare(SurveyInfo a, SurveyInfo b) {
-            if(a.getFrequencyMhz() == b.getFrequencyMhz()) {
-                return a.getName().compareTo(b.getName());
-            }
-            return a.getFrequencyMhz() - b.getFrequencyMhz();
-        }
     }
 }

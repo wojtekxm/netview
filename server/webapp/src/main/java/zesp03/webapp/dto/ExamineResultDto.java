@@ -1,8 +1,7 @@
-package zesp03.webapp.dto.result;
+package zesp03.webapp.dto;
 
-public class ExamineResultDto extends BaseResultDto {
+public class ExamineResultDto {
     private long controllerId;
-    private double timeElapsed; // w sekundach
     private int updatedDevices;
 
     public long getControllerId() {
@@ -11,14 +10,6 @@ public class ExamineResultDto extends BaseResultDto {
 
     public void setControllerId(long controllerId) {
         this.controllerId = controllerId;
-    }
-
-    public double getTimeElapsed() {
-        return timeElapsed;
-    }
-
-    public void setTimeElapsed(double timeElapsed) {
-        this.timeElapsed = timeElapsed;
     }
 
     public int getUpdatedDevices() {

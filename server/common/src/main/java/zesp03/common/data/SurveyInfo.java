@@ -1,5 +1,7 @@
 package zesp03.common.data;
 
+import java.util.Comparator;
+
 public class SurveyInfo {
     private String name;
     private int frequencyMhz;
@@ -36,5 +38,15 @@ public class SurveyInfo {
 
     public void setClientsSum(int clientsSum) {
         this.clientsSum = clientsSum;
+    }
+
+    public static class NameFrequencyUnique implements Comparator<SurveyInfo> {
+        @Override
+        public int compare(SurveyInfo a, SurveyInfo b) {
+            if(a.getFrequencyMhz() == b.getFrequencyMhz()) {
+                return a.getName().compareTo(b.getName());
+            }
+            return a.getFrequencyMhz() - b.getFrequencyMhz();
+        }
     }
 }

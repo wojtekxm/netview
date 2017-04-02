@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import zesp03.common.core.Database;
+import zesp03.common.entity.Building;
 import zesp03.common.entity.LinkUnitBuilding;
 import zesp03.common.entity.Unit;
 import zesp03.common.exception.NotFoundException;
@@ -180,8 +181,6 @@ public class UnitApi {
     public BaseResultDto create(
             @RequestParam("code") String code,
             @RequestParam(value = "description", required = false) String description) {
-
-
         EntityManager em = null;
         EntityTransaction tran = null;
         try {
@@ -227,5 +226,67 @@ public class UnitApi {
             if (em != null) em.close();
         }
     }
+
+    @GetMapping("/api/modify-unit")
+    public UnitDto modify(
+            @RequestParam("id") long id) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Unit u = em.find(Unit.class, id);
+            if(u == null)
+                throw new NotFoundException("modify-unit");
+            UnitDto r = UnitDto.make(u);
+            tran.commit();
+            return r;
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive()) tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null) em.close();
+        }
+    }
+
+    @PostMapping(value = "/api/accept-modify-unit", consumes = "application/x-www-form-urlencoded")
+    public BaseResultDto acceptModifyUnit(
+            @RequestParam("id") long id,
+            @RequestParam("code") String code,
+            @RequestParam("description") String description) {
+        EntityManager em = null;
+        EntityTransaction tran = null;
+        try {
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+            tran.begin();
+
+            Unit u= em.find(Unit.class, id);
+
+            if(u == null) {
+                if (em != null)
+                    em.close();
+                throw new NotFoundException("unit");
+            }
+
+            u.setCode(code);
+            u.setDescription(description);
+            tran.commit();
+
+            return new BaseResultDto(true);
+
+        } catch (RuntimeException exc) {
+            if( tran != null && tran.isActive() )
+                tran.rollback();
+            throw exc;
+        } finally {
+            if (em != null)
+                em.close();
+        }
+    }
+
+
 
 }

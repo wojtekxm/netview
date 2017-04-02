@@ -29,7 +29,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
@@ -56,7 +56,7 @@
         <div class="content">
             <div style="height: 10px;"></div>
             <div>
-                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Akutalna lista kontrolerów:</div></div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kontorlery:</div></div>
             </div>
             <div id="devices" class="panel panel-default" style="padding: 15px;">
                 <c:forEach items="${list}" var="controller">

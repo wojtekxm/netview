@@ -51,7 +51,10 @@
     color : #cdd6cd;
 }
 .navbar-inverse .navbar-nav > li > a:hover{
-     color : #2df2be;
+    color : #2df2be;
+}
+.navbar-inverse{
+    background-color: #121612 !important;
 }
 
 

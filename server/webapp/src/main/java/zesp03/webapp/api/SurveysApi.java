@@ -28,6 +28,7 @@ public class SurveysApi {
     @GetMapping("original")
     public List<OriginalSurveyDto> getOriginal(
             @RequestParam("device") long device,
+            @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("end") int end) {
         if(start < 0)
@@ -37,7 +38,7 @@ public class SurveysApi {
         if(end <= start)
             throw new ValidationException("end", "end must be after start");
 
-        return surveyService.getOriginal(device, start, end)
+        return surveyService.getOriginal(device, frequencyMhz, start, end)
                 .stream()
                 .map( ds -> {
                     OriginalSurveyDto dto = new OriginalSurveyDto();
@@ -53,6 +54,7 @@ public class SurveysApi {
     @GetMapping("average")
     public AverageSurveyDto getAverage(
             @RequestParam("device") long device,
+            @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("end") int end) {
         if(start < 0)
@@ -66,13 +68,14 @@ public class SurveysApi {
         result.setDeviceId(device);
         result.setTimeStart(start);
         result.setTimeEnd(end);
-        result.setAvgClients( surveyService.getAverage(device, start, end) );
+        result.setAvgClients( surveyService.getAverage(device, frequencyMhz, start, end) );
         return result;
     }
 
     @GetMapping("multi-average")
     public List<AverageSurveyDto> getMultiAverage(
             @RequestParam("device") long device,
+            @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("groups") int groups,
             @RequestParam("groupTime") int groupTime) {
@@ -83,7 +86,7 @@ public class SurveysApi {
         if(groupTime < 1)
             throw new ValidationException("groupTime", "less than 1");
 
-        List<Double> list = surveyService.getMultiAverage(device, start, groups, groupTime);
+        List<Double> list = surveyService.getMultiAverage(device, frequencyMhz, start, groups, groupTime);
         List<AverageSurveyDto> result = new ArrayList<>();
         int begin = start;
         for(Double avg : list) {
@@ -101,6 +104,7 @@ public class SurveysApi {
     @GetMapping("minmax")
     public MinmaxSurveyData getMinmax(
             @RequestParam("device") long device,
+            @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("end") int end) {
         if(start < 0)
@@ -110,12 +114,13 @@ public class SurveysApi {
         if(end <= start)
             throw new ValidationException("end", "end must be after start");
 
-        return surveyService.getMinmax(device, start, end);
+        return surveyService.getMinmax(device, frequencyMhz, start, end);
     }
 
     @GetMapping("multi-minmax")
     public List<MinmaxSurveyData> getMultiMinmax(
             @RequestParam("device") long device,
+            @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("groups") int groups,
             @RequestParam("groupTime") int groupTime) {
@@ -126,6 +131,6 @@ public class SurveysApi {
         if(groupTime < 1)
             throw new ValidationException("groupTime", "less than 1");
 
-        return surveyService.getMultiMinmax(device, start, groups, groupTime);
+        return surveyService.getMultiMinmax(device, frequencyMhz, start, groups, groupTime);
     }
 }

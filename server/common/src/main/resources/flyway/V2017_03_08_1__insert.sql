@@ -199,4 +199,4 @@ INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
   ( "building", ( SELECT MAX(id)+1000 FROM building ) ),
   ( "unit", ( SELECT MAX(id)+1000 FROM unit ) ),
   ( "link_unit_building", ( SELECT MAX(id)+1000 FROM link_unit_building ) ),
-  ( "user", ( SELECT MAX(id)+1000 FROM user ) );
+  ( "user", ( SELECT MAX(id)+1000 FROM `user` ) );

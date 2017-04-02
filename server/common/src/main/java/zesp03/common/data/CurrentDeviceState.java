@@ -5,18 +5,19 @@ import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.entity.DeviceSurvey;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CurrentDeviceState {
     private final Device device;
-    private final List<FrequencySurvey> list = new ArrayList<>();
+    private final HashMap<Integer, FrequencySurvey> map = new HashMap<>();
 
     // f i s mogą być null
     public CurrentDeviceState(Device d, DeviceFrequency f, DeviceSurvey s) {
         FrequencySurvey fs = validate(d, f, s);
         this.device = d;
         if(fs.frequency != null) {
-            list.add(fs);
+            map.put(fs.frequency.getFrequency(), fs);
         }
     }
 
@@ -26,34 +27,30 @@ public class CurrentDeviceState {
 
     // zwraca null jak nie znajdzie
     public DeviceFrequency findFrequency(Integer frequencyMhz) {
-        for(FrequencySurvey fs : list) {
-            if( fs.frequency.getFrequency().equals(frequencyMhz) ) {
-                return fs.frequency;
-            }
-        }
+        FrequencySurvey fs = map.get(frequencyMhz);
+        if(fs != null)return fs.frequency;
         return null;
     }
 
     // zwraca null jak nie znajdzie
     public DeviceSurvey findSurvey(Integer frequencyMhz) {
-        for(FrequencySurvey fs : list) {
-            if( fs.frequency.getFrequency().equals(frequencyMhz) ) {
-                return fs.survey;
-            }
-        }
+        FrequencySurvey fs = map.get(frequencyMhz);
+        if(fs != null)return fs.survey;
         return null;
+    }
+
+    public List<Integer> getFrequencies() {
+        return new ArrayList<>(map.keySet());
     }
 
     public void merge(CurrentDeviceState c) {
         if( ! c.device.getId().equals( device.getId() ) ) {
             throw new IllegalArgumentException("Device");
         }
-        if(c.list == list) {
-            throw new IllegalArgumentException("list");
+        if(c.map == map) {
+            throw new IllegalArgumentException("map");
         }
-        for(FrequencySurvey fs : c.list) {
-            list.add(fs);
-        }
+        c.map.forEach( (i, fs) -> map.put(i, fs) );
     }
 
     private static FrequencySurvey validate(Device d, DeviceFrequency f, DeviceSurvey s) {
@@ -71,7 +68,12 @@ public class CurrentDeviceState {
             }
             return new FrequencySurvey(f, s);
         }
-        return new FrequencySurvey(f, s);
+        else if(s != null) {
+            throw new IllegalArgumentException("DeviceSurvey");
+        }
+        else {
+            return new FrequencySurvey(null, null);
+        }
     }
 
     public static class FrequencySurvey {

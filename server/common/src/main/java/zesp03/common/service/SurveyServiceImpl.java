@@ -374,6 +374,7 @@ public class SurveyServiceImpl implements SurveyService {
         HashMap<Long, CurrentDeviceState> map = new HashMap<>();
         //! left join i where in best
         //TODO czy to będzie szybko działać przy wielu badaniach?
+        //TODO fetch join controller
         List<Object[]> list = em.createQuery("SELECT dev, freq, sur " +
                         "FROM Device dev " +
                         "LEFT JOIN dev.frequencyList freq " +
@@ -400,7 +401,6 @@ public class SurveyServiceImpl implements SurveyService {
         return map;
     }
 
-    // mapuje id urządzenia do CurrentDeviceState
     // zwraca null jak nie znajdzie
     public CurrentDeviceState xOne(Long deviceId, EntityManager em) {
         List<Long> bestSurveys = getBestDeviceSurveys(em);

@@ -146,16 +146,13 @@
                         span.addClass('glyphicon glyphicon-hourglass');
                         $.ajax( {
                             type: 'post',
-                            url: '/api/examine',
+                            url: '/api/examine/' + li.data('controller_id'),
                             dataType: 'json',
-                            data: {
-                                id: li.data('controller_id')
-                            },
-                            success: function(contentDtoOfExamineResultDto) {
-                                if(contentDtoOfExamineResultDto.success) {
+                            success: function(baseResultDto) {
+                                if(baseResultDto.success) {
                                     span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
                                     span.addClass('glyphicon glyphicon-ok-circle');
-                                    small.text(contentDtoOfExamineResultDto.queryTime.toFixed(2) + ' sek.');
+                                    small.text(baseResultDto.queryTime.toFixed(2) + ' sek.');
                                 }
                                 else {
                                     span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');

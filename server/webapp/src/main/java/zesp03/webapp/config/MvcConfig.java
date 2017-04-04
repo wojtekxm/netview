@@ -20,20 +20,6 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
                 .addResourceLocations("/css/", "/fonts/", "/images/", "/js/", "/favicon.ico")
                 .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic());
     }
-/*
-    @Bean
-    public ObjectMapper jacksonObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        return mapper;
-    }
-
-    @Bean
-    public MappingJackson2HttpMessageConverter jsonConverter(ObjectMapper objectMapper) {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(jacksonObjectMapper());
-        return converter;
-    }*/
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {

@@ -1,12 +1,8 @@
-package zesp03.webapp.dto.result;
+package zesp03.webapp.dto;
 
-public class LoginResultDto extends BaseResultDto {
+public class LoginResultDto {
     private long userId;
     private String passToken;
-
-    public LoginResultDto(boolean success) {
-        super(success);
-    }
 
     public long getUserId() {
         return userId;

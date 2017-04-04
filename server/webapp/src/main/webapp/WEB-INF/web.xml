@@ -7,9 +7,6 @@
     <listener>
         <listener-class>zesp03.webapp.config.FlywayConfig</listener-class>
     </listener>
-    <listener>
-        <listener-class>zesp03.webapp.config.DatabaseConfig</listener-class>
-    </listener>
 
     <filter>
         <filter-name>StaticResourceFilter</filter-name>

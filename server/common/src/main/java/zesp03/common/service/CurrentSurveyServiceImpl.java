@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class DeviceServiceImpl implements DeviceService {
+public class CurrentSurveyServiceImpl implements CurrentSurveyService {
     @PersistenceContext
     private EntityManager em;
 

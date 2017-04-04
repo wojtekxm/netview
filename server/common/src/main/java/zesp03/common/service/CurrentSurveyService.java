@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public interface DeviceService {
+public interface CurrentSurveyService {
     List<Long> findLastIds();
     Optional<CurrentDeviceState> checkOne(Long deviceId);
     // kluczem w mapie jest id urządzenia

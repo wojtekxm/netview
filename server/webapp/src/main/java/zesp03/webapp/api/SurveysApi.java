@@ -17,12 +17,8 @@ import zesp03.webapp.dto.result.ListDto;
 @RestController
 @RequestMapping("/api/surveys")
 public class SurveysApi {
-    private final HistoricalSurveyService historicalSurveyService;
-
     @Autowired
-    public SurveysApi(HistoricalSurveyService historicalSurveyService) {
-        this.historicalSurveyService = historicalSurveyService;
-    }
+    private HistoricalSurveyService historicalSurveyService;
 
     @GetMapping("original")
     public ListDto<ShortSurvey> getOriginal(
@@ -30,10 +26,12 @@ public class SurveysApi {
             @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("end") int end) {
-        if(start < 0)
+        if(start < 0) {
             throw new ValidationException("start", "less than 0");
-        if(end <= start)
+        }
+        if(end <= start) {
             throw new ValidationException("end", "end must be after start");
+        }
 
         return ListDto.make( () -> historicalSurveyService.getOriginal(device, frequencyMhz, start, end) );
     }
@@ -45,10 +43,12 @@ public class SurveysApi {
             @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("end") int end) {
-        if(start < 0)
+        if(start < 0) {
             throw new ValidationException("start", "less than 0");
-        if(end <= start)
+        }
+        if(end <= start) {
             throw new ValidationException("end", "end must be after start");
+        }
 
         return ContentDto.make( () -> historicalSurveyService.getAverage(device, frequencyMhz, start, end) );
     }
@@ -60,12 +60,15 @@ public class SurveysApi {
             @RequestParam("start") int start,
             @RequestParam("end") int end,
             @RequestParam("groupTime") int groupTime) {
-        if(start < 0)
+        if(start < 0) {
             throw new ValidationException("start", "less than 0");
-        if(end <= start)
+        }
+        if(end <= start) {
             throw new ValidationException("end", "end must be after start");
-        if(groupTime < 1)
+        }
+        if(groupTime < 1) {
             throw new ValidationException("groupTime", "less than 1");
+        }
 
         return ListDto.make( () -> historicalSurveyService.getMultiAverage(device, frequencyMhz, start, end, groupTime) );
     }
@@ -76,10 +79,12 @@ public class SurveysApi {
             @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("end") int end) {
-        if(start < 0)
+        if(start < 0) {
             throw new ValidationException("start", "less than 0");
-        if(end <= start)
+        }
+        if(end <= start) {
             throw new ValidationException("end", "end must be after start");
+        }
 
         return ContentDto.make( () -> historicalSurveyService.getMinMax(device, frequencyMhz, start, end) );
     }
@@ -91,12 +96,15 @@ public class SurveysApi {
             @RequestParam("start") int start,
             @RequestParam("end") int end,
             @RequestParam("groupTime") int groupTime) {
-        if(start < 0)
+        if(start < 0) {
             throw new ValidationException("start", "less than 0");
-        if(end <= start)
+        }
+        if(end <= start) {
             throw new ValidationException("end", "end must be after start");
-        if(groupTime < 1)
+        }
+        if(groupTime < 1) {
             throw new ValidationException("groupTime", "less than 1");
+        }
 
         return ListDto.make( () -> historicalSurveyService.getMultiMinMax(device, frequencyMhz, start, end, groupTime) );
     }
@@ -108,12 +116,15 @@ public class SurveysApi {
             @RequestParam("start") int start,
             @RequestParam("end") int end,
             @RequestParam("groupTime") int groupTime) {
-        if(start < 0)
+        if(start < 0) {
             throw new ValidationException("start", "less than 0");
-        if(end <= start)
+        }
+        if(end <= start) {
             throw new ValidationException("end", "end must be after start");
-        if(groupTime < 1)
+        }
+        if(groupTime < 1) {
             throw new ValidationException("groupTime", "less than 1");
+        }
 
         return ListDto.make( () -> historicalSurveyService.getMultiAvgMinMax(device, frequencyMhz, start, end, groupTime) );
     }

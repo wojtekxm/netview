@@ -32,7 +32,7 @@ public class SurveySavingServiceImpl implements SurveySavingService {
     private NetworkService networkService;
 
     @Autowired
-    private DeviceService deviceService;
+    private CurrentSurveyService currentSurveyService;
 
     @Autowired
     private ControllerRepository controllerRepository;
@@ -76,7 +76,7 @@ public class SurveySavingServiceImpl implements SurveySavingService {
             throw new NotFoundException("controller");
         }
         final HashMap<String, Device> name2device = makeDevices(uniqueSurveys, controller);
-        final Map<Long, CurrentDeviceState> id2current = deviceService.checkSome(name2device.entrySet()
+        final Map<Long, CurrentDeviceState> id2current = currentSurveyService.checkSome(name2device.entrySet()
                 .stream()
                 .map( e -> e.getValue().getId() )
                 .collect(Collectors.toSet())

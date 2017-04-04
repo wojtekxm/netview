@@ -1,41 +1,24 @@
 package zesp03.webapp.page;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import zesp03.common.core.Database;
-import zesp03.common.exception.NotFoundException;
 import zesp03.webapp.dto.BuildingDto;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import zesp03.webapp.service.BuildingService;
 
 @Controller
 public class BuildingPage {
+    @Autowired
+    private BuildingService buildingService;
+
     @GetMapping("/building")
     public String get(
             @RequestParam("id") long id,
             ModelMap model) {
-        EntityManager em = null;
-        EntityTransaction tran = null;
-        try {
-            em = Database.createEntityManager();
-            tran = em.getTransaction();
-            tran.begin();
-
-            zesp03.common.entity.Building b = em.find(zesp03.common.entity.Building.class, id);
-            if(b == null)
-                throw new NotFoundException("building");
-            BuildingDto dto = BuildingDto.make(b);
-            model.put("building", dto);
-            tran.commit();
-            return "building";
-        } catch (RuntimeException exc) {
-            if (tran != null && tran.isActive()) tran.rollback();
-            throw exc;
-        } finally {
-            if (em != null) em.close();
-        }
+        BuildingDto dto = buildingService.getOneBuilding(id);
+        model.put("building", dto);
+        return "building";
     }
 }

@@ -9,8 +9,6 @@ import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
 import zesp03.webapp.service.CommonServiceWrapper;
 
-import java.time.Instant;
-
 @RestController
 public class DeviceApi {
     @Autowired
@@ -30,13 +28,9 @@ public class DeviceApi {
         return ContentDto.make( () -> commonServiceWrapper.checkOneDevice(deviceId) );
     }
 
-    @PostMapping(value = "/api/device/remove/{id}")
+    @PostMapping(value = "/api/device/remove/{deviceId}")
     public BaseResultDto remove(
-            @PathVariable("id") long id) {
-        final Instant t0 = Instant.now();
-        BaseResultDto r = new BaseResultDto();
-        deviceRepository.delete(id);
-        r.makeQueryTime(t0);
-        return r;
+            @PathVariable("deviceId") long id) {
+        return BaseResultDto.make( () -> deviceRepository.delete(id) );
     }
 }

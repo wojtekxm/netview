@@ -287,6 +287,48 @@ public class UnitApi {
         }
     }
 
+    @GetMapping("/api/link-unit-all-buildings")
+    public UnitBuildingsDto getAllBuildings( @RequestParam("id") long id ) {
+
+
+        UnitBuildingsDto unit_building_dto = new UnitBuildingsDto ();
+        EntityManager em = null;
+        EntityTransaction tran = null;
+
+        try {
+
+            em = Database.createEntityManager();
+            tran = em.getTransaction();
+
+            tran.begin();
+
+            List< BuildingDto > buildings = em.createQuery("SELECT b FROM Building b", Building.class)
+                    .getResultList()
+                    .stream()
+                    .map(BuildingDto::make)
+                    .collect(Collectors.toList());
+
+            tran.commit();
+
+            Unit u = em.find(Unit.class, id);
+            if(u == null)
+                throw new NotFoundException("link-unit-all-buildings");
+
+            unit_building_dto.setUnit( UnitDto.make( u ) );
+            unit_building_dto.setBuildings( buildings );
+
+        } catch (RuntimeException exc) {
+            if (tran != null && tran.isActive())
+                tran.rollback();
+
+            throw exc;
+        } finally {
+            if (em != null)
+                em.close();
+        }
+
+        return unit_building_dto;
+    }
 
 
 }

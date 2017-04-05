@@ -43,4 +43,12 @@ public class BaseResultDto {
     public void makeQueryTime(Instant since) {
         queryTime = Duration.between(since, Instant.now()).toNanos() * 0.000000001;
     }
+
+    public static BaseResultDto make(Runnable action) {
+        final Instant t0 = Instant.now();
+        final BaseResultDto result = new BaseResultDto();
+        action.run();
+        result.makeQueryTime(t0);
+        return result;
+    }
 }

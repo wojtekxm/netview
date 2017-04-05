@@ -33,9 +33,9 @@
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -55,7 +55,7 @@
     <div id="kontent">
         <div class="form-group">
 
-            <form method="post" action="/api/create-unit">
+            <form method="post" action="/api/unit/create">
                 <input type="text" class="form-control" placeholder="Kod jednostki"
                        required="required" name="code">
                 <input type="description" class="form-control" placeholder="Opis"

@@ -40,9 +40,9 @@
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -145,12 +145,12 @@
             url: '/api/all-devices',
             dataType: 'json',
 
-            success: function(listDtoOfDeviceStateDto) {
-                if(!listDtoOfDeviceStateDto.success) {
+            success: function(listDtoOfCurrentDeviceStateDto) {
+                if(!listDtoOfCurrentDeviceStateDto.success) {
                     err();
                     return;
                 }
-                devices = listDtoOfDeviceStateDto.list;
+                devices = listDtoOfCurrentDeviceStateDto.list;
                 e();
             },
             error: err
@@ -173,11 +173,21 @@
         $('#devices li').remove();
 
         for(var i = 0; i< devices.length; i++){
-            var h = "/device?id=" + devices[i].id;
+            var currentDeviceStateDto = devices[i];
+            var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+            var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+            if(typeof state2400 === 'undefined') {
+                var sum = 0;
+                var isEnabled = false;
+            }
+            else {
+                var sum = state2400.clients;
+                var isEnabled = state2400.enabled;
+            }
+            var h = "/device?id=" + currentDeviceStateDto.id;
             var clazz= '';
-            var sum = devices[i].clientsSum;
 
-            if (devices[i].enabled == true) {
+            if (isEnabled == true) {
                 if (sum > 0 && sum <= 10) {
                     clazz = "greenDiode1";
                     active++;
@@ -194,7 +204,7 @@
                     clazz = "redDiode";
                     inactive++;
                 }
-            } else if(devices[i].enabled == false){
+            } else if(isEnabled == false){
                 clazz = "greyDiode";
                 sum='-';
                 off++;

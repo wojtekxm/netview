@@ -1,12 +1,13 @@
 package zesp03.common.service;
 
-import zesp03.common.data.*;
+import zesp03.common.data.ShortSurvey;
+import zesp03.common.data.SurveyPeriodAvg;
+import zesp03.common.data.SurveyPeriodAvgMinMax;
+import zesp03.common.data.SurveyPeriodMinMax;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-public interface SurveyService {
+public interface HistoricalSurveyService {
     /**
      * Zwraca listę badań dla urządzenia o id równym <code>device</code>.
      * Zwrócona lista będzie posortowana po czasie wykonania badania, rosnąco.
@@ -60,21 +61,4 @@ public interface SurveyService {
      * @param groupTime czas trwania jednej grupy w sekundach, > 0
      */
     List<SurveyPeriodAvgMinMax> getMultiAvgMinMax(long deviceId, int frequencyMhz, int start, int end, int groupTime);
-
-    Map<Long, CurrentDeviceState> xAll();
-
-    Map<Long, CurrentDeviceState> xSome(Collection<Long> devices);
-
-    CurrentDeviceState xOne(Long deviceId);
-    /**
-     * @return liczba zaktualizowanych urządzeń
-     */
-    int examineAll();
-
-    /**
-     * Wykonuje badanie wskazanego kontrolera.
-     * @param controllerId id kontrolera
-     * @return liczba zaktualizowanych urządzeń (liczba nowych zapisanych badań)
-     */
-    int examineOne(long controllerId);
 }

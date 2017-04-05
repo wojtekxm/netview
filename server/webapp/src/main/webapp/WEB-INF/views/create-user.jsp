@@ -36,9 +36,9 @@
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -70,19 +70,6 @@
             <br>
             <br>
             <div id="settings" class="form-group">
-                <div class="radio">
-                    <label style="font-size:17px;">
-                        <input type="radio" name="is_admin" value="false" checked>
-                        zwykły użytkownik
-                    </label>
-                </div>
-                <div class="radio">
-                    <label style="font-size:17px;">
-                        <input type="radio" name="is_admin" value="true">
-                        administrator
-                    </label>
-                </div>
-                <br>
                 <div>
                     <a class="btn btn-success" id="button_create" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj</a>
                 </div>
@@ -96,7 +83,6 @@
 <script>
     $(document).ready(function () {
         $('#button_create').click(function () {
-            var isAdmin = $('#page').find('input[name="is_admin"]:checked').val() === 'true';
             $('#result')
                 .empty()
                 .append(
@@ -104,20 +90,17 @@
                 );
             $.ajax({
                 type: 'post',
-                url: '/api/create-user',
+                url: '/api/user/create',
                 dataType: 'json',
-                data: {
-                    "is-admin": isAdmin
-                },
-                success: function (data) {
-                    if (data.success) {
+                success: function (contentDtoOfUserCreatedDto) {
+                    if (contentDtoOfUserCreatedDto.success) {
                         $('#result')
                             .empty()
                             .append(
-                                $('<p></p>').text('Stworzono nowego użytkownika o id ' + data.userId + '. By aktywować konto użyj poniższego linku:'),
+                                $('<p></p>').text('Stworzono nowego użytkownika o id ' + contentDtoOfUserCreatedDto.content.userId + '. By aktywować konto użyj poniższego linku:'),
                                 $('<a></a>')
-                                    .attr('href', data.activationURL)
-                                    .text(data.activationURL)
+                                    .attr('href', contentDtoOfUserCreatedDto.content.activationURL)
+                                    .text(contentDtoOfUserCreatedDto.content.activationURL)
                             );
                         $('#settings').hide(400);
                     }

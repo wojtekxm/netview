@@ -35,9 +35,9 @@
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -74,10 +74,10 @@
             type: 'get',
             url: '/api/all-controllers',
             dataType: 'json',
-            success: function(listOfControllerRow) {
+            success: function(listDtoOfControllerDto) {
                 var i;
-                for(i = 0; i < listOfControllerRow.length; i++) {
-                    var controllerRow = listOfControllerRow[i];
+                for(i = 0; i < listDtoOfControllerDto.list.length; i++) {
+                    var controllerRow = listDtoOfControllerDto.list[i];
                     $('#list_controllers').append(
                         $('<li></li>')
                             .addClass('list-group-item row')
@@ -146,16 +146,13 @@
                         span.addClass('glyphicon glyphicon-hourglass');
                         $.ajax( {
                             type: 'post',
-                            url: '/api/examine',
+                            url: '/api/examine/' + li.data('controller_id'),
                             dataType: 'json',
-                            data: {
-                                id: li.data('controller_id')
-                            },
-                            success: function(contentDtoOfExamineResultDto) {
-                                if(contentDtoOfExamineResultDto.success) {
+                            success: function(baseResultDto) {
+                                if(baseResultDto.success) {
                                     span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
                                     span.addClass('glyphicon glyphicon-ok-circle');
-                                    small.text(contentDtoOfExamineResultDto.queryTime.toFixed(2) + ' sek.');
+                                    small.text(baseResultDto.queryTime.toFixed(2) + ' sek.');
                                 }
                                 else {
                                     span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');

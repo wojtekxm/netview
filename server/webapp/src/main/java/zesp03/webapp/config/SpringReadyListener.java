@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import zesp03.common.core.App;
+import zesp03.webapp.service.LoginService;
 import zesp03.webapp.service.UserService;
 
 @Component
@@ -16,8 +17,9 @@ public class SpringReadyListener implements ApplicationListener<ContextRefreshed
     private boolean rootCreated;
 
     @Autowired
-    public SpringReadyListener(UserService userService) {
+    public SpringReadyListener(UserService userService, LoginService loginService) {
         this.userService = userService;
+        UglyUserServiceHolder.setLoginService(loginService);
         rootCreated = false;
     }
 

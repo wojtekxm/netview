@@ -34,9 +34,9 @@
                 <li><a href="/all-devices">Urządzenia</a></li>
                 <li><a href="/unitsbuildings">Budynki</a></li>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>

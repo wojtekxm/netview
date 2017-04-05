@@ -36,9 +36,9 @@
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -66,6 +66,7 @@
         </div>
     </div>
     <div id="progress_area">pobieranie informacji...</div>
+    <em>urządzenia nie wspierające 2,4 GHz są tutaj wyświetlane jak wyłączone</em>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
@@ -78,8 +79,8 @@
             type: 'get',
             url: '/api/all-devices',
             dataType: 'json',
-            success: function(listDtoOfDeviceStateDto) {
-                if(!listDtoOfDeviceStateDto.success) {
+            success: function(listDtoOfCurrentDeviceStateDto) {
+                if(!listDtoOfCurrentDeviceStateDto.success) {
                     err();
                     return;
                 }
@@ -87,12 +88,20 @@
                 var sumActive = 0;
                 var sumInactive = 0;
                 var sumDisabled = 0;
-                var arr = listDtoOfDeviceStateDto.list;
+                var arr = listDtoOfCurrentDeviceStateDto.list;
                 for(i = 0; i < arr.length; i++) {
-                    var deviceStateDto = arr[i];
+                    var currentDeviceStateDto = arr[i];
+                    var sur2400 = currentDeviceStateDto.frequencySurvey['2400'];
+                    if(typeof sur2400 === 'undefined') {
+                        sur2400 = {
+                            "timestamp": 0,
+                            "clients": 0,
+                            "enabled": false
+                        };
+                    }
                     var clazz;
-                    if(deviceStateDto.enabled) {
-                        if(deviceStateDto.clientsSum > 0) {
+                    if(sur2400.enabled) {
+                        if(sur2400.clients > 0) {
                             sumActive++;
                             clazz = 'square-green';
                         }
@@ -105,9 +114,9 @@
                         sumDisabled++;
                         clazz = 'square-gray';
                     }
-                    var href = '/device?id=' + deviceStateDto.id;
+                    var href = '/device?id=' + currentDeviceStateDto.id;
                     var li = $('<li></li>').addClass(clazz)
-                        .attr('title', deviceStateDto.name)
+                        .attr('title', currentDeviceStateDto.name)
                         .attr('data-toggle', 'tooltip')
                         .append(
                             $('<a></a>').attr('href', href)

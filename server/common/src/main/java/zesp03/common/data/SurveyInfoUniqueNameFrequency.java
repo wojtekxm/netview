@@ -1,9 +1,7 @@
 package zesp03.common.data;
 
-import java.util.Comparator;
-
-public class SurveyInfo {
-    private String name;
+public class SurveyInfoUniqueNameFrequency {
+    private String name = "";
     private int frequencyMhz;
     private boolean enabled;
     private int clientsSum;
@@ -13,6 +11,9 @@ public class SurveyInfo {
     }
 
     public void setName(String name) {
+        if(name == null) {
+            throw new IllegalArgumentException("name null");
+        }
         this.name = name;
     }
 
@@ -40,13 +41,21 @@ public class SurveyInfo {
         this.clientsSum = clientsSum;
     }
 
-    public static class NameFrequencyUnique implements Comparator<SurveyInfo> {
-        @Override
-        public int compare(SurveyInfo a, SurveyInfo b) {
-            if(a.getFrequencyMhz() == b.getFrequencyMhz()) {
-                return a.getName().compareTo(b.getName());
-            }
-            return a.getFrequencyMhz() - b.getFrequencyMhz();
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SurveyInfoUniqueNameFrequency that = (SurveyInfoUniqueNameFrequency) o;
+
+        if (frequencyMhz != that.frequencyMhz) return false;
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + frequencyMhz;
+        return result;
     }
 }

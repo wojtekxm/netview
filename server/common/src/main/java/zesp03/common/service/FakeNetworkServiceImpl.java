@@ -3,7 +3,7 @@ package zesp03.common.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import zesp03.common.data.SurveyInfo;
+import zesp03.common.data.SurveyInfoUniqueNameFrequency;
 import zesp03.common.exception.SNMPException;
 
 import java.io.BufferedReader;
@@ -93,14 +93,14 @@ public class FakeNetworkServiceImpl implements NetworkService {
     }
 
     @Override
-    public List<SurveyInfo> queryDevices(String controllerIP) throws SNMPException {
+    public List<SurveyInfoUniqueNameFrequency> queryDevices(String controllerIP) throws SNMPException {
         if (!map.containsKey(controllerIP))
             throw new SNMPException("unable to connect with specified controller");
         final ArrayList<VirtualDevice> devices = map.get(controllerIP);
         final Random random = new Random();
-        final ArrayList<SurveyInfo> result = new ArrayList<>();
+        final ArrayList<SurveyInfoUniqueNameFrequency> result = new ArrayList<>();
         for (VirtualDevice vd : devices) {
-            SurveyInfo si = new SurveyInfo();
+            SurveyInfoUniqueNameFrequency si = new SurveyInfoUniqueNameFrequency();
             si.setName(vd.name);
             si.setFrequencyMhz(vd.frequencyMhz);
             boolean enabled;

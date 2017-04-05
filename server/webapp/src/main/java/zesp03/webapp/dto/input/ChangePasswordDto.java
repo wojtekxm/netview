@@ -1,18 +1,9 @@
-package zesp03.webapp.dto;
+package zesp03.webapp.dto.input;
 
-public class ChangePasswordInputDto {
-    long userId;
+public class ChangePasswordDto {
     String old;
     String desired;
     String repeat;
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
 
     public String getOld() {
         return old;

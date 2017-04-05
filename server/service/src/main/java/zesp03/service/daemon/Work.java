@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import zesp03.common.service.SurveyService;
+import zesp03.common.service.SurveySavingService;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -16,7 +16,7 @@ public class Work {
     private boolean shutdown = false;
 
     @Autowired
-    private SurveyService surveyService;
+    private SurveySavingService surveySavingService;
 
     public void work() {
         Thread t = new Thread(() -> shutdown = true);
@@ -24,7 +24,7 @@ public class Work {
         while(!shutdown) {
             final int WAIT_SECONDS = 10;
             final Instant t0 = Instant.now();
-            final int updatedDevices = surveyService.examineAll();
+            final int updatedDevices = surveySavingService.examineAll();
             final Instant t1 = Instant.now();
             double elapsed = Duration.between(t0, t1).toMillis() * 0.001;
             log.info("network survey of all devices finished, {} updated devices, {} seconds elapsed",

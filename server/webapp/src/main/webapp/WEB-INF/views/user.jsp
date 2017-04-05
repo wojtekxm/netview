@@ -35,9 +35,9 @@
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -78,20 +78,21 @@
                 'id': my.selectedId
             },
             dataType: 'json',
-            success: function(userData) {
+            success: function(contentDtoOfUserDto) {
+                var u = contentDtoOfUserDto.content;
                 var role = 'zwykły użytkownik';
-                if(userData.role === 'ROOT')role = 'root';
-                else if(userData.role === 'ADMIN')role = 'administrator';
+                if(u.role === 'ROOT')role = 'root';
+                else if(u.role === 'ADMIN')role = 'administrator';
 
                 var st = 'aktywne';
-                if(userData.blocked)st = 'zablokowane';
-                else if(!userData.activated)st = 'nieaktywne';
+                if(u.blocked)st = 'zablokowane';
+                else if(!u.activated)st = 'nieaktywne';
 
-                $('#user_id').text(userData.id);
-                $('#user_name').text(userData.name);
+                $('#user_id').text(u.id);
+                $('#user_name').text(u.name);
                 $('#user_role').text(role);
                 $('#user_state').text(st);
-                if(!userData.blocked) {
+                if(!u.blocked) {
                     $('#button_block').show();
                 }
                 $('#result').show();
@@ -99,10 +100,7 @@
                 $('#button_block').click( function() {
                     $.ajax({
                         type: 'post',
-                        url: '/api/block-user',
-                        data: {
-                            id: my.selectedId
-                        },
+                        url: '/api/user/block/' + my.selectedId,
                         dataType: 'json',
                         success: function(baseResultDto) {
                             if(baseResultDto.success) {

@@ -1,9 +1,8 @@
 package zesp03.webapp.filter;
 
 import zesp03.webapp.config.Cookies;
+import zesp03.webapp.config.UglyUserServiceHolder;
 import zesp03.webapp.dto.UserDto;
-import zesp03.webapp.service.LoginService;
-import zesp03.webapp.service.LoginServiceImpl;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -16,13 +15,6 @@ public class AuthenticationFilter implements Filter {
     public static final String COOKIE_PASSTOKEN = "passtoken";
     // mapuje do UserDto, null jeśli uwierzytelnianie się nie powiodło
     public static final String ATTR_USERDTO = "loggedUser";
-
-    private final LoginService loginService;
-
-    public AuthenticationFilter() {
-        //TODO ! spring ?
-        this.loginService = new LoginServiceImpl();
-    }
 
     @Override
     public void destroy() {
@@ -53,7 +45,7 @@ public class AuthenticationFilter implements Filter {
                 UserDto userDto = null;
 
                 if (userId != null && passToken != null) {
-                    userDto = loginService.authenticate(userId, passToken);
+                    userDto = UglyUserServiceHolder.getLoginService().authenticate(userId, passToken);
                 }
 
                 if (userDto != null) {

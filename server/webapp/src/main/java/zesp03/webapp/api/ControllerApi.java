@@ -31,9 +31,25 @@ public class ControllerApi {
         return BaseResultDto.make( () -> controllerService.remove(id) );
     }
 
-    @PostMapping(value = "/api/controller/create")
+    @PostMapping(value = "/api/controller/create", consumes = "application/json")
     public BaseResultDto create(
             @RequestBody CreateControllerDto dto) {
         return BaseResultDto.make( () -> controllerService.create(dto) );
+    }
+
+    @PostMapping(value = "/api/controller/create", consumes = "application/x-www-form-urlencoded")
+    public BaseResultDto create(
+            @RequestParam("name") String name,
+            @RequestParam("ipv4") String ipv4,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "buildingId", required = false) Long buildingId) {
+        return BaseResultDto.make( () -> {
+            CreateControllerDto dto = new CreateControllerDto();
+            dto.setName(name);
+            dto.setIpv4(ipv4);
+            dto.setDescription(description);
+            dto.setBuildingId(buildingId);
+            controllerService.create(dto);
+        } );
     }
 }

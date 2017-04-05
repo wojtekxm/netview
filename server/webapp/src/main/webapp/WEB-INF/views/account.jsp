@@ -36,9 +36,9 @@
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -85,9 +85,9 @@
                     desired: $('#new_password').val(),
                     repeat: $('#repeat_password').val()
                 },
-                success: function (response) {
+                success: function (ContentDtoOfPasswordChangedDto) {
                     $('#result > *').remove();
-                    if(response.success) {
+                    if(ContentDtoOfPasswordChangedDto.success) {
                         $('#result').append(
                             $('<div></div>').addClass('panel panel-success').append(
                                 $('<div></div>').addClass('panel-heading').text('Hasło zostało zmienione.')
@@ -95,17 +95,7 @@
                         );
                     }
                     else {
-                        var txt;
-                        switch (response.reason) {
-                            case 'INVALID_OLD_PASSWORD':
-                                txt = 'Stare hasło się nie zgadza.';
-                                break;
-                            case 'PASSWORDS_DONT_MATCH':
-                                txt = 'Hasła nie pasują do siebie.';
-                                break;
-                            default:
-                                txt = 'Nie możesz wybrać takiego hasła.';
-                        }
+                        var txt = 'Nie udało się zmienić hasła';
                         $('#result').append(
                             $('<div></div>').addClass('panel panel-danger').append(
                                 $('<div></div>').addClass('panel-heading').text(txt)

@@ -35,9 +35,9 @@
                 <%--<li><a href="/all-units">Jednostki</a></li>--%>
                 <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
             </ul>
-            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -51,7 +51,7 @@
 <div id="container">
     <div style="height: 10px;"></div>
     <h1>Aktywacja konta użytkownika</h1>
-    <form action="/api/activate-account" method="post">
+    <form action="/api/user/activate" method="post">
         <input type="hidden" name="tid" value="${param.tid}">
         <input type="hidden" name="tv" value="${param.tv}">
         nazwa użytkownika<br>

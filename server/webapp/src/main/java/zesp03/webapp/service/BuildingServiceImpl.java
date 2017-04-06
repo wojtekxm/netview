@@ -159,4 +159,17 @@ public class BuildingServiceImpl implements BuildingService {
             result.setControllers(controllers);
         return result;
     }
+
+    @Override
+    public List<UnitDto> forBuildingPage(long buildingId) {
+        return em.createQuery( "SELECT u " +
+                "FROM LinkUnitBuilding lub " +
+                "INNER JOIN Building b ON (lub.building.id = " + buildingId +
+                " AND lub.building.id = b.id)" +
+                "INNER JOIN Unit u ON lub.unit.id = u.id", zesp03.common.entity.Unit.class)
+                .getResultList()
+                .stream()
+                .map( UnitDto::make )
+                .collect( Collectors.toList() );
+    }
 }

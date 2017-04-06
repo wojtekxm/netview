@@ -18,7 +18,7 @@ public class ModifyUnitPage {
     public String get(
             @RequestParam("id") long id,
             ModelMap model) {
-        UnitDto dto = unitService.modify(id);
+        UnitDto dto = unitService.getOne(id);
         model.put("unit", dto);
         return "modify-unit";
     }

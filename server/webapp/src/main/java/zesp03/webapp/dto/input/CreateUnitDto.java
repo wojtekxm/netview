@@ -1,6 +1,6 @@
 package zesp03.webapp.dto.input;
 
-public class CreateUserDto {
+public class CreateUnitDto {
     private String code;
     private String description;
 

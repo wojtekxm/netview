@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import zesp03.webapp.dto.LinkUnitBuildingDto;
 import zesp03.webapp.dto.UnitBuildingsDto;
 import zesp03.webapp.dto.UnitDto;
-import zesp03.webapp.dto.input.CreateUserDto;
+import zesp03.webapp.dto.input.CreateUnitDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -17,14 +17,14 @@ public class UnitApi {
     private UnitService unitService;
 
     @GetMapping("/api/all-units")
-    public ListDto<UnitDto> getAllUnits() {
+    public ListDto<UnitDto> getAll() {
         return ListDto.make( () -> unitService.getAll() );
     }
 
     @GetMapping("/api/unit")
-    public ContentDto<UnitBuildingsDto> getUnit(
+    public ContentDto<UnitBuildingsDto> getUnitBuildings(
             @RequestParam("id") long id ) {
-        return ContentDto.make( () -> unitService.getOne(id) );
+        return ContentDto.make( () -> unitService.getUnitBuildings(id) );
     }
 
     @GetMapping("/api/link-unit-building")
@@ -42,7 +42,7 @@ public class UnitApi {
     public BaseResultDto create(
             @RequestParam("code") String code,
             @RequestParam(value = "description", required = false) String description) {
-        CreateUserDto dto = new CreateUserDto();
+        CreateUnitDto dto = new CreateUnitDto();
         dto.setCode(code);
         dto.setDescription(description);
         return BaseResultDto.make( () -> unitService.create(dto) );
@@ -50,7 +50,7 @@ public class UnitApi {
 
     @PostMapping(value = "/api/unit/create", consumes = "application/json")
     public BaseResultDto create(
-            @RequestBody CreateUserDto dto) {
+            @RequestBody CreateUnitDto dto) {
         return BaseResultDto.make( () -> unitService.create(dto) );
     }
 
@@ -63,7 +63,7 @@ public class UnitApi {
     @GetMapping("/api/modify-unit")
     public ContentDto<UnitDto> modify(
             @RequestParam("id") long id) {
-        return ContentDto.make( () -> unitService.modify(id) );
+        return ContentDto.make( () -> unitService.modifyUnit(id) );
     }
 
     @PostMapping(value = "/api/accept-modify-unit", consumes = "application/x-www-form-urlencoded")
@@ -72,5 +72,11 @@ public class UnitApi {
             @RequestParam("code") String code,
             @RequestParam("description") String description) {
         return BaseResultDto.make( () -> unitService.acceptModifyUnit(id, code, description) );
+    }
+
+    @GetMapping("/api/link-unit-all-buildings")
+    public ContentDto<UnitBuildingsDto> getAllBuildings(
+            @RequestParam("id") long id ) {
+        return ContentDto.make( () -> unitService.linkUnitAllBuildings(id) );
     }
 }

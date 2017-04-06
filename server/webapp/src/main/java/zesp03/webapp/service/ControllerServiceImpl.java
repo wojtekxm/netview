@@ -13,17 +13,12 @@ import zesp03.common.util.IPv4;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.input.CreateControllerDto;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
 public class ControllerServiceImpl implements ControllerService {
-    @PersistenceContext
-    private EntityManager em;
-
     @Autowired
     private ControllerRepository controllerRepository;
 

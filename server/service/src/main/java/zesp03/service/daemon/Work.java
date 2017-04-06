@@ -27,7 +27,7 @@ public class Work {
             final int updatedDevices = surveySavingService.examineAll();
             final Instant t1 = Instant.now();
             double elapsed = Duration.between(t0, t1).toMillis() * 0.001;
-            log.info("network survey of all devices finished, {} updated devices, {} seconds elapsed",
+            log.info("network survey of all devices finished, {} new surveys, {} seconds elapsed",
                     updatedDevices, String.format(Locale.US, "%.3f", elapsed));
             long sleep = Duration.between(t1, t0.plusSeconds(WAIT_SECONDS)).toMillis();
             if (sleep < 1) sleep = 1;

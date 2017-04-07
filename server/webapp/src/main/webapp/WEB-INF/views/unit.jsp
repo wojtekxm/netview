@@ -119,8 +119,8 @@
 
                 <div>
 
-                    <a href="/remove-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;" >Usuń powiązanie</a></div>
-                <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;">Dodaj powiązanie</a>
+                    <a href="/remove-unit-all-buildings?id=${unit.id}" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >Usuń powiązanie</a></div>
+                <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;">Dodaj powiązanie</a>
 
             </div>
 

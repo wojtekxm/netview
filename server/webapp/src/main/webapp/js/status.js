@@ -1,20 +1,6 @@
-function loadDate() {
-    var devices = new Array();
+var devices = new Array();
 
 
-    $.ajax({
-        type: 'GET',
-        url: '/api/all-devices',
-        dataType: 'json',
-
-        success: function(listDtoOfDeviceStateDto) {
-            devices=listDtoOfDeviceStateDto.list;
-            var date = new Date(devices[0].lastSurveyTimestamp*1000);
-            var n = date.toLocaleString();
-            $('#data').replaceWith('Ostatnie badanie sieci przeprowadzono:   ' + n);
-        }
-    });
-}
 
 
 var interGreen;
@@ -27,12 +13,19 @@ function onlyGreen()
         url: '/api/all-devices',
         dataType: 'json',
 
-        success: function(listDtoOfDeviceStateDto) {
-            devices = listDtoOfDeviceStateDto.list;
+        success: function(listDtoOfCurrentDeviceStateDto) {
+            if(!listDtoOfCurrentDeviceStateDto.success) {
+                err();
+                return;
+            }
+            devices = listDtoOfCurrentDeviceStateDto.list;
             green();
-        }
-        /* error ? */
+        },
+        error: err
     });
+    function err() {
+        $('#progress_area').show();
+    }
 }
 
 
@@ -49,16 +42,29 @@ function green(){
     $("#devices li").remove();
 
     for(var i = 0; i< devices.length; i++){
-        var h = "/device?id=" + devices[i].id;
-        var clazz= '';
-        var sum = devices[i].clientsSum;
+        var currentDeviceStateDto = devices[i];
+        var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+        var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+        if(typeof state2400 === 'undefined') {
+            var sum = 0;
+            var isEnabled = false;
+            var time = 0;
+        }
+        else {
+            var sum = state2400.clients;
+            var isEnabled = state2400.enabled;
+            var time = state2400.timestamp;
+        }
 
-        if (devices[i].enabled == true) {
+        var h = "/device?id=" + currentDeviceStateDto.id;
+        var clazz= '';
+
+        if (isEnabled == true) {
             if (sum > 0 && sum <= 10) {
                 clazz = "greenDiode1";
                 active++;
                 var line = $('<li></li>').addClass(clazz)
-                    .attr('title', devices[i].name)
+                    .attr('title', currentDeviceStateDto.name)
                     .attr('data-toggle', 'tooltip')
                     .append(
                         $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
@@ -69,7 +75,7 @@ function green(){
                 clazz = "greenDiode2";
                 active++;
                 var line = $('<li></li>').addClass(clazz)
-                    .attr('title', devices[i].name)
+                    .attr('title', currentDeviceStateDto.name)
                     .attr('data-toggle', 'tooltip')
                     .append(
                         $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
@@ -80,7 +86,7 @@ function green(){
                 clazz = "greenDiode3";
                 active++;
                 var line = $('<li></li>').addClass(clazz)
-                    .attr('title', devices[i].name)
+                    .attr('title', currentDeviceStateDto.name)
                     .attr('data-toggle', 'tooltip')
                     .append(
                         $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
@@ -91,7 +97,7 @@ function green(){
                 clazz = "greenDiode4";
                 active++;
                 var line = $('<li></li>').addClass(clazz)
-                    .attr('title', devices[i].name)
+                    .attr('title', currentDeviceStateDto.name)
                     .attr('data-toggle', 'tooltip')
                     .append(
                         $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
@@ -102,7 +108,7 @@ function green(){
                 clazz = "redDiode";
                 inactive++;
             }
-        } else if(devices[i].enabled == false){
+        } else if(isEnabled == false){
             clazz = "greyDiode";
             sum='-';
             off++;
@@ -122,7 +128,10 @@ function green(){
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     })
-    loadDate();
+
+    var date = new Date(time*1000);
+    var n = date.toLocaleString();
+    $('#data').replaceWith('Ostatnie badanie sieci przeprowadzono:   ' + n);
 };
 
 var interRed;
@@ -135,11 +144,19 @@ function onlyRed()
         url: '/api/all-devices',
         dataType: 'json',
 
-        success: function(listDtoOfDeviceStateDto) {
-            devices = listDtoOfDeviceStateDto.list;
+        success: function(listDtoOfCurrentDeviceStateDto) {
+            if(!listDtoOfCurrentDeviceStateDto.success) {
+                err();
+                return;
+            }
+            devices = listDtoOfCurrentDeviceStateDto.list;
             red();
         },
+        error: err
     });
+    function err() {
+        $('#progress_area').show();
+    }
 }
 
 
@@ -156,12 +173,24 @@ function red(){
     $("#devices li").remove();
 
     for(var i = 0; i< devices.length; i++){
-        var h = "/device?id=" + devices[i].id;
-        var t = devices[i].name;
-        var clazz= '';
-        var sum = devices[i].clientsSum;
+        var currentDeviceStateDto = devices[i];
+        var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+        var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+        if(typeof state2400 === 'undefined') {
+            var sum = 0;
+            var isEnabled = false;
+            var time = 0;
+        }
+        else {
+            var sum = state2400.clients;
+            var isEnabled = state2400.enabled;
+            var time = state2400.timestamp;
+        }
 
-        if (devices[i].enabled == true) {
+        var h = "/device?id=" + currentDeviceStateDto.id;
+        var clazz= '';
+
+        if (isEnabled == true) {
             if (sum > 0 && sum <= 10) {
                 clazz = "greenDiode1";
                 active++;
@@ -178,7 +207,7 @@ function red(){
                 clazz = "redDiode";
                 inactive++;
                 var line = $('<li></li>').addClass(clazz)
-                    .attr('title', devices[i].name)
+                    .attr('title', currentDeviceStateDto.name)
                     .attr('data-toggle', 'tooltip')
                     .append(
                         $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
@@ -186,7 +215,7 @@ function red(){
                 $('#devices').append(line);
                 line.tooltip();
             }
-        } else if(devices[i].enabled == false){
+        } else if(isEnabled == false){
             clazz = "greyDiode";
             sum='-';
             off++;
@@ -205,7 +234,10 @@ function red(){
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     })
-    loadDate();
+
+    var date = new Date(time*1000);
+    var n = date.toLocaleString();
+    $('#data').replaceWith('Ostatnie badanie sieci przeprowadzono:   ' + n);
 };
 
 var interGrey;
@@ -218,11 +250,19 @@ function onlyGrey()
         url: '/api/all-devices',
         dataType: 'json',
 
-        success: function(listDtoOfDeviceStateDto) {
-            devices = listDtoOfDeviceStateDto.list;
+        success: function(listDtoOfCurrentDeviceStateDto) {
+            if(!listDtoOfCurrentDeviceStateDto.success) {
+                err();
+                return;
+            }
+            devices = listDtoOfCurrentDeviceStateDto.list;
             grey();
         },
+        error: err
     });
+    function err() {
+        $('#progress_area').show();
+    }
 }
 
 
@@ -239,12 +279,24 @@ function grey(){
     $("#devices li").remove();
 
     for(var i = 0; i< devices.length; i++){
-        var h = "/device?id=" + devices[i].id;
-        var t = devices[i].name;
-        var clazz= '';
-        var sum = devices[i].clientsSum;
+        var currentDeviceStateDto = devices[i];
+        var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+        var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+        if(typeof state2400 === 'undefined') {
+            var sum = 0;
+            var isEnabled = false;
+            var time = 0;
+        }
+        else {
+            var sum = state2400.clients;
+            var isEnabled = state2400.enabled;
+            var time = state2400.timestamp;
+        }
 
-        if (devices[i].enabled == true) {
+        var h = "/device?id=" + currentDeviceStateDto.id;
+        var clazz= '';
+
+        if (isEnabled == true) {
             if (sum > 0 && sum <= 10) {
                 clazz = "greenDiode1";
                 active++;
@@ -261,12 +313,12 @@ function grey(){
                 clazz = "redDiode";
                 inactive++;
             }
-        } else if(devices[i].enabled == false){
+        } else if(isEnabled == false){
             clazz = "greyDiode";
             sum='-';
             off++;
             var line = $('<li></li>').addClass(clazz)
-                .attr('title', devices[i].name)
+                .attr('title', currentDeviceStateDto.name)
                 .attr('data-toggle', 'tooltip')
                 .append(
                     $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
@@ -288,6 +340,9 @@ function grey(){
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     })
-    loadDate();
+
+    var date = new Date(time*1000);
+    var n = date.toLocaleString();
+    $('#data').replaceWith('Ostatnie badanie sieci przeprowadzono:   ' + n);
 };
 

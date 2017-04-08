@@ -49,21 +49,59 @@
         </div>
     </div>
 </nav>
-<div id="container" id="page">
-    <div style="height: 10px;"></div>
-    <p>zalogowany: <c:out value="${loggedUser.name}"/>
-    </p>
-    <a href="/">strona główna</a><br>
-    <hr>
-    <h4>Zmiana hasła</h4>
-    <div id="form" class="form-group">
-        stare hasło <input id="old_password" type="password"><br>
-        nowe hasło <input id="new_password" type="password"><br>
-        powtórz hasło <input id="repeat_password" type="password"><br>
-        <button id="submit" type="button">Zmień</button>
+
+<div id="all" class="container-fluid">
+    <div id="container">
+        <div class="content">
+            <div style="height: 10px;"></div>
+            <div>
+                <div id="wydzial">
+                    <div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
+                        <span class="glyphicon glyphicon-user"></span>
+                        Zalogowany: <c:out value="${loggedUser.name}"/>
+                    </div>
+                </div>
+            </div>
+            <div id="devices" class="panel panel-default" style="padding: 15px;">
+                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+                    Zmiana hasła
+                </div>
+                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                    <tr>
+                        <td>Stare hasło:</td>
+                        <td><input id="old_password" type="password"></td>
+                    </tr>
+                    <tr>
+                        <td>Nowe hasło:</td>
+                        <td><input id="new_password" type="password"></td>
+                    </tr>
+                    <tr>
+                        <td>Potwierdź nowe hasło:</td>
+                        <td><input id="repeat_password" type="password"></td>
+                    </tr>
+                </table>
+                <button id="submit" class="btn btn-success" style="float:right; width:250px;"><span class="glyphicon glyphicon-ok"></span> Zmień</button>
+                <div id="result" style="margin-top: 35px;"></div>
+            </div>
+        </div>
     </div>
-    <div id="result"></div>
 </div>
+
+<%--<div id="container" id="page">--%>
+    <%--<div style="height: 10px;"></div>--%>
+    <%--<p>zalogowany: <c:out value="${loggedUser.name}"/>--%>
+    <%--</p>--%>
+    <%--<a href="/">strona główna</a><br>--%>
+    <%--<hr>--%>
+    <%--<h4>Zmiana hasła</h4>--%>
+    <%--<div id="form" class="form-group">--%>
+        <%--stare hasło <input id="old_password" type="password"><br>--%>
+        <%--nowe hasło <input id="new_password" type="password"><br>--%>
+        <%--powtórz hasło <input id="repeat_password" type="password"><br>--%>
+        <%--<button id="submit" type="button">Zmień</button>--%>
+    <%--</div>--%>
+    <%--<div id="result"></div>--%>
+<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script>

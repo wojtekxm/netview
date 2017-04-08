@@ -13,7 +13,7 @@ body
 {
     margin-bottom:0px;
     margin-top: 50px;
-    min-width: 400px;
+    min-width: 2150;
     max-width: 100%;
     min-height: 500px;
     max-height: 100%;
@@ -43,81 +43,6 @@ body
     }
 }
 
-.welcome
-{
-    min-width: 400px;
-    max-width: 100%;
-    max-height: 150px;
-    min-height: 50px;
-    margin-top:50px;
-    position: relative;
-}
-
-
-.logo
-{
-    min-width: 400px;
-    max-width: 100%;
-    height: auto;
-    background-color: white;/* rgba(152, 255, 182, 1);*/
-}
-.logo img
-{
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    max-width: 100%;
-    height: auto;
-}
-
-.tittle
-{
-    width:580px;
-    height: 70px;
-    line-height: 70px;
-    font-size: 25px;
-    text-align: center;
-    border-radius: 10px;
-    float: left;
-    position: absolute;
-    border: 1px solid #ededed;
-    float: left;
-    left: 0px;
-    top: 27%;
-    z-index: 999;
-    background-color: rgba(255, 255, 255, 0.85);
-    color:black;
-    /*animate onload*/
-    animation-name: dropHeader;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-out;
-    animation-duration: 1.3s;
-}
-
-
-
-.user
-{
-    width:417px;
-    height: 40px;
-    line-height: 33px;
-    text-align: center;
-    font-size: 24px;
-    float: left;
-    position: absolute;
-    border: 1px solid #ededed;
-    border-radius: 10px;
-    right: 0px;
-    bottom: 35%;
-    z-index: 999;
-    background-color: rgba(255, 255, 255, 0.85);
-    color:black;
-    /*animate onload*/
-    animation-name: dropHeader2;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-out;
-    animation-duration: 1.3s;
-}
-
 
 ul.view
 {
@@ -129,7 +54,7 @@ ul.view
     /*text-shadow: 1px 1px 2px #000000;*/
     font-size: 11px;
     list-style: none;
-    min-width: 400px;
+    min-width: 2150;
     max-width: 100%;
     min-height: 400px;
     max-height: 100%;
@@ -160,6 +85,7 @@ ul.view li ul {
     position: relative;
     min-height: 250px;
     max-height: 100%;
+    min-width: 2150;
     width: 100%;
     background-color: #f3f3f3;
 }
@@ -170,6 +96,7 @@ ul.view li ul {
     position: relative;
     min-height: 250px;
     max-height: 100%;
+    min-width: 2150;
     width: 100%;
     background-color: #f3f3f3;
 }
@@ -181,6 +108,20 @@ ul.view li ul {
     -ms-animation: fadein 2s normal forwards; /* Internet Explorer */
     -o-animation: fadein 2s normal forwards; /* Opera < 12.1 */
     animation: fadein 2s normal forwards;
+}
+
+.icon-input-btn{
+    display: inline-block;
+    position: relative;
+}
+/*.icon-input-btn input[type="submit"]{*/
+    /*padding-left: 2em;*/
+/*}*/
+.icon-input-btn .glyphicon{
+    display: inline-block;
+    position: absolute;
+    left: 30px;
+    top: 30%;
 }
 
 @keyframes fadein {

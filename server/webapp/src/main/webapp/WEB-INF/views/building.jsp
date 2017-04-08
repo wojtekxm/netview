@@ -53,7 +53,7 @@
         <div class="content">
             <div style="height: 10px;"></div>
             <div>
-                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> <c:out value="${building.name}"/>: </div></div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o budynku: </div></div>
             </div>
             <div id="devices" class="panel panel-default" style="padding: 15px;">
                 <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
@@ -61,6 +61,10 @@
                 </div>
                 <c:url var="href" value="/modify-building?id=${building.id}"/>
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                    <tr>
+                        <td>Nazwa</td>
+                        <td><c:out value="${building.name}"/></td>
+                    </tr>
                     <tr>
                         <td>ID</td>
                         <td><c:out value="${building.id}"/></td>
@@ -80,17 +84,16 @@
                 </table>
                 <div>
                     <form method="post" action="/api/remove-building">
-                        <input type="hidden" name="id" value="${building.id}">
-                        <input type="submit" value="Usuń" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >
-
+                            <span style="display: flex;position: relative;float: right;">
+                            <span class="glyphicon glyphicon-trash" style="position: absolute;font-size:17px;color: white;top: 30%;left:35%;"></span>
+                                <input type="hidden" name="id" value="${building.id}">
+                                <input type="submit" value="Usuń" class="form-control btn btn-danger" role="button" style="float:right;height:38px;width:250px;font-size:17px;" >
+                            </span>
                     </form>
-                    <a href="${href}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;" >Modyfikuj</a>
-
+                    <a href="${href}" class="btn btn-success" role="button" style="float:right;width:250px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Modyfikuj</a>
                 </div>
-            </div>
 
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+                <div class="panel-heading" style="margin-top: 70px;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
                     Powiązane jednostki:
                 </div>
 
@@ -115,10 +118,41 @@
 
                 <div>
 
-                    <a href="/remove-building-all-units?id=${building.id}" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >Usuń powiązanie</a></div>
-                <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;">Dodaj powiązanie</a>
+                    <a href="/remove-building-all-units?id=${building.id}" class="btn btn-danger" role="button" style="float:right;width:250px;font-size:17px;" ><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a></div>
+                <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button" style="float:right;width:250px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
 
             </div>
+
+            <%--<div id="devices" class="panel panel-default" style="padding: 15px;">--%>
+                <%--<div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">--%>
+                    <%--Powiązane jednostki:--%>
+                <%--</div>--%>
+
+                <%--<table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">--%>
+
+                    <%--<tr>--%>
+                        <%--<td>ID</td>--%>
+                        <%--<td>Kod</td>--%>
+                        <%--<td>Opis</td>--%>
+                    <%--</tr>--%>
+                    <%--<c:forEach items="${units}" var="unit">--%>
+                        <%--<tr>--%>
+
+                            <%--<td><c:out value="${unit.id}"/></td>--%>
+                            <%--<td><c:out value="${unit.code}"/></td>--%>
+                            <%--<td> <c:out value="${unit.description}"/></td>--%>
+
+                        <%--</tr>--%>
+                    <%--</c:forEach>--%>
+
+                <%--</table>--%>
+
+                <%--<div>--%>
+
+                    <%--<a href="/remove-building-all-units?id=${building.id}" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >Usuń powiązanie</a></div>--%>
+                <%--<a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;">Dodaj powiązanie</a>--%>
+
+            <%--</div>--%>
 
         </div>
         </div>

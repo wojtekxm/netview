@@ -36,7 +36,7 @@
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 250px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -92,10 +92,11 @@
 
             </table>
                 <div>
-
-
-                    <input form="form1" type="submit" value="Zatwierdź" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >
-                    <a href="/building?id=${building.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;" >Wróć</a>
+                    <span style="display: flex;position: relative;float: right;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:28%;"></span>
+                        <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:right;width:250px;font-size:17px;" >
+                    </span>
+                    <a href="/building?id=${building.id}" class="btn btn-info" role="button" style="float:right;width:250px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
                 </div>
             </div>
 

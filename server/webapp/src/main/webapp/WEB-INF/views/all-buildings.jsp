@@ -56,7 +56,7 @@
         <div class="content">
             <div style="height: 10px;"></div>
             <div>
-                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Budynki:</div></div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-home"></span> Budynki:</div></div>
             </div>
             <div id="devices" class="panel panel-default" style="padding: 15px;">
                 <c:forEach items="${list}" var="building">
@@ -67,8 +67,8 @@
                             <span class="glyphicon glyphicon-menu-right"></span>
                             <c:out value="${building.code}"/>
                             <c:out value="${building.name}"/>
-                            <c:out value="${building.latitude}"/>
-                            <c:out value="${building.longitude}"/>
+                            <%--<c:out value="${building.latitude}"/>--%>
+                            <%--<c:out value="${building.longitude}"/>--%>
 
                         </a>
                     </div>

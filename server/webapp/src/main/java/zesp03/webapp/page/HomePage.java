@@ -13,6 +13,6 @@ public class HomePage {
         if(req.getAttribute(AuthenticationFilter.ATTR_USERDTO) != null)
             return "home-logged";
         else
-            return "home-public";
+            return "home-public2";
     }
 }

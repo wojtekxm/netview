@@ -179,10 +179,12 @@
             if(typeof state2400 === 'undefined') {
                 var sum = 0;
                 var isEnabled = false;
+                var time = 0;
             }
             else {
                 var sum = state2400.clients;
                 var isEnabled = state2400.enabled;
+                var time = state2400.timestamp;
             }
             var h = "/device?id=" + currentDeviceStateDto.id;
             var clazz= '';
@@ -210,7 +212,7 @@
                 off++;
             }
             var line = $('<li></li>').addClass(clazz)
-                .attr('title', devices[i].name)
+                .attr('title', currentDeviceStateDto.name)
                 .attr('data-toggle', 'tooltip')
                 .append(
                     $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
@@ -222,7 +224,6 @@
                 $('#progress_area').show();
             }
 
-
             line.tooltip();
         }
 
@@ -233,13 +234,14 @@
         $('#countOff').text(off);
         $('#countAll').text(all);
 
-        loadDate();
+        var date = new Date(time*1000);
+        var n = date.toLocaleString();
+        $('#data').replaceWith('Ostatnie badanie sieci przeprowadzono:   ' + n);
     }
 
     $('#progress_area').show();
 
     allDevices();
-//    $("#devices").fadeIn('slow');
     inter = setInterval('allDevices()', 30000);
 </script>
 

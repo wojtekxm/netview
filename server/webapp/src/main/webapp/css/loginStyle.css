@@ -16,6 +16,20 @@ body {
     /*height: 600px;*/
 }
 
+.input-group-addon{color:black; background-color: #ffffff;}
+
+@-webkit-keyframes autofill {
+    to {
+        color: #666;
+        background: transparent;
+    }
+}
+
+input:-webkit-autofill {
+    -webkit-animation-name: autofill;
+    -webkit-animation-fill-mode: both;
+}
+
 @keyframes dropHeader {
     0% {
         transform: translateY(-100%);

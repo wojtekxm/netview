@@ -74,8 +74,8 @@
                 </c:forEach>
                 <div>
                     <a href="/create-user" class="btn btn-success" role="button" style="width: 300px;font-size:17px;">
-                        Dodaj nowego użytkownika
                         <span class="glyphicon glyphicon-plus"></span>
+                        Dodaj nowego użytkownika
                     </a>
                 </div>
             </div>

@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" style="padding: 15px;">
+        <div id="devices" style="padding: 15px;">
             <div>
                 <a href="/all-users" class="btn btn-info" role="button" style="width: 300px;font-size:17px;">
                     <span class="glyphicon glyphicon-backward"></span>

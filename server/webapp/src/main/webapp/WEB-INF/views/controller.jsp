@@ -55,13 +55,17 @@
         <div class="content">
             <div style="height: 10px;"></div>
             <div>
-                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> <c:out value="${controller.name}"/>: </div></div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o kontrolerze: </div></div>
             </div>
             <div id="devices" class="panel panel-default" style="padding: 15px;">
                 <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
                     Szczegóły urządzenia:
                 </div>
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                    <tr>
+                        <td>Nazwa</td>
+                        <td><c:out value="${controller.name}"/></td>
+                    </tr>
                     <tr>
                         <td>ID</td>
                         <td><c:out value="${controller.id}"/></td>
@@ -76,7 +80,7 @@
                     </tr>
                 </table>
                 <div>
-                    <a href="/api/controller/remove/${controller.id}" class="btn btn-danger" role="button" style="float:right;width: 300px;font-size:17px;">
+                    <a href="/api/controller/remove/${controller.id}" class="btn btn-danger" role="button" style="float:right;width: 250px;font-size:17px;">
                         <span class="glyphicon glyphicon-trash"></span> Usuń
                     </a>
                 </div>

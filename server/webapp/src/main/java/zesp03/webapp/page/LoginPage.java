@@ -48,7 +48,7 @@ public class LoginPage {
             return "redirect:/";
         } else {
             model.put("failed", true);
-            return "login";
+            return "home-public";
         }
     }
 
@@ -57,6 +57,6 @@ public class LoginPage {
         if(req.getAttribute(AuthenticationFilter.ATTR_USERDTO) != null) {
             return "redirect:/";
         }
-        return "login";
+        return "home-public";
     }
 }

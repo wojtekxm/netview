@@ -51,13 +51,29 @@
 </nav>
 <div id="all" class="container-fluid">
     <div id="container">
-        <h1>Lista urządzeń</h1>
-        <ol class="list">
-            <c:forEach var="dev" items="${list}"><li><c:url var="h" value="/device?id=${dev.id}"/>
-                <a href="${h}"><c:out value="${dev.name}"/></a>
-            </li>
+        <div class="content">
+            <div style="height: 10px;"></div>
+            <div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-cog"></span> Urządzenia:</div></div>
+            </div>
+            <div id="devices" class="panel panel-default" style="padding: 15px;">
+            <c:forEach var="dev" items="${list}">
+                <div>
+                    <c:url var="h" value="/device?id=${dev.id}"/>
+                    <a href="${h}" class="list-group-item" style="max-width: 300px;">
+                        <span class="glyphicon glyphicon-menu-right"></span>
+                        <c:out value="${dev.name}"/>
+                    </a>
+                </div>
             </c:forEach>
-        </ol>
+                <div>
+                    <a href="/create-device" class="btn btn-success" role="button" style="width: 300px;font-size:17px;">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Dodaj nowe urządzenie
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

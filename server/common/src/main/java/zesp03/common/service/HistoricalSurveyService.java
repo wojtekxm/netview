@@ -60,5 +60,6 @@ public interface HistoricalSurveyService {
      * @param end timestamp w sekundach, end > start
      * @param groupTime czas trwania jednej grupy w sekundach, > 0
      */
+    List<SurveyPeriodAvgMinMax> getMultiAvgMinMax_Slow(long deviceId, int frequencyMhz, int start, int end, int groupTime);
     List<SurveyPeriodAvgMinMax> getMultiAvgMinMax(long deviceId, int frequencyMhz, int start, int end, int groupTime);
 }

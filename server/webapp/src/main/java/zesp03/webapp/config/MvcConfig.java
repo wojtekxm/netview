@@ -1,5 +1,9 @@
 package zesp03.webapp.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -21,12 +25,21 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
                 .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic());
     }
 
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper m = new ObjectMapper();
+        m.configure(SerializationFeature.INDENT_OUTPUT, true);
+        m.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+        m.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true);
+        return m;
+    }
+
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         for(HttpMessageConverter<?> c : converters) {
             if(c instanceof MappingJackson2HttpMessageConverter) {
                 MappingJackson2HttpMessageConverter m = (MappingJackson2HttpMessageConverter)c;
-                m.setPrettyPrint(true);
+                m.setObjectMapper(objectMapper());
             }
         }
     }

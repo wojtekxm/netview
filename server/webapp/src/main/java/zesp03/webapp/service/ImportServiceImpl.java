@@ -28,11 +28,13 @@ public class ImportServiceImpl implements ImportService {
         if(dto.getMaxClients() < 0) {
             throw new ValidationException("maxClients", "less than zero");
         }
+        if(dto.getTimeStart() < 0) {
+            throw new ValidationException("timeStart", "less than zero");
+        }
         final RandomUtil ru = new RandomUtil();
         final List<ShortSurvey> list = new ArrayList<>();
         int lastTime = 0;
         int lastClients = ru.choose(0, dto.getMaxClients());
-        log.debug("lastClients (first time) = {}", lastClients);
         boolean lastEnabled = true;
         for(int i = 0; i < dto.getNumberOfSurveys(); i++) {
             ShortSurvey ss = new ShortSurvey();
@@ -71,11 +73,12 @@ public class ImportServiceImpl implements ImportService {
             ss.setTimestamp(time);
             ss.setEnabled(enabled);
             ss.setClients(clients);
+            if(ss.getTimestamp() < 0) {
+                throw new ValidationException("survey time", "negative");
+            }
             lastTime = ss.getTimestamp();
             lastEnabled = ss.isEnabled();
             lastClients = ss.getClients();
-            log.debug("ss time={} clients={} enabled={}",
-                    ss.getTimestamp(), ss.getClients(), ss.isEnabled());
             list.add(ss);
         }
         surveySavingService.importSurveys(dto.getDeviceId(), dto.getFrequencyMhz(), list);

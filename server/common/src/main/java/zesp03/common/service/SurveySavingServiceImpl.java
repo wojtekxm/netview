@@ -201,6 +201,9 @@ public class SurveySavingServiceImpl implements SurveySavingService {
         deviceSurveyRepository.deleteByFrequency(df);
         DeviceSurvey lastDS = null;
         for(ShortSurvey shortSurvey : data) {
+            if(shortSurvey.getTimestamp() < 0) {
+                throw new IllegalArgumentException("survey time < 0");
+            }
             if( (lastDS != null) &&
                     (shortSurvey.getTimestamp() <= lastDS.getTimestamp()) )continue;
             DeviceSurvey deviceSurvey = new DeviceSurvey();

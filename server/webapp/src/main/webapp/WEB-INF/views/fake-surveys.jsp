@@ -10,6 +10,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -85,10 +86,16 @@
         <div class="form-group row">
             <div class="col-sm-6">
                 <label for="time_start">czas początkowy</label>
-                <input id="time_start" type="datetime-local" class="form-control" required>
+                <div class='input-group date' id='datetimepicker1'>
+                    <input id="time_start" type='text' class="form-control">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
             <div class="col-sm-6">
-                przewidywany czas ostatniego badania
+                <label>przewidywany czas ostatniego badania</label>
+                <input id="estimated_time_end" type="text" class="form-control" disabled>
             </div>
         </div>
         <div class="form-group row">
@@ -103,30 +110,67 @@
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
+<script src="/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/js/progress.js"></script>
 <script>
     $(document).ready(function () {
-        var submitButton = $('#submit');
-        var progressArea = $('#progress');
-        submitButton.click(function () {
+        var $dateTimePicker = $('#datetimepicker1');
+        var $submitButton = $('#submit');
+        var $progressArea = $('#progress');
+        var $minInterval = $('#min_interval');
+        var $maxInterval = $('#max_interval');
+        var $numberOfSurveys = $('#number_of_surveys');
+        var $estimatedTimeEnd = $('#estimated_time_end');
+        $dateTimePicker.datetimepicker( {
+            "locale": 'pl',
+            "format": 'LLL'
+        });
+        $minInterval.on('change', updateEstimated);
+        $maxInterval.on('change', updateEstimated);
+        $numberOfSurveys.on('change', updateEstimated);
+        $dateTimePicker.on('dp.change', updateEstimated);
+        function updateEstimated() {
+            var date = $dateTimePicker.data('DateTimePicker').date();
+            if(date === null) {
+                $estimatedTimeEnd.val('?');
+                return;
+            }
+            var timeStart = date.unix();
+            var interval0 = parseInt( $minInterval.val() );
+            var interval1 = parseInt( $maxInterval.val() );
+            var nos = parseInt( $numberOfSurveys.val() );
+            if( isNaN(interval0) || isNaN(interval1) || isNaN(nos) ||
+                (interval0 < 1) || (interval1 < 1) || (nos < 1) ) {
+                $estimatedTimeEnd.val('?');
+                return;
+            }
+            var ete = timeStart + (nos - 1) * (interval0 + interval1) / 2;
+            var momentEnd = moment.unix(ete);
+            momentEnd.locale('pl');
+            $estimatedTimeEnd.val(momentEnd.format('LLL'));
+        }
+
+        $submitButton.click(function () {
             var obj = {};
-            obj.deviceId = $('#device_id').val();
-            if(obj.deviceId === '')return;
-            obj.frequencyMhz = $('#frequency_mhz').val();
-            if(obj.frequencyMhz === '')return;
-            obj.timeStart = 1490000000;//!
-            if(obj.timeStart === '')return;
-            obj.minInterval = $('#min_interval').val();
-            if(obj.minInterval === '')return;
-            obj.maxInterval = $('#max_interval').val();
-            if(obj.maxInterval === '')return;
-            obj.maxClients = $('#max_clients').val();
-            if(obj.maxClients === '')return;
-            obj.numberOfSurveys = $('#number_of_surveys').val();
-            if(obj.numberOfSurveys === '')return;
-            submitButton.prop('disabled', true);
-            progressArea.empty();
-            progressArea.append( createProgressCircle() );
+            var date = $dateTimePicker.data('DateTimePicker').date();
+            if(date === null)return;
+            obj.timeStart = date.unix();
+            obj.deviceId = parseInt( $('#device_id').val() );
+            obj.frequencyMhz = parseInt( $('#frequency_mhz').val() );
+            obj.minInterval = parseInt( $('#min_interval').val() );
+            obj.maxInterval = parseInt( $('#max_interval').val() );
+            obj.maxClients = parseInt( $('#max_clients').val() );
+            obj.numberOfSurveys = parseInt( $('#number_of_surveys').val() );
+            if( isNaN(obj.deviceId) )return;
+            if( isNaN(obj.frequencyMhz) )return;
+            if( isNaN(obj.minInterval) )return;
+            if( isNaN(obj.maxInterval) )return;
+            if( isNaN(obj.maxClients) )return;
+            if( isNaN(obj.numberOfSurveys) )return;
+            $submitButton.prop('disabled', true);
+            $progressArea.empty();
+            $progressArea.append( createProgressCircle() );
             $.ajax( {
                 "url": '/api/import/fake-surveys',
                 "type": 'post',
@@ -134,10 +178,10 @@
                 "contentType": 'application/json',
                 "data": JSON.stringify(obj),
                 "success": function (baseResultDto) {
-                    progressArea.empty();
-                    submitButton.prop('disabled', false);
+                    $progressArea.empty();
+                    $submitButton.prop('disabled', false);
                     if(baseResultDto.success) {
-                        progressArea.append(
+                        $progressArea.append(
                             $('<div></div>').addClass('panel panel-success').append(
                                 $('<div></div>').addClass('panel-heading').append(
                                     'Sukces ',
@@ -149,7 +193,7 @@
                         );
                     }
                     else {
-                        progressArea.append(
+                        $progressArea.append(
                             $('<div></div>').addClass('panel panel-danger').append(
                                 $('<div></div>').addClass('panel-heading').text('Error')
                             )
@@ -157,9 +201,9 @@
                     }
                 },
                 "error": function() {
-                    progressArea.empty();
-                    submitButton.prop('disabled', false);
-                    progressArea.append(
+                    $progressArea.empty();
+                    $submitButton.prop('disabled', false);
+                    $progressArea.append(
                         $('<div></div>').addClass('panel panel-danger').append(
                             $('<div></div>').addClass('panel-heading').text('Error')
                         )

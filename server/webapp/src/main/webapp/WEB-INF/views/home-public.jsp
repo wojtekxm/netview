@@ -84,7 +84,7 @@
         <div class="col-md-4 col-md-offset-4">
             <div class="login-panel panel panel-default">
                 <div class="panel-heading" style="background-color: #121612;color:#cdd6cd;">
-                    <h3 class="panel-title" style="font-size:17px !important;">Logowanie</h3>
+                    <h3 class="panel-title" style="font-size:17px !important;">Network-Monitor</h3>
                 </div>
                 <div class="panel-body">
                     <form action="/login" method="post" role="form">

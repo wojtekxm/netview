@@ -34,7 +34,14 @@
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
-                <li><a href="/all-buildings">Budynki</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
+                    <ul class="dropdown-menu"  style="background-color: #080b08;">
+                        <li><a href="/all-buildings">Budynki</a></li>
+                        <li><a href="/all-units">Jednostki</a></li>
+                        <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
+                    </ul>
+                </li>
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">

@@ -10,7 +10,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"
             type="text/javascript"></script>
     <script
             src="https://code.jquery.com/jquery-3.2.0.min.js"
@@ -34,18 +34,18 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: #1d1d1d;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
                 <li><a href="/all-buildings">Budynki</a></li>
-                <%--<li><a href="/all-units">Jednostki</a></li>--%>
-                <%--<li><a href="/unitsbuildings">Jedn. Bud.</a></li>--%>
+                <li><a href="/all-units">Jednostki</a></li>
+                <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
             </ul>
-            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <form class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -57,52 +57,22 @@
     </div>
 </nav>
 <div id="container">
-    <div style="height: 10px;"></div>
-    <div id="devices" class="panel panel-default">
-        <div class="panel-heading">
-            szczegóły urządzenia
-        </div>
-        <table class="table table-bordered">
-            <tr>
-                <td>nazwa</td>
-                <td><c:out value="${device.name}"/></td>
-            </tr>
-            <tr>
-                <td>opis</td>
-                <td><c:out value="${device.description}"/></td>
-            </tr>
-            <tr>
-                <td>nazwa kontrolera</td>
-                <td><c:out value="${controller.name}"/></td>
-            </tr>
-            <tr>
-                <td>IP kontrolera</td>
-                <td><c:out value="${controller.ipv4}"/></td>
-            </tr>
-            <tr>
-                <td>opis kontrolera</td>
-                <td><c:out value="${controller.description}"/></td>
-            </tr>
-        </table>
-    </div>
-
-
-    <div id="wykresy">
-        <canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>
-    </div>
-
-    <br/>
+    <br/> <br/> <br/>
     <button type="button" id="onclick1">Dzień</button>
     <button type="button" id="onclick2">Tydzień</button>
     <button type="button" id="onclick3">Miesiąc</button>
     <button type="button" id="onclick4">Kwartał</button>
     <button type="button" id="onclick5">Rok</button>
+    <br/>
+    <div id="wykresy">
+        <canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>
+    </div>
+
 
 
 
     <style>
         #mycanvas {
-            /*background-image: url("/images/logooWhite.jpg");*/
             width: 100% !important;
             max-width: 5000px !important;
             height: auto !important;
@@ -117,25 +87,32 @@
     <script>
 
         var now = Date.now();
-        var doba = now - 86400000;       // dzien
-        var tydzien = now - 604800000;   // 7 dni
-        var miesiac = now - 2629743830; //30 dni
-        var kwartal = now - 7889231490; //90 dni
-        var rok = now - 31536000000;   // 365 dni
-        generateChart(mycanvas, <c:out value="${device.id}"/>,0,now,"Wykres kompletny");
+        var teraz=Math.round(now/1000);
+        var doba = Math.round((now - 86400000)/1000);       // dzien
+        var tydzien = Math.round((now - 604800000)/1000);   // 7 dni
+        var miesiac = Math.round((now - 2629743830)/1000); //30 dni
+        var kwartal = Math.round((now - 7889231490)/1000); //90 dni
+        var rok = Math.round((now - 31536000000)/1000);   // 365 dni
+        generateChart(mycanvas,  <c:out value="${device.id}"/>,doba,teraz,300,'Wykres roczny 2400 SWIEZY',2400);
         var btn1=document.getElementById("onclick1");
-        btn1.addEventListener("click", function(){generateChart(mycanvas,<c:out value="${device.id}"/>,doba,now,"Wykres dobowy");});
+        btn1.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,doba,teraz,300,'Wykres ' +
+            'dzienny pasmo 2,4GHz grupowanie:5min',2400);});
         var btn2=document.getElementById("onclick2");
-        btn2.addEventListener("click", function(){generateChart(mycanvas, <c:out value="${device.id}"/>,tydzien,now,"Wykres tygodniowy");});
+        btn2.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,tydzien,teraz,1800,'Wykres ' +
+            +'tygodniowy pasmo 2,4Ghz grupowanie:30min',2400);});
         var btn3=document.getElementById("onclick3");
-        btn3.addEventListener("click",function(){generateChart(mycanvas, <c:out value="${device.id}"/>,miesiac,now,"Wykres miesieczny");});
+        btn3.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,miesiac,teraz,86400,'Wykres ' +
+            'miesieczny pasmo 2,4Ghz grupowanie:1dzien',2400);});
         var btn4=document.getElementById("onclick4");
-        btn4.addEventListener("click", function(){generateChart(mycanvas, <c:out value="${device.id}"/>,kwartal,now,"Wykres kwartalny");});
+        btn4.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,kwartal,teraz,259200,'Wykres ' +
+            'kwartalny pasmo 2,4Ghz grupowanie:3dni',2400);});
         var btn5=document.getElementById("onclick5");
-        btn5.addEventListener("click", function(){generateChart(mycanvas, <c:out value="${device.id}"/>,rok,now,"Wykres roczny");});
+        btn5.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,rok,teraz,1036800,'Wykres ' +
+            'roczny pasmo 2,4Ghz',2400);});
 
         function convert(time) {
-            var temp = new Date(time * 1000);
+            time=time*1000;
+            var temp = new Date(time);
             var Seconds = temp.getSeconds();
             var Minutes = temp.getMinutes();
             var Hours = temp.getHours();
@@ -152,48 +129,55 @@
         var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
         var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
             "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
-        var now = Date.now();
-        var doba = now - 86400000;       // dzien
-        var tydzien = now - 604800000;   // 7 dni
-        var miesiac = now - 2629743830; //30 dni
-        var kwartal = now - 7889231490; //90 dni
-        var rok = now - 31536000000;   // 365 dni
+        console.log("teraz:" + teraz);
         console.log("doba:" + doba);
         console.log("tydzien:" + tydzien);
         console.log("miesiac:" + miesiac);
         console.log("kwartal:" + kwartal);
         console.log("rok:" + rok);
-        function generateChart(mycanvas, id,timestamp1,timestamp2,etykieta) {
+        function generateChart(mycanvas, id,timestamp,timestamp2,range,etykieta,frequency) {
             var request = new XMLHttpRequest();
             $('#mycanvas').remove();
             $('#wykresy').append('<canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>');
             mycanvas = document.querySelector('#mycanvas');
 
             var tags = [];      //WSZYSTKO
-            var values = [];    //WSZYSTKO
+            var values_avg = [];    //WSZYSTKO
+            var values_min = [];    //WSZYSTKO
+            var values_max = [];    //WSZYSTKO
             var options = {
                 tooltips: {mode: 'index'},
-                legend: {display: false},
+                legend: {display: true},
                 title: {display: true, text: etykieta},
                 hover: {intersect: false,
                     mode:'x'
 
                 },
-                label: {display: true},
+                label: {display: false},
                 scales: {
-                    xAxes: [{display: false}],
+                    xAxes: [{
+                        display:true,
+                        barPercentage:1,
+                        autoSkip: false,
+                        maxRotation: 0,
+                    }],
 
                     yAxes: [{
+                        stacked: true,
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: 'Ilosc klientów'
+                            labelString: 'Ilosc klientów',
                         },
+                        gridLines:{color: "rgba(1,255,1,0.2)"}
+                        ,
                         ticks: {
                             ticks: {
+                                autoSkip: false,
                                 fixedStepSize: 10,
-                                suggestedMin: 0,
-                                suggestedMax: 50
+                                beginAtZero:true,
+                                Min: -5,
+                                suggestedMax: 100
                             }
                         }}]
                 },
@@ -203,46 +187,94 @@
                 elements: {line: {tension: 0}}
             };
 
+            var ctx = mycanvas.getContext("2d");
+            var gradient = ctx.createLinearGradient(300, 0, 300, 600);
+            gradient.addColorStop(0, 'black');
+            gradient.addColorStop(0.25, 'red');
+            gradient.addColorStop(0.5, 'orange');
+            gradient.addColorStop(0.75, 'yellow');
+            gradient.addColorStop(1, 'green');
+
             var data = {
                 labels: tags,
                 datasets: [{
-                    label: "Ilosc klientow urzadzenia",
-                    data: values,
+                    label: "Minimalna ilosc",
+                    data: values_min,
                     fill: false,
-                    borderColor: "rgba(0,255,0,1)",
-                    fillStyle: "rgba(0,255,0,1)",
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "rgba(0,0,0,0)",
-                    pointBackgroundColor: "rgba(0,255,0,1)",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 4,
-                    pointHoverBackgroundColor: "rgba(0, 0, 0, 1)",
-                    pointHoverBorderColor: "rgb(0,0,0,0)",
-                    pointHoverBorderWidth: 4,
-                    pointRadius: 2,
-                    tension: 0
+                    pointRadius:2,
+                    borderColor:"rgba(255,0,0,1)",
+                    fillColor: "rgba(255,0,0,1)",
+                    strokeColor: "rgba(255,0,0,1)",
+                    pointColor: "rgba(255,0,0,1)",
+                    backgroundColor: "rgba(255,0,0,1)",
+                    borderWidth: 3,
+                    hoverBackgroundColor:"rgba(0,0,0,1)"
+
+                },{
+                    label: "Srednia ilosc",
+                    data: values_avg,
+                    fill: false,
+                    pointRadius:2,
+                    borderColor:"rgba(255,255,0,1)",
+                    fillColor: "rgba(255,255,0,1)",
+                    strokeColor: "rgba(255,255,0,1)",
+                    pointColor: "rgba(255,255,0,1)",
+                    backgroundColor: "rgba(255,255,0,1)",
+                    borderWidth: 3,
+                    hoverBackgroundColor:"rgba(0,0,0,1)"
+
+                },{
+                    label: "Maksymalna ilosc",
+                    data: values_max,
+                    fill: false,
+                    pointRadius:2,
+                    borderColor:"rgba(0,255,0,1)",
+                    fillColor: "rgba(0,255,0,1)",
+                    strokeColor: "rgba(0,255,0,1)",
+                    pointColor: "rgba(0,255,0,1)",
+                    backgroundColor: "rgba(0,255,0,1)",
+                    borderWidth: 3,
+                    hoverBackgroundColor:"rgba(0,0,0,1)"
                 }
+
                 ]
             };
-            request.open('Get', '/api/chart?id=' + id);
+            var request = new XMLHttpRequest();
+            request.open('Get', '/api/surveys/multi-avg-minmax?device='+id+
+                '&frequency='+frequency+
+                '&start='+timestamp+
+                '&groupTime='+range+
+                '&end='+timestamp2
+            );
+            var min_tmp,avg_tmp,max_tmp,tags_tmp;
             request.onload = function () {
                 var jsondata = JSON.parse(request.responseText);
-                timestamp1 = timestamp1 / 1000;
-                timestamp2 = timestamp2 / 1000;
-                console.log("timestamp1=" + timestamp1);
-                console.log("timestamp2=" + timestamp2);
-                for (i = 0; i < jsondata.length; i++) {
-                    if (timestamp1 <= jsondata[i][1] && jsondata[i][1] <= timestamp2) {
-                        tags.push(convert(jsondata[i][1]));
-                        console.log(jsondata[i][1]);
-                        values.push(jsondata[i][0]);
-                        console.log(jsondata[i][0]);
-                    }
+                var ilosc=Object.keys(jsondata.list).length;
+                console.log("ILOSC:"+ilosc);
+                console.log("Czas wczytania:"+jsondata.queryTime);
+                //console.log(Math.round(jsondata.list[1].average)); TESTOWO
+                //console.log(Math.round(jsondata.list[0].min)); TESTOWO
+                console.log(JSON.stringify(jsondata));
+
+                for (i = 0; i < ilosc; i++) {
+                    avg_tmp=jsondata.list[i].average;
+                    min_tmp=jsondata.list[i].min;
+                    max_tmp=jsondata.list[i].max;
+                    console.log(i+" AVERAGE:"+avg_tmp);
+                    values_avg.push(Math.round(avg_tmp));
+                    console.log(i+" MIN:"+min_tmp);
+                    values_min.push(min_tmp);
+                    console.log(i+" MAX:"+max_tmp);
+                    values_max.push(max_tmp);
+                    console.log(convert(Number(jsondata.list[i].timeStart)));
+                    tags.push(convert(Number(jsondata.list[i].timeStart)));
+                    console.log("______________________________");
                 }
-                var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});
+                var myFirstChart = Chart.Bar(mycanvas, {data: data, options: options});
 
             };
             request.send();
+            console.log(doba);
         }
     </script>
     <script src="/js/jquery-3.1.1.min.js"></script>
@@ -250,3 +282,32 @@
 </div>
 </body>
 </html>
+
+<%-- <div class="panel panel-default">
+     <div class="panel-heading">
+         szczegóły urządzenia
+     </div>
+     <table class="table table-bordered">
+         <tr>
+             <td>nazwa</td>
+             <td><c:out value="${device.name}"/></td>
+         </tr>
+         <tr>
+             <td>opis</td>
+             <td><c:out value="${device.description}"/></td>
+         </tr>
+         <tr>
+             <td>nazwa kontrolera</td>
+             <td><c:out value="${controller.name}"/></td>
+         </tr>
+         <tr>
+             <td>IP kontrolera</td>
+             <td><c:out value="${controller.ipv4}"/></td>
+         </tr>
+         <tr>
+             <td>opis kontrolera</td>
+             <td><c:out value="${controller.description}"/></td>
+         </tr>
+     </table>
+ </div>
+ --%>

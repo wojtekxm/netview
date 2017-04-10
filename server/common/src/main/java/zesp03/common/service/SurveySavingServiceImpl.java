@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
+import zesp03.common.data.ShortSurvey;
 import zesp03.common.data.SurveyInfoUniqueNameFrequency;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
@@ -13,6 +14,9 @@ import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.entity.DeviceSurvey;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.repository.ControllerRepository;
+import zesp03.common.repository.DeviceFrequencyRepository;
+import zesp03.common.repository.DeviceRepository;
+import zesp03.common.repository.DeviceSurveyRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,13 +41,22 @@ public class SurveySavingServiceImpl implements SurveySavingService {
     @Autowired
     private ControllerRepository controllerRepository;
 
+    @Autowired
+    private DeviceRepository deviceRepository;
+
+    @Autowired
+    private DeviceFrequencyRepository deviceFrequencyRepository;
+
+    @Autowired
+    private DeviceSurveyRepository deviceSurveyRepository;
+
     @Override
     public int examineAll() {
         Iterable<Controller> list = controllerRepository.findAll();
         int result = 0;
         for (Controller c : list) {
             try {
-                result += examineOne(c.getId());
+                result += examineOne(c);
             } catch (RuntimeException exc) {
                 log.error("failed to examine controller", exc);
             }
@@ -57,24 +70,24 @@ public class SurveySavingServiceImpl implements SurveySavingService {
         if(controller == null) {
             throw new NotFoundException("controller");
         }
+        return examineOne(controller);
+    }
+
+    private int examineOne(Controller controller) {
         final List<SurveyInfoUniqueNameFrequency> originalSurveys = networkService.queryDevices(controller.getIpv4());
         if (originalSurveys.isEmpty()) {
-            log.info("survey of controller (id={}, ip={}) returned no devices", controllerId, controller.getIpv4());
+            log.info("survey of controller (id={}, ip={}) returned no devices", controller, controller.getIpv4());
             return 0;
         }
         final HashSet<SurveyInfoUniqueNameFrequency> uniqueSurveys = new HashSet<>();
         for (SurveyInfoUniqueNameFrequency info : originalSurveys) {
             uniqueSurveys.add(info);
         }
-        return saveToDatabase(controllerId, uniqueSurveys);
+        return saveToDatabase(controller, uniqueSurveys);
     }
 
-    public int saveToDatabase(Long controllerId, HashSet<SurveyInfoUniqueNameFrequency> uniqueSurveys) {
+    private int saveToDatabase(Controller controller, HashSet<SurveyInfoUniqueNameFrequency> uniqueSurveys) {
         final int timestamp = (int) Instant.now().getEpochSecond();
-        final Controller controller = controllerRepository.findOne(controllerId);
-        if(controller == null) {
-            throw new NotFoundException("controller");
-        }
         final HashMap<String, Device> name2device = makeDevices(uniqueSurveys, controller);
         final Map<Long, CurrentDeviceState> id2current = currentSurveyService.checkSome(name2device.entrySet()
                 .stream()
@@ -100,7 +113,12 @@ public class SurveySavingServiceImpl implements SurveySavingService {
                 int prevTime = previousSurvey.getTimestamp();
                 int prevClients = previousSurvey.getClientsSum();
                 long prevCumulative = previousSurvey.getCumulative();
-                if( prevTime != timestamp ) {
+                if(prevTime > timestamp) {
+                    log.warn("last survey is from the future, last timestamp = {}, " +
+                            "current timestamp = {}, DeviceFrequency.id = {}",
+                            prevTime, timestamp, frequency.getId());
+                }
+                if( prevTime < timestamp ) {
                     sur.setCumulative( prevCumulative + prevClients * ( timestamp - prevTime ) );
                     ds2persist.add(sur);
                 }
@@ -116,7 +134,7 @@ public class SurveySavingServiceImpl implements SurveySavingService {
      * Dla każdej nazwy z <code>list</code> wstawia do bazy nowe urządzenie jeśli takie nie istnieje.
      * @return mapa [nazwa urządzenia => urządzenie z bazy]
      */
-    public HashMap<String, Device> makeDevices(Collection<SurveyInfoUniqueNameFrequency> surveys, Controller controller) {
+    private HashMap<String, Device> makeDevices(Collection<SurveyInfoUniqueNameFrequency> surveys, Controller controller) {
         if(surveys.isEmpty())return new HashMap<>();
         final HashMap<String, Device> existing = new HashMap<>();
         for(SurveyInfoUniqueNameFrequency si : surveys) {
@@ -160,5 +178,52 @@ public class SurveySavingServiceImpl implements SurveySavingService {
         }
         em.flush();
         return result;
+    }
+
+    @Override
+    public void importSurveys(Long deviceId, Integer frequencyMhz, List<ShortSurvey> data) {
+        data.sort(Comparator.comparingInt(ShortSurvey::getTimestamp));
+        Optional<DeviceFrequency> opt = deviceFrequencyRepository.findByDeviceAndFrequency(deviceId, frequencyMhz);
+        DeviceFrequency df;
+        if(opt.isPresent()) {
+            df = opt.get();
+        }
+        else {
+            Device dev = deviceRepository.findOne(deviceId);
+            if(dev == null) {
+                throw new NotFoundException("device");
+            }
+            df = new DeviceFrequency();
+            df.setDevice(dev);
+            df.setFrequency(frequencyMhz);
+            deviceFrequencyRepository.save(df);
+        }
+        deviceSurveyRepository.deleteByFrequency(df);
+        DeviceSurvey lastDS = null;
+        for(ShortSurvey shortSurvey : data) {
+            if(shortSurvey.getTimestamp() < 0) {
+                throw new IllegalArgumentException("survey time < 0");
+            }
+            if( (lastDS != null) &&
+                    (shortSurvey.getTimestamp() <= lastDS.getTimestamp()) )continue;
+            DeviceSurvey deviceSurvey = new DeviceSurvey();
+            deviceSurvey.setFrequency(df);
+            deviceSurvey.setClientsSum(shortSurvey.getClients());
+            deviceSurvey.setTimestamp(shortSurvey.getTimestamp());
+            deviceSurvey.setEnabled(shortSurvey.isEnabled());
+            if(lastDS != null) {
+                long lastCumulative = lastDS.getCumulative();
+                long lastClients = lastDS.getClientsSum();
+                long lastTime = lastDS.getTimestamp();
+                long now = shortSurvey.getTimestamp();
+                long c = lastCumulative + lastClients * (now - lastTime);
+                deviceSurvey.setCumulative(c);
+            }
+            else {
+                deviceSurvey.setCumulative(0L);
+            }
+            deviceSurveyRepository.save(deviceSurvey);
+            lastDS = deviceSurvey;
+        }
     }
 }

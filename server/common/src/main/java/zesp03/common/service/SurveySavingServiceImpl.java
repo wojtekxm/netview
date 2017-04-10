@@ -106,20 +106,16 @@ public class SurveySavingServiceImpl implements SurveySavingService {
             sur.setClientsSum(info.getClientsSum());
             sur.setFrequency(frequency);
             if(previousSurvey == null) {
-                sur.setCumulative(0L);
                 ds2persist.add(sur);
             }
             else {
-                int prevTime = previousSurvey.getTimestamp();
-                int prevClients = previousSurvey.getClientsSum();
-                long prevCumulative = previousSurvey.getCumulative();
+                final int prevTime = previousSurvey.getTimestamp();
                 if(prevTime > timestamp) {
                     log.warn("last survey is from the future, last timestamp = {}, " +
                             "current timestamp = {}, DeviceFrequency.id = {}",
                             prevTime, timestamp, frequency.getId());
                 }
-                if( prevTime < timestamp ) {
-                    sur.setCumulative( prevCumulative + prevClients * ( timestamp - prevTime ) );
+                if(prevTime < timestamp) {
                     ds2persist.add(sur);
                 }
             }
@@ -211,17 +207,6 @@ public class SurveySavingServiceImpl implements SurveySavingService {
             deviceSurvey.setClientsSum(shortSurvey.getClients());
             deviceSurvey.setTimestamp(shortSurvey.getTimestamp());
             deviceSurvey.setEnabled(shortSurvey.isEnabled());
-            if(lastDS != null) {
-                long lastCumulative = lastDS.getCumulative();
-                long lastClients = lastDS.getClientsSum();
-                long lastTime = lastDS.getTimestamp();
-                long now = shortSurvey.getTimestamp();
-                long c = lastCumulative + lastClients * (now - lastTime);
-                deviceSurvey.setCumulative(c);
-            }
-            else {
-                deviceSurvey.setCumulative(0L);
-            }
             deviceSurveyRepository.save(deviceSurvey);
             lastDS = deviceSurvey;
         }

@@ -23,6 +23,9 @@ public class Controller {
     @Column(length = 1000)
     private String description;
 
+    @Column(name = "community_string", length = 255)
+    private String communityString;
+
     public long getId() {
         return id;
     }
@@ -58,4 +61,12 @@ public class Controller {
     public Building getBuilding(){return building; }
 
     public void setBuilding(Building building) {this.building = building;}
+
+    public String getCommunityString() {
+        return communityString;
+    }
+
+    public void setCommunityString(String communityString) {
+        this.communityString = communityString;
+    }
 }

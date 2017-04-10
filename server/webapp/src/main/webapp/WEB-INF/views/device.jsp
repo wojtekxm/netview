@@ -245,7 +245,7 @@
                 ]
             };
             var request = new XMLHttpRequest();
-            request.open('Get', '/api/surveys/multi-avg-minmax?device='+id+
+            request.open('Get', '/api/surveys/avg-min-max?device='+id+
                 '&frequency='+frequency+
                 '&start='+timestamp+
                 '&groupTime='+range+

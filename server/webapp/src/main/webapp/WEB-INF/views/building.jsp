@@ -73,10 +73,6 @@
                         <td><c:out value="${building.name}"/></td>
                     </tr>
                     <tr>
-                        <td>ID</td>
-                        <td><c:out value="${building.id}"/></td>
-                    </tr>
-                    <tr>
                         <td>Kod</td>
                         <td><c:out value="${building.code}"/></td>
                     </tr>
@@ -107,14 +103,11 @@
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
 
                     <tr>
-                        <td>ID</td>
                         <td>Kod</td>
                         <td>Opis</td>
                     </tr>
                     <c:forEach items="${units}" var="unit">
                         <tr>
-
-                            <td><c:out value="${unit.id}"/></td>
                             <td><c:out value="${unit.code}"/></td>
                             <td> <c:out value="${unit.description}"/></td>
 

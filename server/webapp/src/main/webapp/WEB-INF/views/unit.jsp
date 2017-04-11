@@ -72,10 +72,6 @@
 
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
                     <tr>
-                        <td>ID</td>
-                        <td><c:out value="${unit.id}"/></td>
-                    </tr>
-                    <tr>
                         <td>Kod</td>
                         <td><c:out value="${unit.code}"/></td>
                     </tr>
@@ -101,7 +97,6 @@
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
 
                     <tr>
-                        <td>ID</td>
                         <td>Kod</td>
                         <td>Nazwa</td>
                         <td>Szerokość geograficzna</td>
@@ -109,8 +104,6 @@
                     </tr>
                     <c:forEach items="${buildings}" var="building">
                         <tr>
-
-                            <td><c:out value="${building.id}"/></td>
                             <td><c:out value="${building.code}"/></td>
                             <td> <c:out value="${building.name}"/></td>
                             <td> <c:out value="${building.latitude}"/></td>
@@ -124,8 +117,8 @@
                 <div>
 
 
-                    <a href="/remove-building-all-units?id=${unit.id}" class="btn btn-danger" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a></div>
-                <a href="/link-building-all-units?id=${unit.id}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
+                <a href="/remove-unit-all-buildings?id=${unit.id}" class="btn btn-danger" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a></div>
+                <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
 
             </div>
         </div>

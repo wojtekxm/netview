@@ -89,11 +89,11 @@
 
         </table>
                 <div>
-                    <span style="display: flex;position: relative;float: right;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:28%;"></span>
-                <input form="form2" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:right;width:250px;font-size:17px;" >
+                    <span style="display: flex;position: relative;float: left;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
+                <input form="form2" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
                </span>
-                <a href="/unit?id=${unit.id}" class="btn btn-info" role="button" style="float:right;width:250px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span>Wróć</a>
+                <a href="/unit?id=${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span>Wróć</a>
                 </div>
             </div>
 

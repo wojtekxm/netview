@@ -104,7 +104,7 @@
             'dzienny pasmo 2,4GHz grupowanie:5min',2400);});
         var btn2=document.getElementById("onclick2");
         btn2.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,tydzien,teraz,1800,'Wykres ' +
-            +'tygodniowy pasmo 2,4Ghz grupowanie:30min',2400);});
+            'tygodniowy pasmo 2,4Ghz grupowanie:30min',2400);});
         var btn3=document.getElementById("onclick3");
         btn3.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,miesiac,teraz,86400,'Wykres ' +
             'miesieczny pasmo 2,4Ghz grupowanie:1dzien',2400);});
@@ -168,7 +168,7 @@
                     }],
 
                     yAxes: [{
-                        stacked: true,
+                        stacked: false,
                         display: true,
                         scaleLabel: {
                             display: true,

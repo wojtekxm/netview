@@ -72,7 +72,6 @@
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
 
                     <tr>
-                        <td>ID</td>
                         <td>Kod</td>
                         <td>Nazwa</td>
                         <td>Szerokość geograficzna</td>
@@ -80,24 +79,15 @@
                     </tr>
                     <c:forEach items="${buildings}" var="building">
                         <tr onclick="window.document.location='remove-unit-buildings?id_unit=${unit.id}&id_building=${building.id}';">
-
-
-                            <td><c:out value="${building.id}"/></td>
                             <td><c:out value="${building.code}"/></td>
                             <td> <c:out value="${building.name}"/></td>
                             <td> <c:out value="${building.latitude}"/></td>
                             <td> <c:out value="${building.longitude}"/></td>
-
                         </tr>
                     </c:forEach>
 
                 </table>
-
-
             </div>
-
-
-
         </div>
     </div>
 </div>

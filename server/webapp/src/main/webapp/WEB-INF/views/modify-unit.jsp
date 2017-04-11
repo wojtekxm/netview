@@ -72,9 +72,8 @@
 
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
 
-                    <tr>
-                <td>ID</td>
-                <td ><c:out value="${unit.id}"/></td>
+            <tr>
+
                 <input form="form2" type="hidden" name="id" value="${unit.id}" />
 
             </tr>
@@ -90,9 +89,11 @@
 
         </table>
                 <div>
-
-                <input form="form2" type="submit" value="Zatwierdź" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >
-                <a href="/unit?id=${unit.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;" >Wróć</a>
+                    <span style="display: flex;position: relative;float: right;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:28%;"></span>
+                <input form="form2" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:right;width:250px;font-size:17px;" >
+               </span>
+                <a href="/unit?id=${unit.id}" class="btn btn-info" role="button" style="float:right;width:250px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span>Wróć</a>
                 </div>
             </div>
 

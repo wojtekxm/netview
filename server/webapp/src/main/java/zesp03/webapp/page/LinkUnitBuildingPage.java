@@ -52,10 +52,10 @@ public class LinkUnitBuildingPage {
             @RequestParam("id") long id,
             ModelMap model) {
         UnitDto u = unitService.getOne(id);
-        List<BuildingDto> b1 = unitService.LinkUnitBuildingPage_GET_link_unit_all_buildings(id);
+        List<BuildingDto> b1 = unitService.UnitPage_GET_unit(u.getId());
         model.put("unit", u);
         model.put("buildings",b1);
-        return "link-unit-all-buildings";
+        return "remove-unit-all-buildings";
     }
 
     @GetMapping("/remove-unit-buildings")

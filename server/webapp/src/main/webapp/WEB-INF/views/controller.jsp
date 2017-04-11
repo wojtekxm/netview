@@ -43,7 +43,7 @@
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 180px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -85,7 +85,7 @@
                     </tr>
                 </table>
                 <div>
-                    <a href="/api/controller/remove/${controller.id}" class="btn btn-danger" role="button" style="float:right;width: 250px;font-size:17px;">
+                    <a href="/api/controller/remove/${controller.id}" class="btn btn-danger" role="button" style="float:left;width: 180px;font-size:17px;">
                         <span class="glyphicon glyphicon-trash"></span> Usuń
                     </a>
                 </div>

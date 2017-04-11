@@ -43,7 +43,7 @@
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 180px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -85,28 +85,14 @@
                         <td><input id="repeat_password" type="password"></td>
                     </tr>
                 </table>
-                <button id="submit" class="btn btn-success" style="float:right; width:250px;"><span class="glyphicon glyphicon-ok"></span> Zmień</button>
+                <button id="submit" class="btn btn-success" style="float:left; width:180px;"><span class="glyphicon glyphicon-ok"></span> Zmień</button>
                 <div id="result" style="margin-top: 35px;"></div>
             </div>
         </div>
     </div>
 </div>
 
-<%--<div id="container" id="page">--%>
-    <%--<div style="height: 10px;"></div>--%>
-    <%--<p>zalogowany: <c:out value="${loggedUser.name}"/>--%>
-    <%--</p>--%>
-    <%--<a href="/">strona główna</a><br>--%>
-    <%--<hr>--%>
-    <%--<h4>Zmiana hasła</h4>--%>
-    <%--<div id="form" class="form-group">--%>
-        <%--stare hasło <input id="old_password" type="password"><br>--%>
-        <%--nowe hasło <input id="new_password" type="password"><br>--%>
-        <%--powtórz hasło <input id="repeat_password" type="password"><br>--%>
-        <%--<button id="submit" type="button">Zmień</button>--%>
-    <%--</div>--%>
-    <%--<div id="result"></div>--%>
-<%--</div>--%>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script>

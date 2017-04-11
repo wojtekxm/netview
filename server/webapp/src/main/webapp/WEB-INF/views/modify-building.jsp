@@ -71,10 +71,7 @@
 
             <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
             <tr>
-                <td>ID</td>
-                <td width=""><c:out value="${building.id}"/></td>
                 <input form="form1" type="hidden" name="id" value="${building.id}" />
-
             </tr>
             <tr>
                 <td>Kod</td>

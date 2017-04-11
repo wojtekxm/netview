@@ -72,11 +72,9 @@
                             <span class="glyphicon glyphicon-menu-right"></span>
                             <c:out value="${building.code}"/>
                             <c:out value="${building.name}"/>
-                            <%--<c:out value="${building.latitude}"/>--%>
-                            <%--<c:out value="${building.longitude}"/>--%>
-
                         </a>
                     </div>
+
                 </c:forEach>
                 <div>
                     <a href="/create-building" class="btn btn-success" role="button" style="width: 500px;font-size:17px;">

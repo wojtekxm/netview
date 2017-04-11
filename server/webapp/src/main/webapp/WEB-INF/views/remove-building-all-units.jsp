@@ -72,29 +72,18 @@
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
 
                     <tr>
-                        <td>ID</td>
                         <td>Kod</td>
                         <td>Opis</td>
                     </tr>
+
                     <c:forEach items="${units}" var="unit">
-                        <tr onclick="window.document.location='remove-building-units?id_building=${building.id}&id_unit=${unit.id}';">
-
-
-                            <td> <c:out value="${unit.id}"/></td>
-                            <td> <c:out value="${unit.code}"/></td>
-                            <td> <c:out value="${unit.description}"/></td>
-
-
-                        </tr>
+                    <tr onclick="window.document.location='remove-building-units?id_building=${building.id}&id_unit=${unit.id}';">
+                         <td> <c:out value="${unit.code}"/></td>
+                         <td> <c:out value="${unit.description}"/></td>
+                    </tr>
                     </c:forEach>
-
                 </table>
-
-
             </div>
-
-
-
         </div>
     </div>
 </div>

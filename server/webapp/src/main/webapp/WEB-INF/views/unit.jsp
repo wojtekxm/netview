@@ -71,67 +71,65 @@
                 <c:url var="href" value="/modify-unit?id=${unit.id}"/>
 
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
-            <tr>
-                <td>ID</td>
-                <td><c:out value="${unit.id}"/></td>
-            </tr>
-            <tr>
-                <td>Kod</td>
-                <td><c:out value="${unit.code}"/></td>
-            </tr>
-            <tr>
-                <td>Opis</td>
-                <td><c:out value="${unit.description}"/></td>
-            </tr>
-        </table>
-     <div>
-        <form method="post" action="/api/unit/remove/${unit.id}">
-            <input type="submit" value="Usuń" class="btn btn-danger glyphicon glyphicon-plus" role="button" style="float:right;width:150px;font-size:17px;" >
+                    <tr>
+                        <td>ID</td>
+                        <td><c:out value="${unit.id}"/></td>
+                    </tr>
+                    <tr>
+                        <td>Kod</td>
+                        <td><c:out value="${unit.code}"/></td>
+                    </tr>
+                    <tr>
+                        <td>Opis</td>
+                        <td><c:out value="${unit.description}"/></td>
+                    </tr>
+                </table>
+                <div>
+                    <form method="post" action="/api/unit/remove/${unit.id}">
+                            <span style="display: flex;position: relative;float: right;">
+                            <span class="glyphicon glyphicon-trash" style="position: absolute;font-size:17px;color: white;top: 30%;left:35%;"></span>
+                                <input type="submit" value="Usuń" class="form-control btn btn-danger" role="button" style="float:right;height:38px;width:250px;font-size:17px;" >
+                            </span>
+                    </form>
+                    <a href="${href}" class="btn btn-success" role="button" style="float:right;width:250px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Modyfikuj</a>
+                </div>
 
-        </form>
-
-        <a href="${href}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;" >Modyfikuj</a>
-     </div>
-            </div>
-
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+                <div class="panel-heading"  style="margin-top: 70px;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
                     Powiązane budynki:
                 </div>
 
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
 
-                   <tr>
+                    <tr>
                         <td>ID</td>
                         <td>Kod</td>
                         <td>Nazwa</td>
                         <td>Szerokość geograficzna</td>
                         <td>Wysokość geograficzna</td>
-                   </tr>
-                    <c:forEach items="${buildings}" var="building">
-                    <tr>
-
-                        <td><c:out value="${building.id}"/></td>
-                        <td><c:out value="${building.code}"/></td>
-                        <td> <c:out value="${building.name}"/></td>
-                        <td> <c:out value="${building.latitude}"/></td>
-                        <td> <c:out value="${building.longitude}"/></td>
-
                     </tr>
+                    <c:forEach items="${buildings}" var="building">
+                        <tr>
+
+                            <td><c:out value="${building.id}"/></td>
+                            <td><c:out value="${building.code}"/></td>
+                            <td> <c:out value="${building.name}"/></td>
+                            <td> <c:out value="${building.latitude}"/></td>
+                            <td> <c:out value="${building.longitude}"/></td>
+
+                        </tr>
                     </c:forEach>
 
                 </table>
 
                 <div>
 
-                    <a href="/remove-unit-all-buildings?id=${unit.id}" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >Usuń powiązanie</a></div>
-                <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;">Dodaj powiązanie</a>
+
+                    <a href="/remove-building-all-units?id=${unit.id}" class="btn btn-danger" role="button" style="float:right;width:250px;font-size:17px;" ><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a></div>
+                <a href="/link-building-all-units?id=${unit.id}" class="btn btn-success" role="button" style="float:right;width:250px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
 
             </div>
-
         </div>
     </div>
-
 </div>
 </div>
 

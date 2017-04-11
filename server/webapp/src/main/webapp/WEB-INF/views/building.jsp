@@ -129,41 +129,9 @@
                 <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button" style="float:right;width:250px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
 
             </div>
-
-            <%--<div id="devices" class="panel panel-default" style="padding: 15px;">--%>
-                <%--<div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">--%>
-                    <%--Powiązane jednostki:--%>
-                <%--</div>--%>
-
-                <%--<table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">--%>
-
-                    <%--<tr>--%>
-                        <%--<td>ID</td>--%>
-                        <%--<td>Kod</td>--%>
-                        <%--<td>Opis</td>--%>
-                    <%--</tr>--%>
-                    <%--<c:forEach items="${units}" var="unit">--%>
-                        <%--<tr>--%>
-
-                            <%--<td><c:out value="${unit.id}"/></td>--%>
-                            <%--<td><c:out value="${unit.code}"/></td>--%>
-                            <%--<td> <c:out value="${unit.description}"/></td>--%>
-
-                        <%--</tr>--%>
-                    <%--</c:forEach>--%>
-
-                <%--</table>--%>
-
-                <%--<div>--%>
-
-                    <%--<a href="/remove-building-all-units?id=${building.id}" class="btn btn-danger" role="button" style="float:right;width:150px;font-size:17px;" >Usuń powiązanie</a></div>--%>
-                <%--<a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button" style="float:right;width:150px;font-size:17px;">Dodaj powiązanie</a>--%>
-
-            <%--</div>--%>
-
-        </div>
         </div>
     </div>
+</div>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

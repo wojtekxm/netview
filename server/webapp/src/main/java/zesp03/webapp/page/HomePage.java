@@ -11,7 +11,7 @@ public class HomePage {
     @GetMapping("/")
     public String get(HttpServletRequest req) {
         if(req.getAttribute(AuthenticationFilter.ATTR_USERDTO) != null)
-            return "home-logged";
+            return "status";
         else
             return "home-public";
     }

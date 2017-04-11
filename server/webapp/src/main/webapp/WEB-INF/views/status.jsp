@@ -91,42 +91,46 @@
     <!-- /#sidebar-wrapper -->
 
 
-<div id="all" style="margin: 0">
-    <div id="container">
-        <div id="content">
-            <ul class="view" style="z-index: 1000;top:0;">
-                <li>
-                    <div style="height: 10px;"></div>
-                    <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
-                    <ul id="devices" class="panel panel-default" style="min-height:420px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
-                </li>
-            </ul>
-        </div>
-
-        <div class="panel panel-default" style="border-radius: 10px;">
-            <div class="panel-heading">
-                <div id="data"></div><h3 class="panel-title" style="font-size: 17px;color:black; padding-top: 12px;"><span class="glyphicon glyphicon-th-large"></span> Pokaż tylko urządzenia ( Kliknij w wybrany stan ) :</h3>
+    <div id="all" style="margin: 0">
+        <div id="container">
+            <div id="content">
+                <ul class="view" style="z-index: 1000;top:0;">
+                    <li>
+                        <div style="height: 10px;"></div>
+                        <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
+                        <ul id="devices" class="panel panel-default" style="min-height:420px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
+                    </li>
+                </ul>
             </div>
-            <div class="panel-body">
-                <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                    <div class="btn-group" role="group" onclick="onlyGreen();interGreen = setInterval('onlyGreen()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="greenDiode"></div>&emsp;aktywne: &nbsp;&emsp;<span id="countActive"></span></div></button>
-                    </div>
-                    <div class="btn-group" role="group" onclick="onlyRed();interRed = setInterval('onlyRed()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="redDiode"></div>&emsp;nieaktywne: &nbsp;&emsp;<span id="countInactive"></span></div></button>
-                    </div>
-                    <div class="btn-group" role="group" onclick="onlyGrey();interGrey = setInterval('onlyGrey()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div>&emsp;wyłączone: &nbsp;&emsp;<span id="countOff"></span></div></button>
-                    </div>
-                    <div class="btn-group" role="group" onclick="allDevices();inter = setInterval('allDevices()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;&emsp;<span id="countAll"></span></div></button>
+
+            <div class="panel panel-default" style="border-radius: 10px;">
+                <div class="panel-heading">
+                    <div id="data"></div><h3 class="panel-title" style="font-size: 17px;color:black; padding-top: 12px;"><span class="glyphicon glyphicon-th-large"></span> Pokaż tylko urządzenia ( Kliknij w wybrany stan ) :</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group" onclick="onlyGreen();interGreen = setInterval('onlyGreen()', 10000);">
+                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="greenDiode"></div>&emsp;aktywne: &nbsp;&emsp;<span id="countActive"></span></div></button>
+                        </div>
+                        <div class="btn-group" role="group" onclick="onlyRed();interRed = setInterval('onlyRed()', 10000);">
+                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="redDiode"></div>&emsp;nieaktywne: &nbsp;&emsp;<span id="countInactive"></span></div></button>
+                        </div>
+                        <div class="btn-group" role="group" onclick="onlyGrey();interGrey = setInterval('onlyGrey()', 10000);">
+                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div>&emsp;wyłączone: &nbsp;&emsp;<span id="countOff"></span></div></button>
+                        </div>
+                        <div class="btn-group" role="group" onclick="allDevices();inter = setInterval('allDevices()', 10000);">
+                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;&emsp;<span id="countAll"></span></div></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/status.js"></script>
 
 <script>
     $("#menu-toggle").click(function(e) {
@@ -252,10 +256,6 @@
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="/js/status.js"></script>
 
 </body>
 </html>

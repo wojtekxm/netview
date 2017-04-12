@@ -98,7 +98,7 @@
                 <ul class="view" style="z-index: 1000;top:0;">
                     <li>
                         <div style="height: 10px;"></div>
-                        <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" data-toggle="toggleFrequency" data-on="5400Hz" data-off="2400Hz" data-onstyle="warning" data-offstyle="success"></div>
+                        <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" data-toggle="toggleFrequency" data-on="5400 Hz" data-off="2400 Hz" data-onstyle="warning" data-offstyle="success"></div>
                         <ul id="devices" class="panel panel-default" style="min-height:420px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
                     </li>
                 </ul>

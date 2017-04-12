@@ -60,7 +60,7 @@
     <div id="container">
         <div class="content">
             <div>
-                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kliknij aby powiązać z daną jednostką:</div></div>
+                <div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kliknij aby powiązać z daną jednostką:</div></div>
             </div>
             <div id="devices" class="panel panel-default" style="padding: 15px;">
 

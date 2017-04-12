@@ -60,7 +60,7 @@
         <div class="content">
             <div style="height: 10px;"></div>
                 <div>
-                    <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o użytkowniku: </div></div>
+                    <div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o użytkowniku: </div></div>
                 </div>
 
                 id: <c:out value="${user.id}"/><br>

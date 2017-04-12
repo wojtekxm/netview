@@ -61,7 +61,7 @@
             <div style="height: 10px;"></div>
             <div>
                 <div id="wydzial">
-                    <div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
+                    <div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
                         <span class="glyphicon glyphicon-user"></span>
                         Zalogowany: <c:out value="${loggedUser.name}"/>
                     </div>

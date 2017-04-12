@@ -86,6 +86,7 @@
                     </tr>
                 </table>
                 <div>
+                    <a href="${href}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Modyfikuj</a>
                     <form method="post" action="/api/remove-building">
                             <span style="display: flex;position: relative;float: left;">
                             <span class="glyphicon glyphicon-trash" style="position: absolute;font-size:17px;color: white;top: 30%;left:29%;"></span>
@@ -93,7 +94,6 @@
                                 <input type="submit" value="Usuń" class="form-control btn btn-danger" role="button" style="float:left;height:38px;width:180px;font-size:17px;" >
                             </span>
                     </form>
-                    <a href="${href}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Modyfikuj</a>
                 </div>
 
                 <div class="panel-heading" style="margin-top: 70px;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
@@ -117,9 +117,8 @@
                 </table>
 
                 <div>
-
+                    <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
                     <a href="/remove-building-all-units?id=${building.id}" class="btn btn-danger" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a></div>
-                <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
 
             </div>
         </div>

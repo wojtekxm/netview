@@ -8,9 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Status sieci</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
+    <link rel="stylesheet" href="/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-    <link href="css/simple-sidebar.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/simple-sidebar.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' type='text/css'>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
@@ -97,7 +98,7 @@
                 <ul class="view" style="z-index: 1000;top:0;">
                     <li>
                         <div style="height: 10px;"></div>
-                        <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery</div></div>
+                        <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" data-toggle="toggleFrequency" data-on="5400Hz" data-off="2400Hz" data-onstyle="warning" data-offstyle="success"></div>
                         <ul id="devices" class="panel panel-default" style="min-height:420px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
                     </li>
                 </ul>
@@ -130,7 +131,16 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-toggle.min.js"></script>
 <script src="/js/status.js"></script>
+
+<script>
+    $(function() {
+        $('#toggleFrequency').bootstrapToggle({
+
+        });
+    })
+</script>
 
 <script>
     $("#menu-toggle").click(function(e) {

@@ -94,7 +94,7 @@
                                 <input type="submit" value="Usuń" class="form-control btn btn-danger" role="button" style="float:left;height:38px;width:180px;font-size:17px;" >
                             </span>
                     </form>
-                </div>
+              </div>
 
                 <div class="panel-heading" style="margin-top: 70px;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
                     Powiązane jednostki:
@@ -107,7 +107,8 @@
                         <td>Opis</td>
                     </tr>
                     <c:forEach items="${units}" var="unit">
-                        <tr>
+                        <tr onclick="window.document.location='unit?id=${unit.id}';">
+
                             <td><c:out value="${unit.code}"/></td>
                             <td> <c:out value="${unit.description}"/></td>
 
@@ -117,10 +118,11 @@
                 </table>
 
                 <div>
+
                     <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
                     <a href="/remove-building-all-units?id=${building.id}" class="btn btn-danger" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a></div>
 
-            </div>
+                 </div>
         </div>
     </div>
 </div>

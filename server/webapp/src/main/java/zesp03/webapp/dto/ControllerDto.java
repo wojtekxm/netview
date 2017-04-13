@@ -8,6 +8,7 @@ public class ControllerDto {
     private String ipv4;
     private String description;
     private long buildingId;
+    private String buildingName;
 
     public long getId() {
         return id;
@@ -49,12 +50,21 @@ public class ControllerDto {
         this.buildingId = buildingId;
     }
 
+    public String getBuildingName() {
+        return buildingName;
+    }
+
+    public void setBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+    }
+
     public void wrap(Controller c) {
         this.id = c.getId();
         this.name = c.getName();
         this.ipv4 = c.getIpv4();
         this.description = c.getDescription();
         this.buildingId = c.getBuilding().getId();
+        this.buildingName = c.getBuilding().getName();
     }
 
     public static ControllerDto make(Controller c) {

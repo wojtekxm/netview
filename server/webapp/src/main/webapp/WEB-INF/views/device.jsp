@@ -70,24 +70,32 @@
     <button type="button" id="onclick5">Rok</button>
     <br/>
     <div id="wykresy">
-        <canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>
+        <canvas id="mycanvas" width="1000px" height="500px" style="border:0 solid #bce8f1;"></canvas>
     </div>
+</div>
+
 
 
 
 
     <style>
-        #mycanvas {
-            width: 100% !important;
-            max-width: 5000px !important;
-            height: auto !important;
-            image-rendering: -moz-crisp-edges; /* Firefox */
-            image-rendering: -o-crisp-edges; /* Opera */
-            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
-            image-rendering: crisp-edges;
-            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+        <%-- #mycanvas {
+             width: 100% !important;
+             max-width: 5000px !important;
+             height: auto !important;
+             image-rendering: -moz-crisp-edges; /* Firefox */
+             image-rendering: -o-crisp-edges; /* Opera */
+             image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+             image-rendering: crisp-edges;
+             -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+         } --%>
+        #wykresy{
+            max-height: 500px;
+            max-width: 100%;
+            overflow:scroll;
+
         }
-    </style>
+     </style>
 
     <script>
 
@@ -143,9 +151,39 @@
         function generateChart(mycanvas, id,timestamp,timestamp2,range,etykieta,frequency) {
             var request = new XMLHttpRequest();
             $('#mycanvas').remove();
-            $('#wykresy').append('<canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>');
+            $('#wykresy').append('<canvas id="mycanvas" width="5000px" height="500px" style="border:0 solid #bce8f1;"></canvas>');
             mycanvas = document.querySelector('#mycanvas');
+            Chart.Controller.prototype.getElementsAtEvent = function(e) {
+                var helpers = Chart.helpers;
+                var eventPosition = helpers.getRelativePosition(e, this.chart);
+                var elementsArray = [];
 
+                var found = (function() {
+                    if (this.data.datasets) {
+                        for (var i = 0; i < this.data.datasets.length; i++) {
+                            if (helpers.isDatasetVisible(this.data.datasets[i])) {
+                                for (var j = 0; j < this.data.datasets[i].metaData.length; j++) {
+                                    if (this.data.datasets[i].metaData[j].inLabelRange(eventPosition.x, eventPosition.y)) {
+                                        return this.data.datasets[i].metaData[j];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }).call(this);
+
+                if (!found) {
+                    return elementsArray;
+                }
+
+                helpers.each(this.data.datasets, function(dataset, dsIndex) {
+                    if (helpers.isDatasetVisible(dataset)) {
+                        elementsArray.push(dataset.metaData[found._index]);
+                    }
+                });
+
+                return elementsArray;
+            };
             var tags = [];      //WSZYSTKO
             var values_avg = [];    //WSZYSTKO
             var values_min = [];    //WSZYSTKO
@@ -158,13 +196,16 @@
                     mode:'x'
 
                 },
-                label: {display: false},
+                label: {display: true},
                 scales: {
                     xAxes: [{
                         display:true,
                         barPercentage:1,
                         autoSkip: false,
-                        maxRotation: 0,
+                        ticks: {
+                            maxRotation: 70 // angle in degrees
+                        }
+
                     }],
 
                     yAxes: [{
@@ -172,9 +213,8 @@
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: 'Ilosc klientów',
-                        },
-                        gridLines:{color: "rgba(1,255,1,0.2)"}
+                            labelString: 'Ilosc klientów'
+                        }
                         ,
                         ticks: {
                             ticks: {
@@ -186,8 +226,7 @@
                             }
                         }}]
                 },
-                responsive: true,
-                scaleLineColor: 'black',
+                responsive: false,
                 steppedLine: true,
                 elements: {line: {tension: 0}}
             };
@@ -201,45 +240,34 @@
             gradient.addColorStop(1, 'green');
 
             var data = {
+                showLine:false,
                 labels: tags,
                 datasets: [{
                     label: "Minimalna ilosc",
                     data: values_min,
-                    fill: false,
-                    pointRadius:2,
-                    borderColor:"rgba(255,0,0,1)",
-                    fillColor: "rgba(255,0,0,1)",
-                    strokeColor: "rgba(255,0,0,1)",
-                    pointColor: "rgba(255,0,0,1)",
-                    backgroundColor: "rgba(255,0,0,1)",
-                    borderWidth: 3,
+                    fill:false,
+                    borderColor:"rgba(0,255,0,1)",
+                    backgroundColor: "rgba(0,255,0,1)",
+                    borderWidth: 0,
+                    pointWidth:0,
+                    pointBorderWidth:0,
                     hoverBackgroundColor:"rgba(0,0,0,1)"
 
                 },{
                     label: "Srednia ilosc",
                     data: values_avg,
                     fill: false,
-                    pointRadius:2,
-                    borderColor:"rgba(255,255,0,1)",
-                    fillColor: "rgba(255,255,0,1)",
-                    strokeColor: "rgba(255,255,0,1)",
-                    pointColor: "rgba(255,255,0,1)",
-                    backgroundColor: "rgba(255,255,0,1)",
-                    borderWidth: 3,
+                    borderColor:"rgba(255,155,0,1)",
+                    backgroundColor: "rgba(255,200,0,1)",
+                    borderWidth: 0,
                     hoverBackgroundColor:"rgba(0,0,0,1)"
 
                 },{
                     label: "Maksymalna ilosc",
                     data: values_max,
                     fill: false,
-                    pointRadius:2,
-                    borderColor:"rgba(0,255,0,1)",
-                    fillColor: "rgba(0,255,0,1)",
-                    strokeColor: "rgba(0,255,0,1)",
-                    pointColor: "rgba(0,255,0,1)",
-                    backgroundColor: "rgba(0,255,0,1)",
-                    borderWidth: 3,
-                    hoverBackgroundColor:"rgba(0,0,0,1)"
+                    backgroundColor: "rgba(8, 139, 41,1)",
+                    hoverBackgroundColor:"rgba(8, 139, 41,1)"
                 }
 
                 ]
@@ -275,7 +303,7 @@
                     tags.push(convert(Number(jsondata.list[i].timeStart)));
                     console.log("______________________________");
                 }
-                var myFirstChart = Chart.Bar(mycanvas, {data: data, options: options});
+                var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});
 
             };
             request.send();
@@ -284,7 +312,7 @@
     </script>
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/bootstrap-3.3.7.min.js"></script>
-</div>
+
 </body>
 </html>
 

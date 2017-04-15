@@ -115,7 +115,7 @@
                     </tr>
                 </table>
                 <div>
-                    <button id="button_block" class="btn btn-danger" style="float:left;width: 180px;font-size:17px;"><span class="glyphicon glyphicon-exclamation-sign"></span> Zablokuj</button>
+                    <button id="button_block" class="btn btn-danger" style="display:none;float:left;width: 180px;font-size:17px;"><span class="glyphicon glyphicon-exclamation-sign"></span> Zablokuj</button>
                 </div>
             </div>
         </div>

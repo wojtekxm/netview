@@ -63,34 +63,73 @@
 </nav>
 <div id="container">
     <br/> <br/> <br/>
-    <button type="button" id="onclick1">Dzień</button>
-    <button type="button" id="onclick2">Tydzień</button>
-    <button type="button" id="onclick3">Miesiąc</button>
-    <button type="button" id="onclick4">Kwartał</button>
-    <button type="button" id="onclick5">Rok</button>
+    <div id="control">
+        <form action="">
+            <input type="radio" name="range" value="dzien"> Dzien
+            <input type="radio" name="range" value="tydzien"> Tydzien
+            <input type="radio" name="range" value="miesiac"> Miesiac
+            <input type="radio" name="range" value="kwartal"> Kwartal
+            <input type="radio" name="range" value="rok"> Rok
+        </form></br>
+        <form action="">
+            <input type="radio" name="group" value="1"> 5 minut
+            <input type="radio" name="group" value="2"> 30 minut
+            <input type="radio" name="group" value="3"> 3 godziny
+            <input type="radio" name="group" value="4"> dzień
+            <input type="radio" name="group" value="5"> tydzień
+            <input type="radio" name="group" value="6"> miesiąc
+            <input type="radio" name="group" value="7"> rok
+        </form></br>
+        <form action="">
+            <input type="radio" name="type" value="1"> Wykres liniowy
+            <input type="radio" name="type" value="2"> Wykres słupkowy
+        </form></br>
+        <form action="">
+            <input type="radio" name="frequency" value="1"> Częstotliwość 2,4Ghz
+            <input type="radio" name="frequency" value="2"> Częstotliwość 5Ghz
+        </form></br>
+        <button type="button" id="generate">Generuj wykres</button>
+        <button type="button" id="onclick1">Dzień</button>
+
+    </div>
+
     <br/>
     <div id="wykresy">
-        <canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>
+        <canvas id="mycanvas" width="1000px" height="500px" style="border:0 solid #bce8f1;"></canvas>
     </div>
+
+
+</div>
+
 
 
 
 
     <style>
-        #mycanvas {
-            width: 100% !important;
-            max-width: 5000px !important;
-            height: auto !important;
-            image-rendering: -moz-crisp-edges; /* Firefox */
-            image-rendering: -o-crisp-edges; /* Opera */
-            image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
-            image-rendering: crisp-edges;
-            -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+        <%-- #mycanvas {
+             width: 100% !important;
+             max-width: 5000px !important;
+             height: auto !important;
+             image-rendering: -moz-crisp-edges; /* Firefox */
+             image-rendering: -o-crisp-edges; /* Opera */
+             image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+             image-rendering: crisp-edges;
+             -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+         } --%>
+        #wykresy{
+            max-height: 500px;
+            max-width: 100%;
+            overflow:scroll;
+
         }
-    </style>
+     </style>
 
     <script>
-
+        var range1=0;
+        var range2=0;
+        var group=0;
+        var frequency=0;
+        var type=0;
         var now = Date.now();
         var teraz=Math.round(now/1000);
         var doba = Math.round((now - 86400000)/1000);       // dzien
@@ -98,23 +137,94 @@
         var miesiac = Math.round((now - 2629743830)/1000); //30 dni
         var kwartal = Math.round((now - 7889231490)/1000); //90 dni
         var rok = Math.round((now - 31536000000)/1000);   // 365 dni
-        generateChart(mycanvas,  <c:out value="${device.id}"/>,doba,teraz,300,'Wykres roczny 2400 SWIEZY',2400);
+
+        $(document).ready(function() {
+            $('input[type=radio][name=range]').change(function() {
+                if (this.value=='dzien') {
+                    range1=Math.round((Date.now() - 86400000)/1000); console.log("zakres1:" + convert(range1));
+                    range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
+                }
+                if (this.value=='tydzien') {
+                    range1=Math.round((Date.now() - 604800000)/1000); console.log("zakres1:" + convert(range1));
+                    range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
+                }
+                if (this.value=='miesiac') {
+                    range1=Math.round((Date.now() - 2629743830)/1000); console.log("zakres1:" + convert(range1));
+                    range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
+                }
+                if (this.value=='kwartal') {
+                    range1=Math.round((Date.now() - 7889231490)/1000); console.log("zakres1:" + convert(range1));
+                    range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
+                }
+                if (this.value=='rok') {
+                    range1=Math.round((Date.now() - 31536000000)/1000); console.log("zakres1:" + convert(range1));
+                    range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $('input[type=radio][name=group]').change(function() {
+                if (this.value=='1') {
+                    group=300; console.log("okres grupowania:" + group);
+                }
+                if (this.value=='2') {
+                    group=1800; console.log("okres grupowania:" + group);
+                }
+                if (this.value=='3') {
+                    group=10800; console.log("okres grupowania:" + group);
+                }
+                if (this.value=='4') {
+                    group=86400; console.log("okres grupowania:" + group);
+                }
+                if (this.value=='5') {
+                    group=604800; console.log("okres grupowania:" + group);
+                }
+                if (this.value=='6') {
+                    group=2592000; console.log("okres grupowania:" + group);
+                }
+                if (this.value=='7') {
+                    group=31536000; console.log("okres grupowania:" + group);
+                }
+
+
+            });
+        });
+
+        $(document).ready(function() {
+            $('input[type=radio][name=type]').change(function() {
+                if (this.value=='1') {
+                    type="Line"; console.log("Typ wykresu:"+type);
+                }
+                if (this.value=='2') {
+                    type="Bar"; console.log("Typ wykresu:"+type);
+                }
+
+            });
+        });
+
+        $(document).ready(function() {
+            $('input[type=radio][name=frequency]').change(function() {
+                if (this.value=='1') {
+                    frequency=2400; console.log("Czestotliwosc:"+frequency);
+                }
+                if (this.value=='2') {
+                    frequency = 5000;
+                    console.log("Czestotliwosc:" + frequency);
+                }
+            });
+        });
+
+
+        var gnr=document.getElementById("generate");
+        gnr.addEventListener("click", function(){
+            generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type);
+        }
+        );
+        generateChart(mycanvas,  <c:out value="${device.id}"/>,doba,teraz,300,'Wykres dobowy 2400 SWIEZY',2400);
         var btn1=document.getElementById("onclick1");
         btn1.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,doba,teraz,300,'Wykres ' +
             'dzienny pasmo 2,4GHz grupowanie:5min',2400);});
-        var btn2=document.getElementById("onclick2");
-        btn2.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,tydzien,teraz,1800,'Wykres ' +
-            'tygodniowy pasmo 2,4Ghz grupowanie:30min',2400);});
-        var btn3=document.getElementById("onclick3");
-        btn3.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,miesiac,teraz,86400,'Wykres ' +
-            'miesieczny pasmo 2,4Ghz grupowanie:1dzien',2400);});
-        var btn4=document.getElementById("onclick4");
-        btn4.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,kwartal,teraz,259200,'Wykres ' +
-            'kwartalny pasmo 2,4Ghz grupowanie:3dni',2400);});
-        var btn5=document.getElementById("onclick5");
-        btn5.addEventListener("click", function(){generateChart(mycanvas,  <c:out value="${device.id}"/>,rok,teraz,1036800,'Wykres ' +
-            'roczny pasmo 2,4Ghz',2400);});
-
         function convert(time) {
             time=time*1000;
             var temp = new Date(time);
@@ -140,12 +250,11 @@
         console.log("miesiac:" + miesiac);
         console.log("kwartal:" + kwartal);
         console.log("rok:" + rok);
-        function generateChart(mycanvas, id,timestamp,timestamp2,range,etykieta,frequency) {
+        function generateChart(mycanvas, id,timestamp,timestamp2,range,etykieta,frequency,type) {
             var request = new XMLHttpRequest();
             $('#mycanvas').remove();
-            $('#wykresy').append('<canvas id="mycanvas" width="1000px" style="border:0 solid #bce8f1;"></canvas>');
+            $('#wykresy').append('<canvas id="mycanvas" width="3000px" height="500px" style="border:0 solid #bce8f1;"></canvas>');
             mycanvas = document.querySelector('#mycanvas');
-
             var tags = [];      //WSZYSTKO
             var values_avg = [];    //WSZYSTKO
             var values_min = [];    //WSZYSTKO
@@ -158,13 +267,16 @@
                     mode:'x'
 
                 },
-                label: {display: false},
+                label: {display: true},
                 scales: {
                     xAxes: [{
                         display:true,
                         barPercentage:1,
                         autoSkip: false,
-                        maxRotation: 0,
+                        ticks: {
+                            maxRotation: 70 // angle in degrees
+                        }
+
                     }],
 
                     yAxes: [{
@@ -172,9 +284,8 @@
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: 'Ilosc klientów',
-                        },
-                        gridLines:{color: "rgba(1,255,1,0.2)"}
+                            labelString: 'Ilosc klientów'
+                        }
                         ,
                         ticks: {
                             ticks: {
@@ -186,8 +297,7 @@
                             }
                         }}]
                 },
-                responsive: true,
-                scaleLineColor: 'black',
+                responsive: false,
                 steppedLine: true,
                 elements: {line: {tension: 0}}
             };
@@ -201,45 +311,35 @@
             gradient.addColorStop(1, 'green');
 
             var data = {
+                showLine:false,
                 labels: tags,
                 datasets: [{
                     label: "Minimalna ilosc",
                     data: values_min,
-                    fill: false,
-                    pointRadius:2,
+                    fill:false,
                     borderColor:"rgba(255,0,0,1)",
-                    fillColor: "rgba(255,0,0,1)",
-                    strokeColor: "rgba(255,0,0,1)",
-                    pointColor: "rgba(255,0,0,1)",
                     backgroundColor: "rgba(255,0,0,1)",
-                    borderWidth: 3,
+                    borderWidth: 0,
+                    pointWidth:0,
+                    pointBorderWidth:0,
                     hoverBackgroundColor:"rgba(0,0,0,1)"
 
                 },{
                     label: "Srednia ilosc",
                     data: values_avg,
                     fill: false,
-                    pointRadius:2,
-                    borderColor:"rgba(255,255,0,1)",
-                    fillColor: "rgba(255,255,0,1)",
-                    strokeColor: "rgba(255,255,0,1)",
-                    pointColor: "rgba(255,255,0,1)",
-                    backgroundColor: "rgba(255,255,0,1)",
-                    borderWidth: 3,
+                    borderColor:"rgba(255,155,0,1)",
+                    backgroundColor: "rgba(255,200,0,1)",
+                    borderWidth: 0,
                     hoverBackgroundColor:"rgba(0,0,0,1)"
 
                 },{
                     label: "Maksymalna ilosc",
                     data: values_max,
                     fill: false,
-                    pointRadius:2,
-                    borderColor:"rgba(0,255,0,1)",
-                    fillColor: "rgba(0,255,0,1)",
-                    strokeColor: "rgba(0,255,0,1)",
-                    pointColor: "rgba(0,255,0,1)",
-                    backgroundColor: "rgba(0,255,0,1)",
-                    borderWidth: 3,
-                    hoverBackgroundColor:"rgba(0,0,0,1)"
+                    borderColor: "rgba(8, 95, 41,1)",
+                    backgroundColor: "rgba(8, 139, 41,1)",
+                    hoverBackgroundColor:"rgba(8, 139, 41,1)"
                 }
 
                 ]
@@ -275,7 +375,8 @@
                     tags.push(convert(Number(jsondata.list[i].timeStart)));
                     console.log("______________________________");
                 }
-                var myFirstChart = Chart.Bar(mycanvas, {data: data, options: options});
+
+                    var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});
 
             };
             request.send();
@@ -284,7 +385,7 @@
     </script>
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/bootstrap-3.3.7.min.js"></script>
-</div>
+
 </body>
 </html>
 

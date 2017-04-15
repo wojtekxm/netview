@@ -14,6 +14,7 @@
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' type='text/css'>
 </head>
 <body>
+
 <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -98,7 +99,7 @@
                 <ul class="view" style="z-index: 1000;top:0;">
                     <li>
                         <div style="height: 10px;"></div>
-                        <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" data-toggle="toggleFrequency" data-on="5400 Hz" data-off="2400 Hz" data-onstyle="warning" data-offstyle="success"></div>
+                        <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5000 Hz" data-off="2400 Hz" data-onstyle="warning" data-offstyle="success"></div>
                         <ul id="devices" class="panel panel-default" style="min-height:420px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
                     </li>
                 </ul>
@@ -133,14 +134,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="/js/bootstrap-toggle.min.js"></script>
 <script src="/js/status.js"></script>
+<script src="/js/w3data.js"></script>
 
-<script>
-    $(function() {
-        $('#toggleFrequency').bootstrapToggle({
-
-        });
-    })
-</script>
+<%--<script>--%>
+    <%--$(function(){--%>
+        <%--$("#headerDiv").load("header.html");--%>
+    <%--});--%>
+<%--</script>--%>
 
 <script>
     $("#menu-toggle").click(function(e) {
@@ -151,6 +151,8 @@
 
 <script>
     var devices = new Array();
+    var frequency = "2400";
+    var clicked = "all";
     var inter;
 
     function allDevices()
@@ -177,6 +179,7 @@
     }
 
     function e(){
+        clicked = "all";
         clearInterval(interGreen);
         clearInterval(interRed);
         clearInterval(interGrey);
@@ -192,15 +195,28 @@
             var currentDeviceStateDto = devices[i];
             var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
             var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-            if(typeof state2400 === 'undefined') {
-                var sum = 0;
-                var isEnabled = false;
-                var time = 0;
-            }
-            else {
-                var sum = state2400.clients;
-                var isEnabled = state2400.enabled;
-                var time = state2400.timestamp;
+            if(frequency == "2400"){
+                if(typeof state2400 === 'undefined') {
+                    var sum = 0;
+                    var isEnabled = false;
+                    var time = 0;
+                }
+                else {
+                    var sum = state2400.clients;
+                    var isEnabled = state2400.enabled;
+                    var time = state2400.timestamp;
+                }
+            }else if(frequency == "5000"){
+                if(typeof state5000 === 'undefined') {
+                    var sum = 0;
+                    var isEnabled = false;
+                    var time = 0;
+                }
+                else {
+                    var sum = state5000.clients;
+                    var isEnabled = state5000.enabled;
+                    var time = state5000.timestamp;
+                }
             }
             var h = "/device?id=" + currentDeviceStateDto.id;
             var clazz= '';
@@ -259,6 +275,28 @@
 
     allDevices();
     inter = setInterval('allDevices()', 30000);
+</script>
+
+<script>
+    $(function() {
+        $('#toggleFrequency').change(function() {
+            if(frequency == "2400"){
+                frequency = "5000";
+            }else if(frequency == "5000"){
+                frequency = "2400";
+            }
+            if(clicked == "all"){
+                allDevices();
+            }else if(clicked == "green"){
+                onlyGreen();
+            }else if(clicked == "red"){
+                onlyRed();
+            }else if(clicked == "grey"){
+                onlyGrey();
+            }
+
+        })
+    })
 </script>
 
 <script>

@@ -72,16 +72,16 @@
                         <td><c:out value="${controller.name}"/></td>
                     </tr>
                     <tr>
-                        <td>ID</td>
-                        <td><c:out value="${controller.id}"/></td>
-                    </tr>
-                    <tr>
                         <td>IP</td>
                         <td><c:out value="${controller.ipv4}"/></td>
                     </tr>
                     <tr>
                         <td>Opis</td>
                         <td><c:out value="${controller.description}"/></td>
+                    </tr>
+                    <tr onclick="window.document.location='building?id=${controller.buildingId}';">
+                        <td>Budynek</td>
+                        <td><c:out value="${controller.buildingName}"/></td>
                     </tr>
                 </table>
                 <div>

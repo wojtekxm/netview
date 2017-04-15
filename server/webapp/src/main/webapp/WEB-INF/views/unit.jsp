@@ -61,7 +61,7 @@
         <div class="content">
             <div style="height: 10px;"></div>
             <div>
-                <div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> <c:out value="${unit.description}"/>: </div></div>
+                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o jednostce: </div></div>
             </div>
             <div id="devices" class="panel panel-default" style="padding: 15px;">
                 <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
@@ -88,7 +88,7 @@
                                 <input type="submit" value="Usuń" class="form-control btn btn-danger" role="button" style="float:left;height:38px;width:180px;font-size:17px;" >
                             </span>
                     </form>
-                </div>
+                    </div>
 
                 <div class="panel-heading"  style="margin-top: 70px;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
                     Powiązane budynki:
@@ -103,7 +103,7 @@
                         <td>Wysokość geograficzna</td>
                     </tr>
                     <c:forEach items="${buildings}" var="building">
-                        <tr>
+                        <tr onclick="window.document.location='building?id=${building.id}';">
                             <td><c:out value="${building.code}"/></td>
                             <td> <c:out value="${building.name}"/></td>
                             <td> <c:out value="${building.latitude}"/></td>
@@ -115,8 +115,11 @@
                 </table>
 
                 <div>
-                    <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
-                <a href="/remove-unit-all-buildings?id=${unit.id}" class="btn btn-danger" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a></div>
+
+
+                <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
+                <a href="/remove-unit-all-buildings?id=${unit.id}" class="btn btn-danger" role="button" style="float:left;width:180px;font-size:17px;"><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a>
+</div>
             </div>
         </div>
     </div>

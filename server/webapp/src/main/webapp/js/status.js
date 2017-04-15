@@ -1,10 +1,11 @@
 "use strict";
 var devices = new Array();
-
-
-
-
 var interGreen;
+
+// $(document).ready(function(){
+//     $(".navbar-frame").load("header.html");
+// });
+
 
 function onlyGreen()
 {
@@ -31,6 +32,7 @@ function onlyGreen()
 
 
 function green(){
+    clicked = "green";
     clearInterval(inter);
     clearInterval(interRed);
     clearInterval(interGrey);
@@ -46,15 +48,28 @@ function green(){
         var currentDeviceStateDto = devices[i];
         var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
         var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-        if(typeof state2400 === 'undefined') {
-            var sum = 0;
-            var isEnabled = false;
-            var time = 0;
-        }
-        else {
-            var sum = state2400.clients;
-            var isEnabled = state2400.enabled;
-            var time = state2400.timestamp;
+        if(frequency == "2400"){
+            if(typeof state2400 === 'undefined') {
+                var sum = 0;
+                var isEnabled = false;
+                var time = 0;
+            }
+            else {
+                var sum = state2400.clients;
+                var isEnabled = state2400.enabled;
+                var time = state2400.timestamp;
+            }
+        }else if(frequency == "5000"){
+            if(typeof state5000 === 'undefined') {
+                var sum = 0;
+                var isEnabled = false;
+                var time = 0;
+            }
+            else {
+                var sum = state5000.clients;
+                var isEnabled = state5000.enabled;
+                var time = state5000.timestamp;
+            }
         }
 
         var h = "/device?id=" + currentDeviceStateDto.id;
@@ -162,6 +177,7 @@ function onlyRed()
 
 
 function red(){
+    clicked = "red";
     clearInterval(interGreen);
     clearInterval(interGrey);
     clearInterval(inter);
@@ -177,15 +193,28 @@ function red(){
         var currentDeviceStateDto = devices[i];
         var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
         var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-        if(typeof state2400 === 'undefined') {
-            var sum = 0;
-            var isEnabled = false;
-            var time = 0;
-        }
-        else {
-            var sum = state2400.clients;
-            var isEnabled = state2400.enabled;
-            var time = state2400.timestamp;
+        if(frequency == "2400"){
+            if(typeof state2400 === 'undefined') {
+                var sum = 0;
+                var isEnabled = false;
+                var time = 0;
+            }
+            else {
+                var sum = state2400.clients;
+                var isEnabled = state2400.enabled;
+                var time = state2400.timestamp;
+            }
+        }else if(frequency == "5000"){
+            if(typeof state5000 === 'undefined') {
+                var sum = 0;
+                var isEnabled = false;
+                var time = 0;
+            }
+            else {
+                var sum = state5000.clients;
+                var isEnabled = state5000.enabled;
+                var time = state5000.timestamp;
+            }
         }
 
         var h = "/device?id=" + currentDeviceStateDto.id;
@@ -268,6 +297,7 @@ function onlyGrey()
 
 
 function grey(){
+    clicked = "grey";
     clearInterval(inter);
     clearInterval(interGreen);
     clearInterval(interRed);
@@ -283,15 +313,28 @@ function grey(){
         var currentDeviceStateDto = devices[i];
         var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
         var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-        if(typeof state2400 === 'undefined') {
-            var sum = 0;
-            var isEnabled = false;
-            var time = 0;
-        }
-        else {
-            var sum = state2400.clients;
-            var isEnabled = state2400.enabled;
-            var time = state2400.timestamp;
+        if(frequency == "2400"){
+            if(typeof state2400 === 'undefined') {
+                var sum = 0;
+                var isEnabled = false;
+                var time = 0;
+            }
+            else {
+                var sum = state2400.clients;
+                var isEnabled = state2400.enabled;
+                var time = state2400.timestamp;
+            }
+        }else if(frequency == "5000"){
+            if(typeof state5000 === 'undefined') {
+                var sum = 0;
+                var isEnabled = false;
+                var time = 0;
+            }
+            else {
+                var sum = state5000.clients;
+                var isEnabled = state5000.enabled;
+                var time = state5000.timestamp;
+            }
         }
 
         var h = "/device?id=" + currentDeviceStateDto.id;

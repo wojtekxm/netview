@@ -1,6 +1,8 @@
 package zesp03.common.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "controller")
@@ -20,11 +22,14 @@ public class Controller {
     @Column(nullable = false, length = 15)
     private String ipv4;
 
-    @Column(length = 1000)
+    @Column(length = 1000, nullable = false)
     private String description;
 
-    @Column(name = "community_string", length = 255)
+    @Column(name = "community_string", nullable = false)
     private String communityString;
+
+    @OneToMany(mappedBy = "controller", fetch = FetchType.LAZY)
+    private List<Device> deviceList = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -68,5 +73,13 @@ public class Controller {
 
     public void setCommunityString(String communityString) {
         this.communityString = communityString;
+    }
+
+    public List<Device> getDeviceList() {
+        return deviceList;
+    }
+
+    public void setDeviceList(List<Device> deviceList) {
+        this.deviceList = deviceList;
     }
 }

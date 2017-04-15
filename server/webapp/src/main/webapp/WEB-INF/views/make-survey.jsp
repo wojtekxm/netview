@@ -8,6 +8,7 @@
     <title>Nowe badanie</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -53,132 +54,134 @@
         </div>
     </div>
 </nav>
-
-<!-- kill me pls -->
-<%--<div style="margin-top:100px"></div>--%>
-<!-- I'm not a solution -->
-
-<div id="container">
-    <div style="height: 10px;"></div>
-    <div id="progress_area">
+<div class="container">
+    <div style="height: 100px;"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="pull-left">Kontrolery</h4>
+            <div class="pull-right">
+                <button id="btn_examine" class="btn btn-primary pull-right" type="button">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    zaktualizuj wszystkie
+                </button>
+                <div id="examine_progress" class="pull-right" style="min-height:40px; min-width:40px">
+                    <span class="progress-loading"></span>
+                    <span class="progress-success"></span>
+                    <span class="progress-error"></span>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="box" style="display: none">
-        <ul id="list_controllers" class="list-group"></ul>
-        <button id="btn_all"     type="button">zaznacz wszystkie</button>
-        <button id="btn_none"    type="button">odznacz wszystkie</button>
-        <button id="btn_inverse" type="button">odwróć zaznaczenie</button><br>
-        <button id="btn_examine" type="button">zbadaj</button>
+    <div id="main">
+        <div class="progress-loading"></div>
+        <div class="progress-success">
+            <div id="jjj"></div>
+        </div>
+        <div class="progress-error"></div>
     </div>
-
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/tabelka.js"></script>
 <script>
+var app = {};
+(function(){
+    app.controllers = [];
+    app.maxPageItems = 5;
+    app.pageIndex = 0;
+    app.pendingExamine = false;
+
     $(document).ready( function() {
-        $.ajax( {
-            type: 'get',
-            url: '/api/all-controllers',
-            dataType: 'json',
-            success: function(listDtoOfControllerDto) {
-                var i;
-                for(i = 0; i < listDtoOfControllerDto.list.length; i++) {
-                    var controllerRow = listDtoOfControllerDto.list[i];
-                    $('#list_controllers').append(
-                        $('<li></li>')
-                            .addClass('list-group-item row')
-                            .append(
-                                $('<div></div>')
-                                    .addClass('col-sm-1')
-                                    .append(
-                                        $('<input type="checkbox">')
-                                            .prop('checked', true)
-                                    ),
-                                $('<div></div>')
-                                    .addClass('col-sm-2')
-                                    .append(
-                                        $('<a></a>').text(controllerRow.name)
-                                            .attr('href', '/controller?id=' + controllerRow.id)
-                                    ),
-                                $('<div></div>')
-                                    .addClass('col-sm-3')
-                                    .append(
-                                        $('<span></span>').text(controllerRow.ipv4)
-                                    ),
-                                $('<div></div>')
-                                    .addClass('col-sm-6')
-                                    .append(
-                                        '<span></span>',
-                                        ' ',
-                                        '<small></small>'
-                                    )
-                            )
-                            .data('controller_id', controllerRow.id)
-                    );
+        progress.loadGet('/api/controller/details/all', '#main', function(listDtoOfControllerDetailsDto) {
+            app.controllers = listDtoOfControllerDetailsDto.list;
+            for(var i = 0; i < app.controllers.length; i++) {
+                var e = app.controllers[i];
+                var b = e.building;
+                if(b === null) {
+                    e._location = null;
                 }
-                $('#btn_all').click( function() {
-                    $('#list_controllers').find('> li').each( function() {
-                        $(this).find('input').prop('checked', true);
-                    } );
-                } );
-                $('#btn_none').click( function() {
-                    $('#list_controllers').find('> li').each( function() {
-                        $(this).find('input').prop('checked', false);
-                    } );
-                } );
-                $('#btn_inverse').click( function() {
-                    $('#list_controllers').find('> li').each( function() {
-                        var checkbox = $(this).find('input');
-                        if( checkbox.prop('checked') ) {
-                            checkbox.prop('checked', false);
-                        }
-                        else {
-                            checkbox.prop('checked', true);
-                        }
-                    } );
-                } );
-                $('#btn_examine').click( function() {
-                    $('#list_controllers').find('> li').each( function() {
-                        var li = $(this);
-                        var div4 = li.children('div:nth-of-type(4)');
-                        var span = div4.children('span:nth-of-type(1)');
-                        var small = div4.children('small:nth-of-type(1)');
-                        var checkbox = li.find('input');
-                        span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
-                        small.text('');
-                        if(! checkbox.is(':checked') ) {
-                            return;
-                        }
-                        span.addClass('glyphicon glyphicon-hourglass');
-                        $.ajax( {
-                            type: 'post',
-                            url: '/api/examine/' + li.data('controller_id'),
-                            dataType: 'json',
-                            success: function(baseResultDto) {
-                                if(baseResultDto.success) {
-                                    span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
-                                    span.addClass('glyphicon glyphicon-ok-circle');
-                                    small.text(baseResultDto.queryTime.toFixed(2) + ' sek.');
-                                }
-                                else {
-                                    span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
-                                    span.addClass('glyphicon glyphicon-exclamation-sign');
-                                }
-                            },
-                            error: function() {
-                                span.removeClass('glyphicon glyphicon-exclamation-sign glyphicon-hourglass glyphicon-ok-circle');
-                                span.addClass('glyphicon glyphicon-exclamation-sign');
-                            }
-                        } );
-                    } );
-                } );
-                $('#progress_area').hide();
-                $('#box').show(400);
-            },
-            error: function() {
-                $('#progress_area').text('Wystąpił problem');
+                else {
+                    e._location = b.name;
+                }
             }
+            $('#jjj').append(
+                tabelka.create(app.controllers, [
+                    {
+                        "label" : 'nazwa',
+                        "comparator" : util.comparatorText('name'),
+                        "extractor" : function(controllerDetailsDto) {
+                            return $('<a></a>')
+                                .attr('href', '/controller?id=' + encodeURI(controllerDetailsDto.id))
+                                .text(controllerDetailsDto.name);
+                        }
+                    },
+                    {
+                        "label" : 'IP',
+                        "comparator" : util.comparatorText('ipv4'),
+                        "extractor" : function(controllerDetailsDto) {
+                            return $('<span></span>').text(controllerDetailsDto.ipv4);
+                        }
+                    },
+                    {
+                        "label" : 'opis',
+                        "comparator" : util.comparatorText('description'),
+                        "extractor" : function(controllerDetailsDto) {
+                            return $('<span></span>').text(controllerDetailsDto.description);
+                        }
+                    },
+                    {
+                        "label" : 'community string',
+                        "comparator" : util.comparatorText('communityString'),
+                        "extractor" : function(controllerDetailsDto) {
+                            return $('<span></span>').text(controllerDetailsDto.communityString);
+                        }
+                    },
+                    {
+                        "label" : 'liczba urządzeń',
+                        "comparator" : util.comparatorNumber('numberOfDevices'),
+                        "extractor" : function(controllerDetailsDto) {
+                            return $('<span></span>').text(controllerDetailsDto.numberOfDevices);
+                        }
+                    },
+                    {
+                        "label" : 'lokalizacja',
+                        "comparator" : util.comparatorText('_location'),
+                        "extractor" : function(controllerDetailsDto) {
+                            var b = controllerDetailsDto.building;
+                            if(b === null) {
+                                return $('<span></span>').text('-');
+                            }
+                            else {
+                                return $('<a></a>')
+                                    .attr('href', '/building?id=' + encodeURI(b.id))
+                                    .text(b.name);
+                            }
+                        }
+                    }
+                ])
+            );
+            var btnExamine = $('#btn_examine');
+            btnExamine.click(function(){
+                if(app.pendingExamine)return;
+                app.pendingExamine = true;
+                btnExamine.prop('disabled', true);
+                progress.loadPost('/api/examine-all', '#examine_progress', function() {
+                        app.pendingExamine = false;
+                        btnExamine.prop('disabled', false);
+                        progress.loadGet('/api/controller/details/all', '#main', function(listDtoOfControllerDetailsDto) {
+                            app.controllers = listDtoOfControllerDetailsDto.list;
+                            app.refresh();
+                        });
+                    },
+                    function() {
+                        app.pendingExamine = false;
+                        btnExamine.prop('disabled', false);
+                    });
+            });
         } );
     } );
+})();
 </script>
 </body>
 </html>

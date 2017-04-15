@@ -177,7 +177,7 @@
             if( isNaN(obj.numberOfSurveys) )return;
             $submitButton.prop('disabled', true);
             $progressArea.empty();
-            $progressArea.append( createProgressCircle() );
+            $progressArea.append( progress.createCircle() );
             $.ajax( {
                 "url": '/api/import/fake-surveys',
                 "type": 'post',

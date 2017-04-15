@@ -207,11 +207,8 @@
             var argId = $('#textfield').val();
             $.ajax({
                 type: 'GET',
-                url: '/api/controller',
+                url: '/api/controller/' + argId,
                 dataType: 'json',
-                data: {
-                    id: argId
-                },
                 success: function (data) {
                     $("#result > *").remove();
                     $("#result").append(
@@ -272,7 +269,7 @@
             );
             $.ajax({
                 type: 'GET',
-                url: '/api/all-controllers',
+                url: '/api/controller/all',
                 dataType: 'json',
                 success: function (data) {
                     $("#result > *").remove();

@@ -2,11 +2,14 @@ body
 {
     padding: 0px;
     margin:0px;
-    font-family: 'Josefin Sans', sans-serif;
     font-size:14px;
     background-attachment: scroll;
     background-size:contain;
     background-color: white;
+}
+
+.navbar {
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 #container

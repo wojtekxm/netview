@@ -10,6 +10,7 @@ import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.BuildingRepository;
 import zesp03.common.repository.ControllerRepository;
 import zesp03.common.util.IPv4;
+import zesp03.webapp.dto.ControllerDetailsDto;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.input.CreateControllerDto;
 
@@ -41,6 +42,24 @@ public class ControllerServiceImpl implements ControllerService {
             throw new NotFoundException("controller");
         }
         return ControllerDto.make(c);
+    }
+
+    @Override
+    public List<ControllerDetailsDto> getDetailsAll() {
+        List<ControllerDetailsDto> result = new ArrayList<>();
+        for(Controller c : controllerRepository.findAll()) {
+            result.add(ControllerDetailsDto.make(c));
+        }
+        return result;
+    }
+
+    @Override
+    public ControllerDetailsDto getDetailsOne(Long controllerId) {
+        Controller c = controllerRepository.findOne(controllerId);
+        if(c == null) {
+            throw new NotFoundException("controller");
+        }
+        return ControllerDetailsDto.make(c);
     }
 
     @Override

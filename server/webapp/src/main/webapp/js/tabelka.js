@@ -1,3 +1,4 @@
+"use strict";
 var util = {};
 (function(){
     util.comparatorText = comparatorText;

@@ -28,7 +28,8 @@ public class ControllerApi {
     }
 
     @GetMapping("/details/all")
-    public ListDto<ControllerDetailsDto> getDetailsAll() {
+    public ListDto<ControllerDetailsDto> getDetailsAll() throws InterruptedException {
+        Thread.sleep(500);//!
         return ListDto.make( () -> controllerService.getDetailsAll() );
     }
 

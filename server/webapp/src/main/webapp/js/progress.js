@@ -1,3 +1,4 @@
+"use strict";
 var progress = {};
 ( function() {
     progress.createCircle = createCircle;

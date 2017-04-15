@@ -64,7 +64,7 @@
                     <span class="glyphicon glyphicon-refresh"></span>
                     zaktualizuj wszystkie
                 </button>
-                <div id="examine_progress" class="pull-right" style="min-height:40px; min-width:40px">
+                <div id="examine_progress" class="pull-right" style="min-height:45px; min-width:60px">
                     <span class="progress-loading"></span>
                     <span class="progress-success"></span>
                     <span class="progress-error"></span>
@@ -72,11 +72,9 @@
             </div>
         </div>
     </div>
-    <div id="main">
+    <div id="main_progress">
         <div class="progress-loading"></div>
-        <div class="progress-success">
-            <div id="jjj"></div>
-        </div>
+        <div class="progress-success" id="main_success"></div>
         <div class="progress-error"></div>
     </div>
 </div>
@@ -85,100 +83,119 @@
 <script src="/js/progress.js"></script>
 <script src="/js/tabelka.js"></script>
 <script>
-var app = {};
-(function(){
-    app.controllers = [];
-    app.maxPageItems = 5;
-    app.pageIndex = 0;
-    app.pendingExamine = false;
-
-    $(document).ready( function() {
-        progress.loadGet('/api/controller/details/all', '#main', function(listDtoOfControllerDetailsDto) {
-            app.controllers = listDtoOfControllerDetailsDto.list;
-            for(var i = 0; i < app.controllers.length; i++) {
-                var e = app.controllers[i];
-                var b = e.building;
-                if(b === null) {
-                    e._location = null;
+"use strict";
+(function() {
+    var controllers, columnDefinitions, currentTabelka;
+    currentTabelka = null;
+    controllers = [];
+    columnDefinitions = [
+        {
+            "label" : 'nazwa',
+            "comparator" : util.comparatorText('name'),
+            "extractor" : function(controllerDetailsDto) {
+                return $('<a></a>')
+                    .attr('href', '/controller?id=' + encodeURI(controllerDetailsDto.id))
+                    .text(controllerDetailsDto.name);
+            }
+        }, {
+            "label" : 'IP',
+            "comparator" : util.comparatorText('ipv4'),
+            "extractor" : function(controllerDetailsDto) {
+                return $('<span></span>').text(controllerDetailsDto.ipv4);
+            }
+        }, {
+            "label" : 'opis',
+            "comparator" : util.comparatorText('description'),
+            "extractor" : function(controllerDetailsDto) {
+                return $('<span></span>').text(controllerDetailsDto.description);
+            }
+        }, {
+            "label" : 'community string',
+            "comparator" : util.comparatorText('communityString'),
+            "extractor" : function(controllerDetailsDto) {
+                return $('<span></span>').text(controllerDetailsDto.communityString);
+            }
+        }, {
+            "label" : 'liczba urządzeń',
+            "comparator" : util.comparatorNumber('numberOfDevices'),
+            "extractor" : function(controllerDetailsDto) {
+                return $('<span></span>').text(controllerDetailsDto.numberOfDevices);
+            }
+        }, {
+            "label" : 'lokalizacja',
+            "comparator" : util.comparatorText('_location'),
+            "extractor" : function(controllerDetailsDto) {
+                var building = controllerDetailsDto.building;
+                if(building === null) {
+                    return $('<span></span>').text('-');
                 }
                 else {
-                    e._location = b.name;
+                    return $('<a></a>')
+                        .attr('href', '/building?id=' + encodeURI(building.id))
+                        .text(building.name);
                 }
             }
-            $('#jjj').append(
-                tabelka.create(app.controllers, [
-                    {
-                        "label" : 'nazwa',
-                        "comparator" : util.comparatorText('name'),
-                        "extractor" : function(controllerDetailsDto) {
-                            return $('<a></a>')
-                                .attr('href', '/controller?id=' + encodeURI(controllerDetailsDto.id))
-                                .text(controllerDetailsDto.name);
-                        }
-                    },
-                    {
-                        "label" : 'IP',
-                        "comparator" : util.comparatorText('ipv4'),
-                        "extractor" : function(controllerDetailsDto) {
-                            return $('<span></span>').text(controllerDetailsDto.ipv4);
-                        }
-                    },
-                    {
-                        "label" : 'opis',
-                        "comparator" : util.comparatorText('description'),
-                        "extractor" : function(controllerDetailsDto) {
-                            return $('<span></span>').text(controllerDetailsDto.description);
-                        }
-                    },
-                    {
-                        "label" : 'community string',
-                        "comparator" : util.comparatorText('communityString'),
-                        "extractor" : function(controllerDetailsDto) {
-                            return $('<span></span>').text(controllerDetailsDto.communityString);
-                        }
-                    },
-                    {
-                        "label" : 'liczba urządzeń',
-                        "comparator" : util.comparatorNumber('numberOfDevices'),
-                        "extractor" : function(controllerDetailsDto) {
-                            return $('<span></span>').text(controllerDetailsDto.numberOfDevices);
-                        }
-                    },
-                    {
-                        "label" : 'lokalizacja',
-                        "comparator" : util.comparatorText('_location'),
-                        "extractor" : function(controllerDetailsDto) {
-                            var b = controllerDetailsDto.building;
-                            if(b === null) {
-                                return $('<span></span>').text('-');
-                            }
-                            else {
-                                return $('<a></a>')
-                                    .attr('href', '/building?id=' + encodeURI(b.id))
-                                    .text(b.name);
-                            }
-                        }
-                    }
-                ])
-            );
-            var btnExamine = $('#btn_examine');
-            btnExamine.click(function(){
-                if(app.pendingExamine)return;
-                app.pendingExamine = true;
-                btnExamine.prop('disabled', true);
-                progress.loadPost('/api/examine-all', '#examine_progress', function() {
-                        app.pendingExamine = false;
-                        btnExamine.prop('disabled', false);
-                        progress.loadGet('/api/controller/details/all', '#main', function(listDtoOfControllerDetailsDto) {
-                            app.controllers = listDtoOfControllerDetailsDto.list;
-                            app.refresh();
-                        });
-                    },
+        }
+    ];
+
+    function fixControllers() {
+        var i, e, building;
+        for(i = 0; i < controllers.length; i++) {
+            e = controllers[i];
+            building = e.building;
+            if(building === null) {
+                e._location = null;
+            }
+            else {
+                e._location = building.name;
+            }
+        }
+    }
+
+    $(document).ready( function() {
+        progress.loadGet(
+            '/api/controller/details/all',
+            '#main_progress',
+            function(listDtoOfControllerDetailsDto) {
+                var btnExamine, mainSuccess;
+                btnExamine = $('#btn_examine');
+                mainSuccess = $('#main_success');
+                controllers = listDtoOfControllerDetailsDto.list;
+                fixControllers();
+                currentTabelka = tabelka.create(controllers, columnDefinitions);
+                mainSuccess.append(currentTabelka);
+                btnExamine.click(
                     function() {
-                        app.pendingExamine = false;
-                        btnExamine.prop('disabled', false);
-                    });
-            });
+                        btnExamine.prop('disabled', true);
+                        progress.loadPost(
+                            '/api/examine-all',
+                            '#examine_progress',
+                            function() {
+                                progress.loadGet(
+                                    '/api/controller/details/all',
+                                    '#examine_progress',
+                                    function(listDtoOfControllerDetailsDto) {
+                                        btnExamine.prop('disabled', false);
+                                        controllers = listDtoOfControllerDetailsDto.list;
+                                        fixControllers();
+                                        mainSuccess.fadeOut(200, function() {
+                                            mainSuccess.empty();
+                                            currentTabelka = tabelka.create(controllers, columnDefinitions)
+                                            mainSuccess.append(currentTabelka);
+                                            mainSuccess.fadeIn(200);
+                                        });
+                                    },
+                                    function() {
+                                        btnExamine.prop('disabled', false);
+                                    }
+                                );
+                            },
+                            function() {
+                                btnExamine.prop('disabled', false);
+                            }
+                        );
+                    }
+                );
         } );
     } );
 })();

@@ -60,8 +60,8 @@ var tabelka = {};
 (function(){
     tabelka.create = create;
     function create(data, columnDefinitions, optionalPaginationThresold, optionalPageSizes) {
-        var i, k, sortIndex, sortAscending, sortedData, paginationBar, paginationSizeSelect,
-            paginationNavList, pageIndex, pageCapacity, pageSizes,
+        var i, k, tmp, last, sortIndex, sortAscending, sortedData, paginationBar,
+            paginationSizeSelect, paginationNavList, pageIndex, pageCapacity, pageSizes,
             theadRow, tbody, table, div;
         sortIndex = 0;
         sortAscending = true;
@@ -69,43 +69,58 @@ var tabelka = {};
         for(i = 0; i < data.length; i++) {
             sortedData.push(data[i]);
         }
+        sortedData.sort(
+            util.chooseComparator(
+                columnDefinitions[sortIndex].comparator,
+                sortAscending
+            )
+        );
         if(typeof optionalPaginationThresold === 'undefined') {
             optionalPaginationThresold = 10;
         }
         paginationBar = null;
         if(data.length >= optionalPaginationThresold) {
-            paginationBar = $('<div class="row"></div>');
-            paginationSizeSelect = $('<select class="form-control input-sm" style="width: 75px"></select>');
-            paginationNavList = $('<ul class="pagination pull-right" style="margin-top: 0; margin-right: 0"></ul>');
+            paginationBar = $('<div class="row" style="padding-bottom: 10px"></div>');
+            paginationSizeSelect = $('<select class="form-control" style="display: inline-block; max-width: 100px"></select>');
+            paginationNavList = $('<ul class="pagination pull-right" style="margin: 0"></ul>');
             paginationBar.append(
-                $('<div class="col-sm-6 form-inline"></div>').append(
-                    $('<span></span>').text('wyświetlaj po '),
-                    paginationSizeSelect
+                $('<div class="col-xs-6 form-inline"></div>').append(
+                    $('<div class="form-group"></div>').append(
+                        $('<span></span>').text('wyświetlaj po '),
+                        paginationSizeSelect
+                    )
                 ),
-                $('<div class="col-sm-6"></div>').append(
+                $('<div class="col-xs-6"></div>').append(
                     $('<nav></nav>').append(paginationNavList)
                 )
             );
             paginationSizeSelect.change(function() {
                 pageCapacity = parseInt( $(this).val() );
+                pageIndex = 0;
                 refresh();
             });
         }
         if(typeof optionalPageSizes === 'undefined') {
             optionalPageSizes = [10, 25, 50, 100, 250, 500, 1000];
         }
-        pageCapacity = optionalPageSizes[0];
-        pageIndex = 0;
-        pageSizes = [];
+        tmp = [];
         for(i = 0; i < optionalPageSizes.length; i++) {
-            k = optionalPageSizes[i];
-            if(k < 1 || k > data.length)continue;
+            tmp.push(optionalPageSizes[i]);
+        }
+        tmp.push(data.length);
+        pageCapacity = tmp[0];
+        pageIndex = 0;
+        tmp.sort(util.compareNumbers);
+        last = null;
+        pageSizes = [];
+        for(i = 0; i < tmp.length; i++) {
+            k = tmp[i];
+            if(k === last)continue;
+            if(k < 1)continue;
+            if(k > data.length)continue;
             pageSizes.push(k);
+            last = k;
         }
-        if(pageSizes.length === 0) {
-            pageSizes.push(data.length);
-        }
-        pageSizes.sort(util.compareNumbers);
 
         theadRow = $('<tr></tr>');
         tbody = $('<tbody></tbody>');
@@ -153,7 +168,6 @@ var tabelka = {};
                 th.click(
                     { "columnIndex": i },
                     function(event) {
-                        console.log('event.data', event.data);
                         if(event.data.columnIndex === sortIndex) {
                             sortAscending = !sortAscending;
                         }
@@ -161,18 +175,17 @@ var tabelka = {};
                             sortIndex = event.data.columnIndex;
                             sortAscending = true;
                         }
+                        sortedData.sort(
+                            util.chooseComparator(
+                                columnDefinitions[sortIndex].comparator,
+                                sortAscending
+                            )
+                        );
                         refresh();
                     }
                 );
                 theadRow.append(th);
             }
-
-            sortedData.sort(
-                util.chooseComparator(
-                    columnDefinitions[sortIndex].comparator,
-                    sortAscending
-                )
-            );
 
             if(paginationBar !== null) {
                 start = pageIndex * pageCapacity;

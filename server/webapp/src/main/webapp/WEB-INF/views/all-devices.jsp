@@ -29,7 +29,6 @@
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
-                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -57,38 +56,30 @@
 </nav>
 <div class="container">
     <div style="height: 100px;"></div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h4 class="pull-left">Urządzenia</h4>
-            <div class="pull-right">
-                <button id="btn_examine" class="btn btn-primary pull-right" type="button">
-                    <span class="glyphicon glyphicon-refresh"></span>
-                    zaktualizuj wszystkie
-                </button>
-                <div id="examine_progress" class="pull-right" style="min-height:45px; min-width:60px">
-                    <span class="progress-loading"></span>
-                    <span class="progress-success"></span>
-                    <span class="progress-error"></span>
-                </div>
-            </div>
+    <h4 class="pull-left">Urządzenia</h4>
+    <div class="pull-right">
+        <button id="btn_examine" class="btn btn-primary pull-right" type="button">
+            <span class="glyphicon glyphicon-refresh"></span>
+            zaktualizuj wszystkie
+        </button>
+        <div id="examine_progress" class="pull-right" style="min-height:45px; min-width:60px">
+            <span class="progress-loading"></span>
+            <span class="progress-success"></span>
+            <span class="progress-error"></span>
         </div>
     </div>
-    <div class="row">
-        <div id="main_progress" class="col-sm-12">
-            <div class="progress-loading"></div>
-            <div class="progress-success">
-                <div id="main_success"></div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <a href="/create-device" class="btn btn-success" role="button">
-                            <span class="glyphicon glyphicon-plus"></span>
-                            Dodaj nowe urządzenie
-                        </a>
-                    </div>
-                </div>
+    <div id="main_progress">
+        <div class="progress-loading"></div>
+        <div class="progress-success">
+            <div id="main_success"></div>
+            <div>
+                <a href="/create-device" class="btn btn-success" role="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Dodaj nowe urządzenie
+                </a>
             </div>
-            <div class="progress-error"></div>
         </div>
+        <div class="progress-error"></div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
@@ -105,47 +96,23 @@
         {
             "label" : 'nazwa',
             "comparator" : util.comparatorText('name'),
-            "extractor" : function(deviceDetailsDto) {
-                return $('<a></a>')
-                    .attr('href', '/device?id=' + encodeURI(deviceDetailsDto.id))
-                    .text(deviceDetailsDto.name);
-            }
+            "extractor" : 'td_name'
         }, {
             "label" : 'opis',
             "comparator" : util.comparatorText('description'),
-            "extractor" : function(deviceDetailsDto) {
-                return $('<span></span>').text(deviceDetailsDto.description);
-            }
+            "extractor" : 'td_description'
         }, {
             "label" : '2,4 GHz',
-            "comparator" : util.comparatorNumber('_2400'),
-            "extractor" : function(deviceDetailsDto) {
-                var freq, survey, span;
-                span = $('<span></span>');
-                freq = deviceDetailsDto.frequency;
-                if(typeof freq['2400'] !== 'undefined') {
-                    survey = freq['2400'];
-                    if(survey === null || !survey.enabled) {
-                        span.text('wył.');
-                    }
-                    else {
-                        span.text(survey.clients);
-                    }
-                }
-                else {
-                    span.text('-');
-                }
-                return span;
-            }
+            "comparator" : util.comparatorNumber('cmp_2400'),
+            "extractor" : 'td_2400'
+        }, {
+            "label" : '5 GHz',
+            "comparator" : util.comparatorNumber('cmp_5000'),
+            "extractor" : 'td_5000'
         }, {
             "label" : 'kontroler',
-            "comparator" : util.comparatorText('_controllerName'),
-            "extractor" : function(deviceDetailsDto) {
-                var c = deviceDetailsDto.controller;
-                return $('<a></a>')
-                    .attr('href', '/controller?id=' + encodeURI(c.id))
-                    .text(c.name);
-            }
+            "comparator" : util.comparatorText('cmp_controller'),
+            "extractor" : 'td_controller'
         }
     ];
 
@@ -155,23 +122,56 @@
             dev = devices[i];
             controller = dev.controller;
             freq = dev.frequency;
-            if(controller === null) {
-                dev._controllerName = null;
-            }
-            else {
-                dev._controllerName = controller.name;
-            }
+
+            dev.td_name = $('<a></a>')
+                .attr('href', '/device?id=' + encodeURI(dev.id))
+                .text(dev.name);
+
+            dev.td_description = $('<span></span>').text(dev.description);
+
+            dev.td_2400 = $('<span></span>');
             if(typeof freq['2400'] !== 'undefined') {
                 survey = freq['2400'];
                 if(survey !== null && survey.enabled) {
-                    dev._2400 = survey.clients;
+                    dev.cmp_2400 = survey.clients;
+                    dev.td_2400.text(survey.clients);
                 }
                 else {
-                    dev._2400 = -1;
+                    dev.cmp_2400 = -1;
+                    dev.td_2400.text('wył.');
                 }
             }
             else {
-                dev._2400 = -2;
+                dev.cmp_2400 = -2;
+                dev.td_2400.text('-');
+            }
+
+            dev.td_5000 = $('<span></span>');
+            if(typeof freq['5000'] !== 'undefined') {
+                survey = freq['5000'];
+                if(survey !== null && survey.enabled) {
+                    dev.cmp_5000 = survey.clients;
+                    dev.td_5000.text(survey.clients);
+                }
+                else {
+                    dev.cmp_5000 = -1;
+                    dev.td_5000.text('wył.');
+                }
+            }
+            else {
+                dev.cmp_5000 = -2;
+                dev.td_5000.text('-');
+            }
+
+            if(controller === null) {
+                dev.cmp_controller = null;
+                dev.td_controller = $('<span></span>').text('-');
+            }
+            else {
+                dev.cmp_controller = controller.name;
+                dev.td_controller = $('<a></a>')
+                    .attr('href', '/controller?id=' + encodeURI(controller.id))
+                    .text(controller.name);
             }
         }
     }

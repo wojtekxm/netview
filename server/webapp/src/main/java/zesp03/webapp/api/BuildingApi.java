@@ -19,7 +19,7 @@ public class BuildingApi {
     @Autowired
     private BuildingService buildingService;
 
-    @GetMapping("/api/all-buildings")
+    @GetMapping("/api/building/all")
     public ListDto<BuildingDto> getAllBuildings() {
         return ListDto.make( () -> buildingService.getAllBuildings() );
     }

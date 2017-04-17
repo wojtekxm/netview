@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -9,7 +8,7 @@
     <title>Użytkownicy</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
-    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/progress.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -29,7 +28,6 @@
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
-                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -55,38 +53,110 @@
         </div>
     </div>
 </nav>
-<div id="all" class="container-fluid">
-    <div id="container">
-        <div class="content">
-            <div style="height: 10px;"></div>
+<div class="container">
+    <div style="height: 100px;"></div>
+    <h4 class="pull-left">Użytkownicy</h4>
+    <div id="main_progress">
+        <div class="progress-loading"></div>
+        <div class="progress-success">
+            <div id="main_success"></div>
             <div>
-                <div id="wydzial">
-                    <div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
-                        <span class="glyphicon glyphicon-user"></span>
-                        Użytkownicy:
-                    </div>
-                </div>
-            </div>
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <c:forEach var="user" items="${list}">
-                    <c:url var="href" value="/user?id=${user.id}"/>
-                    <a href="${href}" class="list-group-item" style="max-width: 300px;">
-                        <span class="glyphicon glyphicon-menu-right"></span>
-                        <c:out value="${user.activated ? user.name : '[' += user.id += ' - konto nieaktywne]'}"/>
-                    </a>
-                </c:forEach>
-                <div>
-                    <a href="/create-user" class="btn btn-success" role="button" style="width: 300px;font-size:17px;">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Dodaj nowego użytkownika
-                    </a>
-                </div>
+                <a href="/create-user" class="btn btn-success" role="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Dodaj nowego użytkownika
+                </a>
             </div>
         </div>
+        <div class="progress-error"></div>
     </div>
 </div>
-
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/tabelka.js"></script>
+<script>
+"use strict";
+(function() {
+    var users, columnDefinitions, currentTabelka;
+    currentTabelka = null;
+    users = [];
+    columnDefinitions = [
+        {
+            "label" : 'nazwa',
+            "comparator" : util.comparatorText('cmp_name'),
+            "extractor" : 'td_name'
+        }, {
+            "label" : 'typ',
+            "comparator" : util.comparatorText('role'),
+            "extractor" : 'td_role'
+        }, {
+            "label" : 'aktywne',
+            "comparator" : util.comparatorNumber('activated'),
+            "extractor" : 'td_activated'
+        }, {
+            "label" : 'zablokowane',
+            "comparator" : util.comparatorNumber('blocked'),
+            "extractor" : 'td_blocked'
+        }
+    ];
+
+    function fixUsers() {
+        var i, u;
+        for(i = 0; i < users.length; i++) {
+            u = users[i];
+
+            if(u.name === null) {
+                u.td_name = $('<a></a>')
+                    .attr('href', '/user?id=' + encodeURI(u.id))
+                    .text('[' + u.id + ']');
+                u.cmp_name = '[' + u.id + ']';
+            }
+            else {
+                u.td_name = $('<a></a>')
+                    .attr('href', '/user?id=' + encodeURI(u.id))
+                    .text(u.name);
+                u.cmp_name = u.name;
+            }
+
+            if(u.role === 'ROOT') {
+                u.td_role = $('<span></span>').text('root');
+            }
+            else {
+                u.td_role = $('<span></span>').text('zwykły');
+            }
+
+            if(u.activated) {
+                u.td_activated = $('<span></span>').text('tak');
+            }
+            else {
+                u.td_activated = $('<span></span>').text('nie');
+            }
+
+            if(u.blocked) {
+                u.td_blocked = $('<span></span>').text('tak');
+            }
+            else {
+                u.td_blocked = $('<span></span>').text('nie');
+            }
+        }
+    }
+
+    $(document).ready( function() {
+        progress.load(
+            'get',
+            '/api/user/all',
+            '#main_progress',
+            function(listDtoOfUserDto) {
+                var mainProgress, mainSuccess;
+                mainProgress = $('#main_progress');
+                mainSuccess = $('#main_success');
+                users = listDtoOfUserDto.list;
+                fixUsers();
+                currentTabelka = tabelka.create(users, columnDefinitions);
+                mainSuccess.append(currentTabelka);
+            } );
+    } );
+})();
+</script>
 </body>
 </html>

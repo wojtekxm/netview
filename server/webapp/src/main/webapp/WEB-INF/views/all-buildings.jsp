@@ -1,6 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -8,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Budynki</title>
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
-
 <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -30,7 +28,6 @@
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
-                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -56,37 +53,72 @@
         </div>
     </div>
 </nav>
-<div id="all" class="container-fluid">
-    <div id="container">
-        <div class="content">
-            <div style="height: 10px;"></div>
+<div class="container">
+    <div style="height: 100px;"></div>
+    <h4 class="pull-left">Budynki</h4>
+    <div id="main_progress">
+        <div class="progress-loading"></div>
+        <div class="progress-success">
+            <div id="main_success"></div>
             <div>
-                <div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-home"></span> Budynki:</div></div>
-            </div>
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <c:forEach items="${list}" var="building">
-                    <c:url var="href" value="/building?id=${building.id}"/>
-
-                    <div>
-                        <a href="${href}" class="list-group-item" style="max-width: 500px;">
-                            <span class="glyphicon glyphicon-menu-right"></span>
-                            <c:out value="${building.code}"/>
-                            <c:out value="${building.name}"/>
-                        </a>
-                    </div>
-
-                </c:forEach>
-                <div>
-                    <a href="/create-building" class="btn btn-success" role="button" style="width: 500px;font-size:17px;">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Dodaj nowy budynek
-                    </a>
-                </div>
+                <a href="/create-building" class="btn btn-success" role="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Dodaj nowy budynek
+                </a>
             </div>
         </div>
+        <div class="progress-error"></div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/tabelka.js"></script>
+<script>
+    "use strict";
+    (function() {
+        var buildings, columnDefinitions, currentTabelka;
+        currentTabelka = null;
+        buildings = [];
+        columnDefinitions = [
+            {
+                "label" : 'nazwa',
+                "comparator" : util.comparatorText('name'),
+                "extractor" : 'td_name'
+            }, {
+                "label" : 'kod',
+                "comparator" : util.comparatorText('code'),
+                "extractor" : 'td_code'
+            }
+        ];
+
+        function fixBuildings() {
+            var i, b;
+            for(i = 0; i < buildings.length; i++) {
+                b = buildings[i];
+                b.td_name = $('<a></a>')
+                    .attr('href', '/building?id=' + encodeURI(b.id))
+                    .text(b.name);
+                b.td_code = $('<span></span>').text(b.code);
+            }
+        }
+
+        $(document).ready( function() {
+            progress.load(
+                'get',
+                '/api/building/all',
+                '#main_progress',
+                function(listDtoOfBuildingDto) {
+                    var mainProgress, mainSuccess;
+                    mainProgress = $('#main_progress');
+                    mainSuccess = $('#main_success');
+                    buildings = listDtoOfBuildingDto.list;
+                    fixBuildings();
+                    currentTabelka = tabelka.create(buildings, columnDefinitions);
+                    mainSuccess.append(currentTabelka);
+                } );
+        } );
+    })();
+</script>
 </body>
 </html>

@@ -51,9 +51,7 @@ var util = {};
 ColumnDefinition: {
     "label" : 'nazwa',
     "comparator" : util.comparatorText('name'),
-    "extractor" : function(row) {
-        return $('<span></span>').text(row.name);
-        }
+    "extractor" : 'td_name'
 }
  */
 var tabelka = {};
@@ -80,19 +78,17 @@ var tabelka = {};
         }
         paginationBar = null;
         if(data.length >= optionalPaginationThresold) {
-            paginationBar = $('<div class="row" style="padding-bottom: 10px"></div>');
-            paginationSizeSelect = $('<select class="form-control" style="display: inline-block; max-width: 100px"></select>');
+            paginationBar = $('<div class="clearfix" style="padding-bottom: 10px"></div>');
+            paginationSizeSelect = $('<select class="form-control" style="display: inline-block; width: 100px"></select>');
             paginationNavList = $('<ul class="pagination pull-right" style="margin: 0"></ul>');
             paginationBar.append(
-                $('<div class="col-xs-6 form-inline"></div>').append(
+                $('<div class="pull-left form-inline"></div>').append(
                     $('<div class="form-group"></div>').append(
                         $('<span></span>').text('wyświetlaj po '),
                         paginationSizeSelect
                     )
                 ),
-                $('<div class="col-xs-6"></div>').append(
-                    $('<nav></nav>').append(paginationNavList)
-                )
+                paginationNavList
             );
             paginationSizeSelect.change(function() {
                 pageCapacity = parseInt( $(this).val() );
@@ -205,7 +201,7 @@ var tabelka = {};
                 for(k = 0; k < columnDefinitions.length; k++) {
                     definition = columnDefinitions[k];
                     tr.append(
-                        $('<td></td>').append( definition.extractor(row) )
+                        $('<td></td>').append( row[definition.extractor] )
                     );
                 }
                 tbody.append(tr);

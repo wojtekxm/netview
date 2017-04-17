@@ -23,7 +23,7 @@ public class User {
     private Boolean blocked;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "ENUM('NORMAL', 'ADMIN', 'ROOT')")
+    @Column(nullable = false, columnDefinition = "ENUM('NORMAL', 'ROOT')")
     private UserRole role;
 
     public Long getId() {

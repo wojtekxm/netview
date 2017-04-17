@@ -27,7 +27,6 @@
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
-                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -99,7 +98,6 @@
                             <c:choose>
                                 <c:when test="${selected.role == 'NORMAL'}"><c:out value="zwykły użytkownik"/></c:when>
                                 <c:when test="${selected.role == 'ROOT'}"><c:out value="root"/></c:when>
-                                <c:otherwise><c:out value="admin"/></c:otherwise>
                             </c:choose>
                         </td>
                     </tr>

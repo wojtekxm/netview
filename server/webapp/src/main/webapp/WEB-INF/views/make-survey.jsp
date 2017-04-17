@@ -72,10 +72,22 @@
             </div>
         </div>
     </div>
-    <div id="main_progress">
-        <div class="progress-loading"></div>
-        <div class="progress-success" id="main_success"></div>
-        <div class="progress-error"></div>
+    <div class="row">
+        <div id="main_progress" class="col-sm-12">
+            <div class="progress-loading"></div>
+            <div class="progress-success">
+                <div id="main_success"></div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a href="/create-controller" class="btn btn-success" role="button">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Dodaj nowy kontroler
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-error"></div>
+        </div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
@@ -153,12 +165,14 @@
     }
 
     $(document).ready( function() {
-        progress.loadGet(
+        progress.load(
+            'get',
             '/api/controller/details/all',
             '#main_progress',
             function(listDtoOfControllerDetailsDto) {
-                var btnExamine, mainSuccess;
+                var btnExamine, mainProgress, mainSuccess;
                 btnExamine = $('#btn_examine');
+                mainProgress = $('#main_progress');
                 mainSuccess = $('#main_success');
                 controllers = listDtoOfControllerDetailsDto.list;
                 fixControllers();
@@ -167,28 +181,24 @@
                 btnExamine.click(
                     function() {
                         btnExamine.prop('disabled', true);
-                        progress.loadPost(
-                            '/api/examine-all',
+                        progress.loadMany(
+                            [ {
+                                "url" : '/api/examine-all',
+                                "optionalPostData" : false
+                            }, {
+                                "url" : '/api/controller/details/all'
+                            } ],
                             '#examine_progress',
-                            function() {
-                                progress.loadGet(
-                                    '/api/controller/details/all',
-                                    '#examine_progress',
-                                    function(listDtoOfControllerDetailsDto) {
-                                        btnExamine.prop('disabled', false);
-                                        controllers = listDtoOfControllerDetailsDto.list;
-                                        fixControllers();
-                                        mainSuccess.fadeOut(200, function() {
-                                            mainSuccess.empty();
-                                            currentTabelka = tabelka.create(controllers, columnDefinitions)
-                                            mainSuccess.append(currentTabelka);
-                                            mainSuccess.fadeIn(200);
-                                        });
-                                    },
-                                    function() {
-                                        btnExamine.prop('disabled', false);
-                                    }
-                                );
+                            function(responses) {
+                                btnExamine.prop('disabled', false);
+                                controllers = responses[1].list;
+                                fixControllers();
+                                mainSuccess.fadeOut(200, function() {
+                                    mainSuccess.empty();
+                                    currentTabelka = tabelka.create(controllers, columnDefinitions)
+                                    mainSuccess.append(currentTabelka);
+                                    mainSuccess.fadeIn(200);
+                                });
                             },
                             function() {
                                 btnExamine.prop('disabled', false);

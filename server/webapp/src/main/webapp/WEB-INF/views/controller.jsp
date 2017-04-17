@@ -79,9 +79,9 @@
                         <td>Opis</td>
                         <td><c:out value="${controller.description}"/></td>
                     </tr>
-                    <tr onclick="window.document.location='building?id=${controller.buildingId}';">
+                    <tr onclick="window.document.location='building?id=${controller.building.id}';">
                         <td>Budynek</td>
-                        <td><c:out value="${controller.buildingName}"/></td>
+                        <td><c:out value="${controller.building.name}"/></td>
                     </tr>
                 </table>
                 <div>

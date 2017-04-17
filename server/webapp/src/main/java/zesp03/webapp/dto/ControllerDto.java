@@ -7,7 +7,6 @@ public class ControllerDto {
     private String name;
     private String ipv4;
     private String description;
-    private String buildingName;
     private String communityString;
     private Long buildingId;
 
@@ -59,14 +58,6 @@ public class ControllerDto {
         this.buildingId = buildingId;
     }
 
-    public String getBuildingName() {
-        return buildingName;
-    }
-
-    public void setBuildingName(String buildingName) {
-        this.buildingName = buildingName;
-    }
-
     public void wrap(Controller c) {
         this.id = c.getId();
         this.name = c.getName();
@@ -75,11 +66,9 @@ public class ControllerDto {
         this.communityString = c.getCommunityString();
         if(c.getBuilding() != null) {
             this.buildingId = c.getBuilding().getId();
-            this.buildingName = c.getBuilding().getName();
         }
         else {
             this.buildingId = null;
-            this.buildingName = null;
         }
     }
 

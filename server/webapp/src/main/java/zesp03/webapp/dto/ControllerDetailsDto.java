@@ -8,8 +8,8 @@ public class ControllerDetailsDto {
     private String ipv4;
     private String description;
     private String communityString;
-    private int numberOfDevices;
     private BuildingDto building;
+    private int numberOfDevices;
 
     public long getId() {
         return id;

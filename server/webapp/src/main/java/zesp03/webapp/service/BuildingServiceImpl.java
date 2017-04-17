@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.entity.Building;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.repository.BuildingRepository;
+import zesp03.common.repository.LinkUnitBuildingRepository;
 import zesp03.webapp.dto.BuildingDetailsDto;
 import zesp03.webapp.dto.BuildingDto;
 import zesp03.webapp.dto.ControllerDto;
@@ -26,6 +27,9 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
     private BuildingRepository buildingRepository;
+
+    @Autowired
+    private LinkUnitBuildingRepository linkUnitBuildingRepository;
 
     @Override
     public List<BuildingDto> getAllBuildings() {
@@ -50,6 +54,22 @@ public class BuildingServiceImpl implements BuildingService {
         if(b == null)
             throw new NotFoundException("building");
         return BuildingDetailsDto.make(b);
+    }
+
+    @Override
+    public List<UnitDto> getUnits(Long buildingId) {
+        Building b = buildingRepository.findOne(buildingId);
+        if(b == null)
+            throw new NotFoundException("building");
+        return b.getLubList()
+                .stream()
+                .map( lub -> UnitDto.make(lub.getUnit()) )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void unlinkUnit(Long buildingId, Long unitId) {
+        linkUnitBuildingRepository.deleteBuildingUnit(buildingId, unitId);
     }
 
     @Override

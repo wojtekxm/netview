@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zesp03.webapp.dto.BuildingDetailsDto;
 import zesp03.webapp.dto.BuildingDto;
+import zesp03.webapp.dto.UnitDto;
+import zesp03.webapp.dto.input.BuildingAndUnitDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -31,6 +33,22 @@ public class BuildingApi {
     public ContentDto<BuildingDetailsDto> getDetailsOne(
             @PathVariable("buildingId") long buildingId) {
         return ContentDto.make( () -> buildingService.getDetailsOne(buildingId) );
+    }
+
+    @GetMapping("/api/building/units/{buildingId}")
+    public ListDto<UnitDto> getUnits(
+            @PathVariable("buildingId") long buildingId) {
+        return ListDto.make( () -> buildingService.getUnits(buildingId) );
+    }
+
+    @PostMapping("/api/building/unlink-unit")
+    public BaseResultDto unlinkUnit(
+            @RequestBody BuildingAndUnitDto dto) {
+        return BaseResultDto.make( () ->
+                buildingService.unlinkUnit(
+                        dto.getBuildingId(), dto.getUnitId()
+                )
+        );
     }
 
     @GetMapping("/api/unitsbuildings")

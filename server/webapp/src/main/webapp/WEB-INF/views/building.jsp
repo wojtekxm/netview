@@ -94,6 +94,10 @@
             </div>
             <h4 style="margin-top: 50px">Jednostki organizacyjne powiązane z budynkiem</h4>
             <div id="tabelka_units"></div>
+            <a href="/link-building-all-units?id=${id}" class="btn btn-success" role="button">
+                <span class="glyphicon glyphicon-plus"></span>
+                Połącz z jednostką organizacyjną...
+            </a>
             <h4 style="margin-top: 50px">Kontrolery znajdujące się w budynku</h4>
             <div id="tabelka_controllers"></div>
         </div>
@@ -131,8 +135,36 @@ function fixUnits() {
             .text(u.description);
         u.td_code = $('<span></span>').text(u.code);
         u.td_button = $('<button class="btn btn-danger btn-xs"></button>')
-            .click( function() {
-                //! ...
+            .click( {
+                "unitId" : u.id
+            }, function(event) {
+                var i, buildingAndUnitDto;
+                for(i = 0; i < units.length; i++) {
+                    units[i].td_button.prop('disabled', true);
+                }
+                buildingAndUnitDto = {
+                    "buildingId" : building.id,
+                    "unitId" : event.data.unitId
+                };
+                progress.loadMany(
+                    [ {
+                        "url" : '/api/building/unlink-unit/',
+                        "optionalPostData" : buildingAndUnitDto
+                    }, {
+                        "url" : '/api/building/units/' + encodeURI(building.id)
+                    } ],
+                    '#main_progress',
+                    function(responses) {
+                        var i, tabelkaUnits;
+                        for(i = 0; i < units.length; i++) {
+                            units[i].td_button.prop('disabled', false);
+                        }
+                        units = responses[1].list;
+                        fixUnits();
+                        tabelkaUnits = $('#tabelka_units');
+                        tabelkaUnits.empty();
+                        tabelkaUnits.append(tabelka.create(units, unitDefinitions));
+                    } );
             } ).append(
                 $('<span class="glyphicon glyphicon-minus"></span>')
             );

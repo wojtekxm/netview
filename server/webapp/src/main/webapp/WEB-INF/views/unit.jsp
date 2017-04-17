@@ -102,7 +102,7 @@
                         <td>Wysokość geograficzna</td>
                     </tr>
                     <c:forEach items="${buildings}" var="building">
-                        <tr onclick="window.document.location='building?id=${building.id}';">
+                        <tr onclick="window.document.location='/building/${building.id}';">
                             <td><c:out value="${building.code}"/></td>
                             <td> <c:out value="${building.name}"/></td>
                             <td> <c:out value="${building.latitude}"/></td>

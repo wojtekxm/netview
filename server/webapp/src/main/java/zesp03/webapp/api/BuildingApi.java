@@ -1,12 +1,9 @@
 package zesp03.webapp.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import zesp03.webapp.dto.BuildingDetailsDto;
 import zesp03.webapp.dto.BuildingDto;
-import zesp03.webapp.dto.BuildingUnitsControllersDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -24,22 +21,28 @@ public class BuildingApi {
         return ListDto.make( () -> buildingService.getAllBuildings() );
     }
 
-    @GetMapping("/api/building")
+    @GetMapping("/api/building/{buildingId}")
     public ContentDto<BuildingDto> getBuilding(
-            @RequestParam("id") long id) {
-        return ContentDto.make( () -> buildingService.getOneBuilding(id) );
+            @PathVariable("buildingId") long buildingId) {
+        return ContentDto.make( () -> buildingService.getOneBuilding(buildingId) );
+    }
+
+    @GetMapping("/api/building/details/{buildingId}")
+    public ContentDto<BuildingDetailsDto> getDetailsOne(
+            @PathVariable("buildingId") long buildingId) {
+        return ContentDto.make( () -> buildingService.getDetailsOne(buildingId) );
     }
 
     @GetMapping("/api/unitsbuildings")
-    public ContentDto<BuildingUnitsControllersDto> getUnitsBuildings(
+    public ContentDto<BuildingDetailsDto> getUnitsBuildings(
             @RequestParam("id") long id ) {
         return ContentDto.make( () -> buildingService.getUnitsBuildings(id) );
     }
 
-    @PostMapping(value = "/api/remove-building", consumes = "application/x-www-form-urlencoded")
+    @PostMapping("/api/building/remove/{buildingId}")
     public BaseResultDto remove(
-            @RequestParam("id") long id) {
-        return BaseResultDto.make( () -> buildingService.removeBuilding(id) );
+            @PathVariable("buildingId") long buildingId) {
+        return BaseResultDto.make( () -> buildingService.removeBuilding(buildingId) );
     }
 
     @PostMapping(value = "/api/create-building", consumes = "application/x-www-form-urlencoded")

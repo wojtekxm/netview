@@ -1,0 +1,13 @@
+.info-label {
+    display: block;
+    float: left;
+    width: 200px;
+    font-weight: bold;
+    text-align: left;
+}
+.info-field {
+    display: block;
+    float: left;
+    text-align: left;
+    font-weight: normal;
+}

@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.entity.Building;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.repository.BuildingRepository;
+import zesp03.webapp.dto.BuildingDetailsDto;
 import zesp03.webapp.dto.BuildingDto;
-import zesp03.webapp.dto.BuildingUnitsControllersDto;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.UnitDto;
 
@@ -42,6 +42,14 @@ public class BuildingServiceImpl implements BuildingService {
         if(b == null)
             throw new NotFoundException("building");
         return BuildingDto.make(b);
+    }
+
+    @Override
+    public BuildingDetailsDto getDetailsOne(Long buildingId) {
+        Building b = buildingRepository.findOne(buildingId);
+        if(b == null)
+            throw new NotFoundException("building");
+        return BuildingDetailsDto.make(b);
     }
 
     @Override
@@ -87,8 +95,8 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public BuildingUnitsControllersDto getUnitsBuildings(long id) {
-        BuildingUnitsControllersDto result;
+    public BuildingDetailsDto getUnitsBuildings(long id) {
+        BuildingDetailsDto result;
         List< Object[] > list = em.createQuery( "SELECT b.id, b.code, b.name, b.latitude, b.longitude, u.id, u.code, u.description, c.id, c.name, c.ipv4, c.description, c.building.id " +
                     "FROM LinkUnitBuilding lub " +
                     "INNER JOIN Building b ON lub.building.id = " + id +
@@ -153,7 +161,7 @@ public class BuildingServiceImpl implements BuildingService {
                 }
             }
 
-            result = new BuildingUnitsControllersDto();
+            result = new BuildingDetailsDto();
             result.setBuilding(building);
             result.setUnits(units);
             result.setControllers(controllers);

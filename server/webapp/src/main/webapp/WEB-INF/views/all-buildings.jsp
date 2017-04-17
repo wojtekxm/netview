@@ -9,6 +9,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/progress.css">
+    <link rel="stylesheet" href="/css/tabelka.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -97,7 +98,7 @@
             for(i = 0; i < buildings.length; i++) {
                 b = buildings[i];
                 b.td_name = $('<a></a>')
-                    .attr('href', '/building?id=' + encodeURI(b.id))
+                    .attr('href', '/building/' + encodeURI(b.id))
                     .text(b.name);
                 b.td_code = $('<span></span>').text(b.code);
             }

@@ -79,7 +79,7 @@
 
         <h3>budynki</h3>
         <ol class="list">
-            <c:forEach var="buildingDto" items="${search.buildings}"><li><c:url var="h" value="/building?id=${buildingDto.id}"/>
+            <c:forEach var="buildingDto" items="${search.buildings}"><li><c:url var="h" value="/building/${buildingDto.id}"/>
                 <a href="${h}"><c:out value="${buildingDto.name}"/></a>
             </li>
             </c:forEach>

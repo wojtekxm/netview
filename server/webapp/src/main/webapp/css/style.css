@@ -11,7 +11,7 @@ body
 
 #container
 {  margin-bottom:0px;
-    margin-top: 50px;
+    margin-top: 49px;
     min-width: 200px;
     max-width: 100%;
     min-height: 500px;
@@ -430,6 +430,32 @@ ul li#wydzial
     color:black;font-size:15px;borderdisplay: inline;border-bottom: 1px solid #e0e0e0;padding-bottom: 7px;
 }
 
+#filters-button{
+    width: 100%;
+    height: 29px;
+    font-size:15px;
+    font-weight:bold;
+    line-height: 12px;
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #ededed;
+    border-radius:10px;
+    background-color: #f9f9f9;
+}
+#filters-button:hover{
+    background-color: #efefef;
+}
+
+#filters{
+    /*display: none;*/
+    width: 100%;
+    height: 150px;
+    border: 1px solid #ededed;
+    border-radius:10px;
+}
+
+
 #progress_area {
     border: 4px solid black;
     border-radius: 50%;
@@ -455,3 +481,4 @@ ul li#wydzial
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+

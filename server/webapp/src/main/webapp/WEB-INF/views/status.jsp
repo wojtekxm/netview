@@ -42,7 +42,7 @@
                         <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
                     </ul>
                 </li>
-                <li> <a href="#menu-toggle" id="menu-toggle">Filtry</a></li>
+                <%--<li> <a href="#menu-toggle" id="menu-toggle">Filtry</a></li>--%>
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -58,48 +58,50 @@
     </div>
 </nav>
 
-<div id="wrapper">
-    <!-- Sidebar -->
-    <div id="sidebar-wrapper">
-        <ul class="sidebar-nav" style="background-color: #080b08;font-size: 16px;">
-            <li class="sidebar-brand">
-                <a href="#">
-                    Filtrowanie
-                </a>
-            </li>
-            <li>
-                <a href="#">Kontrolery</a>
-            </li>
-            <li>
-                <a href="#">Budynki</a>
-            </li>
-            <li>
-                <a href="#">Stan</a>
-            </li>
-            <li>
-                <a href="#">Najwięcej użytkowników</a>
-            </li>
-            <li>
-                <a href="#">Najmniej użytkowników</a>
-            </li>
-            <li>
-                <a href="#">Pozdrawiam</a>
-            </li>
-            <li>
-                <a href="#">Kaceper</a>
-            </li>
-        </ul>
-    </div>
-    <!-- /#sidebar-wrapper -->
+<%--<div id="wrapper">--%>
+    <%--<!-- Sidebar -->--%>
+    <%--<div id="sidebar-wrapper">--%>
+        <%--<ul class="sidebar-nav" style="background-color: #080b08;font-size: 16px;">--%>
+            <%--<li class="sidebar-brand">--%>
+                <%--<a href="#">--%>
+                    <%--Filtrowanie--%>
+                <%--</a>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<a href="#">Kontrolery</a>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<a href="#">Budynki</a>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<a href="#">Stan</a>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<a href="#">Najwięcej użytkowników</a>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<a href="#">Najmniej użytkowników</a>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<a href="#">Pozdrawiam</a>--%>
+            <%--</li>--%>
+            <%--<li>--%>
+                <%--<a href="#">Kaceper</a>--%>
+            <%--</li>--%>
+        <%--</ul>--%>
+    <%--</div>--%>
+    <%--<!-- /#sidebar-wrapper -->--%>
 
 
     <div id="all" style="margin: 0">
+        <div style="height: 10px;"></div>
         <div id="container">
             <div id="content">
                 <ul class="view" style="z-index: 1000;top:0;">
                     <li>
-                        <div style="height: 10px;"></div>
                         <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5000 Hz" data-off="2400 Hz" data-onstyle="warning" data-offstyle="success"></div>
+                        <button id="filters-button" type="button" data-toggle="collapse" data-target="#filters"><span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie</button>
+                        <div id="filters" class="collapse"></div>
                         <ul id="devices" class="panel panel-default" style="min-height:420px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
                     </li>
                 </ul>
@@ -128,7 +130,7 @@
             </div>
         </div>
     </div>
-</div>
+<%--</div>--%>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -143,9 +145,9 @@
 <%--</script>--%>
 
 <script>
-    $("#menu-toggle").click(function(e) {
+    $("#filters-button").click(function(e) {
         e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
+        $(".filters").toggleClass("toggled");
     });
 </script>
 

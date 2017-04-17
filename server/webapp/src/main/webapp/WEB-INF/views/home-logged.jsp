@@ -17,7 +17,6 @@
         <span class="label label-default"><c:choose
             ><c:when test="${loggedUser.role eq 'ROOT'}">root</c:when
             ><c:when test="${loggedUser.role eq 'NORMAL'}">zwykły użytkownik</c:when
-            ><c:otherwise>administrator</c:otherwise
         ></c:choose></span>
     </h1>
     <h1>Network Monitor</h1>
@@ -41,19 +40,12 @@
                     <span class="label label-default">status-small</span>
                 </a>
             </li>
-            <c:if test="${loggedUser.role == 'ROOT' or loggedUser.role == 'ADMIN'}"><li>
-                <a href="/make-survey">
-                    nowe badania sieci
-                    <span class="label label-default">make-survey</span>
-                </a>
-            </li>
             <li>
                 <a href="/create-controller">
                     nowy kontroler
                     <span class="label label-default">create-controller</span>
                 </a>
             </li>
-            </c:if>
             <li>
                 <a href="/all-controllers">
                     kontrolery

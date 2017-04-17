@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
         if(userName == null || userName.isEmpty()) {
             throw new ValidationException("username", "empty root username");
         }
-        em.createQuery("UPDATE User u SET u.role = 'ADMIN' WHERE u.role = 'ROOT'")
+        em.createQuery("UPDATE User u SET u.role = 'NORMAL' WHERE u.role = 'ROOT'")
                 .executeUpdate();
         List<User> list = userRepository.findByName(userName);
         User u;

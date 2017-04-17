@@ -2,13 +2,14 @@ package zesp03.webapp.dto;
 
 import zesp03.common.entity.Controller;
 
-public class ControllerDto {
+public class ControllerDetailsDto {
     private long id;
     private String name;
     private String ipv4;
     private String description;
     private String communityString;
-    private Long buildingId;
+    private BuildingDto building;
+    private int numberOfDevices;
 
     public long getId() {
         return id;
@@ -26,20 +27,20 @@ public class ControllerDto {
         this.name = name;
     }
 
-    public String getIpv4() {
-        return ipv4;
-    }
-
-    public void setIpv4(String ipv4) {
-        this.ipv4 = ipv4;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getIpv4() {
+        return ipv4;
+    }
+
+    public void setIpv4(String ipv4) {
+        this.ipv4 = ipv4;
     }
 
     public String getCommunityString() {
@@ -50,12 +51,20 @@ public class ControllerDto {
         this.communityString = communityString;
     }
 
-    public Long getBuildingId() {
-        return buildingId;
+    public int getNumberOfDevices() {
+        return numberOfDevices;
     }
 
-    public void setBuildingId(Long buildingId) {
-        this.buildingId = buildingId;
+    public void setNumberOfDevices(int numberOfDevices) {
+        this.numberOfDevices = numberOfDevices;
+    }
+
+    public BuildingDto getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(BuildingDto building) {
+        this.building = building;
     }
 
     public void wrap(Controller c) {
@@ -64,16 +73,17 @@ public class ControllerDto {
         this.ipv4 = c.getIpv4();
         this.description = c.getDescription();
         this.communityString = c.getCommunityString();
+        this.numberOfDevices = c.getDeviceList().size();
         if(c.getBuilding() != null) {
-            this.buildingId = c.getBuilding().getId();
+            this.building = BuildingDto.make(c.getBuilding());
         }
         else {
-            this.buildingId = null;
+            this.building = null;
         }
     }
 
-    public static ControllerDto make(Controller c) {
-        ControllerDto dto = new ControllerDto();
+    public static ControllerDetailsDto make(Controller c) {
+        ControllerDetailsDto dto = new ControllerDetailsDto();
         dto.wrap(c);
         return dto;
     }

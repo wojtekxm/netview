@@ -133,3 +133,19 @@
     0%, 39%, 100% { opacity: 0; }
     40% { opacity: 1; }
 }
+
+.progress-loading {
+    display: none;
+}
+
+.progress-success {
+    display: none;
+}
+
+.progress-error {
+    display: none;
+}
+
+span.span-link {
+    cursor: pointer;
+}

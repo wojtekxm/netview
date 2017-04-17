@@ -65,6 +65,7 @@ public class App {
                     getProperty("zesp03.mysql.url"),
                     getProperty("zesp03.flyway.user"),
                     getProperty("zesp03.flyway.password") );
+            f.setEncoding("UTF-8");
             if(clean)f.clean();
             if(migrate)f.migrate();
         }

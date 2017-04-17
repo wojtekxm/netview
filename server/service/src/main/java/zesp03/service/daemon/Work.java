@@ -22,7 +22,7 @@ public class Work {
         Thread t = new Thread(() -> shutdown = true);
         Runtime.getRuntime().addShutdownHook(t);
         while(!shutdown) {
-            final int WAIT_SECONDS = 10;
+            final int WAIT_SECONDS = 300;
             final Instant t0 = Instant.now();
             final int updatedDevices = surveySavingService.examineAll();
             final Instant t1 = Instant.now();

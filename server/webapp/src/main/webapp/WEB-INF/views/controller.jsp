@@ -28,7 +28,6 @@
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
-                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -79,9 +78,9 @@
                         <td>Opis</td>
                         <td><c:out value="${controller.description}"/></td>
                     </tr>
-                    <tr onclick="window.document.location='building?id=${controller.buildingId}';">
+                    <tr onclick="window.document.location='building?id=${controller.building.id}';">
                         <td>Budynek</td>
-                        <td><c:out value="${controller.buildingName}"/></td>
+                        <td><c:out value="${controller.building.name}"/></td>
                     </tr>
                 </table>
                 <div>

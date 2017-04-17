@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zesp03.common.repository.DeviceRepository;
 import zesp03.webapp.dto.CurrentDeviceStateDto;
+import zesp03.webapp.dto.DeviceDetailsDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -19,13 +20,18 @@ public class DeviceApi {
 
     @GetMapping("/api/all-devices")
     public ListDto<CurrentDeviceStateDto> getAll() {
-        return ListDto.make( () -> commonServiceWrapper.checkAllDevices() );
+        return ListDto.make( () -> commonServiceWrapper.checkAll() );
+    }
+
+    @GetMapping("/api/device/details/all")
+    public ListDto<DeviceDetailsDto> getDetailsAll() {
+        return ListDto.make( () -> commonServiceWrapper.checkDetailsAll() );
     }
 
     @GetMapping("/api/device")
     public ContentDto<CurrentDeviceStateDto> getOne(
             @RequestParam("id") long deviceId) {
-        return ContentDto.make( () -> commonServiceWrapper.checkOneDevice(deviceId) );
+        return ContentDto.make( () -> commonServiceWrapper.checkOne(deviceId) );
     }
 
     @PostMapping(value = "/api/device/remove/{deviceId}")

@@ -179,15 +179,15 @@ INSERT INTO link_unit_building (unit_id, building_id) VALUES
   ( (SELECT id FROM unit WHERE code ='9001410000'), (SELECT id FROM building WHERE code = 'DS-11') ),
   ( (SELECT id FROM unit WHERE code ='9002290000'), (SELECT id FROM building WHERE code = 'CM_DS-3') );
 
-INSERT INTO controller (`name`, ipv4, description, building_id) VALUES
-  ('WiFi-2',  '102.102.102.102', 'wifi #2', 1),
-  ('WiFi-3',  '103.103.103.103', 'wifi #3', 2),
-  ('WiFi-5',  '105.105.105.105', NULL, 1),
-  ('WiFi-6',  '106.106.106.106', NULL, 3),
-  ('WiFi-7',  '107.107.107.107', NULL, 5),
-  ('WiFi-10', '110.110.110.110', '', 7),
-  ('WiFi-11', '111.111.111.111', '', 8),
-  ('WiFi-99', '199.199.199.199', '', 7);
+INSERT INTO controller (`name`, ipv4, description, community_string, building_id) VALUES
+  ('WiFi-2',  '102.102.102.102', 'wifi #2', '', NULL),
+  ('WiFi-3',  '103.103.103.103', 'wifi #3', '', NULL),
+  ('WiFi-5',  '105.105.105.105', '', 'abc', 1),
+  ('WiFi-6',  '106.106.106.106', '', '1234!@#$', 3),
+  ('WiFi-7',  '107.107.107.107', '', '', 5),
+  ('WiFi-10', '110.110.110.110', '', '', 7),
+  ('WiFi-11', '111.111.111.111', '', '', 8),
+  ('WiFi-99', '199.199.199.199', '', '', 7);
 
 INSERT INTO `user` (name, secret, is_activated, is_blocked, role) VALUES
   ('adam', NULL, TRUE, TRUE, 'NORMAL');

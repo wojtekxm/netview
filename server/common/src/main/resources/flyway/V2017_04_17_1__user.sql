@@ -1,0 +1,2 @@
+UPDATE `user` SET role='NORMAL' WHERE role='ADMIN';
+ALTER TABLE `user` MODIFY role ENUM('NORMAL', 'ROOT') NOT NULL;

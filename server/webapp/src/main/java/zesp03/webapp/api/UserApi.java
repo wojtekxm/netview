@@ -20,7 +20,7 @@ public class UserApi {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/api/all-users")
+    @GetMapping("/api/user/all")
     public ListDto<UserDto> getAll() {
         return ListDto.make( () -> userService.getAll() );
     }

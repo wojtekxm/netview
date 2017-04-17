@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import zesp03.webapp.dto.ControllerDto;
+import zesp03.webapp.dto.ControllerDetailsDto;
 import zesp03.webapp.service.ControllerService;
 
 @Controller
@@ -17,7 +17,7 @@ public class ControllerPage {
     public String get(
             @RequestParam("id") long id,
             ModelMap model) {
-        ControllerDto dto = controllerService.getOne(id);
+        ControllerDetailsDto dto = controllerService.getDetailsOne(id);
         model.put("controller", dto);
         return "controller";
     }

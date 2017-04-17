@@ -16,7 +16,7 @@ public class UnitApi {
     @Autowired
     private UnitService unitService;
 
-    @GetMapping("/api/all-units")
+    @GetMapping("/api/unit/all")
     public ListDto<UnitDto> getAll() {
         return ListDto.make( () -> unitService.getAll() );
     }

@@ -1,6 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -8,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kontrolery</title>
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
-
 <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -30,7 +28,6 @@
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
-                <li style="max-height:50px;"><a href="/make-survey">Nowe badanie</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -56,36 +53,144 @@
         </div>
     </div>
 </nav>
-<div id="all" class="container-fluid">
-    <div id="container">
-        <div class="content">
-            <div style="height: 10px;"></div>
+<div class="container">
+    <div style="height: 100px;"></div>
+    <h4 class="pull-left">Kontrolery</h4>
+    <div class="pull-right">
+        <button id="btn_examine" class="btn btn-primary pull-right" type="button">
+            <span class="glyphicon glyphicon-refresh"></span>
+            zaktualizuj wszystkie
+        </button>
+        <div id="examine_progress" class="pull-right" style="min-height:45px; min-width:60px">
+            <span class="progress-loading"></span>
+            <span class="progress-success"></span>
+            <span class="progress-error"></span>
+        </div>
+    </div>
+    <div id="main_progress">
+        <div class="progress-loading"></div>
+        <div class="progress-success">
+            <div id="main_success"></div>
             <div>
-                <div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kontorlery:</div></div>
-            </div>
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <c:forEach items="${list}" var="controller">
-                    <c:url var="href" value="/controller?id=${controller.id}"/>
-                    <div>
-                        <a href="${href}" class="list-group-item" style="max-width: 300px;">
-                            <span class="glyphicon glyphicon-menu-right"></span>
-                            <c:out value="${controller.name}"/>
-                            <c:out value="${controller.ipv4}"/>
-                            <c:out value="${controller.description}"/>
-                        </a>
-                    </div>
-                </c:forEach>
-                <div>
-                    <a href="/create-controller" class="btn btn-success" role="button" style="width: 300px;font-size:17px;">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Dodaj nowy kontroler
-                    </a>
-                </div>
+                <a href="/create-controller" class="btn btn-success" role="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Dodaj nowy kontroler
+                </a>
             </div>
         </div>
+        <div class="progress-error"></div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/tabelka.js"></script>
+<script>
+"use strict";
+(function() {
+    var controllers, columnDefinitions, currentTabelka;
+    currentTabelka = null;
+    controllers = [];
+    columnDefinitions = [
+        {
+            "label" : 'nazwa',
+            "comparator" : util.comparatorText('name'),
+            "extractor" : 'td_name'
+        }, {
+            "label" : 'IP',
+            "comparator" : util.comparatorText('ipv4'),
+            "extractor" : 'td_ipv4'
+        }, {
+            "label" : 'opis',
+            "comparator" : util.comparatorText('description'),
+            "extractor" : 'td_description'
+        }, {
+            "label" : 'community string',
+            "comparator" : util.comparatorText('communityString'),
+            "extractor" : 'td_community'
+        }, {
+            "label" : 'liczba urządzeń',
+            "comparator" : util.comparatorNumber('numberOfDevices'),
+            "extractor" : 'td_devices'
+        }, {
+            "label" : 'lokalizacja',
+            "comparator" : util.comparatorText('cmp_location'),
+            "extractor" : 'td_location'
+        }
+    ];
+
+    function fixControllers() {
+        var i, cont, building;
+        for(i = 0; i < controllers.length; i++) {
+            cont = controllers[i];
+            building = cont.building;
+
+            cont.td_name = $('<a></a>')
+                .attr('href', '/controller?id=' + encodeURI(cont.id))
+                .text(cont.name);
+            cont.td_ipv4 = $('<span></span>').text(cont.ipv4);
+            cont.td_description = $('<span></span>').text(cont.description);
+            cont.td_community = $('<span></span>').text(cont.communityString);
+            cont.td_devices = $('<span></span>').text(cont.numberOfDevices);
+
+            if(building === null) {
+                cont.cmp_location = null;
+                cont.td_location = $('<span></span>').text('-');
+            }
+            else {
+                cont.cmp_location = building.name;
+                cont.td_location = $('<a></a>')
+                    .attr('href', '/building?id=' + encodeURI(building.id))
+                    .text(building.name);
+            }
+        }
+    }
+
+    $(document).ready( function() {
+        progress.load(
+            'get',
+            '/api/controller/details/all',
+            '#main_progress',
+            function(listDtoOfControllerDetailsDto) {
+                var btnExamine, mainProgress, mainSuccess;
+                btnExamine = $('#btn_examine');
+                mainProgress = $('#main_progress');
+                mainSuccess = $('#main_success');
+                controllers = listDtoOfControllerDetailsDto.list;
+                fixControllers();
+                currentTabelka = tabelka.create(controllers, columnDefinitions);
+                mainSuccess.append(currentTabelka);
+                btnExamine.click(
+                    function() {
+                        btnExamine.prop('disabled', true);
+                        progress.loadMany(
+                            [ {
+                                "url" : '/api/examine-all',
+                                "optionalPostData" : false
+                            }, {
+                                "url" : '/api/controller/details/all'
+                            } ],
+                            '#examine_progress',
+                            function(responses) {
+                                btnExamine.prop('disabled', false);
+                                controllers = responses[1].list;
+                                fixControllers();
+                                mainSuccess.fadeOut(200, function() {
+                                    mainSuccess.empty();
+                                    currentTabelka = tabelka.create(controllers, columnDefinitions)
+                                    mainSuccess.append(currentTabelka);
+                                    mainSuccess.fadeIn(200);
+                                });
+                            },
+                            function() {
+                                btnExamine.prop('disabled', false);
+                            }
+                        );
+                    }
+                );
+        } );
+    } );
+})();
+</script>
 </body>
 </html>

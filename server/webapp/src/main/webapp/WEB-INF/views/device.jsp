@@ -10,16 +10,18 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"
-            type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js" type="text/javascript"></script>
     <script
             src="https://code.jquery.com/jquery-3.2.0.min.js"
             integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I="
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="/css/progress.css"><link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
+
 <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -70,18 +72,25 @@
                 <input type="radio" name="range" value="miesiac"> Miesiac
                 <input type="radio" name="range" value="kwartal"> Kwartal
                 <input type="radio" name="range" value="rok"> Rok
+                <input type="radio" name="range" value="custom"> Ustawienia niestandardowe
             </form></br>
         </div>
-        <div id="control2"> Okres grupowania danych
+        <div id="control2"> Ustawienia niestandardowe
             <form action="" class="forma">
-                <input type="radio" name="group" value="1"> 5 minut
-                <input type="radio" name="group" value="2"> 30 minut
-                <input type="radio" name="group" value="3"> 3 godziny
-                <input type="radio" name="group" value="4"> dzień
-                <input type="radio" name="group" value="5"> tydzień
-                <input type="radio" name="group" value="6"> miesiąc
-                <input type="radio" name="group" value="7"> rok
-            </form></br>
+                <div class='input-group date' id='datetimepicker1' width="100px">
+                    <input id="time_start" type='text'  data-date-end-date="0d" class="form-control"> Od
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class='input-group date' id='datetimepicker2' width="100px">
+                    <input id="time_end" type='text'  data-date-end-date="0d" class="form-control"> Do
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <button type="button" id="apply">Zatwierdz zmiany</button>
+            </form>
         </div>
         <div id="control3"> Określenie badań z danej częstotliwości
             <form action="" class="forma">
@@ -97,51 +106,42 @@
         </div>
         <div id="control5"> Rozmiary wykresu
             <form action="" class="forma">
-                <input type="text" id="chartSize1"defaultValue="3000" value="3000"> Szerokość wykresu (w px)
-                <input type="text" id="chartSize2"defaultValue="500" value="500"> Wysokość wykresu (w px)
+                <input type="text" id="chartSize1" value="1000"> Szerokość wykresu (w px)
+                <input type="text" id="chartSize2" value="500"> Wysokość wykresu (w px)
             </form></br>
         </div>
     </div>
-
     <button type="button" id="generate">Odswież wykres</button>
-
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/moment-with-locales.min.js"></script>
+    <script src="/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/js/progress.js"></script>
     <br/>
-
     <div id="wykresy">
-        <canvas id="mycanvas" width="1000px" height="600px"></canvas>
-    </div>
-    </br>
-    </br>
-    </br>
-    </br>
-
-
+    <canvas id="mycanvas" width="1000px" height="100px"></canvas>
+    </div></br>
 </div>
 
 
 
-
-
 <style>
-    #control{
-        display: flex;
-        justify-content: space-between;
-        padding: 20px;
-    }
+    .input-group{max-width: 200px;}
+    #control{  display: flex; justify-content: space-between;  padding: 20px;  }
     #control1{display:flex;flex-direction: column;}
     #control2{display:flex;flex-direction: column;}
     #control3{display:flex;flex-direction: column;}
     #control4{display:flex;flex-direction: column;}
     .forma{display:flex;flex-direction: column; margin-bottom:5px; padding:10px;}
-    #wykresy {
-        max-width: 100%;
-
-    }
-
+    #wykresy {max-width: 100%;max-height:80%;  }
 </style>
 
 <script>
+    $(function () {$('#datetimepicker1').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
+    $(function () {$('#datetimepicker2').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
+
     $('#control5').hide();
+    $('#control2').hide();
     var now = Date.now();
     var teraz=Math.round(now/1000);
     var doba = Math.round((now - 86400000)/1000);       // dzien
@@ -151,86 +151,73 @@
     var rok = Math.round((now - 31536000000)/1000);   // 365 dni
     var range1=doba;
     var range2=teraz;
+    var ranged;
     var group=300;
     var frequency=2400;
+    var etykietka="DEFAULT";
     var type="Line";
     var respons="true";
+    var timestamp1,timestamp2;
 
     $(document).ready(function() {
         $('input[type=radio][name=range]').change(function() {
             if (this.value=='dzien') {
+                $('#control2').hide();
+                group=300; console.log("okres grupowania:" + group);
+                etykietka="Wykres dzienny - grupowanie:5 minut";
                 range1=Math.round((Date.now() - 86400000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
             }
             if (this.value=='tydzien') {
+                $('#control2').hide();
+                group=10800; console.log("okres grupowania:" + group);
+                etykietka="Wykres tygodniowy - grupowanie:3 godziny";
                 range1=Math.round((Date.now() - 604800000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
             }
             if (this.value=='miesiac') {
+                $('#control2').hide();
+                group=86400; console.log("okres grupowania:" + group);
+                etykietka="Wykres tygodniowy - grupowanie:1 dzien";
                 range1=Math.round((Date.now() - 2629743830)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
             }
             if (this.value=='kwartal') {
+                $('#control2').hide();
+                group=86400; console.log("okres grupowania:" + group);
+                etykietka="Wykres kwartalny - grupowanie:3 dni";
                 range1=Math.round((Date.now() - 7889231490)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
             }
             if (this.value=='rok') {
+                $('#control2').hide();
+                group=2592000; console.log("okres grupowania:" + group);
+                etykietka="Wykres roczny - grupowanie:1 miesiac";
                 range1=Math.round((Date.now() - 31536000000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+            }
+            if (this.value=='custom') {
+                $('#control2').show();
             }
         });
     });
 
-    $(document).ready(function() {
-        $('input[type=radio][name=group]').change(function() {
-            if (this.value=='1') {
-                group=300; console.log("okres grupowania:" + group);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
-            }
-            if (this.value=='2') {
-                group=1800; console.log("okres grupowania:" + group);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
-            }
-            if (this.value=='3') {
-                group=10800; console.log("okres grupowania:" + group);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
-            }
-            if (this.value=='4') {
-                group=86400; console.log("okres grupowania:" + group);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
-            }
-            if (this.value=='5') {
-                group=604800; console.log("okres grupowania:" + group);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
-            }
-            if (this.value=='6') {
-                group=2592000; console.log("okres grupowania:" + group);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
-            }
-            if (this.value=='7') {
-                group=31536000; console.log("okres grupowania:" + group);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
-            }
-
-
-        });
-    });
 
     $(document).ready(function() {
         $('input[type=radio][name=frequency]').change(function() {
             if (this.value=='1') {
                 frequency=2400; console.log("Czestotliwosc:"+frequency);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
             }
             if (this.value=='2') {
                 frequency = 5000;
                 console.log("Czestotliwosc:" + frequency);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
             }
         });
     });
@@ -241,21 +228,21 @@
                 respons=true; console.log("Responsywny:"+respons);
                 $('#wykresy').css('overflow', 'visible');
                 $('#control5').hide();
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
             }
             if (this.value=='2') {
                 respons=false;
                 console.log("Responsywny:" + respons);
                 $('#wykresy').css('overflow', 'scroll');
                 $('#control5').show();
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
             }
         });
     });
 
     var gnr=document.getElementById("generate");
     gnr.addEventListener("click", function(){
-            generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,'TEST',frequency,type,respons);
+            generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
         }
     );
 
@@ -285,6 +272,7 @@
             Day + " " + MonthName[Month] + " " + Year + " (" + DayName[WeekDay] + ") ";
     }
 
+
     var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
     var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
         "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
@@ -294,14 +282,36 @@
     console.log("miesiac:" + miesiac);
     console.log("kwartal:" + kwartal);
     console.log("rok:" + rok);
+
+var temp;
+    $('#apply').click(
+        function () {
+            tmp1=Math.round(Number($('#datetimepicker1').data('DateTimePicker').date())/1000);
+            tmp2=Math.round(Number($('#datetimepicker2').data('DateTimePicker').date())/1000);
+            ranged=Number($('#zakres').val());
+            console.log("data1 z kalendarza:"+tmp1);
+            console.log("data2 z kalendarza:"+tmp2);
+            temp=Number(Math.round((tmp2-tmp1)/100));
+            etykietka=("Zakres od \n"+convert(tmp1)+"do \n"+convert(tmp2));
+            if (tmp1>=tmp2){alert("Wybrano niepoprawne parametry!!!!");}
+            else{
+                generateChart(mycanvas, <c:out value="${device.id}"/>,tmp1,tmp2,temp,etykietka,frequency,type,respons);
+            }
+
+        }
+    );
+
     function generateChart(mycanvas, id,timestamp,timestamp2,range,etykieta,frequency,type) {
         var request = new XMLHttpRequest();
         var szerokosctmp=Number($('#chartSize1').val())+"px";
         var wysokosctmp=Number($('#chartSize2').val())+"px";
+        console.log("WYSOKOSC:"+wysokosctmp);
+        console.log("SZEROKOSC:"+szerokosctmp);
             $('#mycanvas').remove();
             $('#wykresy').append('<canvas id="mycanvas"</canvas>');
-            $('#mycanvas').css('width',szerokosctmp);
-            $('#mycanvas').css('heigth',wysokosctmp);
+            mycanvas=$('#mycanvas');
+            $('#mycanvas').css({'width':szerokosctmp,'height':wysokosctmp});
+            $('#mycanvas').css({'max-width':szerokosctmp,'max-height':wysokosctmp});
 
         mycanvas = document.querySelector('#mycanvas');
         var tags = [];      //WSZYSTKO
@@ -346,19 +356,11 @@
                         }
                     }}]
             },
+            maintainAspectRatio:false,
             responsive: respons,
             steppedLine: true,
             elements: {line: {tension: 0}}
         };
-
-        var ctx = mycanvas.getContext("2d");
-        var gradient = ctx.createLinearGradient(300, 0, 300, 600);
-        gradient.addColorStop(0, 'black');
-        gradient.addColorStop(0.25, 'red');
-        gradient.addColorStop(0.5, 'orange');
-        gradient.addColorStop(0.75, 'yellow');
-        gradient.addColorStop(1, 'green');
-
         var data = {
             showLine:false,
             labels: tags,
@@ -403,28 +405,24 @@
         var min_tmp,avg_tmp,max_tmp,tags_tmp;
         request.onload = function () {
             var jsondata = JSON.parse(request.responseText);
-            var jsondata_txt = JSON.stringify(jsondata);
-            console.log(jsondata_txt);
+            //console.log(JSON.stringify(jsondata));
             var ilosc=Object.keys(jsondata.list).length;
             console.log("ILOSC:"+ilosc);
             console.log("Czas wczytania:"+jsondata.queryTime);
-            //console.log(Math.round(jsondata.list[1].average)); TESTOWO
-            //console.log(Math.round(jsondata.list[0].min)); TESTOWO
-            console.log(JSON.stringify(jsondata));
 
             for (i = 0; i < ilosc; i++) {
                 avg_tmp=jsondata.list[i].average;
                 min_tmp=jsondata.list[i].min;
                 max_tmp=jsondata.list[i].max;
-                console.log(i+" AVERAGE:"+avg_tmp);
                 values_avg.push(Math.round(avg_tmp));
-                console.log(i+" MIN:"+min_tmp);
                 values_min.push(min_tmp);
-                console.log(i+" MAX:"+max_tmp);
                 values_max.push(max_tmp);
-                console.log(convert(Number(jsondata.list[i].timeStart)));
                 tags.push(convert(Number(jsondata.list[i].timeStart)));
-                console.log("______________________________");
+                <%--console.log(i+" AVERAGE:"+avg_tmp);
+                console.log(i+" MIN:"+min_tmp);
+                console.log(i+" MAX:"+max_tmp);
+                console.log(convert(Number(jsondata.list[i].timeStart)));
+                console.log("______________________________");--%>
             }
             var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});
         };
@@ -434,8 +432,7 @@
         console.log(doba);
     }
 </script>
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap-3.3.7.min.js"></script>
+
 
 </body>
 </html>

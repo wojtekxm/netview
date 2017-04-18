@@ -1,12 +1,25 @@
 package zesp03.webapp.page;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import zesp03.webapp.dto.BuildingDto;
+import zesp03.webapp.service.BuildingService;
+
+import java.util.List;
 
 @Controller
 public class CreateControllerPage {
+    @Autowired
+    private BuildingService buildingService;
+
     @GetMapping("/create-controller")
-    public String get() {
+    public String get( ModelMap model) {
+        List<BuildingDto> list = buildingService.getAllBuildings();
+        model.put("list", list);
         return "create-controller";
     }
 }
+
+

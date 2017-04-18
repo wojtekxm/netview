@@ -55,14 +55,43 @@ public class ControllerApi {
             @RequestParam("name") String name,
             @RequestParam("ipv4") String ipv4,
             @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "communityString", required = false) String communityString,
             @RequestParam(value = "buildingId", required = false) Long buildingId) {
         return BaseResultDto.make( () -> {
             CreateControllerDto dto = new CreateControllerDto();
             dto.setName(name);
             dto.setIpv4(ipv4);
             dto.setDescription(description);
+            dto.setCommunityString(communityString);
             dto.setBuildingId(buildingId);
             controllerService.create(dto);
         } );
     }
+
+//    @GetMapping("/api/modify-controller")
+//    public ContentDto<ControllerDto> modifyController(
+//            @RequestParam("id") long id) {
+//        return ContentDto.make( () -> controllerService.modifyController(id) );
+//    }
+
+//    @PostMapping(value = "/api/accept-modify-controller", consumes = "application/x-www-form-urlencoded")
+//    public BaseResultDto acceptModifyController(
+//            @RequestParam("id") long id,
+//            @RequestParam("name") String name,
+//            @RequestParam("ipv4") String ipv4,
+//            @RequestParam(value = "description", required = false) String description,
+//            @RequestParam(value = "communityString", required = false) String communityString,
+//            @RequestParam(value = "buildingId", required = false) Long buildingId) {
+//        return BaseResultDto.make( () -> {
+//            CreateControllerDto dto = new CreateControllerDto();
+//            dto.setName(name);
+//            dto.setIpv4(ipv4);
+//            dto.setDescription(description);
+//            dto.setCommunityString(communityString);
+//            dto.setBuildingId(buildingId);
+//            controllerService.create(dto);
+//        } );
+//    }
+
+
 }

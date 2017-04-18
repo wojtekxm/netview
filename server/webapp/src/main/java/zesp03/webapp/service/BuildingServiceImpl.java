@@ -81,10 +81,14 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void createBuilding(String code, String name, BigDecimal latitude, BigDecimal longitude) {
+    public void createBuilding(String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude) {
         Building building = new Building();
         building.setCode(code);
         building.setName(name);
+        building.setStreet(street);
+        building.setCity(city);
+        building.setPostalCode(postalCode);
+        building.setNumber(number);
         building.setLatitude(latitude);
         building.setLongitude(longitude);
         em.persist(building);
@@ -99,7 +103,7 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void acceptModify(long id, String code, String name, BigDecimal latitude, BigDecimal longitude) {
+    public void acceptModify(long id, String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude) {
         Building b = em.find(Building.class, id);
 
         if(b == null) {
@@ -110,6 +114,10 @@ public class BuildingServiceImpl implements BuildingService {
 
         b.setCode(code);
         b.setName(name);
+        b.setStreet(street);
+        b.setCity(city);
+        b.setPostalCode(postalCode);
+        b.setNumber(number);
         b.setLatitude(latitude);
         b.setLongitude(longitude);
     }

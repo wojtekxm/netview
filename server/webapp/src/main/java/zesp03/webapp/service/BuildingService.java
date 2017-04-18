@@ -14,9 +14,9 @@ public interface BuildingService {
     List<UnitDto> getUnits(Long buildingId);
     void unlinkUnit(Long buildingId, Long unitId);
     void removeBuilding(long id);
-    void createBuilding(String code, String name, BigDecimal latitude, BigDecimal longitude);
+    void createBuilding(String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude);
     BuildingDto modifyBuilding(long id);
-    void acceptModify(long id, String code, String name, BigDecimal latitude, BigDecimal longitude);
+    void acceptModify(long id, String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude);
     BuildingDetailsDto getUnitsBuildings(long id);
     List<UnitDto> forBuildingPage(long buildingId);
 }

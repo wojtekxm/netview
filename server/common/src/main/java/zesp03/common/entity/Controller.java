@@ -13,7 +13,7 @@ public class Controller {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "building_id")
+    @JoinColumn(name = "building_id", nullable = true)
     private Building building;
 
     @Column(name = "\"name\"", unique = true, nullable = false, length = 85)

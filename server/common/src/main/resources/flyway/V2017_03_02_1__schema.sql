@@ -82,6 +82,10 @@ CREATE TABLE building (
 id BIGINT AUTO_INCREMENT,
 code VARCHAR(20) NOT NULL COLLATE 'utf8_general_ci' UNIQUE,
 name VARCHAR(100) NOT NULL COLLATE 'utf8_general_ci' ,
+street VARCHAR(100) COLLATE 'utf8_general_ci',
+city VARCHAR(100) COLLATE 'utf8_general_ci',
+postal_code VARCHAR(6) COLLATE 'utf8_general_ci',
+number VARCHAR(10) COLLATE 'utf8_general_ci',
 latitude  NUMERIC(8,6),
 longitude NUMERIC(8,6),
 PRIMARY KEY (id)

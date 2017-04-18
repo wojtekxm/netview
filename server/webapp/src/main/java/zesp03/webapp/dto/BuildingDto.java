@@ -6,6 +6,10 @@ public class BuildingDto {
     private long id;
     private String code;
     private String name;
+    private String street;
+    private String city;
+    private String postalCode;
+    private String number;
     private double latitude;
     private double longitude;
 
@@ -33,6 +37,22 @@ public class BuildingDto {
         this.name = name;
     }
 
+    public String getStreet(){return street;}
+
+    public void setStreet(String street) {this.street = street; }
+
+    public String getCity(){return city;}
+
+    public void setCity(String city) {this.city = city; }
+
+    public String getPostalCode(){return postalCode;}
+
+    public void setPostalCode(String postalCode) {this.postalCode = postalCode; }
+
+    public String getNumber(){return number;}
+
+    public void setNumber(String number) {this.number = number; }
+
     public double getLatitude() {
         return latitude;
     }
@@ -53,6 +73,10 @@ public class BuildingDto {
         this.id = b.getId();
         this.code = b.getCode();
         this.name = b.getName();
+        this.street = b.getStreet();
+        this.city = b.getCity();
+        this.postalCode = b.getPostalCode();
+        this.number = b.getNumber();
         this.latitude = b.getLatitude().doubleValue();
         this.longitude = b.getLongitude().doubleValue();
     }

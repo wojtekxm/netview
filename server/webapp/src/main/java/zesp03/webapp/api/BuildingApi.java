@@ -67,9 +67,13 @@ public class BuildingApi {
     public BaseResultDto create(
             @RequestParam("code") String code,
             @RequestParam("name") String name,
+            @RequestParam(value = "street", required = false) String street,
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "postalCode", required = false) String postalCode,
+            @RequestParam(value = "number", required = false) String number,
             @RequestParam("latitude")  BigDecimal latitude,
             @RequestParam("longitude")  BigDecimal longitude) {
-        return BaseResultDto.make( () -> buildingService.createBuilding(code, name, latitude, longitude) );
+        return BaseResultDto.make( () -> buildingService.createBuilding(code, name, street, city, postalCode, number, latitude, longitude) );
     }
 
     @GetMapping("/api/modify-building")
@@ -83,9 +87,13 @@ public class BuildingApi {
             @RequestParam("id") long id,
             @RequestParam("code") String code,
             @RequestParam("name") String name,
+            @RequestParam("street") String street,
+            @RequestParam("city") String city,
+            @RequestParam("postalCode") String postalCode,
+            @RequestParam("number") String number,
             @RequestParam("latitude")  BigDecimal latitude,
             @RequestParam("longitude")  BigDecimal longitude) {
-        return BaseResultDto.make( () -> buildingService.acceptModify(id, code, name, latitude, longitude) );
+        return BaseResultDto.make( () -> buildingService.acceptModify(id, code, name, street, city, postalCode, number, latitude, longitude) );
     }
 }
 

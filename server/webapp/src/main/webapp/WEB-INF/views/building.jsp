@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:url var="href" value="/modify-building?id=${id}"/>
+<c:url var="action" value="/api/building/remove/${id}"/>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -65,13 +67,23 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">Informacje o budynku</div>
                         <ul class="list-group">
-                            <li class="list-group-item clearfix">
-                                <div class="info-label">nazwa</div>
-                                <div class="info-field" id="field_name">123</div>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-4">nazwa</div>
+                                    <div class="col-xs-8" id="field_name"></div>
+                                </div>
                             </li>
-                            <li class="list-group-item clearfix">
-                                <div class="info-label">kod</div>
-                                <div class="info-field" id="field_code">xd</div>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-4">kod</div>
+                                    <div class="col-xs-8" id="field_code"></div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-4">adres</div>
+                                    <div class="col-xs-8" id="field_address"></div>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -213,6 +225,11 @@ progress.load(
         fieldName.text(building.name);
         fieldCode = $('#field_code');
         fieldCode.text(building.code);
+        fieldAddress = $('#field_address');
+        fieldAddress.append(
+            building.street + ' ' + building.number,
+            $('<br>'),
+            building.postalCode + ' ' + building.city);
         fixUnits();
         tabelkaUnits = $('#tabelka_units');
         tabelkaUnits.append(tabelka.create(units, unitDefinitions));

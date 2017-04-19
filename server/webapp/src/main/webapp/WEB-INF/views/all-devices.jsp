@@ -74,7 +74,7 @@
         <div class="progress-success">
             <div id="main_success"></div>
             <div>
-                <a href="/create-device" class="btn btn-success" role="button">
+                <a href="/create-device" class="btn btn-success" role="button" style="width: 200px;">
                     <span class="glyphicon glyphicon-plus"></span>
                     Dodaj nowe urządzenie
                 </a>

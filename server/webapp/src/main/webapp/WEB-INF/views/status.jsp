@@ -9,8 +9,8 @@
     <title>Status sieci</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap-multiselect.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="css/simple-sidebar.css">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' type='text/css'>
 </head>
 <body>
@@ -57,83 +57,66 @@
     </div>
 </nav>
 
-<%--<div id="wrapper">--%>
-    <%--<!-- Sidebar -->--%>
-    <%--<div id="sidebar-wrapper">--%>
-        <%--<ul class="sidebar-nav" style="background-color: #080b08;font-size: 16px;">--%>
-            <%--<li class="sidebar-brand">--%>
-                <%--<a href="#">--%>
-                    <%--Filtrowanie--%>
-                <%--</a>--%>
-            <%--</li>--%>
-            <%--<li>--%>
-                <%--<a href="#">Kontrolery</a>--%>
-            <%--</li>--%>
-            <%--<li>--%>
-                <%--<a href="#">Budynki</a>--%>
-            <%--</li>--%>
-            <%--<li>--%>
-                <%--<a href="#">Stan</a>--%>
-            <%--</li>--%>
-            <%--<li>--%>
-                <%--<a href="#">Najwięcej użytkowników</a>--%>
-            <%--</li>--%>
-            <%--<li>--%>
-                <%--<a href="#">Najmniej użytkowników</a>--%>
-            <%--</li>--%>
-            <%--<li>--%>
-                <%--<a href="#">Pozdrawiam</a>--%>
-            <%--</li>--%>
-            <%--<li>--%>
-                <%--<a href="#">Kaceper</a>--%>
-            <%--</li>--%>
-        <%--</ul>--%>
-    <%--</div>--%>
-    <%--<!-- /#sidebar-wrapper -->--%>
-
-
-    <div id="all" style="margin: 0">
-        <div style="height: 10px;"></div>
-        <div id="container">
-            <div id="content">
-                <ul class="view" style="z-index: 1000;top:0;">
-                    <li>
-                        <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="warning" data-offstyle="success"></div>
-                        <button id="filters-button" type="button" data-toggle="collapse" data-target="#filters"><span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie</button>
-                        <div id="filters" class="collapse"></div>
-                        <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
-                    </li>
-                </ul>
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body" style="font-size: 17px;">
+            <span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:
+        </div>
+    </div>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
+        <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
+    </button>
+    <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
+    <div id="filters" class="collapse">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="font-size: 17px;color:black; padding-top: 12px;"><span class="glyphicon glyphicon-th-large"></span> Pokaż tylko urządzenia ( Kliknij w wybrany stan ) :</h3>
             </div>
-
-            <div class="panel panel-default" style="border-radius: 10px;">
-                <div class="panel-heading">
-                    <div id="data"></div><h3 class="panel-title" style="font-size: 17px;color:black; padding-top: 12px;"><span class="glyphicon glyphicon-th-large"></span> Pokaż tylko urządzenia ( Kliknij w wybrany stan ) :</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                        <div class="btn-group" role="group" onclick="onlyGreen();interGreen = setInterval('onlyGreen()', 10000);">
-                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:16px;"><div id="greenDiode"></div>&emsp;aktywne: &nbsp;&emsp;<span id="countActive"></span></div></button>
-                        </div>
-                        <div class="btn-group" role="group" onclick="onlyRed();interRed = setInterval('onlyRed()', 10000);">
-                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:16px;"><div id="redDiode"></div>&emsp;nieaktywne: &nbsp;&emsp;<span id="countInactive"></span></div></button>
-                        </div>
-                        <div class="btn-group" role="group" onclick="onlyGrey();interGrey = setInterval('onlyGrey()', 10000);">
-                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:16px;"><div id="greyDiode"></div>&emsp;wyłączone: &nbsp;&emsp;<span id="countOff"></span></div></button>
-                        </div>
-                        <div class="btn-group" role="group" onclick="allDevices();inter = setInterval('allDevices()', 10000);">
-                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:16px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;&emsp;<span id="countAll"></span></div></button>
-                        </div>
+            <div class="panel-body">
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                    <div class="btn-group" role="group" onclick="onlyGreen();interGreen = setInterval('onlyGreen()', 10000);">
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:16px;"><div id="greenDiode"></div>&emsp;aktywne: &nbsp;&emsp;<span id="countActive"></span></div></button>
+                    </div>
+                    <div class="btn-group" role="group" onclick="onlyRed();interRed = setInterval('onlyRed()', 10000);">
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:16px;"><div id="redDiode"></div>&emsp;nieaktywne: &nbsp;&emsp;<span id="countInactive"></span></div></button>
+                    </div>
+                    <div class="btn-group" role="group" onclick="onlyGrey();interGrey = setInterval('onlyGrey()', 10000);">
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:16px;"><div id="greyDiode"></div>&emsp;wyłączone: &nbsp;&emsp;<span id="countOff"></span></div></button>
+                    </div>
+                    <div class="btn-group" role="group" onclick="allDevices();inter = setInterval('allDevices()', 10000);">
+                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:16px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;&emsp;<span id="countAll"></span></div></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<%--</div>--%>
+</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div class="container">
+    <div style="height: 10px;"></div>
+    <ul class="view" style="z-index: 1000;top:0;">
+        <li>
+            <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
+        </li>
+    </ul>
+</div>
+
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">Ostatnie badanie przeprowadzono: </div>
+        <div class="panel-body">
+            <div id="data"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7.min.js"></script>>
 <script src="/js/bootstrap-toggle.min.js"></script>
+<script src="/js/bootstrap-multiselect.js"></script>
 <script src="/js/status.js"></script>
 <script src="/js/w3data.js"></script>
 
@@ -155,6 +138,13 @@
     var frequency = "2400";
     var clicked = "all";
     var inter;
+
+
+
+    $(document).ready(function(){
+
+    });
+
 
     function allDevices()
     {
@@ -265,7 +255,7 @@
 
         var date = new Date(time*1000);
         var n = date.toLocaleString();
-        $('#data').replaceWith('Ostatnie badanie sieci przeprowadzono:   ' + n);
+        $('#data').replaceWith(n);
     }
 
     $('#progress_area').show();
@@ -301,6 +291,7 @@
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
+
 
 </body>
 </html>

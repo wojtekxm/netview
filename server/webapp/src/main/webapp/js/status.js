@@ -50,9 +50,7 @@ function green(){
         var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
         if(frequency == "2400"){
             if(typeof state2400 === 'undefined') {
-                var sum = 0;
-                var isEnabled = false;
-                var time = 0;
+                continue;
             }
             else {
                 var sum = state2400.clients;
@@ -61,9 +59,7 @@ function green(){
             }
         }else if(frequency == "5000"){
             if(typeof state5000 === 'undefined') {
-                var sum = 0;
-                var isEnabled = false;
-                var time = 0;
+                continue;
             }
             else {
                 var sum = state5000.clients;
@@ -195,9 +191,7 @@ function red(){
         var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
         if(frequency == "2400"){
             if(typeof state2400 === 'undefined') {
-                var sum = 0;
-                var isEnabled = false;
-                var time = 0;
+                continue;
             }
             else {
                 var sum = state2400.clients;
@@ -206,9 +200,7 @@ function red(){
             }
         }else if(frequency == "5000"){
             if(typeof state5000 === 'undefined') {
-                var sum = 0;
-                var isEnabled = false;
-                var time = 0;
+                continue;
             }
             else {
                 var sum = state5000.clients;
@@ -315,9 +307,7 @@ function grey(){
         var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
         if(frequency == "2400"){
             if(typeof state2400 === 'undefined') {
-                var sum = 0;
-                var isEnabled = false;
-                var time = 0;
+                continue;
             }
             else {
                 var sum = state2400.clients;
@@ -326,9 +316,7 @@ function grey(){
             }
         }else if(frequency == "5000"){
             if(typeof state5000 === 'undefined') {
-                var sum = 0;
-                var isEnabled = false;
-                var time = 0;
+                continue;
             }
             else {
                 var sum = state5000.clients;

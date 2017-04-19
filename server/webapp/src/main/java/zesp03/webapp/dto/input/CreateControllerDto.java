@@ -5,6 +5,7 @@ public class CreateControllerDto {
     private String description;
     private String ipv4;
     private Long buildingId;
+    private String communityString;
 
     public String getName() {
         return name;
@@ -36,5 +37,11 @@ public class CreateControllerDto {
 
     public void setBuildingId(Long buildingId) {
         this.buildingId = buildingId;
+    }
+
+    public String getCommunityString() { return communityString; }
+
+    public void setCommunityString(String communityString) {
+        this.communityString = communityString;
     }
 }

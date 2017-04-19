@@ -50,8 +50,9 @@ var util = {};
 /*
 ColumnDefinition: {
     "label" : 'nazwa',
-    "comparator" : util.comparatorText('name'),
-    "extractor" : 'td_name'
+    "comparator" : util.comparatorText('name'), // or null
+    "extractor" : 'td_name',
+    "optionalCssClass" : 'width1'
 }
  */
 var tabelka = {};
@@ -60,19 +61,13 @@ var tabelka = {};
     function create(data, columnDefinitions, optionalPaginationThresold, optionalPageSizes) {
         var i, k, tmp, last, sortIndex, sortAscending, sortedData, paginationBar,
             paginationSizeSelect, paginationNavList, pageIndex, pageCapacity, pageSizes,
-            theadRow, tbody, table, div;
-        sortIndex = 0;
+            colgroup, theadRow, tbody, table, div;
+        sortIndex = -1;
         sortAscending = true;
         sortedData = [];
         for(i = 0; i < data.length; i++) {
             sortedData.push(data[i]);
         }
-        sortedData.sort(
-            util.chooseComparator(
-                columnDefinitions[sortIndex].comparator,
-                sortAscending
-            )
-        );
         if(typeof optionalPaginationThresold === 'undefined') {
             optionalPaginationThresold = 10;
         }
@@ -120,8 +115,23 @@ var tabelka = {};
 
         theadRow = $('<tr></tr>');
         tbody = $('<tbody></tbody>');
+        colgroup = $('<colgroup></colgroup>');
+        colgroup.append( $('<col span="1" class="width1"/>') );
+        for(i = 0; i < columnDefinitions.length; i++) {
+            if(typeof columnDefinitions[i].optionalCssClass !== 'undefined') {
+                colgroup.append(
+                    $('<col span="1"/>').addClass(columnDefinitions[i].optionalCssClass)
+                );
+            }
+            else {
+                colgroup.append(
+                    $('<col span="1"/>')
+                );
+            }
+        }
         table = $('<table class="table table-striped table-bordered"></table>')
             .append(
+                colgroup,
                 $('<thead></thead>').append(theadRow),
                 tbody
             );
@@ -143,43 +153,46 @@ var tabelka = {};
             );
             for(i = 0; i < columnDefinitions.length; i++) {
                 definition = columnDefinitions[i];
-                th = $('<th style="cursor: pointer"></th>');
+                th = $('<th></th>');
                 th.append(
                     $('<span></span>').text(definition.label)
                 );
-                span = $('<span class="pull-right glyphicon"></span>');
-                if(i === sortIndex) {
-                    th.addClass('active');
-                    if(sortAscending) {
-                        span.addClass('glyphicon-sort-by-attributes');
-                    }
-                    else {
-                        span.addClass('glyphicon-sort-by-attributes-alt');
-                    }
-                }
-                else {
-                    span.addClass('glyphicon glyphicon-sort');
-                }
-                th.append(span);
-                th.click(
-                    { "columnIndex": i },
-                    function(event) {
-                        if(event.data.columnIndex === sortIndex) {
-                            sortAscending = !sortAscending;
+                if(definition.comparator !== null) {
+                    th.attr('style', 'cursor: pointer');
+                    span = $('<span class="pull-right glyphicon"></span>');
+                    if (i === sortIndex) {
+                        th.addClass('active');
+                        if (sortAscending) {
+                            span.addClass('glyphicon-sort-by-attributes');
                         }
                         else {
-                            sortIndex = event.data.columnIndex;
-                            sortAscending = true;
+                            span.addClass('glyphicon-sort-by-attributes-alt');
                         }
-                        sortedData.sort(
-                            util.chooseComparator(
-                                columnDefinitions[sortIndex].comparator,
-                                sortAscending
-                            )
-                        );
-                        refresh();
                     }
-                );
+                    else {
+                        span.addClass('glyphicon glyphicon-sort');
+                    }
+                    th.append(span);
+                    th.click(
+                        { "columnIndex": i },
+                        function(event) {
+                            if(event.data.columnIndex === sortIndex) {
+                                sortAscending = !sortAscending;
+                            }
+                            else {
+                                sortIndex = event.data.columnIndex;
+                                sortAscending = true;
+                            }
+                            sortedData.sort(
+                                util.chooseComparator(
+                                    columnDefinitions[sortIndex].comparator,
+                                    sortAscending
+                                )
+                            );
+                            refresh();
+                        }
+                    );
+                }
                 theadRow.append(th);
             }
 

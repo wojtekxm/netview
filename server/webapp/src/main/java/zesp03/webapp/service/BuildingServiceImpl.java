@@ -6,8 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.entity.Building;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.repository.BuildingRepository;
+import zesp03.common.repository.LinkUnitBuildingRepository;
+import zesp03.webapp.dto.BuildingDetailsDto;
 import zesp03.webapp.dto.BuildingDto;
-import zesp03.webapp.dto.BuildingUnitsControllersDto;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.UnitDto;
 
@@ -27,6 +28,9 @@ public class BuildingServiceImpl implements BuildingService {
     @Autowired
     private BuildingRepository buildingRepository;
 
+    @Autowired
+    private LinkUnitBuildingRepository linkUnitBuildingRepository;
+
     @Override
     public List<BuildingDto> getAllBuildings() {
         return em.createQuery("SELECT b FROM Building b", Building.class)
@@ -45,6 +49,30 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
+    public BuildingDetailsDto getDetailsOne(Long buildingId) {
+        Building b = buildingRepository.findOne(buildingId);
+        if(b == null)
+            throw new NotFoundException("building");
+        return BuildingDetailsDto.make(b);
+    }
+
+    @Override
+    public List<UnitDto> getUnits(Long buildingId) {
+        Building b = buildingRepository.findOne(buildingId);
+        if(b == null)
+            throw new NotFoundException("building");
+        return b.getLubList()
+                .stream()
+                .map( lub -> UnitDto.make(lub.getUnit()) )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void unlinkUnit(Long buildingId, Long unitId) {
+        linkUnitBuildingRepository.deleteBuildingUnit(buildingId, unitId);
+    }
+
+    @Override
     public void removeBuilding(long id) {
         Building b = em.find(Building.class, id);
         if (b == null)
@@ -53,10 +81,14 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void createBuilding(String code, String name, BigDecimal latitude, BigDecimal longitude) {
+    public void createBuilding(String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude) {
         Building building = new Building();
         building.setCode(code);
         building.setName(name);
+        building.setStreet(street);
+        building.setCity(city);
+        building.setPostalCode(postalCode);
+        building.setNumber(number);
         building.setLatitude(latitude);
         building.setLongitude(longitude);
         em.persist(building);
@@ -71,7 +103,7 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void acceptModify(long id, String code, String name, BigDecimal latitude, BigDecimal longitude) {
+    public void acceptModify(long id, String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude) {
         Building b = em.find(Building.class, id);
 
         if(b == null) {
@@ -82,13 +114,17 @@ public class BuildingServiceImpl implements BuildingService {
 
         b.setCode(code);
         b.setName(name);
+        b.setStreet(street);
+        b.setCity(city);
+        b.setPostalCode(postalCode);
+        b.setNumber(number);
         b.setLatitude(latitude);
         b.setLongitude(longitude);
     }
 
     @Override
-    public BuildingUnitsControllersDto getUnitsBuildings(long id) {
-        BuildingUnitsControllersDto result;
+    public BuildingDetailsDto getUnitsBuildings(long id) {
+        BuildingDetailsDto result;
         List< Object[] > list = em.createQuery( "SELECT b.id, b.code, b.name, b.latitude, b.longitude, u.id, u.code, u.description, c.id, c.name, c.ipv4, c.description, c.building.id " +
                     "FROM LinkUnitBuilding lub " +
                     "INNER JOIN Building b ON lub.building.id = " + id +
@@ -153,7 +189,7 @@ public class BuildingServiceImpl implements BuildingService {
                 }
             }
 
-            result = new BuildingUnitsControllersDto();
+            result = new BuildingDetailsDto();
             result.setBuilding(building);
             result.setUnits(units);
             result.setControllers(controllers);

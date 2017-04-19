@@ -1,13 +1,16 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dodawanie kontrolera</title>
+    <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/AddControllers.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <title>Dodawanie kontrolera</title>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
@@ -39,7 +42,7 @@
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 180px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -51,21 +54,32 @@
     </div>
 </nav>
 
-<!-- kill me pls -->
 <div style="margin-top:100px"></div>
-<!-- I'm not a solution -->
 
 <div id="strona">
     <div id="kontent">
         <div class="form-group">
-            <form method="post" action="/api/create-controller">
-                <input type="text" class="form-control" placeholder="Nazwa Kontrolera"
+            <form method="post" action="/api/controller/create" id="form1">
+                <input form="form1"type="text" class="form-control"  placeholder="Nazwa Kontrolera"
                        required="required" name="name">
-                <input type="text" class="form-control" placeholder="Adres IPv4"
+                <input form="form1" type="text" class="form-control"  placeholder="Adres IPv4"
                        required="required" name="ipv4">
-                <input type="text" class="form-control" placeholder="Komentarz (opcjonalne)"
+                <input form="form1" type="text" class="form-control"  placeholder="Komentarz (opcjonalne)"
                        name="description">
-                <input type="submit" value="Dodaj kontroler" class="btn btn-primary btn-default btn-lg active">
+                <input form="form1" type="text" class="form-control"  placeholder="Community String"
+                       name="communityString">
+
+                <label for="sel1">Wybierz budynek:</label>
+
+                <select form="form1" class="form-control" id="sel1"name="buildingId">
+                    <option></option>
+                    <c:forEach items="${list}" var="building" >
+                        <option value="${building.id}" >
+                    <c:out value="${building.name}"/>
+                        </option>
+                        </c:forEach>
+                </select>
+                <input form="form1" type="submit" value="Dodaj kontroler" class="btn btn-primary btn-default btn-lg active">
             </form>
             <br>
         </div>

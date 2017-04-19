@@ -1,6 +1,7 @@
 package zesp03.webapp.service;
 
 import zesp03.webapp.dto.ControllerDetailsDto;
+import zesp03.common.entity.Building;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.input.CreateControllerDto;
 
@@ -13,4 +14,5 @@ public interface ControllerService {
     ControllerDetailsDto getDetailsOne(Long controllerId);
     void remove(Long controllerId);
     void create(CreateControllerDto dto);
+
 }

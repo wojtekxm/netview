@@ -69,33 +69,53 @@
                 </div>
 
             <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
-            <tr>
-                <input form="form1" type="hidden" name="id" value="${building.id}" />
-            </tr>
-            <tr>
-                <td>Kod</td>
-                <td><input form="form1" type="text" name="code" value="${building.code}" style="width: 30%;"/></td>
-            </tr>
+                <tr>
+                    <input form="form1" type="hidden" name="id" value="${building.id}" />
+                </tr>
+                <tr>
+                    <td>Kod</td>
+                    <td><input form="form1" type="text" name="code" value="${building.code}" style="width: 30%;"/></td>
+                </tr>
 
-            <tr>
-                <td>Nazwa</td>
-                <td><input form="form1" type="text" name="name" value="${building.name}" style="width: 30%;" />
-            </tr>
+                <tr>
+                    <td>Nazwa</td>
+                    <td><input form="form1" type="text" name="name" value="${building.name}" style="width: 30%;" />
+                </tr>
 
-            <tr>
-                <td>Szerokość geograficzna</td>
-                <td><input form="form1" type="text" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
-            </tr>
+                <tr>
+                    <td>Ulica</td>
+                    <td><input form="form1" type="text" name="street" value="${building.street}" style="width: 30%;" />
+                </tr>
 
-            <tr>
-                <td>Długość geograficzna</td>
-                <td><input form="form1" type="text" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
+                <tr>
+                    <td>Numer</td>
+                    <td><input form="form1" type="text" name="number" value="${building.number}" style="width: 30%;" />
+                </tr>
 
-            </tr>
+                <tr>
+                    <td>Kod pocztowy</td>
+                    <td><input form="form1" type="text" name="postalCode" value="${building.postalCode}" style="width: 30%;" />
+                </tr>
+
+                <tr>
+                    <td>Miasto</td>
+                    <td><input form="form1" type="text" name="city" value="${building.city}" style="width: 30%;" />
+                </tr>
+
+                <tr>
+                    <td>Szerokość geograficzna</td>
+                    <td><input form="form1" type="text" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
+                </tr>
+
+                <tr>
+                    <td>Długość geograficzna</td>
+                    <td><input form="form1" type="text" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
+
+                </tr>
 
             </table>
                 <div>
-                    <a href="/building?id=${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
+                    <a href="/building/${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
                     <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
                         <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >

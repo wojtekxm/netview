@@ -4,26 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import zesp03.webapp.dto.BuildingDto;
-import zesp03.webapp.dto.UnitDto;
+import org.springframework.web.bind.annotation.PathVariable;
 import zesp03.webapp.service.BuildingService;
-
-import java.util.List;
 
 @Controller
 public class BuildingPage {
     @Autowired
     private BuildingService buildingService;
 
-    @GetMapping("/building")
+    @GetMapping("/building/{buildingId}")
     public String get(
-            @RequestParam("id") long id,
+            @PathVariable("buildingId") long buildingId,
             ModelMap model) {
-        BuildingDto b = buildingService.getOneBuilding(id);
-        List<UnitDto> u = buildingService.forBuildingPage(b.getId());
-        model.put( "building", b );
-        model.put( "units", u );
+        model.put("id", buildingId);
         return "building";
     }
 }

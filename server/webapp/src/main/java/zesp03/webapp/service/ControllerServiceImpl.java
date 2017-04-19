@@ -10,16 +10,22 @@ import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.BuildingRepository;
 import zesp03.common.repository.ControllerRepository;
 import zesp03.common.util.IPv4;
+import zesp03.webapp.dto.BuildingDto;
 import zesp03.webapp.dto.ControllerDetailsDto;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.input.CreateControllerDto;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
 public class ControllerServiceImpl implements ControllerService {
+    @PersistenceContext
+    private EntityManager em;
+
     @Autowired
     private ControllerRepository controllerRepository;
 
@@ -88,10 +94,14 @@ public class ControllerServiceImpl implements ControllerService {
         c.setName(dto.getName());
         c.setIpv4(dto.getIpv4());
         c.setDescription(dto.getDescription());
+        c.setCommunityString(dto.getCommunityString());
         if(dto.getBuildingId() != null) {
             Building b = buildingRepository.findOne(dto.getBuildingId());
             c.setBuilding(b);
         }
         controllerRepository.save(c);
     }
-}
+
+
+    }
+

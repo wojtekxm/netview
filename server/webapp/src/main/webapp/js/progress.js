@@ -23,7 +23,7 @@ var progress = {};
         config.type = method;
         if(method.toLowerCase() === 'post') {
             if (typeof optionalParams !== 'undefined') {
-                config.data = optionalParams;
+                config.data = JSON.stringify(optionalParams);
                 config.contentType = 'application/json';
             }
         }
@@ -86,7 +86,7 @@ var progress = {};
                 if(typeof req.optionalPostData !== 'undefined') {
                     config.type = 'post';
                     if(req.optionalPostData !== false) {
-                        config.data = req.optionalPostData;
+                        config.data = JSON.stringify(req.optionalPostData);
                         config.contentType = 'application/json';
                     }
                 }

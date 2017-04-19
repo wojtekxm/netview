@@ -98,10 +98,10 @@
             <div id="content">
                 <ul class="view" style="z-index: 1000;top:0;">
                     <li>
-                        <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5000 Hz" data-off="2400 Hz" data-onstyle="warning" data-offstyle="success"></div>
+                        <div id="wydzial"><div style="width:100%;margin-right:15px;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th"></span> Wszystkie kontrolery </div><input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="warning" data-offstyle="success"></div>
                         <button id="filters-button" type="button" data-toggle="collapse" data-target="#filters"><span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie</button>
                         <div id="filters" class="collapse"></div>
-                        <ul id="devices" class="panel panel-default" style="min-height:420px!important;padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
+                        <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
                     </li>
                 </ul>
             </div>
@@ -113,16 +113,16 @@
                 <div class="panel-body">
                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
                         <div class="btn-group" role="group" onclick="onlyGreen();interGreen = setInterval('onlyGreen()', 10000);">
-                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="greenDiode"></div>&emsp;aktywne: &nbsp;&emsp;<span id="countActive"></span></div></button>
+                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:16px;"><div id="greenDiode"></div>&emsp;aktywne: &nbsp;&emsp;<span id="countActive"></span></div></button>
                         </div>
                         <div class="btn-group" role="group" onclick="onlyRed();interRed = setInterval('onlyRed()', 10000);">
-                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:18px;"><div id="redDiode"></div>&emsp;nieaktywne: &nbsp;&emsp;<span id="countInactive"></span></div></button>
+                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:16px;"><div id="redDiode"></div>&emsp;nieaktywne: &nbsp;&emsp;<span id="countInactive"></span></div></button>
                         </div>
                         <div class="btn-group" role="group" onclick="onlyGrey();interGrey = setInterval('onlyGrey()', 10000);">
-                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div id="greyDiode"></div>&emsp;wyłączone: &nbsp;&emsp;<span id="countOff"></span></div></button>
+                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:16px;"><div id="greyDiode"></div>&emsp;wyłączone: &nbsp;&emsp;<span id="countOff"></span></div></button>
                         </div>
                         <div class="btn-group" role="group" onclick="allDevices();inter = setInterval('allDevices()', 10000);">
-                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:18px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;&emsp;<span id="countAll"></span></div></button>
+                            <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:16px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;&emsp;<span id="countAll"></span></div></button>
                         </div>
                     </div>
                 </div>
@@ -198,9 +198,7 @@
             var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
             if(frequency == "2400"){
                 if(typeof state2400 === 'undefined') {
-                    var sum = 0;
-                    var isEnabled = false;
-                    var time = 0;
+                    continue;
                 }
                 else {
                     var sum = state2400.clients;
@@ -209,9 +207,7 @@
                 }
             }else if(frequency == "5000"){
                 if(typeof state5000 === 'undefined') {
-                    var sum = 0;
-                    var isEnabled = false;
-                    var time = 0;
+                    continue;
                 }
                 else {
                     var sum = state5000.clients;

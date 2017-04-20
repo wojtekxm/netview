@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/bootstrap-multiselect.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' type='text/css'>
 </head>
 <body>
@@ -24,12 +25,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <div class="navbar-brand" title="Control your network">Network Monitor</div>
         </div>
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;Network Monitor</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -59,38 +59,28 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
-        <div class="panel-body" style="font-size: 17px;">
-            <span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:
-        </div>
-    </div>
-    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
-        <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
-    </button>
-    <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
-    <div id="filters" class="collapse">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title" style="font-size: 17px;color:black; padding-top: 12px;"><span class="glyphicon glyphicon-th-large"></span> Pokaż tylko urządzenia ( Kliknij w wybrany stan ) :</h3>
-            </div>
             <div class="panel-body">
-                <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                    <div class="btn-group" role="group" onclick="onlyGreen();interGreen = setInterval('onlyGreen()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:16px;"><div id="greenDiode"></div>&emsp;aktywne: &nbsp;&emsp;<span id="countActive"></span></div></button>
-                    </div>
-                    <div class="btn-group" role="group" onclick="onlyRed();interRed = setInterval('onlyRed()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display:table-cell; font-size:16px;"><div id="redDiode"></div>&emsp;nieaktywne: &nbsp;&emsp;<span id="countInactive"></span></div></button>
-                    </div>
-                    <div class="btn-group" role="group" onclick="onlyGrey();interGrey = setInterval('onlyGrey()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:16px;"><div id="greyDiode"></div>&emsp;wyłączone: &nbsp;&emsp;<span id="countOff"></span></div></button>
-                    </div>
-                    <div class="btn-group" role="group" onclick="allDevices();inter = setInterval('allDevices()', 10000);">
-                        <button type="button" class="btn btn-default" style="border-radius: 10px;"><div style="display: table-cell; font-size:16px;"><div></div><span class="glyphicon glyphicon-equalizer"></span>&emsp;Wszystkie: &nbsp;&emsp;<span id="countAll"></span></div></button>
-                    </div>
+                <div style="font-size: 17px; padding-top: 7px; display: inline-block;"><span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:</div>
+                <div style="float:right;display: inline-block;">
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
+                        <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
+                    </button>
+                    <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
                 </div>
             </div>
         </div>
-    </div>
+        <div id="filters" class="collapse">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <select id="example-single" multiple="multiple">
+                        <option value="active">Aktywne</option>
+                        <option value="inactive">Niektywne</option>
+                        <option value="off">Wyłączone</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 </div>
 
 
@@ -106,34 +96,42 @@
 
 <div class="container">
     <div class="panel panel-default">
-        <div class="panel-heading">Ostatnie badanie przeprowadzono: </div>
+        <div class="panel-heading">
+            <div id="data_tittle">Ostatnie badanie przeprowadzono:</div>
+        </div>
         <div class="panel-body">
             <div id="data"></div>
         </div>
     </div>
 </div>
 
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap-3.3.7.min.js"></script>>
-<script src="/js/bootstrap-toggle.min.js"></script>
-<script src="/js/bootstrap-multiselect.js"></script>
-<script src="/js/status.js"></script>
-<script src="/js/w3data.js"></script>
+<script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-3.3.7.min.js"></script>>
+<script type="text/javascript" src="/js/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/js/status.js"></script>
+<script type="text/javascript" src="/js/progress.js"></script>
+<script type="text/javascript" src="/js/w3data.js"></script>
 
 <%--<script>--%>
     <%--$(function(){--%>
         <%--$("#headerDiv").load("header.html");--%>
     <%--});--%>
 <%--</script>--%>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#example-single').multiselect();
+    })
+</script>
 
-<script>
+<script type="text/javascript">
     $("#filters-button").click(function(e) {
         e.preventDefault();
         $(".filters").toggleClass("toggled");
     });
 </script>
 
-<script>
+<script type="text/javascript">
     var devices = new Array();
     var frequency = "2400";
     var clicked = "all";
@@ -141,9 +139,13 @@
 
 
 
-    $(document).ready(function(){
-
-    });
+    function err() {
+        $('#progress_area').show();
+        setTimeout(function()
+        {
+            $('#progress_area').hide(500);
+        }, 5000);
+    }
 
 
     function allDevices()
@@ -164,9 +166,6 @@
             },
             error: err
         });
-        function err() {
-            $('#progress_area').show();
-        }
     }
 
     function e(){
@@ -240,7 +239,7 @@
                 $('#devices').append(line);
                 $('#progress_area').hide(500);
             }else{
-                $('#progress_area').show();
+                err();
             }
 
             line.tooltip();
@@ -255,16 +254,24 @@
 
         var date = new Date(time*1000);
         var n = date.toLocaleString();
+
+        if(n == "Invalid Date"){
+            n = "";
+            setTimeout(function(){
+                $('#data').replaceWith(n);
+                $('#data_tittle').hide().replaceWith("Wystąpił błąd podczas pobierania danych").show();
+            }, 5000);
+        }
         $('#data').replaceWith(n);
     }
 
-    $('#progress_area').show();
+    err();
 
     allDevices();
     inter = setInterval('allDevices()', 30000);
 </script>
 
-<script>
+<script type="text/javascript">
     $(function() {
         $('#toggleFrequency').change(function() {
             if(frequency == "2400"){

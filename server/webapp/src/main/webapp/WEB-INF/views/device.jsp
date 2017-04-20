@@ -66,12 +66,11 @@
     <div id="control">
         <div id="control1"> Zakres wyswietlanych danych
             <form action="" class="forma">
-                <input type="radio" name="range" value="dzien"> Dzien
-                <input type="radio" name="range" value="tydzien"> Tydzien
-                <input type="radio" name="range" value="miesiac"> Miesiac
-                <input type="radio" name="range" value="kwartal"> Kwartal
-                <input type="radio" name="range" value="rok"> Rok
-                <input type="radio" name="range" value="custom"> Ustawienia niestandardowe
+                <input type="radio" class="rad" name="range" value="dzien"> Dzien </br>
+                <input type="radio" class="rad" name="range" value="tydzien"> Tydzien</br>
+                <input type="radio" class="rad" name="range" value="miesiac"> Miesiac</br>
+                <input type="radio" class="rad" name="range" value="rok"> Rok</br>
+                <input type="radio" class="rad" name="range" value="custom"> Ustawienia niestandardowe</br>
             </form></br>
         </div>
         <div id="control2"> Ustawienia niestandardowe
@@ -82,31 +81,53 @@
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
+                </br>
                 <div class='input-group date' id='datetimepicker2' width="100px">
                     <input id="time_end" type='text'  data-date-end-date="0d" class="form-control"> Do
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
+            </form>
+            </br>
+                <form name="testform">
+                    <select name="range" id="range_picker" size="1">
+                        <option value=1>Badania oryginalne</option>
+                        <option selected value=2>Grupowanie sugerowane</option>
+                        <option value=3>5 minut</option>
+                        <option value=4>15 minut</option>
+                        <option value=5>godzina</option>
+                        <option value=6>3 godziny</option>
+                        <option value=7>dzień</option>
+                        <option value=8>tydzień</option>
+                        <option value=9>miesiąc</option>
+                        <option value=10>rok</option>
+                    </select>
+                </br>
+                    <label for="range_picker">Zakres grupowania badań</label>
+                    </br></br>
+                </form>
+            </br>
                 <button type="button" id="apply">Zatwierdz zmiany</button>
             </form>
         </div>
         <div id="control3"> Określenie badań z danej częstotliwości
             <form action="" class="forma">
-                <input type="radio" name="frequency" value="1"> Częstotliwość 2,4Ghz
-                <input type="radio" name="frequency" value="2"> Częstotliwość 5Ghz
+                <input type="radio" class="rad" name="frequency" value="1"> Częstotliwość 2,4Ghz</br>
+                <input type="radio" class="rad" name="frequency" value="2"> Częstotliwość 5Ghz</br>
             </form>
         </div>
         <div id="control4"> Rodzaj wykresu
             <form action="" class="forma">
-                <input type="radio" name="responsive" value="1"> Wykres responsywny
-                <input type="radio" name="responsive" value="2"> Wykres z suwakiem
+                <input type="radio" class="rad" name="responsive" value="1"> Wykres responsywny</br>
+                <input type="radio" class="rad" name="responsive" value="2"> Wykres z suwakiem</br>
             </form></br>
         </div>
         <div id="control5"> Rozmiary wykresu
             <form action="" class="forma">
-                <input type="text" id="chartSize1" value="1000"> Szerokość wykresu (w px)
-                <input type="text" id="chartSize2" value="500"> Wysokość wykresu (w px)
+                <input type="text" width="20" id="chartSize1" value="1000"> Szerokość wykresu (w px)
+                </br>
+                <input type="text" mwidth="20" id="chartSize2" value="500"> Wysokość wykresu (w px)
             </form></br>
         </div>
     </div>
@@ -131,7 +152,9 @@
     #control2{display:flex;flex-direction: column;}
     #control3{display:flex;flex-direction: column;}
     #control4{display:flex;flex-direction: column;}
-    .forma{display:flex;flex-direction: column; margin-bottom:5px; padding:10px;}
+    .forma{ margin-bottom:5px; padding:10px;margin-top: -1px;
+        vertical-align: middle;}
+
     #wykresy {max-width: 100%;max-height:80%;  }
 </style>
 
@@ -155,50 +178,56 @@
     var frequency=2400;
     var etykietka="DEFAULT";
     var type="Line";
+    var api;
     var respons="true";
+    var range_picker;
     var timestamp1,timestamp2;
 
     $(document).ready(function() {
         $('input[type=radio][name=range]').change(function() {
             if (this.value=='dzien') {
+                $('#range_picker select').val(0);
                 $('#control2').hide();
+                api="original"; console.log("Wartosc api:"+api);
                 group=300; console.log("okres grupowania:" + group);
-                etykietka="Wykres dzienny - grupowanie:5 minut";
+                etykietka="Wykres dzienny - badania oryginalne";
                 range1=Math.round((Date.now() - 86400000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
                 generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+                console.log("_____________________________________________________________");
             }
             if (this.value=='tydzien') {
+                $('#range_picker select').val(0);
                 $('#control2').hide();
+                api="group";console.log("Wartosc api:"+api);
                 group=10800; console.log("okres grupowania:" + group);
                 etykietka="Wykres tygodniowy - grupowanie:3 godziny";
                 range1=Math.round((Date.now() - 604800000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
                 generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+                console.log("_____________________________________________________________");
             }
             if (this.value=='miesiac') {
+                $('#range_picker select').val(0);
                 $('#control2').hide();
+                api="group";console.log("Wartosc api:"+api);
                 group=86400; console.log("okres grupowania:" + group);
-                etykietka="Wykres tygodniowy - grupowanie:1 dzien";
+                etykietka="Wykres miesięczny - grupowanie:1 dzien";
                 range1=Math.round((Date.now() - 2629743830)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
                 generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
-            }
-            if (this.value=='kwartal') {
-                $('#control2').hide();
-                group=86400; console.log("okres grupowania:" + group);
-                etykietka="Wykres kwartalny - grupowanie:3 dni";
-                range1=Math.round((Date.now() - 7889231490)/1000); console.log("zakres1:" + convert(range1));
-                range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+                console.log("_____________________________________________________________");
             }
             if (this.value=='rok') {
+                $('#range_picker select').val(0);
                 $('#control2').hide();
+                api="group";console.log("Wartosc api:"+api);
                 group=2592000; console.log("okres grupowania:" + group);
                 etykietka="Wykres roczny - grupowanie:1 miesiac";
                 range1=Math.round((Date.now() - 31536000000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
                 generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+                console.log("_____________________________________________________________");
             }
             if (this.value=='custom') {
                 $('#control2').show();
@@ -282,6 +311,7 @@
     console.log("kwartal:" + kwartal);
     console.log("rok:" + rok);
 
+
 var temp;
     $('#apply').click(
         function () {
@@ -290,7 +320,7 @@ var temp;
             ranged=Number($('#zakres').val());
             console.log("data1 z kalendarza:"+tmp1);
             console.log("data2 z kalendarza:"+tmp2);
-            temp=Number(Math.round((tmp2-tmp1)/100));
+            temp=Number(Math.round((tmp2-tmp1)/50));
             etykietka=("Zakres od \n"+convert(tmp1)+"do \n"+convert(tmp2));
             if (tmp1>=tmp2){alert("Wybrano niepoprawne parametry!!!!");}
             else{
@@ -301,6 +331,21 @@ var temp;
     );
 
     function generateChart(mycanvas, id,timestamp,timestamp2,range,etykieta,frequency,type) {
+        var temper=$('#range_picker').val();
+        console.log("TEMPER="+temper);
+        if (temper==1){api="original"};
+        if (temper==2){api="group";range=(range2-range1)/100;}
+        if (temper==3){api="group";range=300;}
+        if (temper==4){api="group";range=1500;}
+        if (temper==5){api="group";range=3600;}
+        if (temper==6){api="group";range=10800;}
+        if (temper==7){api="group";range=86400;}
+        if (temper==8){api="group";range=604800;}
+        if (temper==9){api="group";range=31536000;}
+        temper=0;
+        $('#range_picker select').val(0);
+        console.log("TEMPER="+ $('#range_picker select').val());
+        console.log("RANGE:"+range);
         var request = new XMLHttpRequest();
         var szerokosctmp=Number($('#chartSize1').val())+"px";
         var wysokosctmp=Number($('#chartSize2').val())+"px";
@@ -317,49 +362,29 @@ var temp;
         var values_avg = [];    //WSZYSTKO
         var values_min = [];    //WSZYSTKO
         var values_max = [];    //WSZYSTKO
-        var options = {
-            tooltips: {mode: 'index'},
-            legend: {display: true},
+        var options = {tooltips: {mode: 'index'}, legend: {display: true},
             title: {display: true, text: etykieta},
-            hover: {intersect: false,
-                mode:'x'
-
-            },
+            hover: {intersect: false, mode:'x'},
             label: {display: true},
-            scales: {
-                xAxes: [{
-                    display:true,
-                    barPercentage:1,
-                    autoSkip: false,
-                    ticks: {
-                        maxRotation: 70 // angle in degrees
-                    }
-
-                }],
-
-                yAxes: [{
-                    stacked: false,
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Ilosc klientów'
-                    }
-                    ,
-                    ticks: {
-                        ticks: {
-                            autoSkip: false,
-                            fixedStepSize: 10,
-                            beginAtZero:true,
-                            Min: -5,
-                            suggestedMax: 100
-                        }
-                    }}]
-            },
-            maintainAspectRatio:false,
-            responsive: respons,
-            steppedLine: true,
-            elements: {line: {tension: 0}}
+            scales: {xAxes: [{display:true,barPercentage:1, autoSkip: false, ticks: {maxRotation: 30}}],
+                yAxes: [{stacked: false, display: true, scaleLabel: {display: true, labelString: 'Ilosc klientów'},
+                    ticks: {ticks: {autoSkip: false, fixedStepSize: 10, beginAtZero:true, Min: -5, suggestedMax: 100}}}]},
+            maintainAspectRatio:false, responsive: respons, steppedLine: true, elements: {line: {tension: 0}}
         };
+        var data2={
+            showLine:false,
+            labels: tags,
+            datasets: [{
+                label: "Ilosc klientów",
+                data: values_avg,
+                fill: false,
+                borderColor:"rgba(255,155,0,1)",
+                backgroundColor: "rgba(255,200,0,1)",
+                borderWidth: 0,
+                hoverBackgroundColor:"rgba(0,0,0,1)"
+            }]
+        };
+
         var data = {
             showLine:false,
             labels: tags,
@@ -394,41 +419,64 @@ var temp;
 
             ]
         };
-        var request = new XMLHttpRequest();
-        request.open('Get', '/api/surveys/avg-min-max?device='+id+
-            '&frequency='+frequency+
-            '&start='+timestamp+
-            '&groupTime='+range+
-            '&end='+timestamp2
-        );
-        var min_tmp,avg_tmp,max_tmp,tags_tmp;
-        request.onload = function () {
-            var jsondata = JSON.parse(request.responseText);
-            //console.log(JSON.stringify(jsondata));
-            var ilosc=Object.keys(jsondata.list).length;
-            console.log("ILOSC:"+ilosc);
-            console.log("Czas wczytania:"+jsondata.queryTime);
 
-            for (i = 0; i < ilosc; i++) {
-                avg_tmp=jsondata.list[i].average;
-                min_tmp=jsondata.list[i].min;
-                max_tmp=jsondata.list[i].max;
-                values_avg.push(Math.round(avg_tmp));
-                values_min.push(min_tmp);
-                values_max.push(max_tmp);
-                tags.push(convert(Number(jsondata.list[i].timeStart)));
-                <%--console.log(i+" AVERAGE:"+avg_tmp);
-                console.log(i+" MIN:"+min_tmp);
-                console.log(i+" MAX:"+max_tmp);
-                console.log(convert(Number(jsondata.list[i].timeStart)));
-                console.log("______________________________");--%>
-            }
-            var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});
-        };
+        if (api=="original"){
+            var request2 = new XMLHttpRequest();
+            request.open('Get', '/api/surveys/original?device='+id+
+                '&frequency='+frequency+
+                '&start='+timestamp+
+                '&end='+timestamp2
+            );
+            var avg_tmp,tags_tmp;
+            console.log("ZAKRES TIMESTAMPU:"+(range2-range1));
+            request.onload = function () {
+                var jsondata = JSON.parse(request.responseText);
+                //console.log(JSON.stringify(jsondata));
+                var ilosc=Object.keys(jsondata.list).length;
+                    for (i = 0; i < ilosc; i++) {
+                        avg_tmp = jsondata.list[i].clients;
+                        values_avg.push(Math.round(avg_tmp));
+                        tags.push(convert(Number(jsondata.list[i].timestamp)));
+                    }
 
+                var myFirstChart = Chart.Line(mycanvas, {data: data2, options: options});
+            };
+        }
+        else{
+            var request = new XMLHttpRequest();
+            request.open('Get', '/api/surveys/avg-min-max?device='+id+
+                '&frequency='+frequency+
+                '&start='+timestamp+
+                '&groupTime='+range+
+                '&end='+timestamp2
+            );
+            var min_tmp,avg_tmp,max_tmp,tags_tmp;
+            request.onload = function () {
+                var jsondata = JSON.parse(request.responseText);
+                //console.log(JSON.stringify(jsondata));
+                var ilosc=Object.keys(jsondata.list).length;
+                    for (i = 0; i < ilosc; i++) {
+                        avg_tmp = jsondata.list[i].average;
+                        min_tmp = jsondata.list[i].min;
+                        max_tmp = jsondata.list[i].max;
+                        values_avg.push(Math.round(avg_tmp));
+                        values_min.push(min_tmp);
+                        values_max.push(max_tmp);
+                        tags.push(convert(Number(jsondata.list[i].timeStart)));
+                        <%--console.log(i+" AVERAGE:"+avg_tmp);
+                    console.log(i+" MIN:"+min_tmp);
+                    console.log(i+" MAX:"+max_tmp);
+                    console.log(convert(Number(jsondata.list[i].timeStart)));
+                    console.log("______________________________");--%>
 
+                }
+                var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});
+            };
+
+        }
         request.send();
-        console.log(doba);
+
+
     }
 </script>
 

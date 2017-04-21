@@ -14,5 +14,8 @@ public interface ControllerService {
     ControllerDetailsDto getDetailsOne(Long controllerId);
     void remove(Long controllerId);
     void create(CreateControllerDto dto);
+    ControllerDto modifyController(Long controllerId);
+    void acceptModifyController(ControllerDto dto);
+
 
 }

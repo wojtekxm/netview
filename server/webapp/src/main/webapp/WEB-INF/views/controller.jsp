@@ -66,6 +66,8 @@
                 <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
                     Szczegóły urządzenia:
                 </div>
+                <c:url var="href" value="/modify-controller?id=${controller.id}"/>
+
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
                     <tr>
                         <td>Nazwa</td>
@@ -88,6 +90,7 @@
                     <a href="/api/controller/remove/${controller.id}" class="btn btn-danger" role="button" style="float:left;width: 180px;font-size:17px;">
                         <span class="glyphicon glyphicon-trash"></span> Usuń
                     </a>
+                    <a href="${href}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Modyfikuj</a>
                 </div>
             </div>
         </div>

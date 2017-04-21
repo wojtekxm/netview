@@ -61,43 +61,51 @@
     <div style="height: 80px;"></div>
         <div class="panel panel-default">
             <div class="panel-body">
-                <div style="font-size: 17px; padding-top: 7px; display: inline-block;"><span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:</div>
-                <div style="float:right;display: inline-block;">
-                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
-                        <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
-                    </button>
-                    <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
-                </div>
+                <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:</div>
             </div>
+        </div>
+        <div style="display: inline-block; margin-bottom: 5px;">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
+                <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
+            </button>
+            <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
         </div>
         <div id="filters" class="collapse">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <select id="example-single" multiple="multiple">
+                    <select id="stan" multiple="multiple">
                         <option value="active">Aktywne</option>
                         <option value="inactive">Niektywne</option>
                         <option value="off">Wyłączone</option>
                     </select>
+                    <select id="kontrolery" multiple="multiple">
+                        <option value="active">1</option>
+                        <option value="inactive">2</option>
+                        <option value="off">3</option>
+                    </select>
+                    <select id="budynki" multiple="multiple">
+                        <option value="active">1</option>
+                        <option value="inactive">2</option>
+                        <option value="off">3</option>
+                    </select>
+                    &nbsp;&nbsp;
+                    <button id="filters_commit" type="button" class="btn btn-info" style="width: 150px;"><span class='glyphicon glyphicon-ok'></span> Filtruj &nbsp;</button>
+                    <button id="worst_10" type="button" class="btn btn-default" style="float:right;margin-left: 4px;">10 najgorszych urządzeń</button>
+                    <button id="top_10" type="button" class="btn btn-default" style="float:right;">10 najleszych urządzeń</button>
                 </div>
             </div>
         </div>
-</div>
 
-
-<div class="container">
     <div style="height: 10px;"></div>
     <ul class="view" style="z-index: 1000;top:0;">
         <li>
             <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
         </li>
     </ul>
-</div>
 
-
-<div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div id="data_tittle">Ostatnie badanie przeprowadzono:</div>
+            <span class='glyphicon glyphicon-time'></span><div id="data_tittle"></div>
         </div>
         <div class="panel-body">
             <div id="data"></div>
@@ -120,7 +128,17 @@
 <%--</script>--%>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#example-single').multiselect();
+        $('#stan').multiselect({
+            nonSelectedText:'Stan urządzeń'
+        });
+        $('#budynki').multiselect({
+            enableFiltering: true,
+            nonSelectedText:'Budynki'
+        });
+        $('#kontrolery').multiselect({
+            enableFiltering: true,
+            nonSelectedText:'Kontrolery'
+        });
     })
 </script>
 
@@ -259,10 +277,12 @@
             n = "";
             setTimeout(function(){
                 $('#data').replaceWith(n);
-                $('#data_tittle').hide().replaceWith("Wystąpił błąd podczas pobierania danych").show();
+                $('#data_tittle').hide().append("Wystąpił błąd podczas pobierania danych").show();
             }, 5000);
+        }else {
+            $('#data').replaceWith(n);
+            $('#data_tittle').replaceWith(" &nbsp;Ostatnie badanie przeprowadzono:");
         }
-        $('#data').replaceWith(n);
     }
 
     err();

@@ -28,9 +28,9 @@ public class RepositoryConfig {
         config.setConnectionTestQuery("SELECT 1");
         config.setPoolName("springHikariCP");
         config.setAutoCommit(false);
-        config.setUsername(App.getProperty("zesp03.mysql.user"));
-        config.setJdbcUrl(App.getProperty("zesp03.mysql.url"));
-        config.setPassword(App.getProperty("zesp03.mysql.password"));
+        config.setUsername(App.getMysqlUser());
+        config.setJdbcUrl(App.getMysqlUrl());
+        config.setPassword(App.getMysqlPassword());
         return new HikariDataSource(config);
     }
 

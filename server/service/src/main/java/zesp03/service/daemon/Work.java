@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import zesp03.common.core.App;
 import zesp03.common.service.SurveySavingService;
 
 import java.time.Duration;
@@ -19,6 +20,9 @@ public class Work {
     private SurveySavingService surveySavingService;
 
     public void work() {
+        log.info("app.root reset password = {}", App.getRootResetPassword());
+        App.setFlywayClean(true);
+        App.saveSettings();
         Thread t = new Thread(() -> shutdown = true);
         Runtime.getRuntime().addShutdownHook(t);
         while(!shutdown) {

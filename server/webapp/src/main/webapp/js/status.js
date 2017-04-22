@@ -42,7 +42,6 @@ function green(){
     var all=0;
     var style='list-style-type: none;color:white;text-decoration:none;';
 
-    $("#devices li").remove();
 
     for(var i = 0; i< devices.length; i++){
         var currentDeviceStateDto = devices[i];
@@ -129,10 +128,10 @@ function green(){
 
     all = active+inactive+off;
 
-    $('#countActive').text(active);
-    $('#countInactive').text(inactive);
-    $('#countOff').text(off);
-    $('#countAll').text(all);
+    $('#countActive').text('aktywne: ' + active);
+    $('#countInactive').text('nieaktywne: ' + inactive);
+    $('#countOff').text('wyłączone: ' + off);
+    $('#countAll').text('wszystkie: ' + all);
 
     $('#progress_area').hide();
 
@@ -183,7 +182,6 @@ function red(){
     var all=0;
     var style='list-style-type: none;color:white;text-decoration:none;';
 
-    $("#devices li").remove();
 
     for(var i = 0; i< devices.length; i++){
         var currentDeviceStateDto = devices[i];
@@ -246,10 +244,10 @@ function red(){
 
     all = active+inactive+off;
 
-    $('#countActive').text(active);
-    $('#countInactive').text(inactive);
-    $('#countOff').text(off);
-    $('#countAll').text(all);
+    $('#countActive').text('aktywne: ' + active);
+    $('#countInactive').text('nieaktywne: ' + inactive);
+    $('#countOff').text('wyłączone: ' + off);
+    $('#countAll').text('wszystkie: ' + all);
 
     $('#progress_area').hide();
 
@@ -299,7 +297,6 @@ function grey(){
     var all=0;
     var style='list-style-type: none;color:white;text-decoration:none;';
 
-    $("#devices li").remove();
 
     for(var i = 0; i< devices.length; i++){
         var currentDeviceStateDto = devices[i];
@@ -362,10 +359,10 @@ function grey(){
 
     all = active+inactive+off;
 
-    $('#countActive').text(active);
-    $('#countInactive').text(inactive);
-    $('#countOff').text(off);
-    $('#countAll').text(all);
+    $('#countActive').text('aktywne: ' + active);
+    $('#countInactive').text('nieaktywne: ' + inactive);
+    $('#countOff').text('wyłączone: ' + off);
+    $('#countAll').text('wszystkie: ' + all);
 
     $('#progress_area').hide();
 

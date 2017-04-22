@@ -74,22 +74,15 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <select id="stan" multiple="multiple">
-                        <option value="active">Aktywne</option>
-                        <option value="inactive">Niektywne</option>
-                        <option value="off">Wyłączone</option>
+                        <option type="checkbox" class="s" value="active">Aktywne</option>
+                        <option type="checkbox" class="s" value="inactive">Niektywne</option>
+                        <option type="checkbox" class="s" value="off">Wyłączone</option>
                     </select>
-                    <select id="kontrolery" multiple="multiple">
-                        <option value="active">1</option>
-                        <option value="inactive">2</option>
-                        <option value="off">3</option>
-                    </select>
-                    <select id="budynki" multiple="multiple">
-                        <option value="active">1</option>
-                        <option value="inactive">2</option>
-                        <option value="off">3</option>
-                    </select>
+                    <select id="kontrolery" multiple="multiple"></select>
+                    <select id="budynki" multiple="multiple"></select>
                     &nbsp;&nbsp;
                     <button id="filters_commit" type="button" class="btn btn-info" style="width: 150px;"><span class='glyphicon glyphicon-ok'></span> Filtruj &nbsp;</button>
+                    <button id="back" type="button" class="btn btn-info" style="float:right;margin-left: 4px;" onclick="allDevices();setInterval('allDevices()', 30000);">Powrót</button>
                     <button id="worst_10" type="button" class="btn btn-default" style="float:right;margin-left: 4px;">10 najgorszych urządzeń</button>
                     <button id="top_10" type="button" class="btn btn-default" style="float:right;">10 najleszych urządzeń</button>
                 </div>
@@ -105,38 +98,116 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span class='glyphicon glyphicon-time'></span><div id="data_tittle"></div>
+            <span class='glyphicon glyphicon-time'></span><div id="data_tittle"></div> &nbsp;&nbsp;<div id="data"></div>
         </div>
         <div class="panel-body">
-            <div id="data"></div>
+            <div id="countActive" style="display:inline"></div><br>
+            <div id="countInactive" style="display:inline"></div><br>
+            <div id="countOff" style="display:inline"></div><br>
+            <div id="countAll" style="display:inline"></div><br>
         </div>
     </div>
 </div>
 
 <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="/js/bootstrap-3.3.7.min.js"></script>>
+<script type="text/javascript" src="/js/bootstrap-3.3.7.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap-toggle.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/js/status.js"></script>
 <script type="text/javascript" src="/js/progress.js"></script>
 <script type="text/javascript" src="/js/w3data.js"></script>
 
-<%--<script>--%>
-    <%--$(function(){--%>
-        <%--$("#headerDiv").load("header.html");--%>
-    <%--});--%>
-<%--</script>--%>
+
+<script type="text/javascript">
+    $('#filters_commit').click(function filter(){
+        var value = "";
+        $('.s :checkbox:checked').each(function(){
+            $("#devices li").remove();
+            value = $(this).attr('value');
+            if(value == 'active'){
+                onlyGreen();
+            }else if(value == 'inactive'){
+                onlyRed();
+            }else if(value == 'off'){
+                onlyGrey();
+            }
+        });
+        if(value == ""){
+            allDevices();
+        }
+    })
+</script>
+
+
+
 <script type="text/javascript">
     $(document).ready(function () {
+        var devices = new Array();
+        var buildings = new Array();
+        var controllers = new Array();
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/building/all',
+            dataType: 'json',
+
+            success: function(listDtoOfBuildingDto){
+                if(!listDtoOfBuildingDto.success){
+                    return;
+                }
+                buildings = listDtoOfBuildingDto.list;
+
+                $.each(buildings, function(index, item){
+                    var opt = $('<option />', {
+                        type: 'checkbox',
+                        id: item.name,
+                        value: item.name,
+                        text: item.name
+                    });
+                    opt.appendTo(b);
+                    b.multiselect('rebuild');
+                })
+            }
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/controller/details/all',
+            dataType: 'json',
+
+            success: function(listDtoOfControllerDetailsDto){
+                if(!listDtoOfControllerDetailsDto.success){
+                    return;
+                }
+                controllers = listDtoOfControllerDetailsDto.list;
+
+                $.each(controllers, function(index, item){
+                    var opt = $('<option />', {
+                        type: 'checkbox',
+                        id: item.name,
+                        value: item.name,
+                        text: item.name
+                    });
+                    opt.appendTo(c);
+                    c.multiselect('rebuild');
+                })
+            }
+        });
+
+
         $('#stan').multiselect({
+            includeSelectAllOption: true,
             nonSelectedText:'Stan urządzeń'
         });
-        $('#budynki').multiselect({
+        var b = $('#budynki').multiselect({
             enableFiltering: true,
+            includeSelectAllOption: true,
             nonSelectedText:'Budynki'
         });
-        $('#kontrolery').multiselect({
+
+        var c = $('#kontrolery').multiselect({
             enableFiltering: true,
+            includeSelectAllOption: true,
             nonSelectedText:'Kontrolery'
         });
     })
@@ -150,12 +221,9 @@
 </script>
 
 <script type="text/javascript">
-    var devices = new Array();
     var frequency = "2400";
     var clicked = "all";
     var inter;
-
-
 
     function err() {
         $('#progress_area').show();
@@ -265,10 +333,10 @@
 
         all = active+inactive+off;
 
-        $('#countActive').text(active);
-        $('#countInactive').text(inactive);
-        $('#countOff').text(off);
-        $('#countAll').text(all);
+        $('#countActive').text('aktywne: ' + active);
+        $('#countInactive').text('nieaktywne: ' + inactive);
+        $('#countOff').text('wyłączone: ' + off);
+        $('#countAll').text('wszystkie: ' + all);
 
         var date = new Date(time*1000);
         var n = date.toLocaleString();
@@ -277,7 +345,7 @@
             n = "";
             setTimeout(function(){
                 $('#data').replaceWith(n);
-                $('#data_tittle').hide().append("Wystąpił błąd podczas pobierania danych").show();
+                $('#data_tittle').replaceWith(" &nbsp;Wystąpił błąd podczas pobierania danych");
             }, 5000);
         }else {
             $('#data').replaceWith(n);
@@ -319,6 +387,13 @@
     });
 </script>
 
+<%--<script>--%>
+    <%--$('#top_10').click(function(){--%>
+        <%--function compare(){--%>
+            <%--if(){}--%>
+        <%--}--%>
+    <%--});--%>
+<%--</script>--%>
 
 </body>
 </html>

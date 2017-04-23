@@ -103,5 +103,46 @@ public class ControllerServiceImpl implements ControllerService {
     }
 
 
+    @Override
+    public ControllerDto modifyController(Long controllerId) {
+        Controller c = controllerRepository.findOne(controllerId);
+        if(c == null)
+            throw new NotFoundException("controller");
+        return ControllerDto.make(c);
+    }
+
+    @Override
+    public void acceptModifyController(ControllerDto dto) {
+
+        if(dto.getIpv4() == null) {
+            throw new ValidationException("ipv4", "null");
+        }
+        if(dto.getName() == null) {
+            throw new ValidationException("ipv4", "null");
+        }
+        if( ! IPv4.isValid( dto.getIpv4() ) ) {
+            throw new ValidationException("ipv4", "invalid format");
+        }
+        Controller c = controllerRepository.findOne(dto.getId());
+
+        if(c == null) {
+            if (em != null)
+                em.close();
+            throw new NotFoundException("acceptModifyController");
+        }
+
+        c.setName(dto.getName());
+        c.setIpv4(dto.getIpv4());
+        c.setDescription(dto.getDescription());
+        c.setCommunityString(dto.getCommunityString());
+        if(dto.getBuildingId() != null) {
+            Building b = buildingRepository.findOne(dto.getBuildingId());
+            c.setBuilding(b);
+        }
+        controllerRepository.save(c);
+
+        }
+
+
     }
 

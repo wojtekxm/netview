@@ -1,7 +1,16 @@
 package zesp03.webapp.dto;
 
-public class PasswordChangedDto {
+public class AccessDto {
+    private long userId;
     private String passToken;
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
 
     public String getPassToken() {
         return passToken;

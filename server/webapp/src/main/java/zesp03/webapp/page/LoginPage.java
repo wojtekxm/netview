@@ -8,7 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import zesp03.webapp.dto.LoginResultDto;
+import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.filter.AuthenticationFilter;
 import zesp03.webapp.service.LoginService;
 
@@ -29,7 +29,7 @@ public class LoginPage {
             @RequestParam("password") String password,
             ModelMap model,
             HttpServletResponse resp) {
-        LoginResultDto result = loginService.login(username, password);
+        AccessDto result = loginService.login(username, password);
         if (result != null) {
             Cookie cu = new Cookie(
                     AuthenticationFilter.COOKIE_USERID,

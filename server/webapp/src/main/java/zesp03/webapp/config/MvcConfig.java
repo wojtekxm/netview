@@ -20,8 +20,18 @@ import java.util.concurrent.TimeUnit;
 public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/css/**", "/fonts/**", "/images/**", "/js/**", "/favicon.ico")
-                .addResourceLocations("/css/", "/fonts/", "/images/", "/js/", "/favicon.ico")
+        registry.addResourceHandler(
+                "/css/**",
+                "/fonts/**",
+                "/images/**",
+                "/js/**",
+                "/favicon.ico")
+                .addResourceLocations(
+                        "/css/",
+                        "/fonts/",
+                        "/images/",
+                        "/js/",
+                        "/favicon.ico")
                 .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic());
     }
 

@@ -1,11 +1,13 @@
 package zesp03.webapp.service;
 
-import zesp03.webapp.dto.LoginResultDto;
+import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.dto.UserDto;
 
 public interface LoginService {
-    // zwraca null jak się nie uda
-    LoginResultDto login(String userName, String password);
+    /**
+     * @return null jeśli się nie uda
+     */
+    AccessDto login(String userName, String password);
 
     /**
      * @return null jeśli uwierzytelnianie się nie powiodło.

@@ -1,11 +1,15 @@
 package zesp03.webapp.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class StaticResourceFilter implements Filter {
+    private static final Logger log = LoggerFactory.getLogger(StaticResourceFilter.class);
     // mapuje do Boolean
     public static final String ATTR_IS_STATIC = "StaticResourceFilter.ATTR_IS_STATIC";
 
@@ -20,7 +24,7 @@ public class StaticResourceFilter implements Filter {
             final HttpServletRequest hreq = (HttpServletRequest) req;
             final HttpServletResponse hresp = (HttpServletResponse) resp;
             String r = hreq.getRequestURI();
-            String[] prefixes = {"/images/", "/css/", "/js/", "/favicon."};
+            String[] prefixes = {"/images/", "/css/", "/fonts/", "/js/", "/favicon.ico"};
             boolean isStatic = false;
             for (String prefix : prefixes) {
                 if (r.startsWith(prefix)) isStatic = true;

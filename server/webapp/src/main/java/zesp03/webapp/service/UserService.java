@@ -1,6 +1,6 @@
 package zesp03.webapp.service;
 
-import zesp03.webapp.dto.PasswordChangedDto;
+import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
@@ -31,9 +31,23 @@ public interface UserService {
     /**
      * @return Passtoken dla nowego hasła jeśli uda się zmienić hasło (jak się nie uda to wyrzuca wyjątek).
      */
-    PasswordChangedDto changePassword(Long userId, ChangePasswordDto dto);
+    AccessDto changePassword(Long userId, ChangePasswordDto dto);
 
     boolean checkActivation(Long tokenId, String tokenValue);
 
     void activate(ActivateUserDto dto);
+
+    /**
+     * @param password hasło dla którego ma być wyznaczony hash
+     * @return hash funkcji SHA-256 dla podanego hasła, zaprezentowany w formacie Base64URL.
+     */
+    String passwordToHash(String password);
+
+    /**
+     * Generuje losowy token w formacie Base64URL, reprezentujący ciąg bajtów o długości randomBytes.
+     *
+     * @param randomBytes liczba losowych bajtów do wygenerowania
+     * @return napis Base64URL reprezentujący losowo wygenerowany token.
+     */
+    String generateToken(int randomBytes);
 }

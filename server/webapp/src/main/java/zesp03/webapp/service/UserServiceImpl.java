@@ -1,9 +1,10 @@
 package zesp03.webapp.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zesp03.common.core.App;
 import zesp03.common.entity.Token;
 import zesp03.common.entity.TokenAction;
 import zesp03.common.entity.User;
@@ -14,7 +15,7 @@ import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.TokenRepository;
 import zesp03.common.repository.UserRepository;
 import zesp03.common.util.Secret;
-import zesp03.webapp.dto.PasswordChangedDto;
+import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
@@ -22,12 +23,19 @@ import zesp03.webapp.dto.input.ChangePasswordDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -76,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCreatedDto create(String serverName, int serverPort) {
-        String tokenValue = App.generateToken(32);
+        String tokenValue = generateToken(32);
         Secret secret = Secret.create(tokenValue.toCharArray(), 1);
 
         User u = new User();
@@ -146,7 +154,7 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("password", "empty password");
         }
 
-        String hash = App.passwordToHash(password);
+        String hash = passwordToHash(password);
         Secret s = Secret.create(hash.toCharArray(), 1);
         User u = userRepository.findOne(userId);
         if(u == null) {
@@ -157,7 +165,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PasswordChangedDto changePassword(Long userId, ChangePasswordDto dto) {
+    public AccessDto changePassword(Long userId, ChangePasswordDto dto) {
         final String old = dto.getOld();
         final String desired = dto.getDesired();
         final String repeat = dto.getRepeat();
@@ -169,8 +177,8 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("repeat", "passwords do not match");
         }
 
-        String oldHash = App.passwordToHash(old);
-        String desiredHash = App.passwordToHash(desired);
+        String oldHash = passwordToHash(old);
+        String desiredHash = passwordToHash(desired);
         Secret desiredSecret = Secret.create(desiredHash.toCharArray(), 1);
         User u = userRepository.findOne(userId);
         if(u == null) {
@@ -184,7 +192,8 @@ public class UserServiceImpl implements UserService {
         }
         u.setSecret( desiredSecret.getData() );
         userRepository.save(u);
-        PasswordChangedDto result = new PasswordChangedDto();
+        AccessDto result = new AccessDto();
+        result.setUserId(u.getId());
         result.setPassToken(desiredHash);
         return result;
     }
@@ -213,7 +222,7 @@ public class UserServiceImpl implements UserService {
         if( ! dto.getRepeatPassword().equals( dto.getPassword() ) ) {
             throw new ValidationException("repeatPassword", "does not match");
         }
-        String passwordHash = App.passwordToHash(dto.getPassword());
+        String passwordHash = passwordToHash(dto.getPassword());
         byte[] userSecret = Secret.create(passwordHash.toCharArray(), 1).getData();
 
         //TODO co jak nazwa użytkownika zajęta
@@ -240,5 +249,24 @@ public class UserServiceImpl implements UserService {
         user.setBlocked(false);
         tokenRepository.delete(token);
         userRepository.save(user);
+    }
+
+    @Override
+    public String passwordToHash(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] binaryPassword = password.getBytes("UTF-8");
+            byte[] binaryHash = md.digest(binaryPassword);
+            return Base64.getUrlEncoder().encodeToString(binaryHash);
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException exc) {
+            throw new IllegalStateException(exc);
+        }
+    }
+
+    @Override
+    public String generateToken(int randomBytes) {
+        byte[] bin = new byte[randomBytes];
+        new SecureRandom().nextBytes(bin);
+        return Base64.getUrlEncoder().encodeToString(bin);
     }
 }

@@ -6,14 +6,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>zarządzanie kontem</title>
-    <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <title>Lista urządzeń</title>
+    <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/progress.css">
+    <link rel="stylesheet" href="/css/tabelka.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
+
 <nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -43,7 +45,7 @@
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
-                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 180px!important;">
+                    <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
             </form>
@@ -54,77 +56,35 @@
         </div>
     </div>
 </nav>
-
 <div class="container">
     <div style="height: 100px;"></div>
     <div class="clearfix">
-        <h4 class="pull-left">Zarządzanie kontem</h4>
+        <h4 class="pull-left">Ustawienia</h4>
     </div>
-    <div class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Aktualne hasło</label>
-            <div class="col-sm-6">
-                <input id="actual_password" type="password" class="form-control">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Nowe hasło</label>
-            <div class="col-sm-6">
-                <input id="new_password" type="password" class="form-control">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Powtórz nowe hasło</label>
-            <div class="col-sm-6">
-                <input id="repeat_password" type="password" class="form-control">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-5 col-sm-7 clearfix">
-                <button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>
-                <div id="change_progress" class="pull-left" style="min-height:45px; min-width:60px">
-                    <div class="progress-loading"></div>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div id="result_success"></div>
-                <div id="result_error"></div>
-            </div>
-        </div>
+    <div id="notifyDiv" style="height: 100px">
     </div>
+    <form action="/settings" method="POST" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Okres badań (sekundy)</label>
+            <div class="col-sm-6">
+                <input type="text" name="examineInterval" class="form-control" value="${examineInterval}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12 text-center">
+                <input class="btn btn-primary" type="submit" value="Zapisz">
+            </div>
+        </div>
+    </form>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
-<script src="/js/progress.js"></script>
 <script src="/js/notify.js"></script>
 <script>
-$(document).ready(function () {
-    var btnSubmit = $('#btn_submit');
-    btnSubmit.click(function () {
-        btnSubmit.prop('disabled', true);
-        var changePasswordDto = {
-            "old": $('#actual_password').val(),
-            "desired": $('#new_password').val(),
-            "repeat": $('#repeat_password').val()
-        };
-        progress.load(
-            'post',
-            '/api/change-password',
-            '#change_progress',
-            function(contentDtoOfAccessDto) {
-                btnSubmit.prop('disabled', false);
-                notify.success('#result_success', 'Hasło zostało zmienione');
-            },
-            function() {
-                btnSubmit.prop('disabled', false);
-                notify.danger('#result_error', 'Nie udało się zmienić hasła');
-            },
-            changePasswordDto
-        );
-    });
-});
+    <c:if test="${success eq true}">notify.success('#notifyDiv', 'sukces');
+    </c:if>
+    <c:if test="${success eq false}">notify.danger('#notifyDiv', 'error');
+    </c:if>
 </script>
 </body>
 </html>

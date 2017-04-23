@@ -5,11 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zesp03.common.core.App;
 import zesp03.common.entity.User;
 import zesp03.common.repository.UserRepository;
 import zesp03.common.util.Secret;
-import zesp03.webapp.dto.LoginResultDto;
+import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.dto.UserDto;
 
 import java.util.List;
@@ -22,9 +21,12 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
-    public LoginResultDto login(String userName, String password) {
-        final String passToken = App.passwordToHash(password);
+    public AccessDto login(String userName, String password) {
+        final String passToken = userService.passwordToHash(password);
         List<User> list = userRepository.findByName(userName);
         if(list.isEmpty()) {
             return null;
@@ -37,7 +39,7 @@ public class LoginServiceImpl implements LoginService {
                 ! Secret.check(secret, passToken) ) {
             return null;
         }
-        LoginResultDto r = new LoginResultDto();
+        AccessDto r = new AccessDto();
         r.setUserId(u.getId());
         r.setPassToken(passToken);
         return r;

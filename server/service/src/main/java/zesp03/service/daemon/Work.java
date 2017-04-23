@@ -20,17 +20,15 @@ public class Work {
     private SurveySavingService surveySavingService;
 
     public void work() {
-        log.info("app.root reset password = {}", App.getRootResetPassword());
-        App.setFlywayClean(true);
-        App.saveSettings();
         Thread t = new Thread(() -> shutdown = true);
         Runtime.getRuntime().addShutdownHook(t);
         while(!shutdown) {
-            final int WAIT_SECONDS = 300;
+            App.reloadCustomProperties();
+            final int WAIT_SECONDS = App.getExamineInterval();
             final Instant t0 = Instant.now();
             final int updatedDevices = surveySavingService.examineAll();
             final Instant t1 = Instant.now();
-            double elapsed = Duration.between(t0, t1).toMillis() * 0.001;
+            final double elapsed = Duration.between(t0, t1).toMillis() * 0.001;
             log.info("network survey of all devices finished, {} new surveys, {} seconds elapsed",
                     updatedDevices, String.format(Locale.US, "%.3f", elapsed));
             long sleep = Duration.between(t1, t0.plusSeconds(WAIT_SECONDS)).toMillis();

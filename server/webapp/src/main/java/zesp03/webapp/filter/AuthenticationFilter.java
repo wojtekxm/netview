@@ -1,5 +1,7 @@
 package zesp03.webapp.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zesp03.webapp.config.Cookies;
 import zesp03.webapp.config.UglyUserServiceHolder;
 import zesp03.webapp.dto.UserDto;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthenticationFilter implements Filter {
+    public static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
     public static final String COOKIE_USERID = "userid";
     public static final String COOKIE_PASSTOKEN = "passtoken";
     // mapuje do UserDto, null jeśli uwierzytelnianie się nie powiodło
@@ -31,38 +34,19 @@ public class AuthenticationFilter implements Filter {
         if (req instanceof HttpServletRequest && resp instanceof HttpServletResponse) {
             final HttpServletRequest hreq = (HttpServletRequest) req;
             final HttpServletResponse hresp = (HttpServletResponse) resp;
+            UserDto user = null;
             Cookie cookieUid = Cookies.find(hreq, COOKIE_USERID);
             Cookie cookiePass = Cookies.find(hreq, COOKIE_PASSTOKEN);
-            if (cookieUid != null && cookiePass != null) {
-                Long userId = null;
-                if (cookieUid.getValue() != null) {
-                    try {
-                        userId = Long.parseLong(cookieUid.getValue());
-                    } catch (NumberFormatException ignore) {
-                    }
-                }
-                final String passToken = cookiePass.getValue();
-                UserDto userDto = null;
-
-                if (userId != null && passToken != null) {
-                    userDto = UglyUserServiceHolder.getLoginService().authenticate(userId, passToken);
-                }
-
-                if (userDto != null) {
-                    cookieUid.setMaxAge(60 * 60 * 24 * 30);
-                    hresp.addCookie(cookieUid);
-                    cookiePass.setMaxAge(60 * 60 * 24 * 30);
-                    hresp.addCookie(cookiePass);
-                    hreq.setAttribute(ATTR_USERDTO, userDto);
-                } else {
-                    cookieUid.setValue("");
-                    cookieUid.setMaxAge(0);
-                    hresp.addCookie(cookieUid);
-                    cookiePass.setValue("");
-                    cookiePass.setMaxAge(0);
-                    hresp.addCookie(cookiePass);
-                }
+            if (cookieUid != null && cookieUid.getValue() != null
+                    && cookiePass != null && cookiePass.getValue() != null) {
+                try {
+                    long id = Long.parseLong(cookieUid.getValue());
+                    user = UglyUserServiceHolder.getLoginService().authenticate(id, cookiePass.getValue());
+                } catch (NumberFormatException ignore) {}
             }
+            hreq.setAttribute(ATTR_USERDTO, user);
+            chain.doFilter(req, resp);
+            return;
         }
         chain.doFilter(req, resp);
     }

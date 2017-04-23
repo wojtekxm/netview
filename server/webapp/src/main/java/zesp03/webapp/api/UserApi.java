@@ -2,7 +2,7 @@ package zesp03.webapp.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import zesp03.webapp.dto.PasswordChangedDto;
+import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
@@ -13,7 +13,9 @@ import zesp03.webapp.dto.result.ListDto;
 import zesp03.webapp.filter.AuthenticationFilter;
 import zesp03.webapp.service.UserService;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class UserApi {
@@ -48,29 +50,23 @@ public class UserApi {
         return BaseResultDto.make( () -> userService.remove(id) );
     }
 
-    @PostMapping(value = "/api/change-password", consumes = "application/x-www-form-urlencoded")
-    public ContentDto<PasswordChangedDto> changePassword(
-            @RequestParam("old") String old,
-            @RequestParam("desired") String desired,
-            @RequestParam("repeat") String repeat,
-            HttpServletRequest req) {
-        return ContentDto.make( () -> {
-            ChangePasswordDto dto = new ChangePasswordDto();
-            dto.setOld(old);
-            dto.setDesired(desired);
-            dto.setRepeat(repeat);
-            UserDto user = (UserDto)req.getAttribute(AuthenticationFilter.ATTR_USERDTO);
-            return userService.changePassword(user.getId(), dto);
-        } );
-    }
-
     @PostMapping(value = "/api/change-password", consumes = "application/json")
-    public ContentDto<PasswordChangedDto> changePassword(
+    public ContentDto<AccessDto> changePassword(
             @RequestBody ChangePasswordDto dto,
-            HttpServletRequest req) {
+            HttpServletRequest req,
+            HttpServletResponse resp) {
         return ContentDto.make( () -> {
             UserDto user = (UserDto)req.getAttribute(AuthenticationFilter.ATTR_USERDTO);
-            return userService.changePassword(user.getId(), dto);
+            AccessDto access = userService.changePassword(user.getId(), dto);
+            final Cookie cu = new Cookie(AuthenticationFilter.COOKIE_USERID, Long.toString(access.getUserId()));
+            cu.setMaxAge(60 * 60 * 24 * 30);
+            cu.setPath("/");
+            resp.addCookie(cu);
+            final Cookie cp = new Cookie(AuthenticationFilter.COOKIE_PASSTOKEN, access.getPassToken());
+            cp.setMaxAge(60 * 60 * 24 * 30);
+            cp.setPath("/");
+            resp.addCookie(cp);
+            return access;
         } );
     }
 

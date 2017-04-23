@@ -196,7 +196,7 @@
                         btnExamine.prop('disabled', true);
                         progress.loadMany(
                             [ {
-                                "url" : '/api/examine-all',
+                                "url" : '/api/surveys/examine/all',
                                 "optionalPostData" : false
                             }, {
                                 "url" : '/api/device/details/all'

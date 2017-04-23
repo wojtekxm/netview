@@ -12,11 +12,11 @@ public class Controller {
     @TableGenerator(name = "controller", pkColumnValue = "controller")
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id", nullable = true)
     private Building building;
 
-    @Column(name = "\"name\"", unique = true, nullable = false, length = 85)
+    @Column(name = "\"name\"", nullable = false, length = 85)
     private String name;
 
     @Column(nullable = false, length = 15)
@@ -28,8 +28,15 @@ public class Controller {
     @Column(name = "community_string", nullable = false)
     private String communityString;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
     @OneToMany(mappedBy = "controller", fetch = FetchType.LAZY)
     private List<Device> deviceList = new ArrayList<>();
+
+    public Controller() {
+        this.deleted = false;
+    }
 
     public long getId() {
         return id;
@@ -73,6 +80,14 @@ public class Controller {
 
     public void setCommunityString(String communityString) {
         this.communityString = communityString;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     public List<Device> getDeviceList() {

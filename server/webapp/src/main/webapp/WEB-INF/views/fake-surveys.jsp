@@ -178,7 +178,7 @@
             $progressArea.empty();
             $progressArea.append( progress.createCircle() );
             $.ajax( {
-                "url": '/api/import/fake-surveys',
+                "url": '/api/surveys/fake',
                 "type": 'post',
                 "dataType": 'json',
                 "contentType": 'application/json',

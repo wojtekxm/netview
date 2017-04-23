@@ -24,4 +24,11 @@ public interface SurveySavingService {
      * Spreparowane badania mogą być w dowolnej kolejności (nie muszą być posortowane po czasie).
      */
     void importSurveys(Long deviceId, Integer frequencyMhz, List<ShortSurvey> data);
+
+    @Deprecated
+    void markTest(Long deviceId, int frequencyMhz, int validAfter);
+    @Deprecated
+    void justDelete(Long deviceId, int frequencyMhz, int validAfter);
+    @Deprecated
+    void selectAndDelete(Long deviceId, int frequencyMhz, int validAfter);
 }

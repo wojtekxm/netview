@@ -12,7 +12,7 @@ public class Device {
     @TableGenerator(name = "device", pkColumnValue = "device")
     private Long id;
 
-    @Column(name = "\"name\"", length = 85, nullable = false, unique = true)
+    @Column(name = "\"name\"", length = 85, nullable = false)
     private String name;
 
     @Column(name = "is_known", nullable = false)
@@ -25,8 +25,15 @@ public class Device {
     @JoinColumn(name = "controller_id", nullable = false)
     private Controller controller;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
     @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
     private List<DeviceFrequency> frequencyList = new ArrayList<>();
+
+    public Device() {
+        this.deleted = false;
+    }
 
     public Long getId() {
         return id;
@@ -66,6 +73,14 @@ public class Device {
 
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     public List<DeviceFrequency> getFrequencyList() {

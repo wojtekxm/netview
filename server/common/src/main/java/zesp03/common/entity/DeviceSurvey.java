@@ -23,6 +23,13 @@ public class DeviceSurvey {
     @Column(name = "clients_sum", nullable = false)
     private Integer clientsSum;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
+    public DeviceSurvey() {
+        this.deleted = false;
+    }
+
     public Long getId() {
         return id;
     }
@@ -61,5 +68,13 @@ public class DeviceSurvey {
 
     public void setClientsSum(Integer clientsSum) {
         this.clientsSum = clientsSum;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

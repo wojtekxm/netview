@@ -19,8 +19,15 @@ public class DeviceFrequency {
     @Column(name = "frequency_mhz", nullable = false)
     private Integer frequency;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted;
+
     @OneToMany(mappedBy = "frequency", fetch = FetchType.LAZY)
     private List<DeviceSurvey> surveyList = new ArrayList<>();
+
+    public DeviceFrequency() {
+        this.deleted = false;
+    }
 
     public Long getId() {
         return id;
@@ -44,6 +51,14 @@ public class DeviceFrequency {
 
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     public List<DeviceSurvey> getSurveyList() {

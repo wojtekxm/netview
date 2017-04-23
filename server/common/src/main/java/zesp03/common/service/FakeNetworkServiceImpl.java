@@ -95,7 +95,7 @@ public class FakeNetworkServiceImpl implements NetworkService {
     @Override
     public List<SurveyInfoUniqueNameFrequency> queryDevices(String controllerIP) throws SNMPException {
         if (!map.containsKey(controllerIP))
-            throw new SNMPException("unable to connect with specified controller");
+            throw new SNMPException("controller with IP \"" + controllerIP +"\" is undefined");
         final ArrayList<VirtualDevice> devices = map.get(controllerIP);
         final Random random = new Random();
         final ArrayList<SurveyInfoUniqueNameFrequency> result = new ArrayList<>();

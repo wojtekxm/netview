@@ -154,8 +154,8 @@
     #control4{display:flex;flex-direction: column;}
     .forma{ margin-bottom:5px; padding:10px;margin-top: -1px;
         vertical-align: middle;}
-
     #wykresy {max-width: 100%;max-height:80%;  }
+
 </style>
 
 <script>
@@ -177,57 +177,55 @@
     var group=300;
     var frequency=2400;
     var etykietka="DEFAULT";
-    var type="Line";
-    var api;
+    var type="group";
     var respons="true";
     var range_picker;
-    var timestamp1,timestamp2;
-
+    <%-------------------------------------------------------------------------------------------------------------------------------%>
     $(document).ready(function() {
         $('input[type=radio][name=range]').change(function() {
             if (this.value=='dzien') {
                 $('#range_picker select').val(0);
                 $('#control2').hide();
-                api="original"; console.log("Wartosc api:"+api);
+                type="original"; console.log("Wartosc type:"+type);
                 group=300; console.log("okres grupowania:" + group);
                 etykietka="Wykres dzienny - badania oryginalne";
                 range1=Math.round((Date.now() - 86400000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
-                console.log("_____________________________________________________________");
+                type="original";
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
             if (this.value=='tydzien') {
                 $('#range_picker select').val(0);
                 $('#control2').hide();
-                api="group";console.log("Wartosc api:"+api);
+                type="group";console.log("Wartosc type:"+type);
                 group=10800; console.log("okres grupowania:" + group);
                 etykietka="Wykres tygodniowy - grupowanie:3 godziny";
                 range1=Math.round((Date.now() - 604800000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
-                console.log("_____________________________________________________________");
+                type="group";
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
             if (this.value=='miesiac') {
                 $('#range_picker select').val(0);
                 $('#control2').hide();
-                api="group";console.log("Wartosc api:"+api);
+                type="group";console.log("Wartosc type:"+type);
                 group=86400; console.log("okres grupowania:" + group);
                 etykietka="Wykres miesięczny - grupowanie:1 dzien";
                 range1=Math.round((Date.now() - 2629743830)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
-                console.log("_____________________________________________________________");
+                type="group";
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
             if (this.value=='rok') {
                 $('#range_picker select').val(0);
                 $('#control2').hide();
-                api="group";console.log("Wartosc api:"+api);
+                type="group";console.log("Wartosc type:"+type);
                 group=2592000; console.log("okres grupowania:" + group);
                 etykietka="Wykres roczny - grupowanie:1 miesiac";
                 range1=Math.round((Date.now() - 31536000000)/1000); console.log("zakres1:" + convert(range1));
                 range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
-                console.log("_____________________________________________________________");
+                type="group";
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
             if (this.value=='custom') {
                 $('#control2').show();
@@ -235,56 +233,55 @@
         });
     });
 
-
+    <%-------------------------------------------------------------------------------------------------------------------------------%>
     $(document).ready(function() {
         $('input[type=radio][name=frequency]').change(function() {
             if (this.value=='1') {
                 frequency=2400; console.log("Czestotliwosc:"+frequency);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
             if (this.value=='2') {
                 frequency = 5000;
                 console.log("Czestotliwosc:" + frequency);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
         });
     });
-
+    <%-------------------------------------------------------------------------------------------------------------------------------%>
     $(document).ready(function() {
         $('input[type=radio][name=responsive]').change(function() {
             if (this.value=='1') {
                 respons=true; console.log("Responsywny:"+respons);
                 $('#wykresy').css('overflow', 'visible');
                 $('#control5').hide();
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
             if (this.value=='2') {
                 respons=false;
                 console.log("Responsywny:" + respons);
                 $('#wykresy').css('overflow', 'scroll');
                 $('#control5').show();
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
+                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
         });
     });
-
+    <%-------------------------------------------------------------------------------------------------------------------------------%>
     var gnr=document.getElementById("generate");
     gnr.addEventListener("click", function(){
-            generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type,respons);
-        }
-    );
-
-    $(document).ready(function() {
-        $(window).keydown(function(event){
-            if(event.keyCode == 13) {
-                event.preventDefault();
-                return false;
-            }
-        });
+        generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
     });
 
+    <%-------------------------------------------------------------------------------------------------------------------------------%>
+    $(document).ready(function() {
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {event.preventDefault();return false;}});
+    });
 
+    <%-------------------------------------------------------------------------------------------------------------------------------%>
     function convert(time) {
+        var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
+        var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
+            "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
         time=time*1000;
         var temp = new Date(time);
         var Seconds = temp.getSeconds();
@@ -300,68 +297,52 @@
             Day + " " + MonthName[Month] + " " + Year + " (" + DayName[WeekDay] + ") ";
     }
 
-
-    var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
-    var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
-        "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
-    console.log("teraz:" + teraz);
-    console.log("doba:" + doba);
-    console.log("tydzien:" + tydzien);
-    console.log("miesiac:" + miesiac);
-    console.log("kwartal:" + kwartal);
-    console.log("rok:" + rok);
-
-
-var temp;
+    <%-------------------------------------------------------------------------------------------------------------------------------%>
     $('#apply').click(
         function () {
             tmp1=Math.round(Number($('#datetimepicker1').data('DateTimePicker').date())/1000);
             tmp2=Math.round(Number($('#datetimepicker2').data('DateTimePicker').date())/1000);
             ranged=Number($('#zakres').val());
-            console.log("data1 z kalendarza:"+tmp1);
-            console.log("data2 z kalendarza:"+tmp2);
-            temp=Number(Math.round((tmp2-tmp1)/50));
-            etykietka=("Zakres od \n"+convert(tmp1)+"do \n"+convert(tmp2));
+            var temper=$('#range_picker').val();
+            console.log("TEMPER="+temper);
+            $('#range_picker select').val(0);
+            if (temper==1){type="original"; range=0;}
+            if (temper==2){type="group";range=Math.round((range2-range1)/50);}
+            if (temper==3){type="group";range=300;}
+            if (temper==4){type="group";range=1500;}
+            if (temper==5){type="group";range=3600;}
+            if (temper==6){type="group";range=10800;}
+            if (temper==7){type="group";range=86400;}
+            if (temper==8){type="group";range=604800;}
+            if (temper==9){type="group";range=31536000;}
+            etykietka=("Zakres od \n"+convert(tmp1)+"\n"+"do "+convert(tmp2));
             if (tmp1>=tmp2){alert("Wybrano niepoprawne parametry!!!!");}
             else{
-                generateChart(mycanvas, <c:out value="${device.id}"/>,tmp1,tmp2,temp,etykietka,frequency,type,respons);
+                if (temper==1){
+                    generateChart(mycanvas, <c:out value="${device.id}"/>,tmp1,tmp2,range,etykietka,frequency,'original',respons);
+                }
+                else{
+                    generateChart(mycanvas, <c:out value="${device.id}"/>,tmp1,tmp2,range,etykietka,frequency,'group',respons);
+                }
             }
-
         }
     );
-
+<%-------------------------------------------------------------------------------------------------------------------------------%>
     function generateChart(mycanvas, id,timestamp,timestamp2,range,etykieta,frequency,type) {
-        var temper=$('#range_picker').val();
-        console.log("TEMPER="+temper);
-        if (temper==1){api="original"};
-        if (temper==2){api="group";range=(range2-range1)/100;}
-        if (temper==3){api="group";range=300;}
-        if (temper==4){api="group";range=1500;}
-        if (temper==5){api="group";range=3600;}
-        if (temper==6){api="group";range=10800;}
-        if (temper==7){api="group";range=86400;}
-        if (temper==8){api="group";range=604800;}
-        if (temper==9){api="group";range=31536000;}
-        temper=0;
-        $('#range_picker select').val(0);
-        console.log("TEMPER="+ $('#range_picker select').val());
-        console.log("RANGE:"+range);
+        var tags = [];      //WSZYSTKO
+        var values_avg = [];    //WSZYSTKO
+        var values_min = [];    //WSZYSTKO
+        var values_max = [];    //WSZYSTKO
         var request = new XMLHttpRequest();
         var szerokosctmp=Number($('#chartSize1').val())+"px";
         var wysokosctmp=Number($('#chartSize2').val())+"px";
-        console.log("WYSOKOSC:"+wysokosctmp);
-        console.log("SZEROKOSC:"+szerokosctmp);
             $('#mycanvas').remove();
             $('#wykresy').append('<canvas id="mycanvas"</canvas>');
             mycanvas=$('#mycanvas');
             $('#mycanvas').css({'width':szerokosctmp,'height':wysokosctmp});
             $('#mycanvas').css({'max-width':szerokosctmp,'max-height':wysokosctmp});
-
         mycanvas = document.querySelector('#mycanvas');
-        var tags = [];      //WSZYSTKO
-        var values_avg = [];    //WSZYSTKO
-        var values_min = [];    //WSZYSTKO
-        var values_max = [];    //WSZYSTKO
+
         var options = {tooltips: {mode: 'index'}, legend: {display: true},
             title: {display: true, text: etykieta},
             hover: {intersect: false, mode:'x'},
@@ -371,20 +352,12 @@ var temp;
                     ticks: {ticks: {autoSkip: false, fixedStepSize: 10, beginAtZero:true, Min: -5, suggestedMax: 100}}}]},
             maintainAspectRatio:false, responsive: respons, steppedLine: true, elements: {line: {tension: 0}}
         };
-        var data2={
-            showLine:false,
-            labels: tags,
-            datasets: [{
-                label: "Ilosc klientów",
-                data: values_avg,
-                fill: false,
+        var data2={showLine:false, labels: tags,
+            datasets: [{label: "Ilosc klientów", data: values_avg, fill: false,
                 borderColor:"rgba(255,155,0,1)",
                 backgroundColor: "rgba(255,200,0,1)",
-                borderWidth: 0,
-                hoverBackgroundColor:"rgba(0,0,0,1)"
-            }]
-        };
-
+                pointBorderWidth: 1,
+                hoverBackgroundColor:"rgba(0,0,0,1)"}]};
         var data = {
             showLine:false,
             labels: tags,
@@ -394,9 +367,6 @@ var temp;
                 fill:false,
                 borderColor:"rgba(255,0,0,1)",
                 backgroundColor: "rgba(255,0,0,1)",
-                borderWidth: 0,
-                pointWidth:0,
-                pointBorderWidth:0,
                 hoverBackgroundColor:"rgba(0,0,0,1)"
 
             },{
@@ -405,7 +375,6 @@ var temp;
                 fill: false,
                 borderColor:"rgba(255,155,0,1)",
                 backgroundColor: "rgba(255,200,0,1)",
-                borderWidth: 0,
                 hoverBackgroundColor:"rgba(0,0,0,1)"
 
             },{
@@ -414,31 +383,24 @@ var temp;
                 fill: false,
                 borderColor: "rgba(8, 95, 41,1)",
                 backgroundColor: "rgba(8, 139, 41,1)",
-                hoverBackgroundColor:"rgba(8, 139, 41,1)"
-            }
+                hoverBackgroundColor:"rgba(8, 139, 41,1)"}]};
 
-            ]
-        };
-
-        if (api=="original"){
+        if (type=="original"){
             var request2 = new XMLHttpRequest();
             request.open('Get', '/api/surveys/original?device='+id+
                 '&frequency='+frequency+
                 '&start='+timestamp+
                 '&end='+timestamp2
             );
-            var avg_tmp,tags_tmp;
-            console.log("ZAKRES TIMESTAMPU:"+(range2-range1));
             request.onload = function () {
                 var jsondata = JSON.parse(request.responseText);
                 //console.log(JSON.stringify(jsondata));
                 var ilosc=Object.keys(jsondata.list).length;
+                console.log("ilosc badan:"+ilosc);
                     for (i = 0; i < ilosc; i++) {
-                        avg_tmp = jsondata.list[i].clients;
-                        values_avg.push(Math.round(avg_tmp));
+                        values_avg.push(Math.round(jsondata.list[i].clients));
                         tags.push(convert(Number(jsondata.list[i].timestamp)));
                     }
-
                 var myFirstChart = Chart.Line(mycanvas, {data: data2, options: options});
             };
         }
@@ -450,33 +412,19 @@ var temp;
                 '&groupTime='+range+
                 '&end='+timestamp2
             );
-            var min_tmp,avg_tmp,max_tmp,tags_tmp;
             request.onload = function () {
                 var jsondata = JSON.parse(request.responseText);
                 //console.log(JSON.stringify(jsondata));
                 var ilosc=Object.keys(jsondata.list).length;
+                console.log("ilosc badan:"+ilosc);
                     for (i = 0; i < ilosc; i++) {
-                        avg_tmp = jsondata.list[i].average;
-                        min_tmp = jsondata.list[i].min;
-                        max_tmp = jsondata.list[i].max;
-                        values_avg.push(Math.round(avg_tmp));
-                        values_min.push(min_tmp);
-                        values_max.push(max_tmp);
+                        values_avg.push(Math.round(jsondata.list[i].average));
+                        values_min.push(jsondata.list[i].min);
+                        values_max.push(jsondata.list[i].max);
                         tags.push(convert(Number(jsondata.list[i].timeStart)));
-                        <%--console.log(i+" AVERAGE:"+avg_tmp);
-                    console.log(i+" MIN:"+min_tmp);
-                    console.log(i+" MAX:"+max_tmp);
-                    console.log(convert(Number(jsondata.list[i].timeStart)));
-                    console.log("______________________________");--%>
-
                 }
                 var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});
-            };
-
-        }
-        request.send();
-
-
+            };}request.send();
     }
 </script>
 

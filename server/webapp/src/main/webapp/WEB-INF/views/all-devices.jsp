@@ -208,7 +208,7 @@
                                 fixDevices();
                                 mainSuccess.fadeOut(200, function() {
                                     mainSuccess.empty();
-                                    currentTabelka = tabelka.create(devices, columnDefinitions)
+                                    currentTabelka = tabelka.create(devices, columnDefinitions);
                                     mainSuccess.append(currentTabelka);
                                     mainSuccess.fadeIn(200);
                                 });

@@ -178,7 +178,7 @@
                                 fixControllers();
                                 mainSuccess.fadeOut(200, function() {
                                     mainSuccess.empty();
-                                    currentTabelka = tabelka.create(controllers, columnDefinitions)
+                                    currentTabelka = tabelka.create(controllers, columnDefinitions);
                                     mainSuccess.append(currentTabelka);
                                     mainSuccess.fadeIn(200);
                                 });

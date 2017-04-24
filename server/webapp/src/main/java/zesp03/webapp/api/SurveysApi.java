@@ -63,33 +63,6 @@ public class SurveysApi {
         return BaseResultDto.make( () -> importService.fakeSurveys(dto) );
     }
 
-    @Deprecated
-    @PostMapping("/mark-test/{deviceId}/{frequencyMhz}/{validAfter}")
-    public BaseResultDto postMarkTest(
-            @PathVariable("deviceId") long deviceId,
-            @PathVariable("frequencyMhz") int frequencyMhz,
-            @PathVariable("validAfter") int validAfter) {
-        return BaseResultDto.make( () -> surveySavingService.markTest(deviceId, frequencyMhz, validAfter) );
-    }
-
-    @Deprecated
-    @PostMapping("/just-delete/{deviceId}/{frequencyMhz}/{validAfter}")
-    public BaseResultDto postJustDelete(
-            @PathVariable("deviceId") long deviceId,
-            @PathVariable("frequencyMhz") int frequencyMhz,
-            @PathVariable("validAfter") int validAfter) {
-        return BaseResultDto.make( () -> surveySavingService.justDelete(deviceId, frequencyMhz, validAfter) );
-    }
-
-    @Deprecated
-    @PostMapping("/select-and-delete/{deviceId}/{frequencyMhz}/{validAfter}")
-    public BaseResultDto postSelectAndDelete(
-            @PathVariable("deviceId") long deviceId,
-            @PathVariable("frequencyMhz") int frequencyMhz,
-            @PathVariable("validAfter") int validAfter) {
-        return BaseResultDto.make( () -> surveySavingService.selectAndDelete(deviceId, frequencyMhz, validAfter) );
-    }
-
     @GetMapping("/original")
     public ListDto<ShortSurvey> getOriginal(
             @RequestParam("device") long device,

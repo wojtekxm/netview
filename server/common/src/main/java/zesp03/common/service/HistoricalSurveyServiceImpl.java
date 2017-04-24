@@ -1,5 +1,7 @@
 package zesp03.common.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class HistoricalSurveyServiceImpl implements HistoricalSurveyService {
+    private static final Logger log = LoggerFactory.getLogger(HistoricalSurveyServiceImpl.class);
+
     @Autowired
     private DeviceSurveyRepository deviceSurveyRepository;
 
@@ -147,6 +151,7 @@ public class HistoricalSurveyServiceImpl implements HistoricalSurveyService {
             t0 = t1;
             t1 = t0 + groupTime;
         }
+        log.debug("surveys between {} and {}: {}", timeBegin, end, surveys.size());
         return result;
     }
 }

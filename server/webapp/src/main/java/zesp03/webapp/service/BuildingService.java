@@ -18,5 +18,4 @@ public interface BuildingService {
     BuildingDto modifyBuilding(long id);
     void acceptModify(long id, String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude);
     BuildingDetailsDto getUnitsBuildings(long id);
-    List<UnitDto> forBuildingPage(long buildingId);
 }

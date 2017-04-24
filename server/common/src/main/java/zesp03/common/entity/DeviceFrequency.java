@@ -64,8 +64,4 @@ public class DeviceFrequency {
     public List<DeviceSurvey> getSurveyList() {
         return surveyList;
     }
-
-    public void setSurveyList(List<DeviceSurvey> surveyList) {
-        this.surveyList = surveyList;
-    }
 }

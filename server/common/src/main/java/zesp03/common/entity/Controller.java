@@ -93,8 +93,4 @@ public class Controller {
     public List<Device> getDeviceList() {
         return deviceList;
     }
-
-    public void setDeviceList(List<Device> deviceList) {
-        this.deviceList = deviceList;
-    }
 }

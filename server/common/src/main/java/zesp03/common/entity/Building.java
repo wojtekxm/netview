@@ -91,15 +91,7 @@ public class Building {
         return controllerList;
     }
 
-    public void setControllerList(List<Controller> controllerList) {
-        this.controllerList = controllerList;
-    }
-
     public List<LinkUnitBuilding> getLubList() {
         return lubList;
-    }
-
-    public void setLubList(List<LinkUnitBuilding> lubList) {
-        this.lubList = lubList;
     }
 }

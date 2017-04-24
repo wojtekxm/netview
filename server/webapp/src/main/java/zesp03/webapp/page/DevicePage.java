@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import zesp03.common.service.CurrentSurveyService;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.DeviceDto;
 import zesp03.webapp.service.ControllerService;
@@ -13,9 +12,6 @@ import zesp03.webapp.service.DeviceService;
 
 @Controller
 public class DevicePage {
-    @Autowired
-    private CurrentSurveyService currentSurveyService;
-
     @Autowired
     private DeviceService deviceService;
 

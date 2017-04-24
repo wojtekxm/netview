@@ -138,7 +138,7 @@ function green(){
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
-    })
+    });
 
     var date = new Date(time*1000);
     var n = date.toLocaleString();
@@ -253,7 +253,7 @@ function red(){
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
-    })
+    });
 
     var date = new Date(time*1000);
     var n = date.toLocaleString();
@@ -368,7 +368,7 @@ function grey(){
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
-    })
+    });
 
     var date = new Date(time*1000);
     var n = date.toLocaleString();

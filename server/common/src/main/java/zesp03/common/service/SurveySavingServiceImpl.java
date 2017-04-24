@@ -50,9 +50,6 @@ public class SurveySavingServiceImpl implements SurveySavingService {
     @Autowired
     private DeviceSurveyRepository deviceSurveyRepository;
 
-    @Autowired
-    private DeviceFrequencyService deviceFrequencyService;
-
     @Override
     public int examineAll() {
         Iterable<Controller> list = controllerRepository.findAll();
@@ -212,42 +209,6 @@ public class SurveySavingServiceImpl implements SurveySavingService {
             deviceSurvey.setEnabled(shortSurvey.isEnabled());
             deviceSurveyRepository.save(deviceSurvey);
             lastDS = deviceSurvey;
-        }
-    }
-
-    @Deprecated
-    @Override
-    public void markTest(Long deviceId, int frequencyMhz, int validAfter) {
-        Long fi = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
-        em.createQuery("UPDATE DeviceSurvey ds SET ds.clientsSum=-1 WHERE " +
-                "ds.frequency.id = :fi AND ds.timestamp <= :after")
-                .setParameter("after", validAfter)
-                .setParameter("fi", fi)
-                .executeUpdate();
-    }
-
-    @Deprecated
-    @Override
-    public void justDelete(Long deviceId, int frequencyMhz, int validAfter) {
-        Long fi = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
-        em.createQuery("DELETE FROM DeviceSurvey ds WHERE " +
-                "ds.frequency.id = :fi AND ds.timestamp <= :after")
-                .setParameter("after", validAfter)
-                .setParameter("fi", fi)
-                .executeUpdate();
-    }
-
-    @Deprecated
-    @Override
-    public void selectAndDelete(Long deviceId, int frequencyMhz, int validAfter) {
-        Long fi = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
-        List<DeviceSurvey> l = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
-                "ds.frequency.id = :fi AND ds.timestamp <= :after", DeviceSurvey.class)
-                .setParameter("after", validAfter)
-                .setParameter("fi", fi)
-                .getResultList();
-        for(DeviceSurvey ds : l) {
-            deviceSurveyRepository.delete(ds);
         }
     }
 }

@@ -67,7 +67,14 @@ public class HistoricalSurveyServiceImpl implements HistoricalSurveyService {
 
         final List<SurveyPeriodAvgMinMax> result = new ArrayList<>();
         Long frequencyId = deviceFrequencyService.getFrequencyIdOrThrow(deviceId, frequencyMhz);
-        List<DeviceSurvey> beforeList = deviceSurveyRepository.findLastNotAfter(frequencyId, start);
+        List<DeviceSurvey> beforeList = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
+                        "ds.frequency.id = :fi AND ds.timestamp <= :t " +
+                        "ORDER BY ds.timestamp DESC",
+                DeviceSurvey.class)
+                .setParameter("fi", frequencyId)
+                .setParameter("t", start)
+                .setMaxResults(1)
+                .getResultList();
         int timeBegin;
         if(beforeList.isEmpty()) {
             timeBegin = start;

@@ -12,9 +12,6 @@ public interface DeviceSurveyRepository extends CrudRepository<DeviceSurvey, Lon
     @Query("SELECT ds FROM DeviceSurvey ds WHERE ds.frequency.id = ?1 AND ds.timestamp >= ?2 AND ds.timestamp < ?3 ORDER BY ds.timestamp ASC")
     List<DeviceSurvey> findFromPeriodOrderByTime(Long frequencyId, Integer timeStart, Integer timeEnd);
 
-    @Query("SELECT ds FROM DeviceSurvey ds WHERE ds.frequency.id = ?1 AND ds.timestamp <= ?2 ORDER BY ds.timestamp DESC")
-    List<DeviceSurvey> findLastNotAfter(Long frequencyId, Integer timeLast);
-
     @Modifying
     @Query("DELETE FROM DeviceSurvey ds WHERE ds.frequency = ?1")
     void deleteByFrequency(DeviceFrequency df);

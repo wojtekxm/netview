@@ -34,10 +34,6 @@ public class Controller {
     @OneToMany(mappedBy = "controller", fetch = FetchType.LAZY)
     private List<Device> deviceList = new ArrayList<>();
 
-    public Controller() {
-        this.deleted = false;
-    }
-
     public long getId() {
         return id;
     }

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="pl">
@@ -81,14 +82,16 @@
         </div>
         <div class="progress-error"></div>
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>
 <script src="/js/tabelka.js"></script>
+<script src="/js/notify.js"></script>
 <script>
 "use strict";
-(function() {
+$(document).ready( function() {
     var controllers, columnDefinitions, currentTabelka;
     currentTabelka = null;
     controllers = [];
@@ -127,7 +130,7 @@
             building = cont.building;
 
             cont.td_name = $('<a></a>')
-                .attr('href', '/controller?id=' + encodeURI(cont.id))
+                .attr('href', '/controller/' + cont.id)
                 .text(cont.name);
             cont.td_ipv4 = $('<span></span>').text(cont.ipv4);
             cont.td_description = $('<span></span>').text(cont.description);
@@ -141,57 +144,55 @@
             else {
                 cont.cmp_location = building.name;
                 cont.td_location = $('<a></a>')
-                    .attr('href', '/building/' + encodeURI(building.id))
+                    .attr('href', '/building/' + building.id)
                     .text(building.name);
             }
         }
     }
 
-    $(document).ready( function() {
-        progress.load(
-            'get',
-            '/api/controller/details/all',
-            '#main_progress',
-            function(listDtoOfControllerDetailsDto) {
-                var btnExamine, mainProgress, mainSuccess;
-                btnExamine = $('#btn_examine');
-                mainProgress = $('#main_progress');
-                mainSuccess = $('#main_success');
-                controllers = listDtoOfControllerDetailsDto.list;
-                fixControllers();
-                currentTabelka = tabelka.create(controllers, columnDefinitions);
-                mainSuccess.append(currentTabelka);
-                btnExamine.click(
-                    function() {
-                        btnExamine.prop('disabled', true);
-                        progress.loadMany(
-                            [ {
-                                "url" : '/api/surveys/examine/all',
-                                "optionalPostData" : false
-                            }, {
-                                "url" : '/api/controller/details/all'
-                            } ],
-                            '#examine_progress',
-                            function(responses) {
-                                btnExamine.prop('disabled', false);
-                                controllers = responses[1].list;
-                                fixControllers();
-                                mainSuccess.fadeOut(200, function() {
-                                    mainSuccess.empty();
-                                    currentTabelka = tabelka.create(controllers, columnDefinitions);
-                                    mainSuccess.append(currentTabelka);
-                                    mainSuccess.fadeIn(200);
-                                });
-                            },
-                            function() {
-                                btnExamine.prop('disabled', false);
-                            }
-                        );
-                    }
-                );
-        } );
+    progress.load(
+        'get',
+        '/api/controller/details/all',
+        '#main_progress',
+        function(listDtoOfControllerDetailsDto) {
+            var btnExamine, mainProgress, mainSuccess;
+            btnExamine = $('#btn_examine');
+            mainProgress = $('#main_progress');
+            mainSuccess = $('#main_success');
+            controllers = listDtoOfControllerDetailsDto.list;
+            fixControllers();
+            currentTabelka = tabelka.create(controllers, columnDefinitions);
+            mainSuccess.append(currentTabelka);
+            btnExamine.click(
+                function() {
+                    btnExamine.prop('disabled', true);
+                    progress.loadMany(
+                        [ {
+                            "url" : '/api/surveys/examine/all',
+                            "optionalPostData" : false
+                        }, {
+                            "url" : '/api/controller/details/all'
+                        } ],
+                        '#examine_progress',
+                        function(responses) {
+                            btnExamine.prop('disabled', false);
+                            controllers = responses[1].list;
+                            fixControllers();
+                            mainSuccess.fadeOut(200, function() {
+                                mainSuccess.empty();
+                                currentTabelka = tabelka.create(controllers, columnDefinitions);
+                                mainSuccess.append(currentTabelka);
+                                mainSuccess.fadeIn(200);
+                            });
+                        },
+                        function() {
+                            btnExamine.prop('disabled', false);
+                        }
+                    );
+                }
+            );
     } );
-})();
+} );
 </script>
 </body>
 </html>

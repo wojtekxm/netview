@@ -9,10 +9,14 @@ import zesp03.common.entity.DeviceSurvey;
 import java.util.List;
 
 public interface DeviceSurveyRepository extends CrudRepository<DeviceSurvey, Long> {
-    @Query("SELECT ds FROM DeviceSurvey ds WHERE ds.frequency.id = ?1 AND ds.timestamp >= ?2 AND ds.timestamp < ?3 ORDER BY ds.timestamp ASC")
-    List<DeviceSurvey> findFromPeriodOrderByTime(Long frequencyId, Integer timeStart, Integer timeEnd);
+    @Query("SELECT ds FROM DeviceSurvey ds WHERE ds.frequency.id = ?1 AND ds.timestamp >= ?2 AND ds.timestamp < ?3 AND ds.deleted = FALSE ORDER BY ds.timestamp ASC")
+    List<DeviceSurvey> findFromPeriodNotDeletedOrderByTime(Long frequencyId, Integer timeStart, Integer timeEnd);
 
     @Modifying
-    @Query("DELETE FROM DeviceSurvey ds WHERE ds.frequency = ?1")
-    void deleteByFrequency(DeviceFrequency df);
+    @Query("UPDATE DeviceSurvey ds SET ds.deleted = TRUE WHERE ds.frequency = ?1")
+    void markDeletedAll(DeviceFrequency df);
+
+    @Modifying
+    @Query("UPDATE DeviceSurvey ds SET ds.deleted = TRUE WHERE ds.frequency = ?1 AND ds.timestamp < ?2")
+    void markDeletedOlderThan(DeviceFrequency df, int before);
 }

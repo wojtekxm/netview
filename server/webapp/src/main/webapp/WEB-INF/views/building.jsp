@@ -140,7 +140,7 @@ function fixUnits() {
     for(i = 0; i < units.length; i++) {
         u = units[i];
         u.td_description = $('<a></a>')
-            .attr('href', '/unit?id=' + encodeURI(u.id))
+            .attr('href', '/unit?id=' + u.id)
             .text(u.description);
         u.td_code = $('<span></span>').text(u.code);
         u.td_button = $('<button class="btn btn-danger btn-xs"></button>')
@@ -160,7 +160,7 @@ function fixUnits() {
                         "url" : '/api/building/unlink-unit/',
                         "optionalPostData" : buildingAndUnitDto
                     }, {
-                        "url" : '/api/building/units/' + encodeURI(building.id)
+                        "url" : '/api/building/units/' + building.id
                     } ],
                     '#main_progress',
                     function(responses) {
@@ -203,7 +203,7 @@ function fixControllers() {
     for(i = 0; i < controllers.length; i++) {
         cont = controllers[i];
         cont.td_name = $('<a></a>')
-            .attr('href', '/controller?id=' + encodeURI(cont.id))
+            .attr('href', '/controller/' + cont.id)
             .text(cont.name);
         cont.td_ipv4 = $('<span></span>').text(cont.ipv4);
         cont.td_description = $('<span></span>').text(cont.description);
@@ -213,7 +213,7 @@ function fixControllers() {
 
 progress.load(
     'get',
-    '/api/building/details/' + encodeURI(${id}),
+    '/api/building/details/${id}',
     '#main_progress',
     function(contentDtoOfBuildingDetailsDto) {
         var fieldName, fieldCode, tabelkaUnits, tabelkaControllers;

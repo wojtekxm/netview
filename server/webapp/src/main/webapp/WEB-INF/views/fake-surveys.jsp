@@ -192,7 +192,7 @@
                                 $('<div></div>').addClass('panel-heading').append(
                                     'Sukces ',
                                     $('<a></a>')
-                                        .attr('href', '/device?id=' + obj.deviceId)
+                                        .attr('href', '/device/' + obj.deviceId)
                                         .text('sprawdź urządzenie')
                                 )
                             )

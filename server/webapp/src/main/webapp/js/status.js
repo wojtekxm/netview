@@ -67,7 +67,7 @@ function green(){
             }
         }
 
-        var h = "/device?id=" + currentDeviceStateDto.id;
+        var h = "/device/" + currentDeviceStateDto.id;
         var clazz= '';
 
         if (isEnabled == true) {
@@ -207,7 +207,7 @@ function red(){
             }
         }
 
-        var h = "/device?id=" + currentDeviceStateDto.id;
+        var h = "/device/" + currentDeviceStateDto.id;
         var clazz= '';
 
         if (isEnabled == true) {
@@ -322,7 +322,7 @@ function grey(){
             }
         }
 
-        var h = "/device?id=" + currentDeviceStateDto.id;
+        var h = "/device/" + currentDeviceStateDto.id;
         var clazz= '';
 
         if (isEnabled == true) {

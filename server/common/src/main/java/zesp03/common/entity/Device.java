@@ -31,10 +31,6 @@ public class Device {
     @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
     private List<DeviceFrequency> frequencyList = new ArrayList<>();
 
-    public Device() {
-        this.deleted = false;
-    }
-
     public Long getId() {
         return id;
     }

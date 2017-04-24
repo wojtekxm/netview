@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:url var="actionRemove" value="/controller/remove/${controller.id}"/>
+<c:url var="hrefModify" value="/modify-controller?id=${controller.id}"/>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -66,7 +68,6 @@
                 <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
                     Szczegóły urządzenia:
                 </div>
-                <c:url var="href" value="/modify-controller?id=${controller.id}"/>
 
                 <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
                     <tr>
@@ -86,11 +87,15 @@
                         <td><c:out value="${controller.building.name}"/></td>
                     </tr>
                 </table>
-                <div>
-                    <a href="/api/controller/remove/${controller.id}" class="btn btn-danger" role="button" style="float:left;width: 180px;font-size:17px;">
-                        <span class="glyphicon glyphicon-trash"></span> Usuń
+                <div class="clearfix">
+                    <form class="pull-left" method="POST" action="${actionRemove}">
+                        <button class="btn btn-danger" type="submit">
+                            <span class="glyphicon glyphicon-trash"></span> Usuń
+                        </button>
+                    </form>
+                    <a href="${hrefModify}" class="btn btn-success pull-left" role="button">
+                        <span class="glyphicon glyphicon-wrench"></span> Zmień
                     </a>
-                    <a href="${href}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Modyfikuj</a>
                 </div>
             </div>
         </div>

@@ -98,7 +98,7 @@
             for(i = 0; i < buildings.length; i++) {
                 b = buildings[i];
                 b.td_name = $('<a></a>')
-                    .attr('href', '/building/' + encodeURI(b.id))
+                    .attr('href', '/building/' + b.id)
                     .text(b.name);
                 b.td_code = $('<span></span>').text(b.code);
             }

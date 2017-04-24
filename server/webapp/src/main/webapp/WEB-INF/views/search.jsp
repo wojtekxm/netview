@@ -61,7 +61,7 @@
 
         <h3>urządzenia</h3>
         <ol class="list">
-            <c:forEach var="deviceDto" items="${search.devices}"><li><c:url var="h" value="/device?id=${deviceDto.id}"/>
+            <c:forEach var="deviceDto" items="${search.devices}"><li><c:url var="h" value="/device/${deviceDto.id}"/>
                 <a href="${h}"><c:out value="${deviceDto.name}"/></a>
             </li>
             </c:forEach>
@@ -70,7 +70,7 @@
 
         <h3>kontrolery</h3>
         <ol class="list">
-            <c:forEach var="controllerDto" items="${search.controllers}"><li><c:url var="h" value="/controller?id=${controllerDto.id}"/>
+            <c:forEach var="controllerDto" items="${search.controllers}"><li><c:url var="h" value="/controller/${controllerDto.id}"/>
                 <a href="${h}"><c:out value="${controllerDto.name}"/></a>
             </li>
             </c:forEach>

@@ -31,7 +31,7 @@ public class SearchServiceImpl implements SearchService {
         final String anywhere = "%" + query + "%";
 
         final List<DeviceDto> devices = em.createQuery("SELECT d FROM Device d WHERE " +
-                        "d.name LIKE :begins OR d.description LIKE :anywhere",
+                        "d.deleted = FALSE AND (d.name LIKE :begins OR d.description LIKE :anywhere)",
                 Device.class)
                 .setParameter("begins", begins)
                 .setParameter("anywhere", anywhere)
@@ -41,7 +41,8 @@ public class SearchServiceImpl implements SearchService {
                 .collect(Collectors.toList());
 
         final List<ControllerDto> controllers = em.createQuery("SELECT c FROM Controller c WHERE " +
-                        "c.name LIKE :begins OR c.description LIKE :anywhere OR c.ipv4 LIKE :anywhere",
+                        "c.deleted = FALSE AND " +
+                        "(c.name LIKE :begins OR c.description LIKE :anywhere OR c.ipv4 LIKE :anywhere)",
                 Controller.class)
                 .setParameter("begins", begins)
                 .setParameter("anywhere", anywhere)

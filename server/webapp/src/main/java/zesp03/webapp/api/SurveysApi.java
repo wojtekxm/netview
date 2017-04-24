@@ -6,8 +6,8 @@ import zesp03.common.data.ShortSurvey;
 import zesp03.common.data.SurveyPeriodAvgMinMax;
 import zesp03.common.exception.SNMPException;
 import zesp03.common.exception.ValidationException;
-import zesp03.common.service.HistoricalSurveyService;
-import zesp03.common.service.SurveySavingService;
+import zesp03.common.service.SurveyModifyingService;
+import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.input.ImportFakeSurveysDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -19,10 +19,10 @@ import java.time.Instant;
 @RequestMapping("/api/surveys")
 public class SurveysApi {
     @Autowired
-    private HistoricalSurveyService historicalSurveyService;
+    private SurveyReadingService surveyReadingService;
 
     @Autowired
-    private SurveySavingService surveySavingService;
+    private SurveyModifyingService surveyModifyingService;
 
     @Autowired
     private ImportService importService;
@@ -32,7 +32,7 @@ public class SurveysApi {
         final Instant t0 = Instant.now();
         BaseResultDto result = new BaseResultDto();
         try {
-            surveySavingService.examineAll();
+            surveyModifyingService.examineAll();
         }
         catch(SNMPException exc) {
             result.setSuccess(false);
@@ -48,7 +48,7 @@ public class SurveysApi {
         final Instant t0 = Instant.now();
         BaseResultDto result = new BaseResultDto();
         try {
-            surveySavingService.examineOne(controllerId);
+            surveyModifyingService.examineOne(controllerId);
         }
         catch(SNMPException exc) {
             result.setSuccess(false);
@@ -76,7 +76,7 @@ public class SurveysApi {
             throw new ValidationException("end", "end must be after start");
         }
 
-        return ListDto.make( () -> historicalSurveyService.getOriginal(device, frequencyMhz, start, end) );
+        return ListDto.make( () -> surveyReadingService.getOriginal(device, frequencyMhz, start, end) );
     }
 
     @GetMapping("/avg-min-max")
@@ -86,6 +86,6 @@ public class SurveysApi {
             @RequestParam("start") int start,
             @RequestParam("end") int end,
             @RequestParam("groupTime") int groupTime) {
-        return ListDto.make( () -> historicalSurveyService.getMultiAvgMinMax(device, frequencyMhz, start, end, groupTime) );
+        return ListDto.make( () -> surveyReadingService.getMultiAvgMinMax(device, frequencyMhz, start, end, groupTime) );
     }
 }

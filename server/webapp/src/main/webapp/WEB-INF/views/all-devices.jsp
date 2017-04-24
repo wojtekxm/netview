@@ -125,7 +125,7 @@
             freq = dev.frequency;
 
             dev.td_name = $('<a></a>')
-                .attr('href', '/device?id=' + encodeURI(dev.id))
+                .attr('href', '/device/' + dev.id)
                 .text(dev.name);
 
             dev.td_description = $('<span></span>').text(dev.description);
@@ -171,7 +171,7 @@
             else {
                 dev.cmp_controller = controller.name;
                 dev.td_controller = $('<a></a>')
-                    .attr('href', '/controller?id=' + encodeURI(controller.id))
+                    .attr('href', '/controller/' + controller.id)
                     .text(controller.name);
             }
         }

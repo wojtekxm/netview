@@ -2,7 +2,7 @@ package zesp03.webapp.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import zesp03.common.service.SurveySavingService;
+import zesp03.common.service.SurveyModifyingService;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.service.TestService;
 
@@ -11,7 +11,7 @@ import zesp03.webapp.service.TestService;
 @RequestMapping("/api/test")
 public class TestApi {
     @Autowired
-    private SurveySavingService surveySavingService;
+    private SurveyModifyingService surveyModifyingService;
 
     @Autowired
     private TestService testService;
@@ -45,5 +45,13 @@ public class TestApi {
             @PathVariable("deviceId") long deviceId,
             @PathVariable("frequencyMhz") int frequencyMhz) {
         return BaseResultDto.make( () -> testService.selectSurveys(deviceId, frequencyMhz) );
+    }
+
+    @GetMapping("/make-devices/{controllerId}/{deviceName}/{frequencyMhz}")
+    public BaseResultDto getMakeDevices(
+            @PathVariable("controllerId") long controllerId,
+            @PathVariable("deviceName") String deviceName,
+            @PathVariable("frequencyMhz") int frequencyMhz) {
+        return BaseResultDto.make( () -> testService.makeDevices(controllerId, deviceName, frequencyMhz) );
     }
 }

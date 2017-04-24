@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zesp03.common.data.ShortSurvey;
 import zesp03.common.exception.ValidationException;
-import zesp03.common.service.SurveySavingService;
+import zesp03.common.service.SurveyModifyingService;
 import zesp03.common.util.RandomUtil;
 import zesp03.webapp.dto.input.ImportFakeSurveysDto;
 
@@ -18,7 +18,7 @@ public class ImportServiceImpl implements ImportService {
     private static final Logger log = LoggerFactory.getLogger(ImportServiceImpl.class);
 
     @Autowired
-    private SurveySavingService surveySavingService;
+    private SurveyModifyingService surveyModifyingService;
 
     @Override
     public void fakeSurveys(ImportFakeSurveysDto dto) {
@@ -81,6 +81,6 @@ public class ImportServiceImpl implements ImportService {
             lastClients = ss.getClients();
             list.add(ss);
         }
-        surveySavingService.importSurveys(dto.getDeviceId(), dto.getFrequencyMhz(), list);
+        surveyModifyingService.importSurveys(dto.getDeviceId(), dto.getFrequencyMhz(), list);
     }
 }

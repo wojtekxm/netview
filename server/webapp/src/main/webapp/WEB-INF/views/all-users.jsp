@@ -108,13 +108,13 @@
 
             if(u.name === null) {
                 u.td_name = $('<a></a>')
-                    .attr('href', '/user?id=' + encodeURI(u.id))
+                    .attr('href', '/user?id=' + u.id)
                     .text('[' + u.id + ']');
                 u.cmp_name = '[' + u.id + ']';
             }
             else {
                 u.td_name = $('<a></a>')
-                    .attr('href', '/user?id=' + encodeURI(u.id))
+                    .attr('href', '/user?id=' + u.id)
                     .text(u.name);
                 u.cmp_name = u.name;
             }

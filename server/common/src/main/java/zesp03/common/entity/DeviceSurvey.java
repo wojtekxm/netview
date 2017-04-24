@@ -26,10 +26,6 @@ public class DeviceSurvey {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
 
-    public DeviceSurvey() {
-        this.deleted = false;
-    }
-
     public Long getId() {
         return id;
     }

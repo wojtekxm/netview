@@ -118,7 +118,7 @@
                         sumDisabled++;
                         clazz = 'square-gray';
                     }
-                    var href = '/device?id=' + currentDeviceStateDto.id;
+                    var href = '/device/' + currentDeviceStateDto.id;
                     var li = $('<li></li>').addClass(clazz)
                         .attr('title', currentDeviceStateDto.name)
                         .attr('data-toggle', 'tooltip')

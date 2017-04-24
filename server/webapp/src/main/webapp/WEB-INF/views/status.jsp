@@ -290,7 +290,7 @@
                     var time = state5000.timestamp;
                 }
             }
-            var h = "/device?id=" + currentDeviceStateDto.id;
+            var h = "/device/" + currentDeviceStateDto.id;
             var clazz= '';
 
             if (isEnabled == true) {

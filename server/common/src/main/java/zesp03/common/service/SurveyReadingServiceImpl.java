@@ -95,7 +95,6 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
                 Object[].class)
                 .setParameter("deviceIds", deviceIds)
                 .getResultList();
-        log.debug("list.size={}", list.size());
         for(Object[] arr : list) {
             Device dev = (Device)arr[0];
             DeviceFrequency df = (DeviceFrequency)arr[1];
@@ -266,7 +265,6 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
             t0 = t1;
             t1 = t0 + groupTime;
         }
-        log.debug("surveys between {} and {}: {}", timeBegin, end, surveys.size());
         return result;
     }
 }

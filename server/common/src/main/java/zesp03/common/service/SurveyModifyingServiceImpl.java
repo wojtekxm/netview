@@ -89,13 +89,11 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     private int saveToDatabase(Controller controller, HashSet<SurveyInfoUniqueNameFrequency> uniqueSurveys) {
         final int timestamp = (int) Instant.now().getEpochSecond();
         final Map<String, Device> name2device = makeDevices(uniqueSurveys, controller);
-        log.debug("name2device.size={}", name2device.size());
         final Map<Long, CurrentDeviceState> id2current = surveyReadingService.checkSome(name2device.entrySet()
                 .stream()
                 .map( e -> e.getValue().getId() )
                 .collect(Collectors.toSet())
         );
-        log.debug("id2current.size={}", id2current.size());
         final List<DeviceSurvey> ds2persist = new ArrayList<>();
         for(final SurveyInfoUniqueNameFrequency info : uniqueSurveys) {
             final Device device = name2device.get(info.getName());
@@ -146,9 +144,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
                 "d.name IN (:names) AND d.deleted = FALSE", Device.class)
                 .setParameter("names", existing.keySet())
                 .getResultList()
-                .forEach( device -> {
-                    existing.put(device.getName(), device);
-                } );
+                .forEach( device -> existing.put(device.getName(), device) );
         final HashMap<String, Device> result = new HashMap<>();
         existing.forEach( (name, device) -> {
             if(device == null) {

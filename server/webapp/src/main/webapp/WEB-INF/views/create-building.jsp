@@ -104,8 +104,6 @@
 
     $(document).ready(function () {
         var btnSubmit = $('#btn_submit');
-//        var response = JSON.parse('{"failed":""}');
-//        response.id;
         btnSubmit.click(function () {
             btnSubmit.prop('disabled', true);
             var createBuildingDto = {
@@ -125,11 +123,11 @@
                 '#change_progress',
                 function( response ) {
                     btnSubmit.prop( 'disabled', false );
-                    notify.success( '#result_success', 'Budynek został dodany' );
+                    notify.success( '#result_success', 'Budynek został dodany.' );
                 },
                 function( response ) {
                     btnSubmit.prop( 'disabled', false );
-                    notify.danger( '#result_error', (response == null ||  response.error == null ||  response.error == '' ) ? 'Błąd operacji' : response.error  );
+                    notify.danger( '#result_error', 'Nie udało się dodać budynku.'); //(response == null ||  response.error == null ||  response.error == '' ) ? 'Błąd operacji' : response.error  );
                 },
                 createBuildingDto
             );

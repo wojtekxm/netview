@@ -130,11 +130,11 @@
                 '#change_progress',
                 function(unitDto) {
                     btnSubmit.prop('disabled', false);
-                    notify.success('#result_success', 'Dane zostały zmienione');
+                    notify.success('#result_success', 'Dane zostały zmienione.');
                 },
                 function() {
                     btnSubmit.prop('disabled', false);
-                    notify.danger('#result_error', 'Nie udało się zmienić danych');
+                    notify.danger('#result_error', 'Nie udało się zmienić danych.');
                 },
                 unitDto
 

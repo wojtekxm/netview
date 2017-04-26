@@ -120,11 +120,11 @@
                 '#change_progress',
                 function(createControllerDto) {
                     btnSubmit.prop('disabled', false);
-                    notify.success('#result_success', 'Kontroler został dodany');
+                    notify.success('#result_success', 'Kontroler został dodany.');
                 },
                 function() {
                     btnSubmit.prop('disabled', false);
-                    notify.danger('#result_error', 'Nie udało się dodać kontrolera');
+                    notify.danger('#result_error', 'Nie udało się dodać kontrolera.');
                 },
 
                 createControllerDto

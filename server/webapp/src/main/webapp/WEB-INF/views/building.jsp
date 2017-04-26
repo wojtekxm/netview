@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:url var="href" value="/modify-building?id=${id}"/>
-<c:url var="action" value="/api/building/remove/${id}"/>
+<c:url var="action" value="/building/remove/${id}"/>
 <!DOCTYPE html>
 <html lang="pl">
 <head>

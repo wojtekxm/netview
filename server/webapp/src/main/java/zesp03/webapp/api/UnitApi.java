@@ -55,9 +55,9 @@ public class UnitApi {
     }
 
     @PostMapping(value = "/api/unit/remove/{unitId}")
-    public BaseResultDto remove(
+    public BaseResultDto removeUnit(
             @PathVariable("unitId") long id) {
-        return BaseResultDto.make( () -> unitService.remove(id) );
+        return BaseResultDto.make( () -> unitService.removeUnit(id) );
     }
 
     @GetMapping("/api/modify-unit")

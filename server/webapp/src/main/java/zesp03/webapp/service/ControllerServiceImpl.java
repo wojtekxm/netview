@@ -130,7 +130,7 @@ public class ControllerServiceImpl implements ControllerService {
         if(dto.getIpv4() == null) {
             throw new ValidationException("ipv4", "null");
         }
-        if(dto.getName().isEmpty()) {
+        if( dto.getName() == null || dto.getName().isEmpty()) {
             throw new ValidationException("name", "null");
         }
         if( ! IPv4.isValid( dto.getIpv4() ) ) {

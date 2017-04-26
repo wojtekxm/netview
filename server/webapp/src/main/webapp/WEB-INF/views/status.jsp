@@ -82,9 +82,14 @@
                     <select id="budynki" multiple="multiple"></select>
                     &nbsp;&nbsp;
                     <button id="filters_commit" type="button" class="btn btn-info" style="width: 150px;"><span class='glyphicon glyphicon-ok'></span> Filtruj &nbsp;</button>
-                    <button id="back" type="button" class="btn btn-info" style="float:right;margin-left: 4px;" onclick="allDevices();setInterval('allDevices()', 30000);">Powrót</button>
-                    <button id="worst_10" type="button" class="btn btn-default" style="float:right;margin-left: 4px;">10 najgorszych urządzeń</button>
-                    <button id="top_10" type="button" class="btn btn-default" style="float:right;">10 najleszych urządzeń</button>
+                    <br>
+                    <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
+                        <button id="worst_10" type="button" class="btn btn-default" style="margin-right: 4px;">10 najgorszych urządzeń</button>
+                        <button id="top_10" type="button" class="btn btn-default" style="">10 najleszych urządzeń</button>
+                    </div>
+                    <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
+                        <button id="back" type="button" class="btn btn-info" style="width: 150px;" onclick="allDevices();setInterval('allDevices()', 30000);"><span class="glyphicon glyphicon-refresh"></span> Powrót</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,32 +120,136 @@
 <script type="text/javascript" src="/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/js/status.js"></script>
 <script type="text/javascript" src="/js/progress.js"></script>
-<script type="text/javascript" src="/js/w3data.js"></script>
 
 
 <script type="text/javascript">
-    $('#filters_commit').click(function filter(){
+    function filter(){
+        clearInterval(inter);
         var value = "";
+
+        $("#devices li").remove();
+
+        var states = new Array();
+        var stateId = "";
         $('.s :checkbox:checked').each(function(){
-            $("#devices li").remove();
-            value = $(this).attr('value');
-            if(value == 'active'){
-                onlyGreen();
-            }else if(value == 'inactive'){
-                onlyRed();
-            }else if(value == 'off'){
-                onlyGrey();
-            }
+            stateId = $(this).attr('value');
+            states.push(stateId);
         });
-        if(value == ""){
+
+
+        var controllers = new Array();
+        var controllerId = "";
+        $('.c :checkbox:checked').each(function(){
+            controllerId = $(this).attr('value');
+            controllers.push(controllerId);
+        });
+
+
+        for(var i=0;i<controllers.length;i++){
+            for(var j=0;j<devices.length;j++){
+                for(var k=0;k<states.length;k++) {
+                    if (controllers[i] == devices[j].controllerId.toString()) {
+                        var active = 0;
+                        var inactive = 0;
+                        var off = 0;
+                        var all = 0;
+                        var style = 'list-style-type: none;color:white;text-decoration:none;';
+
+                        var currentDeviceStateDto = devices[j];
+                        var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+                        var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+                        if (frequency == "2400") {
+                            if (typeof state2400 === 'undefined') {
+                                continue;
+                            }
+                            else {
+                                var sum = state2400.clients;
+                                var isEnabled = state2400.enabled;
+                                var time = state2400.timestamp;
+                            }
+                        } else if (frequency == "5000") {
+                            if (typeof state5000 === 'undefined') {
+                                continue;
+                            }
+                            else {
+                                var sum = state5000.clients;
+                                var isEnabled = state5000.enabled;
+                                var time = state5000.timestamp;
+                            }
+                        }
+                        var h = "/device?id=" + currentDeviceStateDto.id;
+                        var clazz = '';
+
+                        if (isEnabled == true) {
+                            if(states[k] == 'active') {
+                                if (sum > 0 && sum <= 10) {
+                                    clazz = "greenDiode1";
+                                    active++;
+                                } else if (sum > 10 && sum <= 30) {
+                                    clazz = "greenDiode2";
+                                    active++;
+                                } else if (sum > 30 && sum <= 47) {
+                                    clazz = "greenDiode3";
+                                    active++;
+                                } else if (sum > 47) {
+                                    clazz = "greenDiode4";
+                                    active++;
+                                }
+                            }else if(states[k] == 'inactive'){
+                                if (sum == 0) {
+                                    clazz = "redDiode";
+                                    inactive++;
+                                }
+                            }
+                        } else if (isEnabled == false) {
+                            if(states[k] == 'off'){
+                                clazz = "greyDiode";
+                                sum = '-';
+                                off++;
+                            }
+                        }
+                        var line = $('<li></li>').addClass(clazz)
+                            .attr('title', currentDeviceStateDto.name)
+                            .attr('data-toggle', 'tooltip')
+                            .append(
+                                $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
+                            );
+                        if (active + inactive + off != 0) {
+                            $('#devices').append(line);
+                            $('#progress_area').hide(500);
+                        } else {
+                            err();
+                        }
+
+                        line.tooltip();
+                    }
+                }
+            }
+        }
+
+
+        if(value == "" && controllerId == ""){
+            inter = setInterval('allDevices()', 30000);
             allDevices();
         }
+    }
+
+    $('#filters_commit').click(function(){
+        filter();
     })
 </script>
 
 
 
 <script type="text/javascript">
+    function compare(b1, b2) {
+        var x = b1.name;
+        if (x === null) x = '';
+        var y = b2.name;
+        if (y === null) y = '';
+        return x.localeCompare(y);
+    }
+
     $(document).ready(function () {
         var devices = new Array();
         var buildings = new Array();
@@ -156,14 +265,17 @@
                     return;
                 }
                 buildings = listDtoOfBuildingDto.list;
+                buildings.sort(compare);
 
                 $.each(buildings, function(index, item){
-                    var opt = $('<option />', {
+                    var opt = $('<option></option>', {
                         type: 'checkbox',
-                        id: item.name,
+                        id: item.id,
                         value: item.name,
-                        text: item.name
+                        text: item.name,
+                        class: 'b'
                     });
+                    opt.attr('id', '1')
                     opt.appendTo(b);
                     b.multiselect('rebuild');
                 })
@@ -180,14 +292,17 @@
                     return;
                 }
                 controllers = listDtoOfControllerDetailsDto.list;
+                controllers.sort(compare);
 
                 $.each(controllers, function(index, item){
-                    var opt = $('<option />', {
+                    var opt = $('<option></option>', {
                         type: 'checkbox',
-                        id: item.name,
-                        value: item.name,
-                        text: item.name
+                        value: item.id,
+                        text: item.name,
+                        class: 'c',
                     });
+
+
                     opt.appendTo(c);
                     c.multiselect('rebuild');
                 })
@@ -197,18 +312,24 @@
 
         $('#stan').multiselect({
             includeSelectAllOption: true,
-            nonSelectedText:'Stan urządzeń'
+            nonSelectedText:'Stan urządzeń',
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 300
         });
         var b = $('#budynki').multiselect({
             enableFiltering: true,
             includeSelectAllOption: true,
-            nonSelectedText:'Budynki'
+            nonSelectedText:'Budynki',
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 300
         });
 
         var c = $('#kontrolery').multiselect({
             enableFiltering: true,
             includeSelectAllOption: true,
-            nonSelectedText:'Kontrolery'
+            nonSelectedText:'Kontrolery',
+            enableCaseInsensitiveFiltering: true,
+            maxHeight: 300
         });
     })
 </script>
@@ -250,7 +371,10 @@
                 devices = listDtoOfCurrentDeviceStateDto.list;
                 e();
             },
-            error: err
+            error: function(){
+                $('#data').remove();
+                $('#data_tittle').replaceWith(" &nbsp;Wystąpił błąd podczas pobierania danych");
+            }
         });
     }
 
@@ -333,10 +457,6 @@
 
         all = active+inactive+off;
 
-        $('#countActive').text('aktywne: ' + active);
-        $('#countInactive').text('nieaktywne: ' + inactive);
-        $('#countOff').text('wyłączone: ' + off);
-        $('#countAll').text('wszystkie: ' + all);
 
         var date = new Date(time*1000);
         var n = date.toLocaleString();
@@ -345,11 +465,15 @@
             n = "";
             setTimeout(function(){
                 $('#data').replaceWith(n);
-                $('#data_tittle').replaceWith(" &nbsp;Wystąpił błąd podczas pobierania danych");
+                $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
             }, 5000);
         }else {
             $('#data').replaceWith(n);
             $('#data_tittle').replaceWith(" &nbsp;Ostatnie badanie przeprowadzono:");
+            $('#countActive').text('aktywne: ' + active);
+            $('#countInactive').text('nieaktywne: ' + inactive);
+            $('#countOff').text('wyłączone: ' + off);
+            $('#countAll').text('wszystkie: ' + all);
         }
     }
 
@@ -362,21 +486,14 @@
 <script type="text/javascript">
     $(function() {
         $('#toggleFrequency').change(function() {
+            $('#devices li').remove();
             if(frequency == "2400"){
                 frequency = "5000";
             }else if(frequency == "5000"){
                 frequency = "2400";
             }
-            if(clicked == "all"){
-                allDevices();
-            }else if(clicked == "green"){
-                onlyGreen();
-            }else if(clicked == "red"){
-                onlyRed();
-            }else if(clicked == "grey"){
-                onlyGrey();
-            }
 
+            filter();
         })
     })
 </script>

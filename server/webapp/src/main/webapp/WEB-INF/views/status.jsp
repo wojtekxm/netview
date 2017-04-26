@@ -136,6 +136,7 @@
             states.push(stateId);
         });
 
+
         var controllers = new Array();
         var controllerId = "";
         $('.c :checkbox:checked').each(function(){
@@ -146,18 +147,19 @@
 
         for(var i=0;i<controllers.length;i++){
             for(var j=0;j<devices.length;j++){
-                if(controllers[i] == devices[j].controllerId.toString()){
-                    var active=0;
-                    var inactive=0;
-                    var off=0;
-                    var all=0;
-                    var style='list-style-type: none;color:white;text-decoration:none;';
+                for(var k=0;k<states.length;k++) {
+                    if (controllers[i] == devices[j].controllerId.toString()) {
+                        var active = 0;
+                        var inactive = 0;
+                        var off = 0;
+                        var all = 0;
+                        var style = 'list-style-type: none;color:white;text-decoration:none;';
 
                         var currentDeviceStateDto = devices[j];
                         var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
                         var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-                        if(frequency == "2400"){
-                            if(typeof state2400 === 'undefined') {
+                        if (frequency == "2400") {
+                            if (typeof state2400 === 'undefined') {
                                 continue;
                             }
                             else {
@@ -165,8 +167,8 @@
                                 var isEnabled = state2400.enabled;
                                 var time = state2400.timestamp;
                             }
-                        }else if(frequency == "5000"){
-                            if(typeof state5000 === 'undefined') {
+                        } else if (frequency == "5000") {
+                            if (typeof state5000 === 'undefined') {
                                 continue;
                             }
                             else {
@@ -176,45 +178,52 @@
                             }
                         }
                         var h = "/device?id=" + currentDeviceStateDto.id;
-                        var clazz= '';
+                        var clazz = '';
 
                         if (isEnabled == true) {
-                            if (sum > 0 && sum <= 10) {
-                                clazz = "greenDiode1";
-                                active++;
-                            } else if (sum > 10 && sum <= 30) {
-                                clazz = "greenDiode2";
-                                active++;
-                            } else if (sum > 30 && sum <= 47) {
-                                clazz = "greenDiode3";
-                                active++;
-                            } else if (sum > 47) {
-                                clazz = "greenDiode4";
-                                active++;
-                            } else if (sum == 0) {
-                                clazz = "redDiode";
-                                inactive++;
+                            if(states[k] == 'active') {
+                                if (sum > 0 && sum <= 10) {
+                                    clazz = "greenDiode1";
+                                    active++;
+                                } else if (sum > 10 && sum <= 30) {
+                                    clazz = "greenDiode2";
+                                    active++;
+                                } else if (sum > 30 && sum <= 47) {
+                                    clazz = "greenDiode3";
+                                    active++;
+                                } else if (sum > 47) {
+                                    clazz = "greenDiode4";
+                                    active++;
+                                }
+                            }else if(states[k] == 'inactive'){
+                                if (sum == 0) {
+                                    clazz = "redDiode";
+                                    inactive++;
+                                }
                             }
-                        } else if(isEnabled == false){
-                            clazz = "greyDiode";
-                            sum='-';
-                            off++;
+                        } else if (isEnabled == false) {
+                            if(states[k] == 'off'){
+                                clazz = "greyDiode";
+                                sum = '-';
+                                off++;
+                            }
                         }
                         var line = $('<li></li>').addClass(clazz)
                             .attr('title', currentDeviceStateDto.name)
                             .attr('data-toggle', 'tooltip')
                             .append(
-                                $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
+                                $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
                             );
-                        if(active+inactive+off != 0){
+                        if (active + inactive + off != 0) {
                             $('#devices').append(line);
                             $('#progress_area').hide(500);
-                        }else{
+                        } else {
                             err();
                         }
 
                         line.tooltip();
                     }
+                }
             }
         }
 

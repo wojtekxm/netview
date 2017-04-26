@@ -56,11 +56,11 @@ var progress = {};
     }
 
     /*
-    Request: {
-        "url" : '/api/examine/all'
-        "optionalPostData" : false
-    }
-    */
+     Request: {
+     "url" : '/api/examine/all'
+     "optionalPostData" : false
+     }
+     */
     function loadMany(requests, jquerySelector, successHandler, optionalErrorHandler) {
         var done, responses, req, parent, elemLoading, elemSuccess, elemError, config;
         parent = $(jquerySelector);

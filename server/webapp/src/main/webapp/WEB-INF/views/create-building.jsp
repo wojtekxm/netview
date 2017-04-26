@@ -62,33 +62,82 @@
 <div id="strona">
     <div id="kontent">
         <div class="form-group">
-            <form method="post" action="/api/create-building">
+            <form method="post" action="/api/building/create">
                 <input type="text" class="form-control" placeholder="Nazwa Budynku"
-                       required="required" name="name">
+                       id="new_name" required="required" name="name">
                 <input type="text" class="form-control" placeholder="Kod budynku"
-                       required="required" name="code">
+                       id="new_code" required="required" name="code">
                 <input type="text" class="form-control" placeholder="Ulica"
-                       name="street">
+                       id="new_street" name="street">
                 <input type="text" class="form-control" placeholder="Miasto"
-                       name="city">
+                       id="new_city" name="city">
                 <input type="text" class="form-control" placeholder="Kod pocztowy"
-                       name="postalCode">
+                       id="new_postalCode" name="postalCode">
                 <input type="text" class="form-control" placeholder="Numer"
-                       name="number">
+                       id="new_number" name="number">
                 <input type="text" class="form-control" placeholder="Szerokosc geograficzna"
-                       required="required" name="latitude">
+                       id="new_latitude" required="required" name="latitude">
                 <input type="text" class="form-control" placeholder="Wysokosc geograficzna"
-                       required="required" name="longitude">
-                <input type="submit" value="Dodaj budynek" class="btn btn-primary btn-default btn-lg active">
-
+                       id="new_longitude" required="required" name="longitude" style="margin-bottom: inherit;">
+                <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">
+                <div id="change_progress" style="min-height:38px; min-width:60px">
+                    <div class="progress-loading"></div>
+                </div>
             </form>
-            <br>
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div id="result_success"></div>
+                    <div id="result_error"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
 
+<script>
+
+    $(document).ready(function () {
+        var btnSubmit = $('#btn_submit');
+//        var response = JSON.parse('{"failed":""}');
+//        response.id;
+        btnSubmit.click(function () {
+            btnSubmit.prop('disabled', true);
+            var createBuildingDto = {
+                "name": $('#new_name').val(),
+                "code": $('#new_code').val(),
+                "street": $('#new_street').val(),
+                "city": $('#new_city').val(),
+                "postalCode": $('#new_postalCode').val(),
+                "number": $('#new_number').val(),
+                "latitude": $('#new_latitude').val(),
+                "longitude": $('#new_longitude').val()
+
+            };
+            progress.load(
+                'post',
+                '/api/building/create',
+                '#change_progress',
+                function( response ) {
+                    btnSubmit.prop( 'disabled', false );
+                    notify.success( '#result_success', 'Budynek został dodany' );
+                },
+                function( response ) {
+                    btnSubmit.prop( 'disabled', false );
+                    notify.danger( '#result_error', (response == null ||  response.error == null ||  response.error == '' ) ? 'Błąd operacji' : response.error  );
+                },
+                createBuildingDto
+            );
+
+        });
+    });
+
+
+</script>
 </body>
 </html>

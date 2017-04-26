@@ -69,37 +69,78 @@
                     Modyfikuj jednostkę:
                 </div>
 
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
 
-            <tr>
+                    <tr>
 
-                <input form="form2" type="hidden" name="id" value="${unit.id}" />
+                        <input form="form2" id="id" type="hidden" name="id" value="${unit.id}" />
 
-            </tr>
-            <tr>
-                <td >Kod</td>
-                <td ><input form="form2" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
-            </tr>
+                    </tr>
+                    <tr>
+                        <td >Kod</td>
+                        <td ><input form="form2" id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
+                    </tr>
 
-            <tr>
-                <td >Opis</td>
-                <td ><input form="form2" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
-            </tr>
+                    <tr>
+                        <td >Opis</td>
+                        <td ><input form="form2" id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
+                    </tr>
 
-        </table>
+                </table>
                 <div>
-                    <a href="/unit?id=${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span>Wróć</a>
+                    <a href="/unit?id=${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
                     <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
-                        <input form="form2" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                        <input form="form2" type="submit" value=" Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
+                         <div id="change_progress" style="min-height:38px; min-width:60px">
+                    <div class="progress-loading"></div>
+                         </div>
                     </span>
                 </div>
             </div>
-
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div id="result_success"></div>
+                    <div id="result_error"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        var btnSubmit = $('#btn_submit');
+        btnSubmit.click(function () {
+            btnSubmit.prop('disabled', true);
+            var unitDto = {
+                "id": $('#id').val(),
+                "code": $('#new_code').val(),
+                "description": $('#new_description').val()
+
+            };
+            progress.load(
+                'post',
+                '/api/accept-modify-unit',
+                '#change_progress',
+                function(unitDto) {
+                    btnSubmit.prop('disabled', false);
+                    notify.success('#result_success', 'Dane zostały zmienione');
+                },
+                function() {
+                    btnSubmit.prop('disabled', false);
+                    notify.danger('#result_error', 'Nie udało się zmienić danych');
+                },
+                unitDto
+
+            );
+        });
+    });
+</script>
 </body>
 </html>

@@ -65,14 +65,34 @@ public class UnitApi {
             @RequestParam("id") long id) {
         return ContentDto.make( () -> unitService.modifyUnit(id) );
     }
+    @PostMapping(value = "/api/accept-modify-unit", consumes = "application/json")
+    public BaseResultDto acceptModifyUnit(
+            @RequestBody UnitDto dto) {
+        return BaseResultDto.make( () -> unitService.acceptModifyUnit(dto) );
+    }
 
     @PostMapping(value = "/api/accept-modify-unit", consumes = "application/x-www-form-urlencoded")
     public BaseResultDto acceptModifyUnit(
             @RequestParam("id") long id,
             @RequestParam("code") String code,
             @RequestParam("description") String description) {
-        return BaseResultDto.make( () -> unitService.acceptModifyUnit(id, code, description) );
+        return BaseResultDto.make( () -> {
+            UnitDto dto = new UnitDto();
+            dto.setId(id);
+            dto.setCode(code);
+            dto.setDescription(description);
+            unitService.acceptModifyUnit(dto);
+        } );
     }
+
+
+//    @PostMapping(value = "/api/accept-modify-unit", consumes = "application/x-www-form-urlencoded")
+//    public BaseResultDto acceptModifyUnit(
+//            @RequestParam("id") long id,
+//            @RequestParam("code") String code,
+//            @RequestParam("description") String description) {
+//        return BaseResultDto.make( () -> unitService.acceptModifyUnit(id, code, description) );
+//    }
 
     @GetMapping("/api/link-unit-all-buildings")
     public ContentDto<UnitBuildingsDto> getAllBuildings(

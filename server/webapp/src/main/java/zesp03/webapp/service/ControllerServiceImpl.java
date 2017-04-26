@@ -97,8 +97,8 @@ public class ControllerServiceImpl implements ControllerService {
         if(dto.getIpv4() == null) {
             throw new ValidationException("ipv4", "null");
         }
-        if(dto.getName() == null) {
-            throw new ValidationException("ipv4", "null");
+        if(dto.getName().isEmpty()) {
+            throw new ValidationException("name", "null");
         }
         if( ! IPv4.isValid( dto.getIpv4() ) ) {
             throw new ValidationException("ipv4", "invalid format");
@@ -130,8 +130,8 @@ public class ControllerServiceImpl implements ControllerService {
         if(dto.getIpv4() == null) {
             throw new ValidationException("ipv4", "null");
         }
-        if(dto.getName() == null) {
-            throw new ValidationException("ipv4", "null");
+        if(dto.getName().isEmpty()) {
+            throw new ValidationException("name", "null");
         }
         if( ! IPv4.isValid( dto.getIpv4() ) ) {
             throw new ValidationException("ipv4", "invalid format");

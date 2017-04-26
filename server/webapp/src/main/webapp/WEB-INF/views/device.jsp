@@ -66,7 +66,7 @@
     <div id="control">
         <div id="control1"> Zakres wyswietlanych danych
             <form action="" class="forma">
-                <input type="radio" class="rad" name="range" value="dzien"> Dzien </br>
+                <input type="radio" class="rad" id="default_chart" name="range" value="dzien"> Dzien </br>
                 <input type="radio" class="rad" name="range" value="tydzien"> Tydzien</br>
                 <input type="radio" class="rad" name="range" value="miesiac"> Miesiac</br>
                 <input type="radio" class="rad" name="range" value="rok"> Rok</br>
@@ -152,16 +152,14 @@
     #control2{display:flex;flex-direction: column;}
     #control3{display:flex;flex-direction: column;}
     #control4{display:flex;flex-direction: column;}
-    .forma{ margin-bottom:5px; padding:10px;margin-top: -1px;
-        vertical-align: middle;}
+    .forma{ margin-bottom:5px; padding:10px;margin-top: -1px;  vertical-align: middle;}
     #wykresy {max-width: 100%;max-height:80%;  }
-
 </style>
 
 <script>
     $(function () {$('#datetimepicker1').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
     $(function () {$('#datetimepicker2').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
-
+$('#default_chart').prop("checked", true);
     $('#control5').hide();
     $('#control2').hide();
     var now = Date.now();
@@ -176,8 +174,8 @@
     var ranged;
     var group=300;
     var frequency=2400;
-    var etykietka="DEFAULT";
-    var type="group";
+    var etykietka="Domyślny wykres dniowy";
+    var type="original";
     var respons="true";
     var range_picker;
     <%-------------------------------------------------------------------------------------------------------------------------------%>
@@ -347,7 +345,7 @@
             title: {display: true, text: etykieta},
             hover: {intersect: false, mode:'x'},
             label: {display: true},
-            scales: {xAxes: [{display:true,barPercentage:1, autoSkip: false, ticks: {maxRotation: 30}}],
+            scales: {xAxes: [{display:true,barPercentage:1, autoSkip: true, ticks: {maxRotation: 0,maxTicksLimit: 2}}],
                 yAxes: [{stacked: false, display: true, scaleLabel: {display: true, labelString: 'Ilosc klientów'},
                     ticks: {ticks: {autoSkip: false, fixedStepSize: 10, beginAtZero:true, Min: -5, suggestedMax: 100}}}]},
             maintainAspectRatio:false, responsive: respons, steppedLine: true, elements: {line: {tension: 0}}

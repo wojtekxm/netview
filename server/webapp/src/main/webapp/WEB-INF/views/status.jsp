@@ -59,40 +59,40 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:</div>
+        </div>
+    </div>
+    <div style="display: inline-block; margin-bottom: 5px;">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
+            <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
+        </button>
+        <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
+    </div>
+    <div id="filters" class="collapse">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:</div>
-            </div>
-        </div>
-        <div style="display: inline-block; margin-bottom: 5px;">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
-                <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
-            </button>
-            <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
-        </div>
-        <div id="filters" class="collapse">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <select id="stan" multiple="multiple">
-                        <option type="checkbox" class="s" value="active">Aktywne</option>
-                        <option type="checkbox" class="s" value="inactive">Niektywne</option>
-                        <option type="checkbox" class="s" value="off">Wyłączone</option>
-                    </select>
-                    <select id="kontrolery" multiple="multiple"></select>
-                    <select id="budynki" multiple="multiple"></select>
-                    &nbsp;&nbsp;
-                    <button id="filters_commit" type="button" class="btn btn-info" style="width: 150px;"><span class='glyphicon glyphicon-ok'></span> Filtruj &nbsp;</button>
-                    <br>
-                    <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
-                        <button id="worst_10" type="button" class="btn btn-default" style="margin-right: 4px;">10 najgorszych urządzeń</button>
-                        <button id="top_10" type="button" class="btn btn-default" style="">10 najleszych urządzeń</button>
-                    </div>
-                    <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
-                        <button id="back" type="button" class="btn btn-info" style="width: 150px;" onclick="allDevices();setInterval('allDevices()', 30000);"><span class="glyphicon glyphicon-refresh"></span> Powrót</button>
-                    </div>
+                <select id="stan" multiple="multiple">
+                    <option type="checkbox" class="s" value="active">Aktywne</option>
+                    <option type="checkbox" class="s" value="inactive">Niektywne</option>
+                    <option type="checkbox" class="s" value="off">Wyłączone</option>
+                </select>
+                <select id="kontrolery" multiple="multiple"></select>
+                <select id="budynki" multiple="multiple"></select>
+                &nbsp;&nbsp;
+                <button id="filters_commit" type="button" class="btn btn-info" style="width: 150px;"><span class='glyphicon glyphicon-ok'></span> Filtruj &nbsp;</button>
+                <br>
+                <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
+                    <button id="top_15" type="button" class="btn btn-default" style="">15 najlepszych urządzeń</button>
+                    <button id="worst_15" type="button" class="btn btn-default" style="margin-right: 4px;">15 najgorszych urządzeń</button>
+                </div>
+                <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
+                    <button id="back" type="button" class="btn btn-info" style="width: 150px;" onclick="allDevices();setInterval('allDevices()', 30000);"><span class="glyphicon glyphicon-refresh"></span> Powrót</button>
                 </div>
             </div>
         </div>
+    </div>
 
     <div style="height: 10px;"></div>
     <ul class="view" style="z-index: 1000;top:0;">
@@ -120,6 +120,157 @@
 <script type="text/javascript" src="/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/js/status.js"></script>
 <script type="text/javascript" src="/js/progress.js"></script>
+
+<script type="text/javascript">
+    var frequency = "2400";
+    var option = "";
+
+    $('#top_15').click(function(){
+        option = "best";
+        topDevices(option);
+    });
+    $('#worst_15').click(function(){
+        option = "worst";
+        topDevices(option);
+    });
+
+    function displayDevice(currentDeviceStateDto){
+
+        var style='list-style-type: none;color:white;text-decoration:none;';
+
+        var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+        var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+
+        if(frequency == "2400"){
+            if(typeof state2400 === 'undefined') {
+                return;
+            }
+            else {
+                var sum = state2400.clients;
+                var isEnabled = state2400.enabled;
+            }
+        }else if(frequency == "5000"){
+            if(typeof state5000 === 'undefined') {
+                return;
+            }
+            else {
+                var sum = state5000.clients;
+                var isEnabled = state5000.enabled;
+            }
+        }
+        var h = "/device/" + currentDeviceStateDto.id;
+        var clazz= '';
+
+        if (isEnabled == true) {
+            if (sum > 0 && sum <= 10) {
+                clazz = "greenDiode1";
+            } else if (sum > 10 && sum <= 30) {
+                clazz = "greenDiode2";
+            } else if (sum > 30 && sum <= 47) {
+                clazz = "greenDiode3";
+            } else if (sum > 47) {
+                clazz = "greenDiode4";
+            } else if (sum == 0) {
+                clazz = "redDiode";
+            }
+        } else if(isEnabled == false){
+            clazz = "redDiode";
+            sum="-";
+        }
+        var line = $('<li></li>').addClass(clazz)
+            .attr('title', currentDeviceStateDto.name)
+            .attr('data-toggle', 'tooltip')
+            .append(
+                $('<a>'+sum+'</a>').attr('href', h).attr('style',style)
+            );
+
+            $('#devices').append(line);
+            $('#progress_area').hide(500);
+
+        line.tooltip();
+    }
+
+    function topDevices(option){
+        clearInterval(inter);
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/all-devices',
+            dataType: 'json',
+
+            success: function(listDtoOfCurrentDeviceStateDto) {
+                if(!listDtoOfCurrentDeviceStateDto.success) {
+                    err();
+                    return;
+                }
+                devices = listDtoOfCurrentDeviceStateDto.list;
+                var freq2400 = new Array();
+                var freq5000 = new Array();
+
+                for(var i = 0; i< devices.length; i++){
+                    var currentDeviceStateDto = devices[i];
+                    var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+                    var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+                    if(frequency == "2400"){
+                        if(typeof state2400 === 'undefined') {
+                            continue;
+                        }
+                        else if(state2400.enabled == true){
+                            freq2400.push(currentDeviceStateDto);
+                        }
+                    }else if(frequency == "5000"){
+                        if(typeof state5000 === 'undefined') {
+                            continue;
+                        }
+                        else if(state5000.enabled == true){
+                            freq5000.push(currentDeviceStateDto);
+                        }
+                    }
+                }
+
+                if(frequency == "2400"){
+                    if(option == "worst") {
+                        freq2400.sort(function (a, b) {
+                            return a.frequencySurvey['2400'].clients - b.frequencySurvey['2400'].clients;
+                        });
+                    }else if(option == "best") {
+                        freq2400.sort(function (a, b) {
+                            return b.frequencySurvey['2400'].clients - a.frequencySurvey['2400'].clients;
+                        });
+                    }
+                }else if(frequency == "5000"){
+                    if(option == "worst") {
+                        freq5000.sort(function (a, b) {
+                            return a.frequencySurvey['5000'].clients - b.frequencySurvey['5000'].clients;
+                        });
+                    }else if(option == "best") {
+                        freq5000.sort(function (a, b) {
+                            return b.frequencySurvey['5000'].clients - a.frequencySurvey['5000'].clients;
+                        });
+                    }
+                }
+
+                $('#devices li').remove();
+
+                if(frequency == "2400"){
+                    for(var i = 0; i < 15; i++){
+                        displayDevice(freq2400[i]);
+                    }
+                }else if(frequency == "5000"){
+                    for(var i = 0; i < 15; i++){
+                        displayDevice(freq5000[i]);
+                    }
+                }
+
+            },
+            error: function(){
+                $('#data').remove();
+                $('#data_tittle').replaceWith(" &nbsp;Wystąpił błąd podczas pobierania danych");
+            }
+        });
+    }
+</script>
+
 
 
 <script type="text/javascript">
@@ -505,11 +656,11 @@
 </script>
 
 <%--<script>--%>
-    <%--$('#top_10').click(function(){--%>
-        <%--function compare(){--%>
-            <%--if(){}--%>
-        <%--}--%>
-    <%--});--%>
+<%--$('#top_15').click(function(){--%>
+<%--function compare(){--%>
+<%--if(){}--%>
+<%--}--%>
+<%--});--%>
 <%--</script>--%>
 
 </body>

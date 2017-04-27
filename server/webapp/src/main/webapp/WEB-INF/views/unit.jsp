@@ -81,7 +81,7 @@
                 </table>
                 <div>
                     <a href="${href}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Modyfikuj</a>
-                    <form method="post" action="/api/unit/remove/${unit.id}">
+                    <form method="post" action="/unit/remove/${unit.id}">
                             <span style="display: flex;position: relative;float: left;">
                             <span class="glyphicon glyphicon-trash" style="position: absolute;font-size:17px;color: white;top: 30%;left:29%;"></span>
                                 <input type="submit" value="Usuń" class="form-control btn btn-danger" role="button" style="float:left;height:38px;width:180px;font-size:17px;" >

@@ -104,11 +104,11 @@
                 '#change_progress',
                 function(createUnitDto) {
                     btnSubmit.prop('disabled', false);
-                    notify.success('#result_success', 'Jednostka została dodana');
+                    notify.success('#result_success', 'Jednostka została dodana.');
                 },
                 function() {
                     btnSubmit.prop('disabled', false);
-                    notify.danger('#result_error', 'Nie udało się dodać jednostki');
+                    notify.danger('#result_error', 'Nie udało się dodać jednostki.');
                 },
                 createUnitDto
 

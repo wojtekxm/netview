@@ -165,11 +165,11 @@
                 '#change_progress',
                 function(BuildingDto) {
                     btnSubmit.prop('disabled', false);
-                    notify.success('#result_success', 'Udało się zmienić dane');
+                    notify.success('#result_success', 'Udało się zmienić dane.');
                 },
                 function() {
                     btnSubmit.prop('disabled', false);
-                    notify.danger('#result_error', 'Nie udało się zmienić danych');
+                    notify.danger('#result_error', 'Nie udało się zmienić danych.');
                 },
                 BuildingDto
 

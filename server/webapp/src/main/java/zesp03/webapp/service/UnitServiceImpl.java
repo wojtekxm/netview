@@ -89,8 +89,11 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public void create(CreateUnitDto dto) {
-        if(dto.getCode() == null) {
+        if(dto.getCode() == null || dto.getCode().isEmpty()) {
             throw new ValidationException("code", "null");
+        }
+        if(dto.getDescription() == null || dto.getDescription().isEmpty()) {
+            throw new ValidationException("description", "null");
         }
 
         //TODO co jak o takim kodzie już istnieje
@@ -101,7 +104,7 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public void remove(Long unitId) {
+    public void removeUnit(Long unitId) {
         Unit u = unitRepository.findOne(unitId);
         if(u == null) {
             throw new NotFoundException("unit");
@@ -122,6 +125,9 @@ public class UnitServiceImpl implements UnitService {
 
         if(dto.getCode() == null || dto.getCode().isEmpty()) {
             throw new ValidationException("code", "null");
+        }
+        if(dto.getDescription() == null || dto.getDescription().isEmpty()) {
+            throw new ValidationException("description", "null");
         }
 
         Unit u = unitRepository.findOne(dto.getId());

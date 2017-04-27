@@ -15,7 +15,7 @@ public interface UnitService {
     UnitBuildingsDto linkUnitAllBuildings(long unitId);
     List<BuildingDto> listForLinkUnitAllBuildings(long unitId);
     void create(CreateUnitDto dto);
-    void remove(Long unitId);
+    void removeUnit(Long unitId);
     UnitDto modifyUnit(long id);
 //    void acceptModifyUnit(long id, String code, String description);
     void acceptModifyUnit(UnitDto dto);

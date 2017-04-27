@@ -60,7 +60,7 @@ public class BuildingApi {
     }
 
     @PostMapping("/api/building/remove/{buildingId}")
-    public BaseResultDto remove(
+    public BaseResultDto removeBuilding(
             @PathVariable("buildingId") long buildingId) {
         return BaseResultDto.make( () -> buildingService.removeBuilding(buildingId) );
     }

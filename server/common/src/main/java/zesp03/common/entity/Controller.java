@@ -26,7 +26,7 @@ public class Controller {
     private String description;
 
     @Column(name = "community_string", nullable = false)
-    private String communityString;
+    private String community;
 
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
@@ -70,12 +70,12 @@ public class Controller {
 
     public void setBuilding(Building building) {this.building = building;}
 
-    public String getCommunityString() {
-        return communityString;
+    public String getCommunity() {
+        return community;
     }
 
-    public void setCommunityString(String communityString) {
-        this.communityString = communityString;
+    public void setCommunity(String community) {
+        this.community = community;
     }
 
     public Boolean getDeleted() {

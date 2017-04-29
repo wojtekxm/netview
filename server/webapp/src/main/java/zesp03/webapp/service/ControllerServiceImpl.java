@@ -109,7 +109,7 @@ public class ControllerServiceImpl implements ControllerService {
         c.setName(dto.getName());
         c.setIpv4(dto.getIpv4());
         c.setDescription(dto.getDescription());
-        c.setCommunityString(dto.getCommunityString());
+        c.setCommunity(dto.getCommunityString());
         c.setDeleted(false);
         if(dto.getBuildingId() != null) {
             Building b = buildingRepository.findOne(dto.getBuildingId());
@@ -141,7 +141,7 @@ public class ControllerServiceImpl implements ControllerService {
         c.setName(dto.getName());
         c.setIpv4(dto.getIpv4());
         c.setDescription(dto.getDescription());
-        c.setCommunityString(dto.getCommunityString());
+        c.setCommunity(dto.getCommunityString());
         if(dto.getBuildingId() != null) {
             Building b = buildingRepository.findOne(dto.getBuildingId());
             c.setBuilding(b);

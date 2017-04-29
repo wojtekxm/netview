@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.data.ShortSurvey;
-import zesp03.common.data.SurveyInfoUniqueNameFrequency;
+import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
@@ -17,12 +17,12 @@ import zesp03.common.repository.ControllerRepository;
 import zesp03.common.repository.DeviceFrequencyRepository;
 import zesp03.common.repository.DeviceRepository;
 import zesp03.common.repository.DeviceSurveyRepository;
+import zesp03.common.util.SurveyInfoCollection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -74,28 +74,63 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     }
 
     private int examineOne(Controller controller) {
-        final List<SurveyInfoUniqueNameFrequency> originalSurveys = networkService.queryDevices(controller.getIpv4());
-        if (originalSurveys.isEmpty()) {
-            log.info("survey of controller (id={}, ip={}) returned no devices", controller, controller.getIpv4());
-            return 0;
-        }
-        final HashSet<SurveyInfoUniqueNameFrequency> uniqueSurveys = new HashSet<>();
-        for (SurveyInfoUniqueNameFrequency info : originalSurveys) {
-            uniqueSurveys.add(info);
-        }
-        return saveToDatabase(controller, uniqueSurveys);
+        final List<SurveyInfo> originalSurveys =
+                networkService.queryDevices(controller.getIpv4(), controller.getCommunity());
+        final SurveyInfoCollection col = new SurveyInfoCollection(originalSurveys);
+        return saveToDatabase(controller, col);
     }
 
-    private int saveToDatabase(Controller controller, HashSet<SurveyInfoUniqueNameFrequency> uniqueSurveys) {
+    private int saveToDatabase(Controller controller, SurveyInfoCollection collection) {
+        final int timestamp = (int) Instant.now().getEpochSecond();
+        makeDevices(collection, controller);
+        final Map<Long, CurrentDeviceState> id2current = surveyReadingService.checkForController(controller);
+        final List<DeviceSurvey> ds2persist = new ArrayList<>();
+        id2current.forEach( (deviceId, currentState) -> {
+            for(Integer frequencyMhz : currentState.getFrequencies()) {
+                final DeviceFrequency deviceFrequency = currentState.findFrequency(frequencyMhz);
+                final DeviceSurvey previousSurvey = currentState.findSurvey(frequencyMhz);
+                final SurveyInfo info = collection.find(
+                        currentState.getDevice().getName(), frequencyMhz);
+                final DeviceSurvey newSurvey = new DeviceSurvey();
+                newSurvey.setTimestamp(timestamp);
+                if(info != null) {
+                    newSurvey.setEnabled(true);
+                    newSurvey.setClientsSum(info.getClientsSum());
+                }
+                else {
+                    newSurvey.setEnabled(false);
+                    newSurvey.setClientsSum(0);
+                }
+                newSurvey.setFrequency(deviceFrequency);
+                newSurvey.setDeleted(false);
+                if(previousSurvey == null) {
+                    ds2persist.add(newSurvey);
+                }
+                else {
+                    final int prevTime = previousSurvey.getTimestamp();
+                    if(prevTime > timestamp) {
+                        log.warn("last survey is from the future, last timestamp = {}, " +
+                                        "current timestamp = {}, DeviceFrequency.id = {}",
+                                prevTime, timestamp, deviceFrequency.getId());
+                    }
+                    if(prevTime < timestamp) {
+                        ds2persist.add(newSurvey);
+                    }
+                }
+            }
+        } );
+        for(DeviceSurvey ds : ds2persist) {
+            em.persist(ds);
+        }
+        return ds2persist.size();
+    }
+
+    /*private int saveToDatabase(Controller controller, HashSet<SurveyInfo> uniqueSurveys) {
         final int timestamp = (int) Instant.now().getEpochSecond();
         final Map<String, Device> name2device = makeDevices(uniqueSurveys, controller);
-        final Map<Long, CurrentDeviceState> id2current = surveyReadingService.checkSome(name2device.entrySet()
-                .stream()
-                .map( e -> e.getValue().getId() )
-                .collect(Collectors.toSet())
-        );
+        final Map<Long, CurrentDeviceState> id2current = surveyReadingService.checkForController(controller);
         final List<DeviceSurvey> ds2persist = new ArrayList<>();
-        for(final SurveyInfoUniqueNameFrequency info : uniqueSurveys) {
+        for(final SurveyInfo info : uniqueSurveys) {
             final Device device = name2device.get(info.getName());
             final CurrentDeviceState current = id2current.get(
                     device.getId()
@@ -119,7 +154,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
                 final int prevTime = previousSurvey.getTimestamp();
                 if(prevTime > timestamp) {
                     log.warn("last survey is from the future, last timestamp = {}, " +
-                            "current timestamp = {}, DeviceFrequency.id = {}",
+                                    "current timestamp = {}, DeviceFrequency.id = {}",
                             prevTime, timestamp, frequency.getId());
                 }
                 if(prevTime < timestamp) {
@@ -131,14 +166,16 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             em.persist(ds);
         }
         return ds2persist.size();
-    }
+    }*/
 
     @Override
-    public Map<String, Device> makeDevices(Collection<SurveyInfoUniqueNameFrequency> surveys, Controller controller) {
-        if(surveys.isEmpty())return new HashMap<>();
+    public Map<String, Device> makeDevices(Iterable<SurveyInfo> surveys, Controller controller) {
         final HashMap<String, Device> existing = new HashMap<>();
-        for(SurveyInfoUniqueNameFrequency si : surveys) {
+        for(SurveyInfo si : surveys) {
             existing.put(si.getName(), null);
+        }
+        if(existing.isEmpty()) {
+            return new HashMap<>(0);
         }
         em.createQuery("SELECT d FROM Device d LEFT JOIN FETCH d.frequencyList WHERE " +
                 "d.name IN (:names) AND d.deleted = FALSE", Device.class)
@@ -160,7 +197,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             else result.put(name, device);
         } );
         em.flush();
-        for(SurveyInfoUniqueNameFrequency si : surveys) {
+        for(SurveyInfo si : surveys) {
             final Device d = result.get( si.getName() );
             final List<DeviceFrequency> freqList = d.getFrequencyList();
             DeviceFrequency freq = null;

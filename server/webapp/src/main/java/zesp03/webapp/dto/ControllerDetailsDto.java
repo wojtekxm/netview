@@ -72,7 +72,7 @@ public class ControllerDetailsDto {
         this.name = c.getName();
         this.ipv4 = c.getIpv4();
         this.description = c.getDescription();
-        this.communityString = c.getCommunityString();
+        this.communityString = c.getCommunity();
         this.numberOfDevices = c.getDeviceList().size();
         if(c.getBuilding() != null) {
             this.building = BuildingDto.make(c.getBuilding());

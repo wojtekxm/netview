@@ -3,6 +3,7 @@ package zesp03.common.service;
 import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.data.ShortSurvey;
 import zesp03.common.data.SurveyPeriodAvgMinMax;
+import zesp03.common.entity.Controller;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +16,8 @@ public interface SurveyReadingService {
     Optional<CurrentDeviceState> checkOne(Long deviceId);
     // kluczem w mapie jest id urządzenia
     Map<Long, CurrentDeviceState> checkSome(Collection<Long> deviceIds);
+    // kluczem w mapie jest id urządzenia
+    Map<Long, CurrentDeviceState> checkForController(Controller c);
     // kluczem w mapie jest id urządzenia
     Map<Long, CurrentDeviceState> checkAll();
 

@@ -63,7 +63,7 @@ public class ControllerDto {
         this.name = c.getName();
         this.ipv4 = c.getIpv4();
         this.description = c.getDescription();
-        this.communityString = c.getCommunityString();
+        this.communityString = c.getCommunity();
         if(c.getBuilding() != null) {
             this.buildingId = c.getBuilding().getId();
         }

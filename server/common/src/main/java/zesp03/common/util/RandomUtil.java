@@ -7,6 +7,8 @@ public class RandomUtil {
     private final Random r = new Random();
 
     public synchronized boolean decide(double chance) {
+        if(chance > 1.0)chance = 1.0;
+        else if(chance < 0.0)chance = 0.0;
         final int BIG = 1000_000_000;
         final int positiveOptions = (int)Math.round(chance * BIG);
         return decide(positiveOptions, BIG);

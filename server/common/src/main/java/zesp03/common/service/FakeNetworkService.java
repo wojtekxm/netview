@@ -3,7 +3,7 @@ package zesp03.common.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import zesp03.common.data.SurveyInfoUniqueNameFrequency;
+import zesp03.common.data.SurveyInfo;
 import zesp03.common.exception.SNMPException;
 
 import java.io.BufferedReader;
@@ -21,8 +21,8 @@ import java.util.Random;
  * Lista "znanych" kontrolerów i urządzeń może być modyfikowana przez pliki konfiguracyjne (patrz konstruktor).
  */
 @Service
-public class FakeNetworkServiceImpl implements NetworkService {
-    private static final Logger log = LoggerFactory.getLogger(FakeNetworkServiceImpl.class);
+public class FakeNetworkService implements NetworkService {
+    private static final Logger log = LoggerFactory.getLogger(FakeNetworkService.class);
     /**
      * mapuje adres IP kontrolera do listy urządzeń które są zarządzane przez ten kontroler
      */
@@ -36,7 +36,7 @@ public class FakeNetworkServiceImpl implements NetworkService {
      *
      * @throws IOException błąd przy czytaniu plików konfiguracyjnych
      */
-    public FakeNetworkServiceImpl() throws IOException {
+    public FakeNetworkService() throws IOException {
         random = new Random();
         parse("FakeNetworkServiceImpl_wifi02.txt");
         parse("FakeNetworkServiceImpl_wifi03.txt");
@@ -53,7 +53,7 @@ public class FakeNetworkServiceImpl implements NetworkService {
     private void parse(String resourceName) throws IOException {
         InputStream stream = null;
         try {
-            stream = FakeNetworkServiceImpl.class.getResourceAsStream(resourceName);
+            stream = FakeNetworkService.class.getResourceAsStream(resourceName);
             if (stream == null)
                 throw new IllegalStateException("resource \"" + resourceName + "\" for FakeNetworkServiceImpl is not available");
             try (InputStreamReader isr = new InputStreamReader(stream, "utf-8");
@@ -93,16 +93,13 @@ public class FakeNetworkServiceImpl implements NetworkService {
     }
 
     @Override
-    public List<SurveyInfoUniqueNameFrequency> queryDevices(String controllerIP) throws SNMPException {
-        if (!map.containsKey(controllerIP))
-            throw new SNMPException("controller with IP \"" + controllerIP +"\" is undefined");
-        final ArrayList<VirtualDevice> devices = map.get(controllerIP);
+    public List<SurveyInfo> queryDevices(String controllerIPv4, String community) throws SNMPException {
+        if (!map.containsKey(controllerIPv4))
+            throw new SNMPException("controller with IP \"" + controllerIPv4 +"\" is undefined");
+        final ArrayList<VirtualDevice> devices = map.get(controllerIPv4);
         final Random random = new Random();
-        final ArrayList<SurveyInfoUniqueNameFrequency> result = new ArrayList<>();
+        final ArrayList<SurveyInfo> result = new ArrayList<>();
         for (VirtualDevice vd : devices) {
-            SurveyInfoUniqueNameFrequency si = new SurveyInfoUniqueNameFrequency();
-            si.setName(vd.name);
-            si.setFrequencyMhz(vd.frequencyMhz);
             boolean enabled;
             int clients;
             int diff;
@@ -126,11 +123,12 @@ public class FakeNetworkServiceImpl implements NetworkService {
             else {
                 clients = 0;
             }
-            si.setEnabled(enabled);
-            si.setClientsSum(clients);
+
+            if(enabled) {
+                result.add( new SurveyInfo(vd.name, vd.frequencyMhz, clients) );
+            }
             vd.lastEnabled = enabled;
             vd.lastClients = clients;
-            result.add(si);
         }
         return result;
     }

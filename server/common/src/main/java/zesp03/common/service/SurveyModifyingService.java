@@ -1,11 +1,10 @@
 package zesp03.common.service;
 
 import zesp03.common.data.ShortSurvey;
-import zesp03.common.data.SurveyInfoUniqueNameFrequency;
+import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -35,5 +34,5 @@ public interface SurveyModifyingService {
      * jeśli takie nie istnieją.
      * @return mapa [nazwa urządzenia => urządzenie z bazy]
      */
-    Map<String, Device> makeDevices(Collection<SurveyInfoUniqueNameFrequency> surveys, Controller controller);
+    Map<String, Device> makeDevices(Iterable<SurveyInfo> surveys, Controller controller);
 }

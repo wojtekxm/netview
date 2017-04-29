@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.data.ShortSurvey;
 import zesp03.common.data.SurveyPeriodAvgMinMax;
+import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.entity.DeviceSurvey;
@@ -94,6 +95,36 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
                         "(sur.deleted = FALSE OR sur.deleted IS NULL)",
                 Object[].class)
                 .setParameter("deviceIds", deviceIds)
+                .getResultList();
+        for(Object[] arr : list) {
+            Device dev = (Device)arr[0];
+            DeviceFrequency df = (DeviceFrequency)arr[1];
+            DeviceSurvey sur = (DeviceSurvey)arr[2];
+            CurrentDeviceState current = new CurrentDeviceState(dev, df, sur);
+            CurrentDeviceState found = map.get(dev.getId());
+            if(found != null) {
+                found.merge(current);
+            }
+            else {
+                map.put(dev.getId(), current);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public Map<Long, CurrentDeviceState> checkForController(Controller c) {
+        HashMap<Long, CurrentDeviceState> map = new HashMap<>();
+        List<Object[]> list = em.createQuery("SELECT dev, df, sur FROM Device dev " +
+                        "LEFT JOIN DeviceFrequency df ON dev.id = df.device.id " +
+                        "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
+                        "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id " +
+                        "WHERE dev.controller = :c AND " +
+                        "(dev.deleted = FALSE OR dev.deleted IS NULL) AND " +
+                        "( df.deleted = FALSE OR  df.deleted IS NULL) AND " +
+                        "(sur.deleted = FALSE OR sur.deleted IS NULL)",
+                Object[].class)
+                .setParameter("c", c)
                 .getResultList();
         for(Object[] arr : list) {
             Device dev = (Device)arr[0];

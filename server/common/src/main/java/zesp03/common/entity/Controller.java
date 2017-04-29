@@ -31,6 +31,9 @@ public class Controller {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
 
+    @Column(name = "is_fake", nullable = false)
+    private Boolean fake;
+
     @OneToMany(mappedBy = "controller", fetch = FetchType.LAZY)
     private List<Device> deviceList = new ArrayList<>();
 
@@ -78,12 +81,20 @@ public class Controller {
         this.community = community;
     }
 
-    public Boolean getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Boolean isFake() {
+        return fake;
+    }
+
+    public void setFake(Boolean fake) {
+        this.fake = fake;
     }
 
     public List<Device> getDeviceList() {

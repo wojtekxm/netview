@@ -13,7 +13,6 @@ import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.entity.DeviceSurvey;
 import zesp03.common.exception.NotFoundException;
-import zesp03.common.repository.ControllerRepository;
 import zesp03.common.repository.DeviceFrequencyRepository;
 import zesp03.common.repository.DeviceRepository;
 import zesp03.common.repository.DeviceSurveyRepository;
@@ -33,13 +32,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     private EntityManager em;
 
     @Autowired
-    private NetworkService networkService;
-
-    @Autowired
     private SurveyReadingService surveyReadingService;
-
-    @Autowired
-    private ControllerRepository controllerRepository;
 
     @Autowired
     private DeviceRepository deviceRepository;
@@ -51,38 +44,9 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     private DeviceSurveyRepository deviceSurveyRepository;
 
     @Override
-    public int examineAll() {
-        Iterable<Controller> list = controllerRepository.findAllNotDeleted();
-        int result = 0;
-        for (Controller c : list) {
-            try {
-                result += examineOne(c);
-            } catch (RuntimeException exc) {
-                log.error("failed to examine controller", exc);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public int examineOne(long controllerId) {
-        Optional<Controller> opt = controllerRepository.findOneNotDeleted(controllerId);
-        if(!opt.isPresent()) {
-            throw new NotFoundException("controller");
-        }
-        return examineOne(opt.get());
-    }
-
-    private int examineOne(Controller controller) {
-        final List<SurveyInfo> originalSurveys =
-                networkService.queryDevices(controller.getIpv4(), controller.getCommunity());
-        final SurveyInfoCollection col = new SurveyInfoCollection(originalSurveys);
-        return saveToDatabase(controller, col);
-    }
-
-    private int saveToDatabase(Controller controller, SurveyInfoCollection collection) {
+    public int update(Controller controller, SurveyInfoCollection collection) {
         final int timestamp = (int) Instant.now().getEpochSecond();
-        makeDevices(collection, controller);
+        makeDevices(controller, collection);
         final Map<Long, CurrentDeviceState> id2current = surveyReadingService.checkForController(controller);
         final List<DeviceSurvey> ds2persist = new ArrayList<>();
         id2current.forEach( (deviceId, currentState) -> {
@@ -125,51 +89,8 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
         return ds2persist.size();
     }
 
-    /*private int saveToDatabase(Controller controller, HashSet<SurveyInfo> uniqueSurveys) {
-        final int timestamp = (int) Instant.now().getEpochSecond();
-        final Map<String, Device> name2device = makeDevices(uniqueSurveys, controller);
-        final Map<Long, CurrentDeviceState> id2current = surveyReadingService.checkForController(controller);
-        final List<DeviceSurvey> ds2persist = new ArrayList<>();
-        for(final SurveyInfo info : uniqueSurveys) {
-            final Device device = name2device.get(info.getName());
-            final CurrentDeviceState current = id2current.get(
-                    device.getId()
-            );
-            final DeviceFrequency frequency = current.findFrequency(
-                    info.getFrequencyMhz()
-            );
-            final DeviceSurvey previousSurvey = current.findSurvey(
-                    info.getFrequencyMhz()
-            );
-            final DeviceSurvey sur = new DeviceSurvey();
-            sur.setTimestamp(timestamp);
-            sur.setEnabled(info.isEnabled());
-            sur.setClientsSum(info.getClientsSum());
-            sur.setFrequency(frequency);
-            sur.setDeleted(false);
-            if(previousSurvey == null) {
-                ds2persist.add(sur);
-            }
-            else {
-                final int prevTime = previousSurvey.getTimestamp();
-                if(prevTime > timestamp) {
-                    log.warn("last survey is from the future, last timestamp = {}, " +
-                                    "current timestamp = {}, DeviceFrequency.id = {}",
-                            prevTime, timestamp, frequency.getId());
-                }
-                if(prevTime < timestamp) {
-                    ds2persist.add(sur);
-                }
-            }
-        }
-        for(DeviceSurvey ds : ds2persist) {
-            em.persist(ds);
-        }
-        return ds2persist.size();
-    }*/
-
     @Override
-    public Map<String, Device> makeDevices(Iterable<SurveyInfo> surveys, Controller controller) {
+    public Map<String, Device> makeDevices(Controller controller, Iterable<SurveyInfo> surveys) {
         final HashMap<String, Device> existing = new HashMap<>();
         for(SurveyInfo si : surveys) {
             existing.put(si.getName(), null);

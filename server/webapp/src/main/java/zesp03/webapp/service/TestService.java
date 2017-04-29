@@ -87,20 +87,20 @@ public class TestService {
         final SurveyInfo si = new SurveyInfo(
                 deviceName, frequencyMhz, -99);
         list.add(si);
-        Map<String, Device> map = surveyModifyingService.makeDevices(list, c);
+        Map<String, Device> map = surveyModifyingService.makeDevices(c, list);
         map.forEach( (name, device) -> {
             log.debug("key={}; id={} name={} deleted={} freqListSize={}",
                     name,
                     device.getId(),
                     device.getName(),
-                    device.getDeleted(),
+                    device.isDeleted(),
                     device.getFrequencyList()
                             .size());
             for(DeviceFrequency f : device.getFrequencyList()) {
                 log.debug("frequency: id={} mhz={} deleted={}",
                         f.getId(),
                         f.getFrequency(),
-                        f.getDeleted());
+                        f.isDeleted());
             }
         } );
     }

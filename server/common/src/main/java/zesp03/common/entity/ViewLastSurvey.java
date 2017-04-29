@@ -54,7 +54,7 @@ public class ViewLastSurvey {
         this.timestamp = timestamp;
     }
 
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
@@ -70,7 +70,7 @@ public class ViewLastSurvey {
         this.clientsSum = clientsSum;
     }
 
-    public Boolean getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 

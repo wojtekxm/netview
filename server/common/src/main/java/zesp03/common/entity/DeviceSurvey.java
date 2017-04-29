@@ -66,7 +66,7 @@ public class DeviceSurvey {
         this.clientsSum = clientsSum;
     }
 
-    public Boolean getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 

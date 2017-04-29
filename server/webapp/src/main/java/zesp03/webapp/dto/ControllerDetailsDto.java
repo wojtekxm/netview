@@ -8,6 +8,7 @@ public class ControllerDetailsDto {
     private String ipv4;
     private String description;
     private String communityString;
+    private boolean fake;
     private BuildingDto building;
     private int numberOfDevices;
 
@@ -51,6 +52,14 @@ public class ControllerDetailsDto {
         this.communityString = communityString;
     }
 
+    public boolean isFake() {
+        return fake;
+    }
+
+    public void setFake(boolean fake) {
+        this.fake = fake;
+    }
+
     public int getNumberOfDevices() {
         return numberOfDevices;
     }
@@ -73,6 +82,7 @@ public class ControllerDetailsDto {
         this.ipv4 = c.getIpv4();
         this.description = c.getDescription();
         this.communityString = c.getCommunity();
+        this.fake = c.isFake();
         this.numberOfDevices = c.getDeviceList().size();
         if(c.getBuilding() != null) {
             this.building = BuildingDto.make(c.getBuilding());

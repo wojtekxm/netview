@@ -6,7 +6,7 @@ import zesp03.common.data.ShortSurvey;
 import zesp03.common.data.SurveyPeriodAvgMinMax;
 import zesp03.common.exception.SNMPException;
 import zesp03.common.exception.ValidationException;
-import zesp03.common.service.SurveyModifyingService;
+import zesp03.common.service.ExamineService;
 import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.input.ImportFakeSurveysDto;
 import zesp03.webapp.dto.result.BaseResultDto;
@@ -22,7 +22,7 @@ public class SurveysApi {
     private SurveyReadingService surveyReadingService;
 
     @Autowired
-    private SurveyModifyingService surveyModifyingService;
+    private ExamineService examineService;
 
     @Autowired
     private ImportService importService;
@@ -32,7 +32,7 @@ public class SurveysApi {
         final Instant t0 = Instant.now();
         BaseResultDto result = new BaseResultDto();
         try {
-            surveyModifyingService.examineAll();
+            examineService.examineAll();
         }
         catch(SNMPException exc) {
             result.setSuccess(false);
@@ -48,7 +48,7 @@ public class SurveysApi {
         final Instant t0 = Instant.now();
         BaseResultDto result = new BaseResultDto();
         try {
-            surveyModifyingService.examineOne(controllerId);
+            examineService.examineOne(controllerId);
         }
         catch(SNMPException exc) {
             result.setSuccess(false);

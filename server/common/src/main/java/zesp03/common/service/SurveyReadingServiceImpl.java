@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class SurveyReadingServiceImpl implements SurveyReadingService {
     private static final Logger log = LoggerFactory.getLogger(SurveyReadingServiceImpl.class);
 
@@ -77,39 +77,6 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         else {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public Map<Long, CurrentDeviceState> checkSome(Collection<Long> deviceIds) {
-        if(deviceIds.isEmpty()) {
-            return new HashMap<>();
-        }
-        HashMap<Long, CurrentDeviceState> map = new HashMap<>();
-        List<Object[]> list = em.createQuery("SELECT dev, df, sur FROM Device dev " +
-                        "LEFT JOIN DeviceFrequency df ON dev.id = df.device.id " +
-                        "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
-                        "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id " +
-                        "WHERE dev.id IN (:deviceIds) AND " +
-                        "(dev.deleted = FALSE OR dev.deleted IS NULL) AND " +
-                        "( df.deleted = FALSE OR  df.deleted IS NULL) AND " +
-                        "(sur.deleted = FALSE OR sur.deleted IS NULL)",
-                Object[].class)
-                .setParameter("deviceIds", deviceIds)
-                .getResultList();
-        for(Object[] arr : list) {
-            Device dev = (Device)arr[0];
-            DeviceFrequency df = (DeviceFrequency)arr[1];
-            DeviceSurvey sur = (DeviceSurvey)arr[2];
-            CurrentDeviceState current = new CurrentDeviceState(dev, df, sur);
-            CurrentDeviceState found = map.get(dev.getId());
-            if(found != null) {
-                found.merge(current);
-            }
-            else {
-                map.put(dev.getId(), current);
-            }
-        }
-        return map;
     }
 
     @Override

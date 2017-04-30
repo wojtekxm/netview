@@ -109,7 +109,12 @@ public class App {
             log.warn("reloading custom properties \"{}\"", customPath);
             log.warn("number parsing error", exc);
         }
-        examineInterval = ei;
+        if(ei >= 0) {
+            examineInterval = ei;
+        }
+        else {
+            log.warn("rejected zesp03.examine.interval={}", ei);
+        }
     }
 
     public static synchronized void saveCustomProperties() {
@@ -175,11 +180,20 @@ public class App {
         return rootResetPassword;
     }
 
+    /**
+     * @return zawsze >= 0
+     */
     public static synchronized int getExamineInterval() {
         return examineInterval;
     }
 
+    /**
+     * @param examineInterval >= 0
+     */
     public static synchronized void setExamineInterval(int examineInterval) {
+        if(examineInterval < 0) {
+            throw new IllegalArgumentException("examineInterval < 0");
+        }
         App.examineInterval = examineInterval;
     }
 }

@@ -18,13 +18,42 @@ public class GarbageCollectionWorker implements Runnable {
 
     @Override
     public void run() {
+        NextClean next = NextClean.SURVEY;
         while(!responsiveShutdown.shouldStop()) {
-            try {
-                Thread.sleep(1000);
-            }
-            catch(InterruptedException exc) {
-                log.debug("sleep interrupted: {}", exc.getLocalizedMessage());
+            log.debug("next = {}", next);
+            switch(next) {
+                case SURVEY:
+                    if(!garbageCollectingService.cleanSomeSurveys(1000)) {
+                        next = NextClean.FREQUENCY;
+                    }
+                    break;
+                case FREQUENCY:
+                    if(!garbageCollectingService.cleanSomeFrequencies(1000)) {
+                        next = NextClean.DEVICE;
+                    }
+                    break;
+                case DEVICE:
+                    if(!garbageCollectingService.cleanSomeDevices(1000)) {
+                        next = NextClean.CONTROLLER;
+                    }
+                    break;
+                default:
+                    if(!garbageCollectingService.cleanSomeControllers(1000)) {
+                        next = NextClean.SURVEY;
+                        try {
+                            Thread.sleep(1000);
+                        }
+                        catch(InterruptedException exc) {
+                            log.debug("sleep interrupted: {}", exc.getLocalizedMessage());
+                        }
+                    }
+                    break;
             }
         }
+        log.info("GarbageCollectionWorker ends");
+    }
+
+    private enum NextClean {
+        SURVEY, FREQUENCY, DEVICE, CONTROLLER
     }
 }

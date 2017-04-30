@@ -7,9 +7,6 @@ import org.springframework.stereotype.Component;
 import zesp03.common.core.App;
 import zesp03.common.service.ExamineService;
 
-import java.time.Duration;
-import java.time.Instant;
-
 @Component
 public class ExamineWorker implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(Daemon.class);
@@ -22,19 +19,23 @@ public class ExamineWorker implements Runnable {
 
     @Override
     public void run() {
+        long lastTime = 0L;
         while(!responsiveShutdown.shouldStop()) {
             App.reloadCustomProperties();
-            final int WAIT_SECONDS = App.getExamineInterval();
-            final Instant t0 = Instant.now();
-            examineService.examineAll();
-            final Instant t1 = Instant.now();
-            long sleep = Duration.between(t1, t0.plusSeconds(WAIT_SECONDS)).toMillis();
-            if (sleep < 1) sleep = 1;
-            try {
-                Thread.sleep(sleep);
-            } catch (InterruptedException exc) {
-                log.error("sleep interrupted", exc);
+            final long nextTime = lastTime + App.getExamineInterval() * 1000L;
+            final long now = System.currentTimeMillis();
+            if(now >= nextTime) {
+                examineService.examineAll();
+                lastTime = now;
+            }
+            else {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException exc) {
+                    log.debug("sleep interrupted: {}", exc.getLocalizedMessage());
+                }
             }
         }
+        log.info("ExamineWorker ends");
     }
 }

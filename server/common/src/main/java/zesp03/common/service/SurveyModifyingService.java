@@ -3,11 +3,9 @@ package zesp03.common.service;
 import zesp03.common.data.ShortSurvey;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
-import zesp03.common.entity.Device;
 import zesp03.common.util.SurveyInfoCollection;
 
 import java.util.List;
-import java.util.Map;
 
 public interface SurveyModifyingService {
     int update(Controller controller, SurveyInfoCollection collection);
@@ -15,9 +13,8 @@ public interface SurveyModifyingService {
     /**
      * Dla każdego elementu z <code>surveys</code> wstawia do bazy nowe urządzenie i częstotliwość,
      * jeśli takie nie istnieją.
-     * @return mapa [nazwa urządzenia => urządzenie z bazy]
      */
-    Map<String, Device> makeDevices(Controller controller, Iterable<SurveyInfo> surveys);
+    void makeDevices(Controller controller, Iterable<SurveyInfo> surveys);
 
     /**
      * Usuwa wszystkie badania dla danego urządzenia ze wskazaną częstotliwością

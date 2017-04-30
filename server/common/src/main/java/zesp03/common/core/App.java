@@ -29,6 +29,7 @@ public class App {
     private static final String rootResetName;
     private static final String rootResetPassword;
     private static int examineInterval;
+    private static int databaseCleaningInterval;
 
     static {
         try {
@@ -84,6 +85,7 @@ public class App {
 
             customPath = Paths.get(configDirectory, "custom.properties");
             examineInterval = 300;
+            databaseCleaningInterval = 100;
             reloadCustomProperties();
         } catch (IOException exc) {
             throw new IllegalStateException(exc);
@@ -92,6 +94,7 @@ public class App {
 
     public static synchronized void reloadCustomProperties() {
         int ei = examineInterval;
+        int dci = databaseCleaningInterval;
         final Charset utf8 = Charset.forName("UTF-8");
         try(BufferedReader br = Files.newBufferedReader(customPath, utf8)) {
             final Properties p = new Properties();
@@ -99,6 +102,10 @@ public class App {
             String s = p.getProperty("zesp03.examine.interval");
             if(s != null) {
                 ei = Integer.parseInt(s);
+            }
+            s = p.getProperty("zesp03.database.cleaning.interval");
+            if(s != null) {
+                dci = Integer.parseInt(s);
             }
         }
         catch(IOException exc) {
@@ -115,11 +122,18 @@ public class App {
         else {
             log.warn("rejected zesp03.examine.interval={}", ei);
         }
+        if(dci >= 0) {
+            databaseCleaningInterval = dci;
+        }
+        else {
+            log.warn("rejected zesp03.database.cleaning.interval={}", dci);
+        }
     }
 
     public static synchronized void saveCustomProperties() {
         final Properties p = new Properties();
         p.setProperty("zesp03.examine.interval", Integer.toString(examineInterval));
+        p.setProperty("zesp03.database.cleaning.interval", Integer.toString(databaseCleaningInterval));
         final Charset utf8 = Charset.forName("UTF-8");
         try(BufferedWriter bw = Files.newBufferedWriter(customPath, utf8)) {
             p.store(bw, null);
@@ -195,5 +209,22 @@ public class App {
             throw new IllegalArgumentException("examineInterval < 0");
         }
         App.examineInterval = examineInterval;
+    }
+
+    /**
+     * @return zawsze >= 0
+     */
+    public static synchronized int getDatabaseCleaningInterval() {
+        return databaseCleaningInterval;
+    }
+
+    /**
+     * @param databaseCleaningInterval >= 0
+     */
+    public static synchronized void setDatabaseCleaningInterval(int databaseCleaningInterval) {
+        if(databaseCleaningInterval < 0) {
+            throw new IllegalArgumentException("databaseCleaningInterval < 0");
+        }
+        App.databaseCleaningInterval = databaseCleaningInterval;
     }
 }

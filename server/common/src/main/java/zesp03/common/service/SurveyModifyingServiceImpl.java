@@ -90,13 +90,13 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     }
 
     @Override
-    public Map<String, Device> makeDevices(Controller controller, Iterable<SurveyInfo> surveys) {
+    public void makeDevices(Controller controller, Iterable<SurveyInfo> surveys) {
         final HashMap<String, Device> existing = new HashMap<>();
         for(SurveyInfo si : surveys) {
             existing.put(si.getName(), null);
         }
         if(existing.isEmpty()) {
-            return new HashMap<>(0);
+            return;
         }
         em.createQuery("SELECT d FROM Device d LEFT JOIN FETCH d.frequencyList WHERE " +
                 "d.name IN (:names) AND d.deleted = FALSE", Device.class)
@@ -117,7 +117,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             }
             else result.put(name, device);
         } );
-        em.flush();
+        int createdFrequencies = 0;
         for(SurveyInfo si : surveys) {
             final Device d = result.get( si.getName() );
             final List<DeviceFrequency> freqList = d.getFrequencyList();
@@ -135,10 +135,12 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
                 freq.setDeleted(false);
                 freqList.add(freq);
                 em.persist(freq);
+                createdFrequencies++;
             }
         }
-        em.flush();
-        return result;
+        if(createdFrequencies > 0) {
+            log.info("{} DeviceFrequency entities created", createdFrequencies);
+        }
     }
 
     @Override

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
-import zesp03.common.entity.Device;
-import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.entity.DeviceSurvey;
 import zesp03.common.repository.ControllerRepository;
 import zesp03.common.repository.DeviceSurveyRepository;
@@ -19,7 +17,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -87,21 +84,6 @@ public class TestService {
         final SurveyInfo si = new SurveyInfo(
                 deviceName, frequencyMhz, -99);
         list.add(si);
-        Map<String, Device> map = surveyModifyingService.makeDevices(c, list);
-        map.forEach( (name, device) -> {
-            log.debug("key={}; id={} name={} deleted={} freqListSize={}",
-                    name,
-                    device.getId(),
-                    device.getName(),
-                    device.isDeleted(),
-                    device.getFrequencyList()
-                            .size());
-            for(DeviceFrequency f : device.getFrequencyList()) {
-                log.debug("frequency: id={} mhz={} deleted={}",
-                        f.getId(),
-                        f.getFrequency(),
-                        f.isDeleted());
-            }
-        } );
+        surveyModifyingService.makeDevices(c, list);
     }
 }

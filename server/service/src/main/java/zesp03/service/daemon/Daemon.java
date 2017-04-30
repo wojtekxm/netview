@@ -25,6 +25,7 @@ public class Daemon {
         GarbageCollectionWorker gcw = acac.getBean(GarbageCollectionWorker.class);
         Thread te = new Thread(ew);
         Thread tgc = new Thread(gcw);
+        tgc.setPriority(Thread.MIN_PRIORITY);
         te.start();
         tgc.start();
         try {

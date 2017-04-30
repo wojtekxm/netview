@@ -11,17 +11,18 @@ import java.time.Duration;
 import java.time.Instant;
 
 @Component
-public class Work {
+public class ExamineWorker implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(Daemon.class);
-    private boolean shutdown = false;
+
+    @Autowired
+    private ResponsiveShutdown responsiveShutdown;
 
     @Autowired
     private ExamineService examineService;
 
-    public void work() {
-        Thread t = new Thread(() -> shutdown = true);
-        Runtime.getRuntime().addShutdownHook(t);
-        while(!shutdown) {
+    @Override
+    public void run() {
+        while(!responsiveShutdown.shouldStop()) {
             App.reloadCustomProperties();
             final int WAIT_SECONDS = App.getExamineInterval();
             final Instant t0 = Instant.now();

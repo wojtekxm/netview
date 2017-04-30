@@ -113,6 +113,25 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
+    public List<BuildingDto> getBuildings(Long unitId) {
+        Unit u = unitRepository.findOne(unitId);
+        if(u == null)
+            throw new NotFoundException("unit");
+        return u.getLubList()
+                .stream()
+                .map( lub -> BuildingDto.make(lub.getBuilding()) )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UnitBuildingsDto getDetailsOne(Long unitId) {
+        Unit u = unitRepository.findOne(unitId);
+        if(u == null)
+            throw new NotFoundException("unit");
+        return UnitBuildingsDto.make(u);
+    }
+
+    @Override
     public UnitDto modifyUnit(long id) {
         Unit u = em.find(Unit.class, id);
         if(u == null)

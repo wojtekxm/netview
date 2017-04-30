@@ -18,14 +18,11 @@ public class UnitPage {
     @Autowired
     private UnitService unitService;
 
-    @GetMapping("/unit")
+    @GetMapping("/unit/{unitId}")
     public String get(
-            @RequestParam("id") long id,
+            @PathVariable("unitId") long unitId,
             ModelMap model) {
-        UnitDto u = unitService.getOne(id);
-        List<BuildingDto> b = unitService.UnitPage_GET_unit(id);
-        model.put( "unit", u );
-        model.put( "buildings", b );
+        model.put("id", unitId);
         return "unit";
     }
 

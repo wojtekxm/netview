@@ -61,37 +61,56 @@
 
 <div id="strona">
     <div id="kontent">
-        <div class="form-group">
-            <form method="post" action="/api/building/create">
+
+            <form method="post" action="/api/building/create" class="form-horizontal">
+
+                <div class="col-xs-2">
+                    <div class="form-group">
                 <input type="text" class="form-control" placeholder="Nazwa Budynku"
-                       id="new_name" required="required" name="name">
+                       id="new_name" required="required" name="name"></div>
+                    <div class="form-group">
                 <input type="text" class="form-control" placeholder="Kod budynku"
-                       id="new_code" required="required" name="code">
-                <input type="text" class="form-control" placeholder="Ulica"
-                       id="new_street" name="street">
-                <input type="text" class="form-control" placeholder="Miasto"
-                       id="new_city" name="city">
-                <input type="text" class="form-control" placeholder="Kod pocztowy"
-                       id="new_postalCode" name="postalCode">
-                <input type="text" class="form-control" placeholder="Numer"
-                       id="new_number" name="number">
-                <input type="text" class="form-control" placeholder="Szerokosc geograficzna"
-                       id="new_latitude" required="required" name="latitude">
-                <input type="text" class="form-control" placeholder="Wysokosc geograficzna"
-                       id="new_longitude" required="required" name="longitude" style="margin-bottom: inherit;">
-                <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">
-                <div id="change_progress" style="min-height:38px; min-width:60px">
-                    <div class="progress-loading"></div>
+                       id="new_code" required="required" name="code"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Ulica"
+                           id="new_street" name="street"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Miasto"
+                           id="new_city" name="city"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Kod pocztowy"
+                           id="new_postalCode" name="postalCode"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Numer"
+                           id="new_number" name="number"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Szerokosc geograficzna"
+                           id="new_latitude" required="required" name="latitude"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Wysokosc geograficzna"
+                           id="new_longitude" required="required" name="longitude"></div>
+
+                    <div id="change_progress" style="min-height:38px; min-width:60px">
+                        <div class="progress-loading"></div>
+                <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
+                    <div class="form-group">
+                        <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
+                    </div>
+
+
+
+
+
+
+            <div class="form-group">
+                <%--<div class="col-sm-4">--%>
+                    <div id="result_success"></div>
+                    <div id="result_error"></div>
+                <%--</div>--%>
+            </div>
                 </div>
             </form>
 
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div id="result_success"></div>
-                    <div id="result_error"></div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

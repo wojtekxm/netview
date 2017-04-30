@@ -88,10 +88,10 @@
 
                 </table>
                 <div>
-                    <a href="/unit?id=${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
+                    <a href="/unit/${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
                     <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input form="form2" type="submit" value=" Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
+                        <input form="form2" type="submit" value="Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
                          <div id="change_progress" style="min-height:38px; min-width:60px">
                     <div class="progress-loading"></div>
                          </div>

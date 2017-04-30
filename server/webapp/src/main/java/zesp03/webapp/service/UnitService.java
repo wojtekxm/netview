@@ -14,10 +14,11 @@ public interface UnitService {
     UnitBuildingsDto getUnitBuildings(long unitId);
     UnitBuildingsDto linkUnitAllBuildings(long unitId);
     List<BuildingDto> listForLinkUnitAllBuildings(long unitId);
+    List<BuildingDto> getBuildings(Long unitId);
     void create(CreateUnitDto dto);
     void removeUnit(Long unitId);
+    UnitBuildingsDto getDetailsOne(Long unitId);
     UnitDto modifyUnit(long id);
-//    void acceptModifyUnit(long id, String code, String description);
     void acceptModifyUnit(UnitDto dto);
     List<LinkUnitBuildingDto> getAllLinkUnitBuildings();
     LinkUnitBuildingDto getLinkUnitBuilding(long id);

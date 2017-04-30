@@ -4,7 +4,8 @@ var progress = {};
     progress.createCircle = createCircle;
     progress.load = load;
     progress.loadMany = loadMany;
-
+//3 el w ktorym elemencie na stronie koleczko ma sie pojawic #id
+    //4 par. funkcja ktora ma sie wykonac, 5 par. jakby sie nie udalo
     function load(method, url, jquerySelector, successHandler, optionalErrorHandler, optionalParams) {
         var parent, elemLoading, elemSuccess, elemError, config;
         parent = $(jquerySelector);

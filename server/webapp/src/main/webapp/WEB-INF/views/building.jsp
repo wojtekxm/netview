@@ -140,7 +140,7 @@ function fixUnits() {
     for(i = 0; i < units.length; i++) {
         u = units[i];
         u.td_description = $('<a></a>')
-            .attr('href', '/unit?id=' + u.id)
+            .attr('href', '/unit/' + u.id)
             .text(u.description);
         u.td_code = $('<span></span>').text(u.code);
         u.td_button = $('<button class="btn btn-danger btn-xs"></button>')

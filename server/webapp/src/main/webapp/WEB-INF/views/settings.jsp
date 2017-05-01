@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 50px;background-color: #2e302e;">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myDiv">
@@ -25,12 +25,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <div class="navbar-brand" title="Control your network">Network Monitor</div>
         </div>
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;Network Monitor</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -42,6 +41,7 @@
                         <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
                     </ul>
                 </li>
+                <%--<li> <a href="#menu-toggle" id="menu-toggle">Filtry</a></li>--%>
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">

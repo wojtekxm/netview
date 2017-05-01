@@ -191,8 +191,6 @@
     }
 
     function topDevices(option){
-        clearInterval(inter);
-
         $.ajax({
             type: 'GET',
             url: '/api/all-devices',
@@ -295,6 +293,20 @@
             controllers.push(controllerId);
         });
 
+        if(states.length == 0){
+            $('.s').each(function(){
+                stateId = $(this).attr('value');
+                states.push(stateId);
+            });
+        }
+
+        if(controllers.length == 0){
+            $('.c').each(function(){
+                controllerId = $(this).attr('value');
+                controllers.push(controllerId);
+            });
+        }
+
 
         for(var i=0;i<controllers.length;i++){
             for(var j=0;j<devices.length;j++){
@@ -365,21 +377,21 @@
                             .append(
                                 $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
                             );
+
                         if (active + inactive + off != 0) {
                             $('#devices').append(line);
                             $('#progress_area').hide(500);
-                        } else {
-                            err();
                         }
 
                         line.tooltip();
+
                     }
                 }
             }
         }
 
 
-        if(value == "" && controllerId == ""){
+        if(value == "" && controllerId == "" && stateId == ""){
             inter = setInterval('allDevices()', 30000);
             allDevices();
         }

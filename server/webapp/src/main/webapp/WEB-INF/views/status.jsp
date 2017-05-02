@@ -90,6 +90,12 @@
                 <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
                     <button id="back" type="button" class="btn btn-info" style="width: 150px;" onclick="allDevices();setInterval('allDevices()', 30000);"><span class="glyphicon glyphicon-refresh"></span> Powrót</button>
                 </div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <div class="col-sm-12">
+                        <div id="result_success"></div>
+                        <div id="result_error"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -120,6 +126,7 @@
 <script type="text/javascript" src="/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/js/status.js"></script>
 <script type="text/javascript" src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
 
 <script type="text/javascript">
     var frequency = "2400";
@@ -294,17 +301,11 @@
         });
 
         if(states.length == 0){
-            $('.s').each(function(){
-                stateId = $(this).attr('value');
-                states.push(stateId);
-            });
+            notify.danger('#result_error', 'Nie wybrano żadnego stanu');
         }
 
         if(controllers.length == 0){
-            $('.c').each(function(){
-                controllerId = $(this).attr('value');
-                controllers.push(controllerId);
-            });
+            notify.danger('#result_error', 'Nie wybrano żadnego kontrolera');
         }
 
 
@@ -388,12 +389,6 @@
                     }
                 }
             }
-        }
-
-
-        if(value == "" && controllerId == "" && stateId == ""){
-            inter = setInterval('allDevices()', 30000);
-            allDevices();
         }
     }
 

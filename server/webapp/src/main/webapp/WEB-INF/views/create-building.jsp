@@ -63,37 +63,70 @@
 
             <form method="post" action="/api/building/create" class="form-horizontal">
 
-                <div class="col-xs-2">
+
+
                     <div class="form-group">
-                <input type="text" class="form-control" placeholder="Nazwa Budynku"
-                       id="new_name" required="required" name="name"></div>
+                        <label for="new_name" class="col-sm-2 control-label">Nazwa budynku</label>
+                        <div class="col-xs-3">
+                <input type="text" class="form-control" placeholder="Wprowadź nazwę budynku"
+                       id="new_name" required="required" name="name">
+                        </div>
+                    </div>
                     <div class="form-group">
-                <input type="text" class="form-control" placeholder="Kod budynku"
-                       id="new_code" required="required" name="code"></div>
+                        <label for="new_name" class="col-sm-2 control-label">Kod budynku</label>
+                        <div class="col-xs-3">
+                <input type="text" class="form-control" placeholder="Wprowadź kod budynku"
+                       id="new_code" required="required" name="code">
+                        </div>
+                    </div>
                     <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Ulica"
-                           id="new_street" name="street"></div>
+                        <label for="new_name" class="col-sm-2 control-label">Ulica</label>
+                        <div class="col-xs-3">
+                        <input type="text" class="form-control" placeholder="Wprowadź nazwę ulicy"
+                           id="new_street" name="street">
+                        </div>
+                    </div>
                     <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Miasto"
-                           id="new_city" name="city"></div>
+                        <label for="new_name" class="col-sm-2 control-label">Miasto</label>
+                        <div class="col-xs-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź nazwę miasta"
+                           id="new_city" name="city">
+                        </div>
+                    </div>
                     <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Kod pocztowy"
-                           id="new_postalCode" name="postalCode"></div>
+                        <label for="new_name" class="col-sm-2 control-label">Kod pocztowy</label>
+                        <div class="col-xs-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź kod pocztowy"
+                           id="new_postalCode" name="postalCode">
+                        </div>
+                    </div>
                     <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Numer"
-                           id="new_number" name="number"></div>
+                        <label for="new_name" class="col-sm-2 control-label">Numer</label>
+                        <div class="col-xs-3">
+                        <input type="text" class="form-control" placeholder="Wprowadź numer"
+                           id="new_number" name="number">
+                        </div>
+                    </div>
                     <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Szerokosc geograficzna"
-                           id="new_latitude" required="required" name="latitude"></div>
+                        <label for="new_name" class="col-sm-2 control-label">Szerokość geograficzna</label>
+                        <div class="col-xs-3">
+                        <input type="text" class="form-control" placeholder="Wprowadź szerokosc geograficzną"
+                           id="new_latitude" required="required" name="latitude">
+                        </div>
+                    </div>
                     <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Wysokosc geograficzna"
-                           id="new_longitude" required="required" name="longitude"></div>
+                        <label for="new_name" class="col-sm-2 control-label">Długość geograficzna</label>
+                        <div class="col-xs-3">
+                        <input type="text" class="form-control" placeholder="Wprowadź długość geograficzną"
+                           id="new_longitude" required="required" name="longitude">
+                        </div>
+                    </div>
 
                     <div id="change_progress" style="min-height:38px; min-width:60px">
                         <div class="progress-loading"></div>
                 <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
                     <div class="form-group">
-                        <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
+                        <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;margin-left: 50px;"></div>
                     </div>
 
 
@@ -107,7 +140,7 @@
                     <div id="result_error"></div>
                 <%--</div>--%>
             </div>
-                </div>
+                <%--</div>--%>
             </form>
 
     </div>

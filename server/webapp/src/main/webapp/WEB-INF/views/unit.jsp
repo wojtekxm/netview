@@ -63,7 +63,7 @@
                 <%--<div class="col-md-6">--%>
                     <div class="panel panel-default">
                         <div class="panel-heading">Informacje o jednostce</div>
-                        <ul class="list-group">
+                        <ul class="list-group" >
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-xs-4">kod</div>
@@ -72,23 +72,24 @@
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col-xs-4">opis</div>
+                                    <div class="col-xs-4">Nazwa</div>
                                     <div class="col-xs-8" id="field_description"></div>
                                 </div>
                             </li>
                         </ul>
                     <%--</div>--%>
                         <div>
-                            <a href="${href}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
-                            <form method="post" action="${action}">
-                            <span style="display: flex;position: relative;float: left;">
-                            <span class="glyphicon glyphicon-trash" style="position: absolute;font-size:17px;color: white;top: 30%;left:29%;"></span>
-                                <input type="submit" value="Usuń" class="form-control btn btn-danger" role="button" style="float:left;height:38px;width:180px;font-size:17px;" >
-                            </span>
+                            <a href="${href}" class="btn btn-success" role="button" style="float:left; margin-right: 10px;margin-top: 10px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
+                            <form class="pull-left" method="post" action="${action}">
+                                <button type="submit" class="btn btn-danger " style="margin-top: 10px;">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                    Usuń
+                                </button>
                             </form>
+
                         </div>
                     </div>
-                    <h4 style="margin-top: 50px">Jednostki organizacyjne powiązane z jednostką</h4>
+                    <h4 style="margin-top: 80px">Budynki powiązane z jednostką</h4>
                     <div id="tabelka_buildings"></div>
                     <a href="/link-unit-all-buildings?id=${id}" class="btn btn-success" role="button">
                         <span class="glyphicon glyphicon-plus"></span>
@@ -102,9 +103,6 @@
 
 </div>
 
-
-<%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>--%>
-<%--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>
@@ -112,24 +110,15 @@
 <script>
     var unit, buildings,  buildingDefinitions;
     buildingDefinitions = [
-      {
+       {
+            "label": 'nazwa',
+            "comparator": util.comparatorText('name'),
+            "extractor": 'td_name'
+        },{
             "label" : 'kod',
             "comparator" : util.comparatorText('code'),
             "extractor" : 'td_code'
-        },   {
-            "label" : 'nazwa',
-            "comparator" : util.comparatorText('name'),
-            "extractor" : 'td_name'
         }, {
-            "label" : 'szerokość geograficzna',
-            "comparator" : util.comparatorText('latitude'),
-            "extractor" : 'td_latitude'
-        }, {
-            "label" : 'długość geograficzna',
-            "comparator" : util.comparatorText('longitude'),
-            "extractor" : 'td_longitude'
-        },
-        {
             "label" : '',
             "comparator" : null,
             "extractor" : 'td_button',
@@ -144,8 +133,6 @@
                 .attr('href', '/building/' + b.id)
                 .text(b.name);
             b.td_code = $('<span></span>').text(b.code);
-            b.td_latitude = $('<span></span>').text(b.latitude);
-            b.td_longitude = $('<span></span>').text(b.longitude);
             b.td_button = $('<button class="btn btn-danger btn-xs"></button>')
                 .click( {
                     "buildingId" : b.id
@@ -195,6 +182,7 @@
             fieldDescription.text(unit.description);
             fieldCode = $('#field_code');
             fieldCode.text(unit.code);
+
             fixBuildings();
             tabelkaBuildings = $('#tabelka_buildings');
             tabelkaBuildings.append(tabelka.create(buildings, buildingDefinitions));

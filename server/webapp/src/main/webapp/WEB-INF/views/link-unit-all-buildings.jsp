@@ -75,7 +75,7 @@
                         <td>Kod</td>
                         <td>Nazwa</td>
                         <td>Szerokość geograficzna</td>
-                        <td>Wysokość geograficzna</td>
+                        <td>Długość geograficzna</td>
                     </tr>
 
                     <c:forEach items="${buildings}" var="building">

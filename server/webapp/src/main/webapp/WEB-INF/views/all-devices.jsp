@@ -73,12 +73,6 @@
         <div class="progress-loading"></div>
         <div class="progress-success">
             <div id="main_success"></div>
-            <div>
-                <a href="/create-device" class="btn btn-success" role="button" style="width: 200px;">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Dodaj nowe urządzenie
-                </a>
-            </div>
         </div>
         <div class="progress-error"></div>
     </div>
@@ -89,7 +83,7 @@
 <script src="/js/tabelka.js"></script>
 <script>
 "use strict";
-(function() {
+$(document).ready( function() {
     var devices, columnDefinitions, currentTabelka;
     currentTabelka = null;
     devices = [];
@@ -177,51 +171,48 @@
         }
     }
 
-    $(document).ready( function() {
-        progress.load(
-            'get',
-            '/api/device/details/all',
-            '#main_progress',
-            function(listDtoOfDeviceDetailsDto) {
-                var btnExamine, mainProgress, mainSuccess;
-                btnExamine = $('#btn_examine');
-                mainProgress = $('#main_progress');
-                mainSuccess = $('#main_success');
-                devices = listDtoOfDeviceDetailsDto.list;
-                fixDevices();
-                currentTabelka = tabelka.create(devices, columnDefinitions);
-                mainSuccess.append(currentTabelka);
-                btnExamine.click(
-                    function() {
-                        btnExamine.prop('disabled', true);
-                        progress.loadMany(
-                            [ {
-                                "url" : '/api/surveys/examine/all',
-                                "optionalPostData" : false
-                            }, {
-                                "url" : '/api/device/details/all'
-                            } ],
-                            '#examine_progress',
-                            function(responses) {
-                                btnExamine.prop('disabled', false);
-                                devices = responses[1].list;
-                                fixDevices();
-                                mainSuccess.fadeOut(200, function() {
-                                    mainSuccess.empty();
-                                    currentTabelka = tabelka.create(devices, columnDefinitions);
-                                    mainSuccess.append(currentTabelka);
-                                    mainSuccess.fadeIn(200);
-                                });
-                            },
-                            function() {
-                                btnExamine.prop('disabled', false);
-                            }
-                        );
-                    }
-                );
-            } );
-    } );
-})();
+    progress.load(
+        'get',
+        '/api/device/details/all',
+        '#main_progress',
+        function(listDtoOfDeviceDetailsDto) {
+            var btnExamine, mainProgress, mainSuccess;
+            btnExamine = $('#btn_examine');
+            mainProgress = $('#main_progress');
+            mainSuccess = $('#main_success');
+            devices = listDtoOfDeviceDetailsDto.list;
+            fixDevices();
+            currentTabelka = tabelka.create(devices, columnDefinitions);
+            mainSuccess.append(currentTabelka);
+            btnExamine.click(function() {
+                    btnExamine.prop('disabled', true);
+                    progress.loadMany(
+                        [ {
+                            "url" : '/api/surveys/examine/all',
+                            "optionalPostData" : false
+                        }, {
+                            "url" : '/api/device/details/all'
+                        } ],
+                        '#examine_progress',
+                        function(responses) {
+                            btnExamine.prop('disabled', false);
+                            devices = responses[1].list;
+                            fixDevices();
+                            mainSuccess.fadeOut(200, function() {
+                                mainSuccess.empty();
+                                currentTabelka = tabelka.create(devices, columnDefinitions);
+                                mainSuccess.append(currentTabelka);
+                                mainSuccess.fadeIn(200);
+                            });
+                        },
+                        function() {
+                            btnExamine.prop('disabled', false);
+                        }
+                    );
+                });
+        }
+    );
+} );
 </script>
 </body>
 </html>

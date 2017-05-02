@@ -22,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -178,6 +179,33 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             deviceSurvey.setDeleted(false);
             deviceSurveyRepository.save(deviceSurvey);
             lastDS = deviceSurvey;
+        }
+    }
+
+    @Override
+    public void deleteForAll(int before) {
+        em.createQuery("UPDATE DeviceSurvey ds SET ds.deleted = TRUE WHERE ds.timestamp < :b")
+                .setParameter("b", before)
+                .executeUpdate();
+    }
+
+    @Override
+    public void deleteForOne(Long deviceId, int before) {
+        Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
+        if( ! opt.isPresent() ) {
+            throw new NotFoundException("device");
+        }
+        Device dev = opt.get();
+        Set<Long> ids = dev.getFrequencyList()
+                .stream()
+                .map(DeviceFrequency::getId)
+                .collect(Collectors.toSet());
+        if(! ids.isEmpty()) {
+            em.createQuery("UPDATE DeviceSurvey ds SET ds.deleted = TRUE " +
+                    "WHERE ds.frequency.id IN (:ids) AND ds.timestamp < :b")
+                    .setParameter("ids", ids)
+                    .setParameter("b", before)
+                    .executeUpdate();
         }
     }
 }

@@ -23,4 +23,8 @@ public interface SurveyModifyingService {
      * Spreparowane badania mogą być w dowolnej kolejności (nie muszą być posortowane po czasie).
      */
     void importSurveys(Long deviceId, Integer frequencyMhz, List<ShortSurvey> data);
+
+    void deleteForAll(int before);
+
+    void deleteForOne(Long deviceId, int before);
 }

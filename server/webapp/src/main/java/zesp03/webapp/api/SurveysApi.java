@@ -7,6 +7,7 @@ import zesp03.common.data.SurveyPeriodAvgMinMax;
 import zesp03.common.exception.SNMPException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.service.ExamineService;
+import zesp03.common.service.SurveyModifyingService;
 import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.input.ImportFakeSurveysDto;
 import zesp03.webapp.dto.result.BaseResultDto;
@@ -23,6 +24,9 @@ public class SurveysApi {
 
     @Autowired
     private ExamineService examineService;
+
+    @Autowired
+    private SurveyModifyingService surveyModifyingService;
 
     @Autowired
     private ImportService importService;
@@ -56,6 +60,19 @@ public class SurveysApi {
         }
         result.makeQueryTime(t0);
         return result;
+    }
+
+    @PostMapping("/delete/all/{before}")
+    public BaseResultDto deleteForAll(
+            @PathVariable("before") int before) {
+        return BaseResultDto.make( () -> surveyModifyingService.deleteForAll(before) );
+    }
+
+    @PostMapping("/delete/{deviceId}/{before}")
+    public BaseResultDto deleteForOne(
+            @PathVariable("deviceId") long deviceId,
+            @PathVariable("before") int before) {
+        return BaseResultDto.make( () -> surveyModifyingService.deleteForOne(deviceId, before) );
     }
 
     @PostMapping("/fake")

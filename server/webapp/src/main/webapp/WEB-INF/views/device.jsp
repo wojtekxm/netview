@@ -9,6 +9,7 @@
     <title>Informacje o urządzeniu</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
+    <link rel="stylesheet" href="/css/status-small.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js" type="text/javascript"></script>
     <script
             src="https://code.jquery.com/jquery-3.2.0.min.js"
@@ -17,18 +18,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="/css/progress.css">
-    <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-    <style>
-        .input-group{max-width: 200px;}
-        #control{  display: flex; justify-content: space-between;  padding: 20px;  }
-        #control1{display:flex;flex-direction: column;}
-        #control2{display:flex;flex-direction: column;}
-        #control3{display:flex;flex-direction: column;}
-        #control4{display:flex;flex-direction: column;}
-        .forma{ margin-bottom:5px; padding:10px;margin-top: -1px;  vertical-align: middle;}
-        #wykresy {max-width: 100%;max-height:80%;  }
-    </style>
+    <link rel="stylesheet" href="/css/progress.css"><link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
@@ -155,7 +145,16 @@
 
 
 
-
+<style>
+    .input-group{max-width: 200px;}
+    #control{  display: flex; justify-content: space-between;  padding: 20px;  }
+    #control1{display:flex;flex-direction: column;}
+    #control2{display:flex;flex-direction: column;}
+    #control3{display:flex;flex-direction: column;}
+    #control4{display:flex;flex-direction: column;}
+    .forma{ margin-bottom:5px; padding:10px;margin-top: -1px;  vertical-align: middle;}
+    #wykresy {max-width: 100%;max-height:80%;  }
+</style>
 
 <script>
     $(function () {$('#datetimepicker1').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});

@@ -6,6 +6,7 @@ public class CreateControllerDto {
     private String ipv4;
     private Long buildingId;
     private String communityString;
+    private Boolean fake;
 
     public String getName() {
         return name;
@@ -43,5 +44,13 @@ public class CreateControllerDto {
 
     public void setCommunityString(String communityString) {
         this.communityString = communityString;
+    }
+
+    public Boolean isfake() {
+        return fake;
+    }
+
+    public void setfake(Boolean fake) {
+        this.fake = fake;
     }
 }

@@ -61,14 +61,31 @@
     <div id="kontent">
         <div class="form-group">
 
-            <form method="post" action="/api/unit/create">
-                <input type="text" class="form-control" placeholder="Kod jednostki"
-                       id="new_code" required="required" name="code">
-                <input type="description" class="form-control" placeholder="Opis"
-                       id="new_description" required="required" name="description">
-                <input type="submit" value="Dodaj jednostkę" id="btn_submit" class="btn btn-primary btn-default btn-lg active">
+            <form method="post" action="/api/unit/create" class="form-horizontal">
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="new_code" >Kod jednostki:</label>
+                    <div class="col-sm-3">
+                <input type="text" class="form-control" placeholder="Wprowadź kod jednostki"
+                       id="new_code" required="required" name="code"></div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="new_description" >Nazwa jednostki:</label>
+                    <div class="col-sm-3">
+                <input type="description" class="form-control" placeholder="Wprowadź nazwę jednostki"
+                       id="new_description" required="required" name="description"></div>
+                </div>
+
                 <div id="change_progress" style="min-height:38px; min-width:60px">
                     <div class="progress-loading"></div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <span style="display: flex;position: relative;float: left;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                        <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
+                        </span>
+                </div>
                 </div>
             </form>
 

@@ -1,6 +1,6 @@
 package zesp03.common.service;
 
-import zesp03.common.data.SurveyInfoUniqueNameFrequency;
+import zesp03.common.data.SurveyInfo;
 
 import java.util.List;
 
@@ -11,12 +11,12 @@ import java.util.List;
 public interface NetworkService {
     /**
      * Zapytuje kontroler o wskazanym IP o listę wszystkich urządzeń którymi zarządza.
-     * Dla każdego urządzenia zwraca strukturę SurveyInfoUniqueNameFrequency,
+     * Dla każdego urządzenia zwraca strukturę SurveyInfo,
      * czyli nazwa urządzenia, stan (czy jest włączone) i liczba podłączonych klientów.
      * Nie ma takiej gwarancji że nazwy wszystkich urządzeń na tej liście będą unikalne.
      *
-     * @param controllerIP adres IP kontrolera
+     * @param controllerIPv4 adres IP kontrolera
      * @return lista zawierająca informacje o wszystkich zarządzanych urządzeniach
      */
-    List<SurveyInfoUniqueNameFrequency> queryDevices(String controllerIP);
+    List<SurveyInfo> queryDevices(String controllerIPv4, String community);
 }

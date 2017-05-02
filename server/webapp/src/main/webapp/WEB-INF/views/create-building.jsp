@@ -61,34 +61,100 @@
 
 <div id="strona">
     <div id="kontent">
-        <div class="form-group">
-            <form method="post" action="/api/create-building">
-                <input type="text" class="form-control" placeholder="Nazwa Budynku"
-                       required="required" name="name">
-                <input type="text" class="form-control" placeholder="Kod budynku"
-                       required="required" name="code">
-                <input type="text" class="form-control" placeholder="Ulica"
-                       name="street">
-                <input type="text" class="form-control" placeholder="Miasto"
-                       name="city">
-                <input type="text" class="form-control" placeholder="Kod pocztowy"
-                       name="postalCode">
-                <input type="text" class="form-control" placeholder="Numer"
-                       name="number">
-                <input type="text" class="form-control" placeholder="Szerokosc geograficzna"
-                       required="required" name="latitude">
-                <input type="text" class="form-control" placeholder="Wysokosc geograficzna"
-                       required="required" name="longitude">
-                <input type="submit" value="Dodaj budynek" class="btn btn-primary btn-default btn-lg active">
 
+            <form method="post" action="/api/building/create" class="form-horizontal">
+
+                <div class="col-xs-2">
+                    <div class="form-group">
+                <input type="text" class="form-control" placeholder="Nazwa Budynku"
+                       id="new_name" required="required" name="name"></div>
+                    <div class="form-group">
+                <input type="text" class="form-control" placeholder="Kod budynku"
+                       id="new_code" required="required" name="code"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Ulica"
+                           id="new_street" name="street"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Miasto"
+                           id="new_city" name="city"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Kod pocztowy"
+                           id="new_postalCode" name="postalCode"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Numer"
+                           id="new_number" name="number"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Szerokosc geograficzna"
+                           id="new_latitude" required="required" name="latitude"></div>
+                    <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Wysokosc geograficzna"
+                           id="new_longitude" required="required" name="longitude"></div>
+
+                    <div id="change_progress" style="min-height:38px; min-width:60px">
+                        <div class="progress-loading"></div>
+                <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
+                    <div class="form-group">
+                        <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
+                    </div>
+
+
+
+
+
+
+            <div class="form-group">
+                <%--<div class="col-sm-4">--%>
+                    <div id="result_success"></div>
+                    <div id="result_error"></div>
+                <%--</div>--%>
+            </div>
+                </div>
             </form>
-            <br>
-        </div>
+
     </div>
 </div>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
 
+<script>
+
+    $(document).ready(function () {
+        var btnSubmit = $('#btn_submit');
+        btnSubmit.click(function () {
+            btnSubmit.prop('disabled', true);
+            var createBuildingDto = {
+                "name": $('#new_name').val(),
+                "code": $('#new_code').val(),
+                "street": $('#new_street').val(),
+                "city": $('#new_city').val(),
+                "postalCode": $('#new_postalCode').val(),
+                "number": $('#new_number').val(),
+                "latitude": $('#new_latitude').val(),
+                "longitude": $('#new_longitude').val()
+
+            };
+            progress.load(
+                'post',
+                '/api/building/create',
+                '#change_progress',
+                function( response ) {
+                    btnSubmit.prop( 'disabled', false );
+                    notify.success( '#result_success', 'Budynek został dodany.' );
+                },
+                function( response ) {
+                    btnSubmit.prop( 'disabled', false );
+                    notify.danger( '#result_error', 'Nie udało się dodać budynku.'); //(response == null ||  response.error == null ||  response.error == '' ) ? 'Błąd operacji' : response.error  );
+                },
+                createBuildingDto
+            );
+
+        });
+    });
+
+
+</script>
 </body>
 </html>

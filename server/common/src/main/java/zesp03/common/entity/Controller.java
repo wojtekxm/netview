@@ -26,10 +26,13 @@ public class Controller {
     private String description;
 
     @Column(name = "community_string", nullable = false)
-    private String communityString;
+    private String community;
 
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
+
+    @Column(name = "is_fake", nullable = false)
+    private Boolean fake;
 
     @OneToMany(mappedBy = "controller", fetch = FetchType.LAZY)
     private List<Device> deviceList = new ArrayList<>();
@@ -70,20 +73,28 @@ public class Controller {
 
     public void setBuilding(Building building) {this.building = building;}
 
-    public String getCommunityString() {
-        return communityString;
+    public String getCommunity() {
+        return community;
     }
 
-    public void setCommunityString(String communityString) {
-        this.communityString = communityString;
+    public void setCommunity(String community) {
+        this.community = community;
     }
 
-    public Boolean getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Boolean isFake() {
+        return fake;
+    }
+
+    public void setFake(Boolean fake) {
+        this.fake = fake;
     }
 
     public List<Device> getDeviceList() {

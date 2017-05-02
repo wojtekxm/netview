@@ -12,7 +12,11 @@ public class CurrentDeviceState {
     private final Device device;
     private final HashMap<Integer, FrequencySurvey> map = new HashMap<>();
 
-    // f i s mogą być null
+    /**
+     * @param d nie może być null
+     * @param f może być null
+     * @param s może być null
+     */
     public CurrentDeviceState(Device d, DeviceFrequency f, DeviceSurvey s) {
         FrequencySurvey fs = validate(d, f, s);
         this.device = d;
@@ -21,18 +25,25 @@ public class CurrentDeviceState {
         }
     }
 
+    /**
+     * @return nigdy null
+     */
     public Device getDevice() {
         return device;
     }
 
-    // zwraca null jak nie znajdzie
+    /**
+     * @return null jak nie znajdzie
+     */
     public DeviceFrequency findFrequency(Integer frequencyMhz) {
         FrequencySurvey fs = map.get(frequencyMhz);
         if(fs != null)return fs.frequency;
         return null;
     }
 
-    // zwraca null jak nie znajdzie
+    /**
+     * @return null jak nie znajdzie
+     */
     public DeviceSurvey findSurvey(Integer frequencyMhz) {
         FrequencySurvey fs = map.get(frequencyMhz);
         if(fs != null)return fs.survey;

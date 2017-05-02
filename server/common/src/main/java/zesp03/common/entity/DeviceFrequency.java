@@ -49,7 +49,7 @@ public class DeviceFrequency {
         this.frequency = frequency;
     }
 
-    public Boolean getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 

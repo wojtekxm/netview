@@ -2,9 +2,11 @@ package zesp03.webapp.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import zesp03.webapp.dto.BuildingDto;
 import zesp03.webapp.dto.LinkUnitBuildingDto;
 import zesp03.webapp.dto.UnitBuildingsDto;
 import zesp03.webapp.dto.UnitDto;
+import zesp03.webapp.dto.input.BuildingAndUnitDto;
 import zesp03.webapp.dto.input.CreateUnitDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
@@ -55,9 +57,21 @@ public class UnitApi {
     }
 
     @PostMapping(value = "/api/unit/remove/{unitId}")
-    public BaseResultDto remove(
+    public BaseResultDto removeUnit(
             @PathVariable("unitId") long id) {
-        return BaseResultDto.make( () -> unitService.remove(id) );
+        return BaseResultDto.make( () -> unitService.removeUnit(id) );
+    }
+
+    @GetMapping("/api/unit/details/{unitId}")
+    public ContentDto<UnitBuildingsDto> getDetailsOne(
+            @PathVariable("unitId") long unitId) {
+        return ContentDto.make( () -> unitService.getDetailsOne(unitId) );
+    }
+
+    @GetMapping("/api/unit/buildings/{unitId}")
+    public ListDto<BuildingDto> getBuilding(
+            @PathVariable("unitId") long unitId) {
+        return ListDto.make( () -> unitService.getBuildings(unitId) );
     }
 
     @GetMapping("/api/modify-unit")
@@ -65,13 +79,24 @@ public class UnitApi {
             @RequestParam("id") long id) {
         return ContentDto.make( () -> unitService.modifyUnit(id) );
     }
+    @PostMapping(value = "/api/accept-modify-unit", consumes = "application/json")
+    public BaseResultDto acceptModifyUnit(
+            @RequestBody UnitDto dto) {
+        return BaseResultDto.make( () -> unitService.acceptModifyUnit(dto) );
+    }
 
     @PostMapping(value = "/api/accept-modify-unit", consumes = "application/x-www-form-urlencoded")
     public BaseResultDto acceptModifyUnit(
             @RequestParam("id") long id,
             @RequestParam("code") String code,
             @RequestParam("description") String description) {
-        return BaseResultDto.make( () -> unitService.acceptModifyUnit(id, code, description) );
+        return BaseResultDto.make( () -> {
+            UnitDto dto = new UnitDto();
+            dto.setId(id);
+            dto.setCode(code);
+            dto.setDescription(description);
+            unitService.acceptModifyUnit(dto);
+        } );
     }
 
     @GetMapping("/api/link-unit-all-buildings")

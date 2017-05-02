@@ -64,38 +64,38 @@
             </div>
 
             <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0; margin-bottom: inherit;">
                     Modyfikuj kontroler:
                 </div>
 
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
                     <tr>
-                        <input form="form1" type="hidden" name="id" value="${controller.id}" />
+                        <input form="form1" id="id" type="hidden" name="id" value="${controller.id}" />
                     </tr>
 
                     <tr>
                         <td>Nazwa</td>
-                        <td><input form="form1" type="text" name="name" value="${controller.name}" style="width: 30%;" />
+                        <td><input form="form1" id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
                     </tr>
 
                     <tr>
                         <td>IP</td>
-                        <td><input form="form1" type="text" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
+                        <td><input form="form1" type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
                     </tr>
 
                     <tr>
                         <td>Opis</td>
-                        <td><input form="form1" type="text" name="description" value="${controller.description}" style="width: 30%;" />
+                        <td><input form="form1" type="text" id="new_description" name="description" value="${controller.description}" style="width: 30%;" />
                     </tr>
                     <tr>
                         <td>Community String</td>
-                        <td><input form="form1" type="text" name="communityString" value="${controller.communityString}" style="width: 30%;" />
+                        <td><input form="form1" type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
                     </tr>
 
 
-                    <label for="sel1">Wybierz budynek:</label>
+                    <label for="new_building">Wybierz budynek:</label>
 
-                    <select form="form1" class="form-control" id="sel1"name="buildingId">
+                    <select form="form1" class="form-control" id="new_building"name="buildingId">
                         <option></option>
                         <c:forEach items="${list}" var="building" >
                             <option value="${building.id}" >
@@ -105,19 +105,64 @@
                     </select>
                 </table>
                 <div>
-                    <a href="/controller/?id=${controller.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
+
+                    <a href="/controller/${controller.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
                     <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
-                        <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                        <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
+                         <div id="change_progress" class="pull-left" style="min-height:38px; min-width:60px">
+                    <div class="progress-loading"></div>
+                </div>
                     </span>
 
                 </div>
             </div>
-
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div id="result_success"></div>
+                    <div id="result_error"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        var btnSubmit = $('#btn_submit');
+        btnSubmit.click(function () {
+            btnSubmit.prop('disabled', true);
+            var controllerDto = {
+                "id": $('#id').val(),
+                "name": $('#new_name').val(),
+                "ipv4": $('#new_ipv4').val(),
+                "description": $('#new_description').val(),
+                "communityString": $('#new_communityString').val(),
+                "buildingId": $('#new_building').val()
+
+            };
+            progress.load(
+                'post',
+                '/api/controller/accept-modify-controller',
+                '#change_progress',
+                function(controllerDto) {
+                    btnSubmit.prop('disabled', false);
+                    notify.success('#result_success', 'Dane zostały zmienione.');
+                },
+                function() {
+                    btnSubmit.prop('disabled', false);
+                    notify.danger('#result_error', 'Nie udało się zmienić danych.');
+                },
+                controllerDto
+
+            );
+        });
+    });
+    </script>
 </body>
 </html>

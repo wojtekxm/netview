@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.entity.Building;
 import zesp03.common.exception.NotFoundException;
+import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.BuildingRepository;
 import zesp03.common.repository.LinkUnitBuildingRepository;
 import zesp03.webapp.dto.BuildingDetailsDto;
 import zesp03.webapp.dto.BuildingDto;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.UnitDto;
+import zesp03.webapp.dto.input.CreateBuildingDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -81,17 +83,32 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void createBuilding(String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude) {
+    public void createBuilding(CreateBuildingDto dto) {
+
+        if(dto.getCode() == null || dto.getCode().isEmpty()) {
+            throw new ValidationException("code", "null");
+        }
+        if(dto.getName().isEmpty()) {
+            throw new ValidationException("name", "null");
+        }
+        if(dto.getLatitude() == null) {
+            throw new ValidationException("latitude", "null");
+        }
+        if(dto.getLongitude() == null) {
+            throw new ValidationException("longitude", "null");
+        }
+
         Building building = new Building();
-        building.setCode(code);
-        building.setName(name);
-        building.setStreet(street);
-        building.setCity(city);
-        building.setPostalCode(postalCode);
-        building.setNumber(number);
-        building.setLatitude(latitude);
-        building.setLongitude(longitude);
-        em.persist(building);
+        building.setCode(dto.getCode());
+        building.setName(dto.getName());
+        building.setStreet(dto.getStreet());
+        building.setCity(dto.getCity());
+        building.setPostalCode(dto.getPostalCode());
+        building.setNumber(dto.getNumber());
+        building.setLatitude(dto.getLatitude());
+        building.setLongitude(dto.getLongitude());
+
+        buildingRepository.save(building);
     }
 
     @Override
@@ -103,23 +120,34 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public void acceptModify(long id, String code, String name, String street, String city, String postalCode, String number, BigDecimal latitude, BigDecimal longitude) {
-        Building b = em.find(Building.class, id);
+    public void acceptModifyBuilding(BuildingDto dto) {
 
-        if(b == null) {
-            if (em != null)
-                em.close();
-            throw new NotFoundException("building");
+
+        if(dto.getCode() == null || dto.getCode().isEmpty()) {
+            throw new ValidationException("code", "Nie podano kodu");
+        }
+        if(dto.getName() == null || dto.getName().isEmpty()) {
+            throw new ValidationException("name", "Nie podano nazwy");
+        }
+        if(dto.getLatitude() == null) {
+            throw new ValidationException("latitude", "null");
+        }
+        if(dto.getLongitude() == null) {
+            throw new ValidationException("longitude", "null");
         }
 
-        b.setCode(code);
-        b.setName(name);
-        b.setStreet(street);
-        b.setCity(city);
-        b.setPostalCode(postalCode);
-        b.setNumber(number);
-        b.setLatitude(latitude);
-        b.setLongitude(longitude);
+        Building b = buildingRepository.findOne(dto.getId());
+
+        b.setCode(dto.getCode());
+        b.setName(dto.getName());
+        b.setStreet(dto.getStreet());
+        b.setCity(dto.getCity());
+        b.setPostalCode(dto.getPostalCode());
+        b.setNumber(dto.getNumber());
+        b.setLatitude(dto.getLatitude());
+        b.setLongitude(dto.getLongitude());
+
+        buildingRepository.save(b);
     }
 
     @Override
@@ -149,8 +177,8 @@ public class BuildingServiceImpl implements BuildingService {
                 building.setId(((Number) list.get(0)[0]).longValue());
                 building.setCode(list.get(0)[1].toString());
                 building.setName(list.get(0)[2].toString());
-                building.setLatitude(((BigDecimal) list.get(0)[3]).doubleValue());
-                building.setLongitude(((BigDecimal) list.get(0)[4]).doubleValue());
+                building.setLatitude(((BigDecimal) list.get(0)[3]));//.doubleValue());
+                building.setLongitude(((BigDecimal) list.get(0)[4]));//.doubleValue());
             }
 
             // object[5] = id

@@ -68,66 +68,114 @@
                     Modyfikuj budynek:
                 </div>
 
-            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0; margin-bottom: inherit;">
                 <tr>
-                    <input form="form1" type="hidden" name="id" value="${building.id}" />
+                    <input form="form1" type="hidden" id="id" name="id" value="${building.id}" />
                 </tr>
                 <tr>
                     <td>Kod</td>
-                    <td><input form="form1" type="text" name="code" value="${building.code}" style="width: 30%;"/></td>
+                    <td><input form="form1" type="text" id="new_code" name="code" value="${building.code}" style="width: 30%;"/></td>
                 </tr>
 
                 <tr>
                     <td>Nazwa</td>
-                    <td><input form="form1" type="text" name="name" value="${building.name}" style="width: 30%;" />
+                    <td><input form="form1" type="text" id="new_name" name="name" value="${building.name}" style="width: 30%;" />
                 </tr>
 
                 <tr>
                     <td>Ulica</td>
-                    <td><input form="form1" type="text" name="street" value="${building.street}" style="width: 30%;" />
+                    <td><input form="form1" type="text" id="new_street" name="street" value="${building.street}" style="width: 30%;" />
                 </tr>
 
                 <tr>
                     <td>Numer</td>
-                    <td><input form="form1" type="text" name="number" value="${building.number}" style="width: 30%;" />
+                    <td><input form="form1" type="text" id="new_number" name="number" value="${building.number}" style="width: 30%;" />
                 </tr>
 
                 <tr>
                     <td>Kod pocztowy</td>
-                    <td><input form="form1" type="text" name="postalCode" value="${building.postalCode}" style="width: 30%;" />
+                    <td><input form="form1" type="text" id="new_postalCode" name="postalCode" value="${building.postalCode}" style="width: 30%;" />
                 </tr>
 
                 <tr>
                     <td>Miasto</td>
-                    <td><input form="form1" type="text" name="city" value="${building.city}" style="width: 30%;" />
+                    <td><input form="form1" type="text" id="new_city" name="city" value="${building.city}" style="width: 30%;" />
                 </tr>
 
                 <tr>
                     <td>Szerokość geograficzna</td>
-                    <td><input form="form1" type="text" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
+                    <td><input form="form1" type="text" id="new_latitude" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
                 </tr>
 
                 <tr>
                     <td>Długość geograficzna</td>
-                    <td><input form="form1" type="text" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
+                    <td><input form="form1" type="text" id="new_longitude" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
 
                 </tr>
 
             </table>
                 <div>
-                    <a href="/building/${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
+                    <a href="/building/${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
                     <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
-                        <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <input form="form1" id="btn_submit" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
                     </span>
+                    <div id="change_progress" style="min-height:38px; min-width:60px">
+                        <div class="progress-loading"></div>
+                    </div>
 
                 </div>
             </div>
-
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div id="result_success"></div>
+                    <div id="result_error"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        var btnSubmit = $('#btn_submit');
+        btnSubmit.click(function () {
+            btnSubmit.prop('disabled', true);
+            var BuildingDto = {
+                "id": $('#id').val(),
+                "name": $('#new_name').val(),
+                "code": $('#new_code').val(),
+                "street": $('#new_street').val(),
+                "city": $('#new_city').val(),
+                "postalCode": $('#new_postalCode').val(),
+                "number": $('#new_number').val(),
+                "latitude": $('#new_latitude').val(),
+                "longitude": $('#new_longitude').val()
+
+            };
+            progress.load(
+                'post',
+                '/api/accept-modify-building',
+                '#change_progress',
+                function(BuildingDto) {
+                    btnSubmit.prop('disabled', false);
+                    notify.success('#result_success', 'Udało się zmienić dane.');
+                },
+                function() {
+                    btnSubmit.prop('disabled', false);
+                    notify.danger('#result_error', 'Nie udało się zmienić danych.');
+                },
+                BuildingDto
+
+            );
+        });
+    });
+</script>
 </body>
 </html>

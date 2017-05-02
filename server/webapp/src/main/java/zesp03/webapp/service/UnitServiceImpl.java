@@ -3,6 +3,8 @@ package zesp03.webapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import zesp03.common.entity.Building;
 import zesp03.common.entity.LinkUnitBuilding;
 import zesp03.common.entity.Unit;
@@ -15,6 +17,7 @@ import zesp03.webapp.dto.LinkUnitBuildingDto;
 import zesp03.webapp.dto.UnitBuildingsDto;
 import zesp03.webapp.dto.UnitDto;
 import zesp03.webapp.dto.input.CreateUnitDto;
+import zesp03.webapp.dto.result.BaseResultDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -86,9 +89,13 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public void create(CreateUnitDto dto) {
-        if(dto.getCode() == null) {
+        if(dto.getCode() == null || dto.getCode().isEmpty()) {
             throw new ValidationException("code", "null");
         }
+        if(dto.getDescription() == null || dto.getDescription().isEmpty()) {
+            throw new ValidationException("description", "null");
+        }
+
         //TODO co jak o takim kodzie już istnieje
         Unit unit = new Unit();
         unit.setCode(dto.getCode());
@@ -97,12 +104,31 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public void remove(Long unitId) {
+    public void removeUnit(Long unitId) {
         Unit u = unitRepository.findOne(unitId);
         if(u == null) {
             throw new NotFoundException("unit");
         }
         unitRepository.delete(u);
+    }
+
+    @Override
+    public List<BuildingDto> getBuildings(Long unitId) {
+        Unit u = unitRepository.findOne(unitId);
+        if(u == null)
+            throw new NotFoundException("unit");
+        return u.getLubList()
+                .stream()
+                .map( lub -> BuildingDto.make(lub.getBuilding()) )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UnitBuildingsDto getDetailsOne(Long unitId) {
+        Unit u = unitRepository.findOne(unitId);
+        if(u == null)
+            throw new NotFoundException("unit");
+        return UnitBuildingsDto.make(u);
     }
 
     @Override
@@ -114,16 +140,25 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public void acceptModifyUnit(long id, String code, String description) {
-        Unit u= em.find(Unit.class, id);
-        if(u == null) {
-            if (em != null)
-                em.close();
-            throw new NotFoundException("unit");
+    public void acceptModifyUnit(UnitDto dto) {
+
+        if(dto.getCode() == null || dto.getCode().isEmpty()) {
+            throw new ValidationException("code", "null");
         }
-        u.setCode(code);
-        u.setDescription(description);
+        if(dto.getDescription() == null || dto.getDescription().isEmpty()) {
+            throw new ValidationException("description", "null");
+        }
+
+        Unit u = unitRepository.findOne(dto.getId());
+
+        u.setCode(dto.getCode());
+        u.setDescription(dto.getDescription());
+
+        unitRepository.save(u);
+
     }
+
+
 
     @Override
     public LinkUnitBuildingDto getLinkUnitBuilding(long id) {
@@ -175,8 +210,8 @@ public class UnitServiceImpl implements UnitService {
             dto.setId(((Number)object[3]).longValue());
             dto.setCode(object[4].toString());
             dto.setName(object[5].toString());
-            dto.setLatitude( ((BigDecimal)object[6]).doubleValue() );
-            dto.setLongitude( ((BigDecimal)object[7]).doubleValue() );
+            dto.setLatitude( ((BigDecimal)object[6]));//.doubleValue() );
+            dto.setLongitude( ((BigDecimal)object[7]));//.doubleValue() );
         }
 
 

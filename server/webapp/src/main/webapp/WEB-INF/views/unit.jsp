@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:url var="href" value="/modify-unit?id=${id}"/>
+<c:url var="action" value="/unit/remove/${id}"/>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -53,80 +55,154 @@
         </div>
     </div>
 </nav>
-
-
-<div id="all" class="container-fluid">
-    <div id="container">
-        <div class="content">
-            <div style="height: 10px;"></div>
-            <div>
-                <div id="wydzial"><div style="border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o jednostce: </div></div>
-            </div>
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-                    Szczegóły jednostki:
-                </div>
-
-                <c:url var="href" value="/modify-unit?id=${unit.id}"/>
-
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
-                    <tr>
-                        <td>Kod</td>
-                        <td><c:out value="${unit.code}"/></td>
-                    </tr>
-                    <tr>
-                        <td>Opis</td>
-                        <td><c:out value="${unit.description}"/></td>
-                    </tr>
-                </table>
-                <div>
-                    <a href="${href}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Modyfikuj</a>
-                    <form method="post" action="/api/unit/remove/${unit.id}">
+<div class="container" style="margin-top:100px">
+    <div id="main_progress">
+        <div class="progress-loading"></div>
+        <div class="progress-success">
+            <div class="row">
+                <%--<div class="col-md-6">--%>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Informacje o jednostce</div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-4">kod</div>
+                                    <div class="col-xs-8" id="field_code"></div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-4">opis</div>
+                                    <div class="col-xs-8" id="field_description"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    <%--</div>--%>
+                        <div>
+                            <a href="${href}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
+                            <form method="post" action="${action}">
                             <span style="display: flex;position: relative;float: left;">
                             <span class="glyphicon glyphicon-trash" style="position: absolute;font-size:17px;color: white;top: 30%;left:29%;"></span>
                                 <input type="submit" value="Usuń" class="form-control btn btn-danger" role="button" style="float:left;height:38px;width:180px;font-size:17px;" >
                             </span>
-                    </form>
+                            </form>
+                        </div>
                     </div>
+                    <h4 style="margin-top: 50px">Jednostki organizacyjne powiązane z jednostką</h4>
+                    <div id="tabelka_buildings"></div>
+                    <a href="/link-unit-all-buildings?id=${id}" class="btn btn-success" role="button">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Połącz z budynkiem ...
+                    </a>
 
-                <div class="panel-heading"  style="margin-top: 70px;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-                    Powiązane budynki:
-                </div>
-
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
-
-                    <tr>
-                        <td>Kod</td>
-                        <td>Nazwa</td>
-                        <td>Szerokość geograficzna</td>
-                        <td>Wysokość geograficzna</td>
-                    </tr>
-                    <c:forEach items="${buildings}" var="building">
-                        <tr onclick="window.document.location='/building/${building.id}';">
-                            <td><c:out value="${building.code}"/></td>
-                            <td> <c:out value="${building.name}"/></td>
-                            <td> <c:out value="${building.latitude}"/></td>
-                            <td> <c:out value="${building.longitude}"/></td>
-
-                        </tr>
-                    </c:forEach>
-
-                </table>
-
-                <div>
-
-
-                <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" ><span class="glyphicon glyphicon-plus"></span> Dodaj powiązanie</a>
-                <a href="/remove-unit-all-buildings?id=${unit.id}" class="btn btn-danger" role="button" style="float:left;width:180px;font-size:17px;"><span class="glyphicon glyphicon-trash"></span> Usuń powiązanie</a>
-</div>
             </div>
+            <div class="progress-error">err</div>
         </div>
     </div>
-</div>
+
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>--%>
+<%--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>--%>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/tabelka.js"></script>
+<script>
+    var unit, buildings,  buildingDefinitions;
+    buildingDefinitions = [
+      {
+            "label" : 'kod',
+            "comparator" : util.comparatorText('code'),
+            "extractor" : 'td_code'
+        },   {
+            "label" : 'nazwa',
+            "comparator" : util.comparatorText('name'),
+            "extractor" : 'td_name'
+        }, {
+            "label" : 'szerokość geograficzna',
+            "comparator" : util.comparatorText('latitude'),
+            "extractor" : 'td_latitude'
+        }, {
+            "label" : 'długość geograficzna',
+            "comparator" : util.comparatorText('longitude'),
+            "extractor" : 'td_longitude'
+        },
+        {
+            "label" : '',
+            "comparator" : null,
+            "extractor" : 'td_button',
+            "optionalCssClass" : 'width1'
+        }
+    ];
+    function fixBuildings() {
+        var i, b;
+        for(i = 0; i < buildings.length; i++) {
+            b = buildings[i];
+            b.td_name = $('<a></a>')
+                .attr('href', '/building/' + b.id)
+                .text(b.name);
+            b.td_code = $('<span></span>').text(b.code);
+            b.td_latitude = $('<span></span>').text(b.latitude);
+            b.td_longitude = $('<span></span>').text(b.longitude);
+            b.td_button = $('<button class="btn btn-danger btn-xs"></button>')
+                .click( {
+                    "buildingId" : b.id
+                }, function(event) {
+                    var i, buildingAndUnitDto;
+                    for(i = 0; i < buildings.length; i++) {
+                        buildings[i].td_button.prop('disabled', true);
+                    }
+                    buildingAndUnitDto = {
+                        "unitId" : unit.id,
+                        "buildingId" : event.data.buildingId
+                    };
+                    progress.loadMany(
+                        [ {
+                            "url" : '/api/building/unlink-unit/',
+                            "optionalPostData" : buildingAndUnitDto
+                        }, {
+                            "url" : '/api/unit/buildings/' + unit.id
+                        } ],
+                        '#main_progress',
+                        function(responses) {
+                            var i, tabelkaBuildings;
+                            for(i = 0; i < buildings.length; i++) {
+                                buildings[i].td_button.prop('disabled', false);
+                            }
+                            buildings = responses[1].list;
+                            fixBuildings();
+                            tabelkaBuildings = $('#tabelka_buildings');
+                            tabelkaBuildings.empty();
+                            tabelkaBuildings.append(tabelka.create(buildings, buildingDefinitions));
+                        } );
+                } ).append(
+                    $('<span class="glyphicon glyphicon-minus"></span>')
+                );
+        }
+    }
+
+    progress.load(
+        'get',
+        '/api/unit/details/${id}',
+        '#main_progress',
+        function(contentDtoOfUnitDetailsDto) {
+            var fieldDescription, fieldCode, tabelkaBuildings;
+            buildings = contentDtoOfUnitDetailsDto.content.buildings;
+            unit = contentDtoOfUnitDetailsDto.content.unit;
+            fieldDescription = $('#field_description');
+            fieldDescription.text(unit.description);
+            fieldCode = $('#field_code');
+            fieldCode.text(unit.code);
+            fixBuildings();
+            tabelkaBuildings = $('#tabelka_buildings');
+            tabelkaBuildings.append(tabelka.create(buildings, buildingDefinitions));
+
+
+        }
+    );
+
+</script>
 </body>
 </html>

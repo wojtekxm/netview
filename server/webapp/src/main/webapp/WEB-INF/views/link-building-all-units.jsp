@@ -69,9 +69,9 @@
 
 
 
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;cursor: pointer;">
                     <tr>
-                        <td>ID</td>
+                        <%--<td>ID</td>--%>
                         <td>Kod</td>
                         <td>Opis</td>
                     </tr>
@@ -79,7 +79,7 @@
                     <c:forEach items="${units}" var="unit">
 
                         <tr onclick="window.document.location='link-building-units?id_building=${building.id}&id_unit=${unit.id}';">
-                            <td> <c:out value="${unit.id}"/></td>
+                            <%--<td> <c:out value="${unit.id}"/></td>--%>
                             <td> <c:out value="${unit.code}"/></td>
                             <td> <c:out value="${unit.description}"/></td>
 

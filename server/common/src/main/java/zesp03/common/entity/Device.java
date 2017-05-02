@@ -71,7 +71,7 @@ public class Device {
         this.controller = controller;
     }
 
-    public Boolean getDeleted() {
+    public Boolean isDeleted() {
         return deleted;
     }
 

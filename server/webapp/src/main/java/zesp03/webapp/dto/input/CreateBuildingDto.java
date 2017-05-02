@@ -1,11 +1,9 @@
-package zesp03.webapp.dto;
+package zesp03.webapp.dto.input;
 
-import zesp03.common.entity.Building;
 
 import java.math.BigDecimal;
 
-public class BuildingDto {
-    private long id;
+public class CreateBuildingDto {
     private String code;
     private String name;
     private String street;
@@ -14,14 +12,6 @@ public class BuildingDto {
     private String number;
     private BigDecimal latitude;
     private BigDecimal longitude;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getCode() {
         return code;
@@ -69,23 +59,5 @@ public class BuildingDto {
 
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
-    }
-
-    public void wrap(Building b) {
-        this.id = b.getId();
-        this.code = b.getCode();
-        this.name = b.getName();
-        this.street = b.getStreet();
-        this.city = b.getCity();
-        this.postalCode = b.getPostalCode();
-        this.number = b.getNumber();
-        this.latitude = (BigDecimal) b.getLatitude();//.doubleValue();
-        this.longitude = (BigDecimal) b.getLongitude();
-    }
-
-    public static BuildingDto make(Building b) {
-        BuildingDto dto = new BuildingDto();
-        dto.wrap(b);
-        return dto;
     }
 }

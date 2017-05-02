@@ -1,27 +1,27 @@
 package zesp03.common.util;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 // thread safe
 public class RandomUtil {
-    private final Random r = new Random();
-
-    public synchronized boolean decide(double chance) {
+    public boolean decide(double chance) {
+        if(chance > 1.0)chance = 1.0;
+        else if(chance < 0.0)chance = 0.0;
         final int BIG = 1000_000_000;
         final int positiveOptions = (int)Math.round(chance * BIG);
         return decide(positiveOptions, BIG);
     }
 
-    public synchronized boolean decide(int positiveOptions, int allOptions) {
-        return r.nextInt(allOptions) < positiveOptions;
+    public boolean decide(int positiveOptions, int allOptions) {
+        return ThreadLocalRandom.current().nextInt(allOptions) < positiveOptions;
     }
 
-    public synchronized int choose(int min, int max) {
+    public int choose(int min, int max) {
         if(max < min) {
             throw new IllegalArgumentException("max < min");
         }
         int diff = max - min;
         if(diff == 0)return min;
-        return min + r.nextInt(diff + 1);
+        return min + ThreadLocalRandom.current().nextInt(diff + 1);
     }
 }

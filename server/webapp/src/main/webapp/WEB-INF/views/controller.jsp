@@ -69,7 +69,7 @@
                     Szczegóły urządzenia:
                 </div>
 
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0; margin-bottom: inherit">
                     <tr>
                         <td>Nazwa</td>
                         <td><c:out value="${controller.name}"/></td>
@@ -82,14 +82,23 @@
                         <td>Opis</td>
                         <td><c:out value="${controller.description}"/></td>
                     </tr>
+                    <tr>
+                        <td>Community String</td>
+                        <td><c:out value="${controller.communityString}"/></td>
+                    </tr>
+
+
+                    <c:if test="${ controller.building != null && controller.building.name != ''}">
+
                     <tr onclick="window.document.location='/building/${controller.building.id}';">
                         <td>Budynek</td>
                         <td><c:out value="${controller.building.name}"/></td>
                     </tr>
+                    </c:if>
                 </table>
                 <div class="clearfix">
                     <form class="pull-left" method="POST" action="${actionRemove}">
-                        <button class="btn btn-danger" type="submit">
+                        <button class="btn btn-danger" type="submit" style="margin-right: 10px;">
                             <span class="glyphicon glyphicon-trash"></span> Usuń
                         </button>
                     </form>

@@ -84,7 +84,7 @@ public class ControllerServiceImpl implements ControllerService {
                 .setParameter("c", c)
                 .getResultList()
                 .stream()
-                .map( dev -> dev.getId() )
+                .map(Device::getId)
                 .collect(Collectors.toList());
         if(deviceIdsToDelete.isEmpty())return;
         em.createQuery("UPDATE DeviceFrequency df SET df.deleted = true WHERE df.device.id IN (:ids)")
@@ -97,8 +97,8 @@ public class ControllerServiceImpl implements ControllerService {
         if(dto.getIpv4() == null) {
             throw new ValidationException("ipv4", "null");
         }
-        if(dto.getName() == null) {
-            throw new ValidationException("ipv4", "null");
+        if(dto.getName().isEmpty()) {
+            throw new ValidationException("name", "null");
         }
         if( ! IPv4.isValid( dto.getIpv4() ) ) {
             throw new ValidationException("ipv4", "invalid format");
@@ -109,8 +109,9 @@ public class ControllerServiceImpl implements ControllerService {
         c.setName(dto.getName());
         c.setIpv4(dto.getIpv4());
         c.setDescription(dto.getDescription());
-        c.setCommunityString(dto.getCommunityString());
+        c.setCommunity(dto.getCommunityString());
         c.setDeleted(false);
+        c.setFake(true);//???
         if(dto.getBuildingId() != null) {
             Building b = buildingRepository.findOne(dto.getBuildingId());
             c.setBuilding(b);
@@ -130,8 +131,8 @@ public class ControllerServiceImpl implements ControllerService {
         if(dto.getIpv4() == null) {
             throw new ValidationException("ipv4", "null");
         }
-        if(dto.getName() == null) {
-            throw new ValidationException("ipv4", "null");
+        if( dto.getName() == null || dto.getName().isEmpty()) {
+            throw new ValidationException("name", "null");
         }
         if( ! IPv4.isValid( dto.getIpv4() ) ) {
             throw new ValidationException("ipv4", "invalid format");
@@ -141,7 +142,7 @@ public class ControllerServiceImpl implements ControllerService {
         c.setName(dto.getName());
         c.setIpv4(dto.getIpv4());
         c.setDescription(dto.getDescription());
-        c.setCommunityString(dto.getCommunityString());
+        c.setCommunity(dto.getCommunityString());
         if(dto.getBuildingId() != null) {
             Building b = buildingRepository.findOne(dto.getBuildingId());
             c.setBuilding(b);

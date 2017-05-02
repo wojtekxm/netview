@@ -61,17 +61,17 @@
         <div class="form-group">
             <form method="post" action="/api/controller/create" id="form1">
                 <input form="form1"type="text" class="form-control"  placeholder="Nazwa Kontrolera"
-                       required="required" name="name">
+                       id="new_name" required="required" name="name">
                 <input form="form1" type="text" class="form-control"  placeholder="Adres IPv4"
-                       required="required" name="ipv4">
+                       id="new_ipv4" required="required" name="ipv4">
                 <input form="form1" type="text" class="form-control"  placeholder="Komentarz (opcjonalne)"
-                       name="description">
+                       id="new_description" name="description">
                 <input form="form1" type="text" class="form-control"  placeholder="Community String"
-                       name="communityString">
+                       id="new_communityString" name="communityString">
 
-                <label for="sel1">Wybierz budynek:</label>
+                <label for="new_building">Wybierz budynek:</label>
 
-                <select form="form1" class="form-control" id="sel1"name="buildingId">
+                <select form="form1" class="form-control" id="new_building"name="buildingId">
                     <option></option>
                     <c:forEach items="${list}" var="building" >
                         <option value="${building.id}" >
@@ -79,9 +79,17 @@
                         </option>
                         </c:forEach>
                 </select>
-                <input form="form1" type="submit" value="Dodaj kontroler" class="btn btn-primary btn-default btn-lg active">
+                <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-primary btn-default btn-lg active">
+                <div id="change_progress" style="min-height:38px; min-width:60px">
+                    <div class="progress-loading"></div>
+                </div>
             </form>
-            <br>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div id="result_success"></div>
+                <div id="result_error"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -89,6 +97,41 @@
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
 
+<script>
+
+    $(document).ready(function () {
+        var btnSubmit = $('#btn_submit');
+        btnSubmit.click(function () {
+            btnSubmit.prop('disabled', true);
+            var createControllerDto = {
+                "name": $('#new_name').val(),
+                "ipv4": $('#new_ipv4').val(),
+                "description": $('#new_description').val(),
+                "communityString": $('#new_communityString').val(),
+                "buildingId": $('#new_building').val()
+
+            };
+            progress.load(
+                'post',
+                '/api/controller/create',
+                '#change_progress',
+                function(createControllerDto) {
+                    btnSubmit.prop('disabled', false);
+                    notify.success('#result_success', 'Kontroler został dodany.');
+                },
+                function() {
+                    btnSubmit.prop('disabled', false);
+                    notify.danger('#result_error', 'Nie udało się dodać kontrolera.');
+                },
+
+                createControllerDto
+
+            );
+        });
+    });
+</script>
 </body>
 </html>

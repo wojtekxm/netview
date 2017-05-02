@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zesp03.common.data.SurveyInfoUniqueNameFrequency;
+import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
@@ -83,27 +83,24 @@ public class TestService {
 
     public void makeDevices(Long controllerId, String deviceName, int frequencyMhz) {
         Controller c = controllerRepository.findOne(controllerId);
-        List<SurveyInfoUniqueNameFrequency> list = new ArrayList<>();
-        SurveyInfoUniqueNameFrequency si = new SurveyInfoUniqueNameFrequency();
-        si.setName(deviceName);
-        si.setFrequencyMhz(frequencyMhz);
-        si.setClientsSum(-99);
-        si.setEnabled(false);
+        List<SurveyInfo> list = new ArrayList<>();
+        final SurveyInfo si = new SurveyInfo(
+                deviceName, frequencyMhz, -99);
         list.add(si);
-        Map<String, Device> map = surveyModifyingService.makeDevices(list, c);
+        Map<String, Device> map = surveyModifyingService.makeDevices(c, list);
         map.forEach( (name, device) -> {
             log.debug("key={}; id={} name={} deleted={} freqListSize={}",
                     name,
                     device.getId(),
                     device.getName(),
-                    device.getDeleted(),
+                    device.isDeleted(),
                     device.getFrequencyList()
                             .size());
             for(DeviceFrequency f : device.getFrequencyList()) {
                 log.debug("frequency: id={} mhz={} deleted={}",
                         f.getId(),
                         f.getFrequency(),
-                        f.getDeleted());
+                        f.isDeleted());
             }
         } );
     }

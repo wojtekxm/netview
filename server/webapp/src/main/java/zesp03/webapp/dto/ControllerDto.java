@@ -9,6 +9,7 @@ public class ControllerDto {
     private String description;
     private String communityString;
     private Long buildingId;
+    private boolean fake;
 
     public long getId() {
         return id;
@@ -58,18 +59,27 @@ public class ControllerDto {
         this.buildingId = buildingId;
     }
 
+    public boolean isFake() {
+        return fake;
+    }
+
+    public void setFake(boolean fake) {
+        this.fake = fake;
+    }
+
     public void wrap(Controller c) {
         this.id = c.getId();
         this.name = c.getName();
         this.ipv4 = c.getIpv4();
         this.description = c.getDescription();
-        this.communityString = c.getCommunityString();
+        this.communityString = c.getCommunity();
         if(c.getBuilding() != null) {
             this.buildingId = c.getBuilding().getId();
         }
         else {
             this.buildingId = null;
         }
+        this.fake = c.isFake();
     }
 
     public static ControllerDto make(Controller c) {

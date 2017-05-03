@@ -122,8 +122,8 @@
                         </div>
                     </div>
 
-                    <div id="change_progress" style="min-height:38px; min-width:60px">
-                        <div class="progress-loading"></div>
+                    <div style="min-height:38px; min-width:60px">
+                        <div id="change_loading" class="later"></div>
                 <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
                     <div class="form-group">
                         <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;margin-left: 50px;"></div>
@@ -145,48 +145,44 @@
 
     </div>
 </div>
-
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>
 <script src="/js/notify.js"></script>
-
 <script>
+"use strict";
+$(document).ready(function () {
+    var btnSubmit = $('#btn_submit');
+    btnSubmit.click(function () {
+        btnSubmit.prop('disabled', true);
+        var createBuildingDto = {
+            "name": $('#new_name').val(),
+            "code": $('#new_code').val(),
+            "street": $('#new_street').val(),
+            "city": $('#new_city').val(),
+            "postalCode": $('#new_postalCode').val(),
+            "number": $('#new_number').val(),
+            "latitude": $('#new_latitude').val(),
+            "longitude": $('#new_longitude').val()
 
-    $(document).ready(function () {
-        var btnSubmit = $('#btn_submit');
-        btnSubmit.click(function () {
-            btnSubmit.prop('disabled', true);
-            var createBuildingDto = {
-                "name": $('#new_name').val(),
-                "code": $('#new_code').val(),
-                "street": $('#new_street').val(),
-                "city": $('#new_city').val(),
-                "postalCode": $('#new_postalCode').val(),
-                "number": $('#new_number').val(),
-                "latitude": $('#new_latitude').val(),
-                "longitude": $('#new_longitude').val()
+        };
+        progress.load(
+            'post',
+            '/api/building/create',
+            ['#change_loading'], [], [],
+            function( response ) {
+                btnSubmit.prop( 'disabled', false );
+                notify.success( '#result_success', 'Budynek został dodany.' );
+            },
+            function( response ) {
+                btnSubmit.prop( 'disabled', false );
+                notify.danger( '#result_error', 'Nie udało się dodać budynku.'); //(response == null ||  response.error == null ||  response.error == '' ) ? 'Błąd operacji' : response.error  );
+            },
+            createBuildingDto
+        );
 
-            };
-            progress.load(
-                'post',
-                '/api/building/create',
-                '#change_progress',
-                function( response ) {
-                    btnSubmit.prop( 'disabled', false );
-                    notify.success( '#result_success', 'Budynek został dodany.' );
-                },
-                function( response ) {
-                    btnSubmit.prop( 'disabled', false );
-                    notify.danger( '#result_error', 'Nie udało się dodać budynku.'); //(response == null ||  response.error == null ||  response.error == '' ) ? 'Błąd operacji' : response.error  );
-                },
-                createBuildingDto
-            );
-
-        });
     });
-
-
+});
 </script>
 </body>
 </html>

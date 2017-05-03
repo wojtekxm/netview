@@ -82,8 +82,8 @@
         <div class="form-group">
             <div class="col-sm-offset-5 col-sm-7 clearfix">
                 <button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>
-                <div id="change_progress" class="pull-left" style="min-height:45px; min-width:60px">
-                    <div class="progress-loading"></div>
+                <div class="pull-left" style="min-height:45px; min-width:60px">
+                    <div id="change_loading" class="later"></div>
                 </div>
             </div>
         </div>
@@ -112,7 +112,7 @@ $(document).ready(function () {
         progress.load(
             'post',
             '/api/change-password',
-            '#change_progress',
+            ['#change_loading'], [], [],
             function(contentDtoOfAccessDto) {
                 btnSubmit.prop('disabled', false);
                 notify.success('#result_success', 'Hasło zostało zmienione');

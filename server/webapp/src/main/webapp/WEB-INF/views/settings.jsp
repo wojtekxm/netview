@@ -71,6 +71,18 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-3 control-label">Okres odśmiecania bazy (sekundy)</label>
+            <div class="col-sm-6">
+                <input type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Opóźnienie API (milisekundy)</label>
+            <div class="col-sm-6">
+                <input type="text" name="serverDelay" class="form-control" value="${serverDelay}">
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-sm-12 text-center">
                 <input class="btn btn-primary" type="submit" value="Zapisz">
             </div>

@@ -110,8 +110,8 @@
                     <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
                         <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
-                         <div id="change_progress" class="pull-left" style="min-height:38px; min-width:60px">
-                    <div class="progress-loading"></div>
+                         <div class="pull-left" style="min-height:38px; min-width:60px">
+                    <div id="change_loading" class="later"></div>
                 </div>
                     </span>
 
@@ -130,39 +130,38 @@
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>
 <script src="/js/notify.js"></script>
-
 <script>
+"use strict";
+$(document).ready(function () {
+    var btnSubmit = $('#btn_submit');
+    btnSubmit.click(function () {
+        btnSubmit.prop('disabled', true);
+        var controllerDto = {
+            "id": $('#id').val(),
+            "name": $('#new_name').val(),
+            "ipv4": $('#new_ipv4').val(),
+            "description": $('#new_description').val(),
+            "communityString": $('#new_communityString').val(),
+            "buildingId": $('#new_building').val()
 
-    $(document).ready(function () {
-        var btnSubmit = $('#btn_submit');
-        btnSubmit.click(function () {
-            btnSubmit.prop('disabled', true);
-            var controllerDto = {
-                "id": $('#id').val(),
-                "name": $('#new_name').val(),
-                "ipv4": $('#new_ipv4').val(),
-                "description": $('#new_description').val(),
-                "communityString": $('#new_communityString').val(),
-                "buildingId": $('#new_building').val()
+        };
+        progress.load(
+            'post',
+            '/api/controller/accept-modify-controller',
+            ['#change_loading'], [], [],
+            function(controllerDto) {
+                btnSubmit.prop('disabled', false);
+                notify.success('#result_success', 'Dane zostały zmienione.');
+            },
+            function() {
+                btnSubmit.prop('disabled', false);
+                notify.danger('#result_error', 'Nie udało się zmienić danych.');
+            },
+            controllerDto
 
-            };
-            progress.load(
-                'post',
-                '/api/controller/accept-modify-controller',
-                '#change_progress',
-                function(controllerDto) {
-                    btnSubmit.prop('disabled', false);
-                    notify.success('#result_success', 'Dane zostały zmienione.');
-                },
-                function() {
-                    btnSubmit.prop('disabled', false);
-                    notify.danger('#result_error', 'Nie udało się zmienić danych.');
-                },
-                controllerDto
-
-            );
-        });
+        );
     });
-    </script>
+});
+</script>
 </body>
 </html>

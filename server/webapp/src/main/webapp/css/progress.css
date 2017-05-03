@@ -134,15 +134,7 @@
     40% { opacity: 1; }
 }
 
-.progress-loading {
-    display: none;
-}
-
-.progress-success {
-    display: none;
-}
-
-.progress-error {
+.later, .on-loading, .on-loaded {
     display: none;
 }
 

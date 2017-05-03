@@ -57,18 +57,15 @@
 <div class="container">
     <div style="height: 100px;"></div>
     <h4 class="pull-left">Budynki</h4>
-    <div id="main_progress">
-        <div class="progress-loading"></div>
-        <div class="progress-success">
-            <div id="main_success"></div>
-            <div>
-                <a href="/create-building" class="btn btn-success" role="button" style="width: 200px;">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Dodaj nowy budynek
-                </a>
-            </div>
+    <div id="main_loading" class="later"></div>
+    <div id="main_success" class="later">
+        <div id="tabelka_space"></div>
+        <div>
+            <a href="/create-building" class="btn btn-success" role="button" style="width: 200px;">
+                <span class="glyphicon glyphicon-plus"></span>
+                Dodaj nowy budynek
+            </a>
         </div>
-        <div class="progress-error"></div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
@@ -76,50 +73,47 @@
 <script src="/js/progress.js"></script>
 <script src="/js/tabelka.js"></script>
 <script>
-    "use strict";
-    (function() {
-        var buildings, columnDefinitions, currentTabelka;
-        currentTabelka = null;
-        buildings = [];
-        columnDefinitions = [
-            {
-                "label" : 'nazwa',
-                "comparator" : util.comparatorText('name'),
-                "extractor" : 'td_name'
-            }, {
-                "label" : 'kod',
-                "comparator" : util.comparatorText('code'),
-                "extractor" : 'td_code'
-            }
-        ];
-
-        function fixBuildings() {
-            var i, b;
-            for(i = 0; i < buildings.length; i++) {
-                b = buildings[i];
-                b.td_name = $('<a></a>')
-                    .attr('href', '/building/' + b.id)
-                    .text(b.name);
-                b.td_code = $('<span></span>').text(b.code);
-            }
+"use strict";
+$(document).ready( function() {
+    var buildings, columnDefinitions, currentTabelka;
+    currentTabelka = null;
+    buildings = [];
+    columnDefinitions = [
+        {
+            "label" : 'nazwa',
+            "comparator" : util.comparatorText('name'),
+            "extractor" : 'td_name'
+        }, {
+            "label" : 'kod',
+            "comparator" : util.comparatorText('code'),
+            "extractor" : 'td_code'
         }
+    ];
 
-        $(document).ready( function() {
-            progress.load(
-                'get',
-                '/api/building/all',
-                '#main_progress',
-                function(listDtoOfBuildingDto) {
-                    var mainProgress, mainSuccess;
-                    mainProgress = $('#main_progress');
-                    mainSuccess = $('#main_success');
-                    buildings = listDtoOfBuildingDto.list;
-                    fixBuildings();
-                    currentTabelka = tabelka.create(buildings, columnDefinitions);
-                    mainSuccess.append(currentTabelka);
-                } );
-        } );
-    })();
+    function fixBuildings() {
+        var i, b;
+        for(i = 0; i < buildings.length; i++) {
+            b = buildings[i];
+            b.td_name = $('<a></a>')
+                .attr('href', '/building/' + b.id)
+                .text(b.name);
+            b.td_code = $('<span></span>').text(b.code);
+        }
+    }
+
+    progress.load(
+        'get',
+        '/api/building/all',
+        ['#main_loading'], ['#main_success'], [],
+        function(listDtoOfBuildingDto) {
+            buildings = listDtoOfBuildingDto.list;
+            fixBuildings();
+            $('#tabelka_space').append(
+                tabelka.create(buildings, columnDefinitions)
+            );
+        }
+    );
+} );
 </script>
 </body>
 </html>

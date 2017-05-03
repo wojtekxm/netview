@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class App {
     private static final Logger log = LoggerFactory.getLogger(App.class);
@@ -28,8 +29,9 @@ public class App {
     private static final boolean rootResetEnabled;
     private static final String rootResetName;
     private static final String rootResetPassword;
-    private static int examineInterval;
-    private static int databaseCleaningInterval;
+    private static final AtomicInteger examineInterval;
+    private static final AtomicInteger databaseCleaningInterval;
+    private static final AtomicInteger serverDelay;
 
     static {
         try {
@@ -84,17 +86,19 @@ public class App {
             }
 
             customPath = Paths.get(configDirectory, "custom.properties");
-            examineInterval = 300;
-            databaseCleaningInterval = 100;
+            examineInterval = new AtomicInteger(300);
+            databaseCleaningInterval = new AtomicInteger(100);
+            serverDelay = new AtomicInteger(0);
             reloadCustomProperties();
         } catch (IOException exc) {
             throw new IllegalStateException(exc);
         }
     }
 
-    public static synchronized void reloadCustomProperties() {
-        int ei = examineInterval;
-        int dci = databaseCleaningInterval;
+    public static void reloadCustomProperties() {
+        int ei = examineInterval.get();
+        int dci = databaseCleaningInterval.get();
+        int sd = serverDelay.get();
         final Charset utf8 = Charset.forName("UTF-8");
         try(BufferedReader br = Files.newBufferedReader(customPath, utf8)) {
             final Properties p = new Properties();
@@ -107,6 +111,10 @@ public class App {
             if(s != null) {
                 dci = Integer.parseInt(s);
             }
+            s = p.getProperty("zesp03.server.delay");
+            if(s != null) {
+                sd = Integer.parseInt(s);
+            }
         }
         catch(IOException exc) {
             log.warn("reloading custom properties \"{}\"", customPath);
@@ -117,23 +125,30 @@ public class App {
             log.warn("number parsing error", exc);
         }
         if(ei >= 0) {
-            examineInterval = ei;
+            examineInterval.set(ei);
         }
         else {
             log.warn("rejected zesp03.examine.interval={}", ei);
         }
         if(dci >= 0) {
-            databaseCleaningInterval = dci;
+            databaseCleaningInterval.set(dci);
         }
         else {
             log.warn("rejected zesp03.database.cleaning.interval={}", dci);
         }
+        if(sd >= 0) {
+            serverDelay.set(sd);
+        }
+        else {
+            log.warn("rejected zesp03.server.delay={}", sd);
+        }
     }
 
-    public static synchronized void saveCustomProperties() {
+    public static void saveCustomProperties() {
         final Properties p = new Properties();
-        p.setProperty("zesp03.examine.interval", Integer.toString(examineInterval));
-        p.setProperty("zesp03.database.cleaning.interval", Integer.toString(databaseCleaningInterval));
+        p.setProperty("zesp03.examine.interval", Integer.toString(examineInterval.get()));
+        p.setProperty("zesp03.database.cleaning.interval", Integer.toString(databaseCleaningInterval.get()));
+        p.setProperty("zesp03.server.delay", Integer.toString(serverDelay.get()));
         final Charset utf8 = Charset.forName("UTF-8");
         try(BufferedWriter bw = Files.newBufferedWriter(customPath, utf8)) {
             p.store(bw, null);
@@ -197,34 +212,51 @@ public class App {
     /**
      * @return zawsze >= 0
      */
-    public static synchronized int getExamineInterval() {
-        return examineInterval;
+    public static int getExamineInterval() {
+        return examineInterval.get();
     }
 
     /**
      * @param examineInterval >= 0
      */
-    public static synchronized void setExamineInterval(int examineInterval) {
+    public static void setExamineInterval(int examineInterval) {
         if(examineInterval < 0) {
             throw new IllegalArgumentException("examineInterval < 0");
         }
-        App.examineInterval = examineInterval;
+        App.examineInterval.set(examineInterval);
     }
 
     /**
      * @return zawsze >= 0
      */
-    public static synchronized int getDatabaseCleaningInterval() {
-        return databaseCleaningInterval;
+    public static int getDatabaseCleaningInterval() {
+        return databaseCleaningInterval.get();
     }
 
     /**
      * @param databaseCleaningInterval >= 0
      */
-    public static synchronized void setDatabaseCleaningInterval(int databaseCleaningInterval) {
+    public static void setDatabaseCleaningInterval(int databaseCleaningInterval) {
         if(databaseCleaningInterval < 0) {
             throw new IllegalArgumentException("databaseCleaningInterval < 0");
         }
-        App.databaseCleaningInterval = databaseCleaningInterval;
+        App.databaseCleaningInterval.set(databaseCleaningInterval);
+    }
+
+    /**
+     * @return milisekundy
+     */
+    public static int getServerDelay() {
+        return serverDelay.get();
+    }
+
+    /**
+     * @param serverDelay milisekundy, >= 0
+     */
+    public static void setServerDelay(int serverDelay) {
+        if(serverDelay < 0) {
+            throw new IllegalArgumentException("serverDelay < 0");
+        }
+        App.serverDelay.set(serverDelay);
     }
 }

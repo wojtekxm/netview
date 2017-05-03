@@ -67,8 +67,8 @@
                 <input type="description" class="form-control" placeholder="Opis"
                        id="new_description" required="required" name="description">
                 <input type="submit" value="Dodaj jednostkę" id="btn_submit" class="btn btn-primary btn-default btn-lg active">
-                <div id="change_progress" style="min-height:38px; min-width:60px">
-                    <div class="progress-loading"></div>
+                <div style="min-height:38px; min-width:60px">
+                    <div id="change_loading" class="later"></div>
                 </div>
             </form>
 
@@ -88,33 +88,32 @@
 <script src="/js/notify.js"></script>
 
 <script>
+"use strict";
+$(document).ready(function () {
+    var btnSubmit = $('#btn_submit');
+    btnSubmit.click(function () {
+        btnSubmit.prop('disabled', true);
+        var createUnitDto = {
+            "code": $('#new_code').val(),
+            "description": $('#new_description').val()
+        };
+        progress.load(
+            'post',
+            '/api/unit/create',
+            ['#change_loading'], [], [],
+            function(createUnitDto) {
+                btnSubmit.prop('disabled', false);
+                notify.success('#result_success', 'Jednostka została dodana.');
+            },
+            function() {
+                btnSubmit.prop('disabled', false);
+                notify.danger('#result_error', 'Nie udało się dodać jednostki.');
+            },
+            createUnitDto
 
-    $(document).ready(function () {
-        var btnSubmit = $('#btn_submit');
-        btnSubmit.click(function () {
-            btnSubmit.prop('disabled', true);
-            var createUnitDto = {
-                "code": $('#new_code').val(),
-                "description": $('#new_description').val()
-
-            };
-            progress.load(
-                'post',
-                '/api/unit/create',
-                '#change_progress',
-                function(createUnitDto) {
-                    btnSubmit.prop('disabled', false);
-                    notify.success('#result_success', 'Jednostka została dodana.');
-                },
-                function() {
-                    btnSubmit.prop('disabled', false);
-                    notify.danger('#result_error', 'Nie udało się dodać jednostki.');
-                },
-                createUnitDto
-
-            );
-        });
+        );
     });
+});
 </script>
 </body>
 </html>

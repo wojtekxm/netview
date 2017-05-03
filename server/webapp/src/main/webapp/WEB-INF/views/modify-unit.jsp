@@ -92,8 +92,8 @@
                     <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
                         <input form="form2" type="submit" value=" Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
-                         <div id="change_progress" style="min-height:38px; min-width:60px">
-                    <div class="progress-loading"></div>
+                         <div style="min-height:38px; min-width:60px">
+                    <div id="change_loading" class="later"></div>
                          </div>
                     </span>
                 </div>
@@ -113,34 +113,34 @@
 <script src="/js/notify.js"></script>
 
 <script>
+"use strict";
+$(document).ready(function () {
+    var btnSubmit = $('#btn_submit');
+    btnSubmit.click(function () {
+        btnSubmit.prop('disabled', true);
+        var unitDto = {
+            "id": $('#id').val(),
+            "code": $('#new_code').val(),
+            "description": $('#new_description').val()
 
-    $(document).ready(function () {
-        var btnSubmit = $('#btn_submit');
-        btnSubmit.click(function () {
-            btnSubmit.prop('disabled', true);
-            var unitDto = {
-                "id": $('#id').val(),
-                "code": $('#new_code').val(),
-                "description": $('#new_description').val()
+        };
+        progress.load(
+            'post',
+            '/api/accept-modify-unit',
+            ['#change_loading'], [], [],
+            function(unitDto) {
+                btnSubmit.prop('disabled', false);
+                notify.success('#result_success', 'Dane zostały zmienione.');
+            },
+            function() {
+                btnSubmit.prop('disabled', false);
+                notify.danger('#result_error', 'Nie udało się zmienić danych.');
+            },
+            unitDto
 
-            };
-            progress.load(
-                'post',
-                '/api/accept-modify-unit',
-                '#change_progress',
-                function(unitDto) {
-                    btnSubmit.prop('disabled', false);
-                    notify.success('#result_success', 'Dane zostały zmienione.');
-                },
-                function() {
-                    btnSubmit.prop('disabled', false);
-                    notify.danger('#result_error', 'Nie udało się zmienić danych.');
-                },
-                unitDto
-
-            );
-        });
+        );
     });
+});
 </script>
 </body>
 </html>

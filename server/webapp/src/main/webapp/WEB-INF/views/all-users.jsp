@@ -57,18 +57,15 @@
 <div class="container">
     <div style="height: 100px;"></div>
     <h4 class="pull-left">Użytkownicy</h4>
-    <div id="main_progress">
-        <div class="progress-loading"></div>
-        <div class="progress-success">
-            <div id="main_success"></div>
-            <div>
-                <a href="/create-user" class="btn btn-success" role="button">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Dodaj nowego użytkownika
-                </a>
-            </div>
+    <div id="main_loading" class="later"></div>
+    <div id="main_success" class="later">
+        <div id="tabelka_space"></div>
+        <div>
+            <a href="/create-user" class="btn btn-success" role="button">
+                <span class="glyphicon glyphicon-plus"></span>
+                Dodaj nowego użytkownika
+            </a>
         </div>
-        <div class="progress-error"></div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
@@ -77,7 +74,7 @@
 <script src="/js/tabelka.js"></script>
 <script>
 "use strict";
-(function() {
+$(document).ready( function() {
     var users, columnDefinitions, currentTabelka;
     currentTabelka = null;
     users = [];
@@ -142,22 +139,18 @@
         }
     }
 
-    $(document).ready( function() {
-        progress.load(
-            'get',
-            '/api/user/all',
-            '#main_progress',
-            function(listDtoOfUserDto) {
-                var mainProgress, mainSuccess;
-                mainProgress = $('#main_progress');
-                mainSuccess = $('#main_success');
-                users = listDtoOfUserDto.list;
-                fixUsers();
-                currentTabelka = tabelka.create(users, columnDefinitions);
-                mainSuccess.append(currentTabelka);
-            } );
-    } );
-})();
+    progress.load(
+        'get',
+        '/api/user/all',
+        ['#main_loading'], ['#main_success'], [],
+        function(listDtoOfUserDto) {
+            users = listDtoOfUserDto.list;
+            fixUsers();
+            $('#tabelka_space').append(
+                tabelka.create(users, columnDefinitions)
+            );
+        } );
+} );
 </script>
 </body>
 </html>

@@ -56,61 +56,58 @@
     </div>
 </nav>
 <div class="container" style="margin-top:100px">
-    <div id="main_progress">
-        <div class="progress-loading"></div>
-        <div class="progress-success">
-            <div class="row">
-                <%--<div class="col-md-6">--%>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Informacje o jednostce</div>
-                        <ul class="list-group" >
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-4">kod</div>
-                                    <div class="col-xs-8" id="field_code"></div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-4">Nazwa</div>
-                                    <div class="col-xs-8" id="field_description"></div>
-                                </div>
-                            </li>
-                        </ul>
-                    <%--</div>--%>
-                        <div>
-                            <a href="${href}" class="btn btn-success" role="button" style="float:left; margin-right: 10px;margin-top: 10px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
-                            <form class="pull-left" method="post" action="${action}">
-                                <button type="submit" class="btn btn-danger " style="margin-top: 10px;">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                    Usuń
-                                </button>
-                            </form>
+    <div id="main_loading" class="later"></div>
+    <div id="main_success" class="later">
+        <div class="row">
+            <%--<div class="col-md-6">--%>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Informacje o jednostce</div>
+                    <ul class="list-group" >
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-4">kod</div>
+                                <div class="col-xs-8" id="field_code"></div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-4">Nazwa</div>
+                                <div class="col-xs-8" id="field_description"></div>
+                            </div>
+                        </li>
+                    </ul>
+                <%--</div>--%>
+                    <div>
+                        <a href="${href}" class="btn btn-success" role="button" style="float:left; margin-right: 10px;margin-top: 10px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
+                        <form class="pull-left" method="post" action="${action}">
+                            <button type="submit" class="btn btn-danger " style="margin-top: 10px;">
+                                <span class="glyphicon glyphicon-trash"></span>
+                                Usuń
+                            </button>
+                        </form>
 
-                        </div>
                     </div>
-                    <h4 style="margin-top: 80px">Budynki powiązane z jednostką</h4>
-                    <div id="tabelka_buildings"></div>
-                    <a href="/link-unit-all-buildings?id=${id}" class="btn btn-success" role="button">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Połącz z budynkiem ...
-                    </a>
-
-            </div>
-            <div class="progress-error">err</div>
+                </div>
+                <h4 style="margin-top: 80px">Budynki powiązane z jednostką</h4>
+                <div id="tabelka_buildings"></div>
+                <a href="/link-unit-all-buildings?id=${id}" class="btn btn-success" role="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Połącz z budynkiem ...
+                </a>
         </div>
     </div>
-
 </div>
-
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>
 <script src="/js/tabelka.js"></script>
 <script>
+"use strict";
+$(document).ready(function() {
     var unit, buildings,  buildingDefinitions;
+
     buildingDefinitions = [
-       {
+        {
             "label": 'nazwa',
             "comparator": util.comparatorText('name'),
             "extractor": 'td_name'
@@ -125,6 +122,7 @@
             "optionalCssClass" : 'width1'
         }
     ];
+
     function fixBuildings() {
         var i, b;
         for(i = 0; i < buildings.length; i++) {
@@ -152,7 +150,7 @@
                         }, {
                             "url" : '/api/unit/buildings/' + unit.id
                         } ],
-                        '#main_progress',
+                        ['#main_loading'], ['#main_success'], [],
                         function(responses) {
                             var i, tabelkaBuildings;
                             for(i = 0; i < buildings.length; i++) {
@@ -173,7 +171,7 @@
     progress.load(
         'get',
         '/api/unit/details/${id}',
-        '#main_progress',
+        ['#main_loading'], [], [],
         function(contentDtoOfUnitDetailsDto) {
             var fieldDescription, fieldCode, tabelkaBuildings;
             buildings = contentDtoOfUnitDetailsDto.content.buildings;
@@ -190,7 +188,7 @@
 
         }
     );
-
+});
 </script>
 </body>
 </html>

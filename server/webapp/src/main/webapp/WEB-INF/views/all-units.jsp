@@ -57,18 +57,15 @@
 <div class="container">
     <div style="height: 100px;"></div>
     <h4 class="pull-left">Jednostki organizacyjne</h4>
-    <div id="main_progress">
-        <div class="progress-loading"></div>
-        <div class="progress-success">
-            <div id="main_success"></div>
-            <div>
-                <a href="/create-unit" class="btn btn-success" role="button">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Dodaj nową jednostkę organizacyjną
-                </a>
-            </div>
+    <div id="main_loading" class="later"></div>
+    <div id="main_success" class="later">
+        <div id="tabelka_space"></div>
+        <div>
+            <a href="/create-unit" class="btn btn-success" role="button">
+                <span class="glyphicon glyphicon-plus"></span>
+                Dodaj nową jednostkę organizacyjną
+            </a>
         </div>
-        <div class="progress-error"></div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
@@ -76,50 +73,46 @@
 <script src="/js/progress.js"></script>
 <script src="/js/tabelka.js"></script>
 <script>
-    "use strict";
-    (function() {
-        var units, columnDefinitions, currentTabelka;
-        currentTabelka = null;
-        units = [];
-        columnDefinitions = [
-            {
-                "label" : 'nazwa',
-                "comparator" : util.comparatorText('description'),
-                "extractor" : 'td_description'
-            }, {
-                "label" : 'kod',
-                "comparator" : util.comparatorText('code'),
-                "extractor" : 'td_code'
-            }
-        ];
-
-        function fixUnits() {
-            var i, u;
-            for(i = 0; i < units.length; i++) {
-                u = units[i];
-                u.td_description = $('<a></a>')
-                    .attr('href', '/unit/' + u.id)
-                    .text(u.description);
-                u.td_code = $('<span></span>').text(u.code);
-            }
+"use strict";
+$(document).ready( function() {
+    var units, columnDefinitions;
+    units = [];
+    columnDefinitions = [
+        {
+            "label" : 'nazwa',
+            "comparator" : util.comparatorText('description'),
+            "extractor" : 'td_description'
+        }, {
+            "label" : 'kod',
+            "comparator" : util.comparatorText('code'),
+            "extractor" : 'td_code'
         }
+    ];
 
-        $(document).ready( function() {
-            progress.load(
-                'get',
-                '/api/unit/all',
-                '#main_progress',
-                function(listDtoOfUnitDto) {
-                    var mainProgress, mainSuccess;
-                    mainProgress = $('#main_progress');
-                    mainSuccess = $('#main_success');
-                    units = listDtoOfUnitDto.list;
-                    fixUnits();
-                    currentTabelka = tabelka.create(units, columnDefinitions);
-                    mainSuccess.append(currentTabelka);
-                } );
-        } );
-    })();
+    function fixUnits() {
+        var i, u;
+        for(i = 0; i < units.length; i++) {
+            u = units[i];
+            u.td_description = $('<a></a>')
+                .attr('href', '/unit/' + u.id)
+                .text(u.description);
+            u.td_code = $('<span></span>').text(u.code);
+        }
+    }
+
+    progress.load(
+        'get',
+        '/api/unit/all',
+        ['#main_loading'], ['#main_success'], [],
+        function(listDtoOfUnitDto) {
+            units = listDtoOfUnitDto.list;
+            fixUnits();
+            $('#tabelka_space').append(
+                tabelka.create(units, columnDefinitions)
+            );
+        }
+    );
+} );
 </script>
 </body>
 </html>

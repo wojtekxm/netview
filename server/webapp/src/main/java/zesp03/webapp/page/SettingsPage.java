@@ -13,23 +13,33 @@ public class SettingsPage {
     public String getSettings(ModelMap model) {
         App.reloadCustomProperties();
         model.put("examineInterval", App.getExamineInterval());
+        model.put("databaseCleaningInterval", App.getDatabaseCleaningInterval());
+        model.put("serverDelay", App.getServerDelay());
         return "settings";
     }
 
     @PostMapping(value = "/settings", consumes = "application/x-www-form-urlencoded")
     public String postSettings(
             @RequestParam("examineInterval") int examineInterval,
+            @RequestParam("databaseCleaningInterval") int databaseCleaningInterval,
+            @RequestParam("serverDelay") int serverDelay,
             ModelMap model) {
         App.setExamineInterval(examineInterval);
+        App.setDatabaseCleaningInterval(databaseCleaningInterval);
+        App.setServerDelay(serverDelay);
         App.saveCustomProperties();
         App.reloadCustomProperties();
-        if(examineInterval == App.getExamineInterval()) {
+        if( examineInterval == App.getExamineInterval() &&
+                databaseCleaningInterval == App.getDatabaseCleaningInterval() &&
+                serverDelay == App.getServerDelay() ) {
             model.put("success", true);
         }
         else {
             model.put("success", false);
         }
         model.put("examineInterval", App.getExamineInterval());
+        model.put("databaseCleaningInterval", App.getDatabaseCleaningInterval());
+        model.put("serverDelay", App.getServerDelay());
         return "settings";
     }
 }

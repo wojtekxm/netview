@@ -80,8 +80,8 @@
                         </c:forEach>
                 </select>
                 <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-primary btn-default btn-lg active">
-                <div id="change_progress" style="min-height:38px; min-width:60px">
-                    <div class="progress-loading"></div>
+                <div style="min-height:38px; min-width:60px">
+                    <div id="change_loading" class="later"></div>
                 </div>
             </form>
         </div>
@@ -93,45 +93,40 @@
         </div>
     </div>
 </div>
-
-
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>
 <script src="/js/notify.js"></script>
-
 <script>
+"use strict";
+$(document).ready(function () {
+    var btnSubmit = $('#btn_submit');
+    btnSubmit.click(function () {
+        btnSubmit.prop('disabled', true);
+        var createControllerDto = {
+            "name": $('#new_name').val(),
+            "ipv4": $('#new_ipv4').val(),
+            "description": $('#new_description').val(),
+            "communityString": $('#new_communityString').val(),
+            "buildingId": $('#new_building').val()
 
-    $(document).ready(function () {
-        var btnSubmit = $('#btn_submit');
-        btnSubmit.click(function () {
-            btnSubmit.prop('disabled', true);
-            var createControllerDto = {
-                "name": $('#new_name').val(),
-                "ipv4": $('#new_ipv4').val(),
-                "description": $('#new_description').val(),
-                "communityString": $('#new_communityString').val(),
-                "buildingId": $('#new_building').val()
-
-            };
-            progress.load(
-                'post',
-                '/api/controller/create',
-                '#change_progress',
-                function(createControllerDto) {
-                    btnSubmit.prop('disabled', false);
-                    notify.success('#result_success', 'Kontroler został dodany.');
-                },
-                function() {
-                    btnSubmit.prop('disabled', false);
-                    notify.danger('#result_error', 'Nie udało się dodać kontrolera.');
-                },
-
-                createControllerDto
-
-            );
-        });
+        };
+        progress.load(
+            'post',
+            '/api/controller/create',
+            ['#change_loading'], [], [],
+            function(createControllerDto) {
+                btnSubmit.prop('disabled', false);
+                notify.success('#result_success', 'Kontroler został dodany.');
+            },
+            function() {
+                btnSubmit.prop('disabled', false);
+                notify.danger('#result_error', 'Nie udało się dodać kontrolera.');
+            },
+            createControllerDto
+        );
     });
+});
 </script>
 </body>
 </html>

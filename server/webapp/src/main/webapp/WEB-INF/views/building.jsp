@@ -58,59 +58,56 @@
     </div>
 </nav>
 <div class="container" style="margin-top:100px">
-    <div id="main_progress">
-        <div class="progress-loading"></div>
-        <div class="progress-success">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Informacje o budynku</div>
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-4">nazwa</div>
-                                    <div class="col-xs-8" id="field_name"></div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-4">kod</div>
-                                    <div class="col-xs-8" id="field_code"></div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-4">adres</div>
-                                    <div class="col-xs-8" id="field_address"></div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <a href="${href}" class="btn btn-success pull-left" role="button">
-                        <span class="glyphicon glyphicon-wrench"></span>
-                        Zmień
-                    </a>
-                    <form class="pull-right" method="post" action="${action}">
-                        <button type="submit" class="btn btn-danger pull-right" style="margin-bottom: 10px">
-                            <span class="glyphicon glyphicon-trash"></span>
-                            Usuń
-                        </button>
-                    </form>
+    <div class="main_loading" class="later"></div>
+    <div class="main_success" class="later">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Informacje o budynku</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-4">nazwa</div>
+                                <div class="col-xs-8" id="field_name"></div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-4">kod</div>
+                                <div class="col-xs-8" id="field_code"></div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-4">adres</div>
+                                <div class="col-xs-8" id="field_address"></div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col-md-6">
-                    <div id="map" style="width: 100%; height: 300px; box-shadow: 0 0 10px -2px black"></div>
-                </div>
+                <a href="${href}" class="btn btn-success pull-left" role="button">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                    Zmień
+                </a>
+                <form class="pull-right" method="post" action="${action}">
+                    <button type="submit" class="btn btn-danger pull-right" style="margin-bottom: 10px">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        Usuń
+                    </button>
+                </form>
             </div>
-            <h4 style="margin-top: 50px">Jednostki organizacyjne powiązane z budynkiem</h4>
-            <div id="tabelka_units"></div>
-            <a href="/link-building-all-units?id=${id}" class="btn btn-success" role="button">
-                <span class="glyphicon glyphicon-plus"></span>
-                Połącz z jednostką organizacyjną...
-            </a>
-            <h4 style="margin-top: 50px">Kontrolery znajdujące się w budynku</h4>
-            <div id="tabelka_controllers"></div>
+            <div class="col-md-6">
+                <div id="map" style="width: 100%; height: 300px; box-shadow: 0 0 10px -2px black"></div>
+            </div>
         </div>
-        <div class="progress-error">err</div>
+        <h4 style="margin-top: 50px">Jednostki organizacyjne powiązane z budynkiem</h4>
+        <div id="tabelka_units"></div>
+        <a href="/link-building-all-units?id=${id}" class="btn btn-success" role="button">
+            <span class="glyphicon glyphicon-plus"></span>
+            Połącz z jednostką organizacyjną...
+        </a>
+        <h4 style="margin-top: 50px">Kontrolery znajdujące się w budynku</h4>
+        <div id="tabelka_controllers"></div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
@@ -118,132 +115,137 @@
 <script src="/js/progress.js"></script>
 <script src="/js/tabelka.js"></script>
 <script>
-var building, units, controllers, unitDefinitions, controllerDefinitions;
-unitDefinitions = [
-    {
-        "label" : 'nazwa',
-        "comparator" : util.comparatorText('description'),
-        "extractor" : 'td_description'
-    }, {
-        "label" : 'kod',
-        "comparator" : util.comparatorText('code'),
-        "extractor" : 'td_code'
-    }, {
-        "label" : '',
-        "comparator" : null,
-        "extractor" : 'td_button',
-        "optionalCssClass" : 'width1'
-    }
-];
-function fixUnits() {
-    var i, u;
-    for(i = 0; i < units.length; i++) {
-        u = units[i];
-        u.td_description = $('<a></a>')
-            .attr('href', '/unit/' + u.id)
-            .text(u.description);
-        u.td_code = $('<span></span>').text(u.code);
-        u.td_button = $('<button class="btn btn-danger btn-xs"></button>')
-            .click( {
-                "unitId" : u.id
-            }, function(event) {
-                var i, buildingAndUnitDto;
-                for(i = 0; i < units.length; i++) {
-                    units[i].td_button.prop('disabled', true);
-                }
-                buildingAndUnitDto = {
-                    "buildingId" : building.id,
-                    "unitId" : event.data.unitId
-                };
-                progress.loadMany(
-                    [ {
-                        "url" : '/api/building/unlink-unit/',
-                        "optionalPostData" : buildingAndUnitDto
-                    }, {
-                        "url" : '/api/building/units/' + building.id
-                    } ],
-                    '#main_progress',
-                    function(responses) {
-                        var i, tabelkaUnits;
-                        for(i = 0; i < units.length; i++) {
-                            units[i].td_button.prop('disabled', false);
-                        }
-                        units = responses[1].list;
-                        fixUnits();
-                        tabelkaUnits = $('#tabelka_units');
-                        tabelkaUnits.empty();
-                        tabelkaUnits.append(tabelka.create(units, unitDefinitions));
-                    } );
-            } ).append(
-                $('<span class="glyphicon glyphicon-minus"></span>')
-            );
-    }
-}
-controllerDefinitions = [
-    {
-        "label" : 'nazwa',
-        "comparator" : util.comparatorText('name'),
-        "extractor" : 'td_name'
-    }, {
-        "label" : 'IP',
-        "comparator" : util.comparatorText('ipv4'),
-        "extractor" : 'td_ipv4'
-    }, {
-        "label" : 'opis',
-        "comparator" : util.comparatorText('description'),
-        "extractor" : 'td_description'
-    }, {
-        "label" : 'community string',
-        "comparator" : util.comparatorText('communityString'),
-        "extractor" : 'td_community'
-    }
-];
-function fixControllers() {
-    var i, cont;
-    for(i = 0; i < controllers.length; i++) {
-        cont = controllers[i];
-        cont.td_name = $('<a></a>')
-            .attr('href', '/controller/' + cont.id)
-            .text(cont.name);
-        cont.td_ipv4 = $('<span></span>').text(cont.ipv4);
-        cont.td_description = $('<span></span>').text(cont.description);
-        cont.td_community = $('<span></span>').text(cont.communityString);
-    }
-}
+"use strict";
+var building;
+$(document).ready(function(){
+    var units, controllers, unitDefinitions, controllerDefinitions;
+    unitDefinitions = [
+        {
+            "label" : 'nazwa',
+            "comparator" : util.comparatorText('description'),
+            "extractor" : 'td_description'
+        }, {
+            "label" : 'kod',
+            "comparator" : util.comparatorText('code'),
+            "extractor" : 'td_code'
+        }, {
+            "label" : '',
+            "comparator" : null,
+            "extractor" : 'td_button',
+            "optionalCssClass" : 'width1'
+        }
+    ];
 
-progress.load(
-    'get',
-    '/api/building/details/${id}',
-    '#main_progress',
-    function(contentDtoOfBuildingDetailsDto) {
-        var fieldName, fieldCode, tabelkaUnits, tabelkaControllers;
-        building = contentDtoOfBuildingDetailsDto.content.building;
-        units = contentDtoOfBuildingDetailsDto.content.units;
-        controllers = contentDtoOfBuildingDetailsDto.content.controllers;
-        fieldName = $('#field_name');
-        fieldName.text(building.name);
-        fieldCode = $('#field_code');
-        fieldCode.text(building.code);
-        fieldAddress = $('#field_address');
-        fieldAddress.append(
-            building.street + ' ' + building.number,
-            $('<br>'),
-            building.postalCode + ' ' + building.city);
-        fixUnits();
-        tabelkaUnits = $('#tabelka_units');
-        tabelkaUnits.append(tabelka.create(units, unitDefinitions));
-        fixControllers();
-        tabelkaControllers = $('#tabelka_controllers');
-        tabelkaControllers.append(tabelka.create(controllers, controllerDefinitions));
-        $('body').append(
-            $('<script/>', {
-                "src" : 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCR0onCdpLDKtCPdd1h9Fpc3ENsrhPj_Q0&callback=initMap',
-                "async" : 'async',
-                "defer" : 'defer'
-            })
-        );
+    function fixUnits() {
+        var i, u;
+        for(i = 0; i < units.length; i++) {
+            u = units[i];
+            u.td_description = $('<a></a>')
+                .attr('href', '/unit/' + u.id)
+                .text(u.description);
+            u.td_code = $('<span></span>').text(u.code);
+            u.td_button = $('<button class="btn btn-danger btn-xs"></button>')
+                .click( {
+                    "unitId" : u.id
+                }, function(event) {
+                    var i, buildingAndUnitDto;
+                    for(i = 0; i < units.length; i++) {
+                        units[i].td_button.prop('disabled', true);
+                    }
+                    buildingAndUnitDto = {
+                        "buildingId" : building.id,
+                        "unitId" : event.data.unitId
+                    };
+                    progress.loadMany(
+                        [ {
+                            "url" : '/api/building/unlink-unit/',
+                            "optionalPostData" : buildingAndUnitDto
+                        }, {
+                            "url" : '/api/building/units/' + building.id
+                        } ],
+                        ['#main_loading'], ['#main_success'], [],
+                        function(responses) {
+                            var i, tabelkaUnits;
+                            for(i = 0; i < units.length; i++) {
+                                units[i].td_button.prop('disabled', false);
+                            }
+                            units = responses[1].list;
+                            fixUnits();
+                            tabelkaUnits = $('#tabelka_units');
+                            tabelkaUnits.empty();
+                            tabelkaUnits.append(tabelka.create(units, unitDefinitions));
+                        } );
+                } ).append(
+                    $('<span class="glyphicon glyphicon-minus"></span>')
+                );
+        }
     }
-);
+
+    controllerDefinitions = [
+        {
+            "label" : 'nazwa',
+            "comparator" : util.comparatorText('name'),
+            "extractor" : 'td_name'
+        }, {
+            "label" : 'IP',
+            "comparator" : util.comparatorText('ipv4'),
+            "extractor" : 'td_ipv4'
+        }, {
+            "label" : 'opis',
+            "comparator" : util.comparatorText('description'),
+            "extractor" : 'td_description'
+        }, {
+            "label" : 'community string',
+            "comparator" : util.comparatorText('communityString'),
+            "extractor" : 'td_community'
+        }
+    ];
+
+    function fixControllers() {
+        var i, cont;
+        for(i = 0; i < controllers.length; i++) {
+            cont = controllers[i];
+            cont.td_name = $('<a></a>')
+                .attr('href', '/controller/' + cont.id)
+                .text(cont.name);
+            cont.td_ipv4 = $('<span></span>').text(cont.ipv4);
+            cont.td_description = $('<span></span>').text(cont.description);
+            cont.td_community = $('<span></span>').text(cont.communityString);
+        }
+    }
+
+    progress.load(
+        'get',
+        '/api/building/details/${id}',
+        ['#main_loading'], ['#main_success'], [],
+        function(contentDtoOfBuildingDetailsDto) {
+            building = contentDtoOfBuildingDetailsDto.content.building;
+            units = contentDtoOfBuildingDetailsDto.content.units;
+            controllers = contentDtoOfBuildingDetailsDto.content.controllers;
+            $('#field_name').text(building.name);
+            $('#field_code').text(building.code);
+            $('#field_address').append(
+                building.street + ' ' + building.number,
+                $('<br>'),
+                building.postalCode + ' ' + building.city);
+            fixUnits();
+            $('#tabelka_units').append(
+                tabelka.create(units, unitDefinitions)
+            );
+            fixControllers();
+            $('#tabelka_controllers').append(
+                tabelka.create(controllers, controllerDefinitions)
+            );
+            $('body').append(
+                $('<script/>', {
+                    "src" : 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCR0onCdpLDKtCPdd1h9Fpc3ENsrhPj_Q0&callback=initMap',
+                    "async" : 'async',
+                    "defer" : 'defer'
+                })
+            );
+        }
+    );
+});
 function initMap() {
     var place = {
         lat: building.latitude,

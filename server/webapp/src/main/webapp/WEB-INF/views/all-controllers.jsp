@@ -58,29 +58,24 @@
 <div class="container">
     <div style="height: 100px;"></div>
     <h4 class="pull-left">Kontrolery</h4>
-    <div class="pull-right">
+    <div class="pull-right on-loaded">
         <button id="btn_examine" class="btn btn-primary pull-right" type="button">
             <span class="glyphicon glyphicon-refresh"></span>
             zaktualizuj wszystkie
         </button>
-        <div id="examine_progress" class="pull-right" style="min-height:45px; min-width:60px">
-            <span class="progress-loading"></span>
-            <span class="progress-success"></span>
-            <span class="progress-error"></span>
+        <div class="pull-right" style="min-height:45px; min-width:60px">
+            <span id="examine_loading"></span>
         </div>
     </div>
-    <div id="main_progress">
-        <div class="progress-loading"></div>
-        <div class="progress-success">
-            <div id="main_success"></div>
-            <div>
-                <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Dodaj nowy kontroler
-                </a>
-            </div>
+    <div class="on-loading"></div>
+    <div class="on-loaded">
+        <div id="tabelka_space"></div>
+        <div>
+            <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;">
+                <span class="glyphicon glyphicon-plus"></span>
+                Dodaj nowy kontroler
+            </a>
         </div>
-        <div class="progress-error"></div>
     </div>
     <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
@@ -92,8 +87,7 @@
 <script>
 "use strict";
 $(document).ready( function() {
-    var controllers, columnDefinitions, currentTabelka;
-    currentTabelka = null;
+    var controllers, columnDefinitions;
     controllers = [];
     columnDefinitions = [
         {
@@ -153,16 +147,16 @@ $(document).ready( function() {
     progress.load(
         'get',
         '/api/controller/details/all',
-        '#main_progress',
+        ['.on-loading'], ['.on-loaded'], [],
         function(listDtoOfControllerDetailsDto) {
-            var btnExamine, mainProgress, mainSuccess;
+            var btnExamine, tabelkaSpace;
             btnExamine = $('#btn_examine');
-            mainProgress = $('#main_progress');
-            mainSuccess = $('#main_success');
+            tabelkaSpace = $('#tabelka_space');
             controllers = listDtoOfControllerDetailsDto.list;
             fixControllers();
-            currentTabelka = tabelka.create(controllers, columnDefinitions);
-            mainSuccess.append(currentTabelka);
+            tabelkaSpace.append(
+                tabelka.create(controllers, columnDefinitions)
+            );
             btnExamine.click(
                 function() {
                     btnExamine.prop('disabled', true);
@@ -173,16 +167,17 @@ $(document).ready( function() {
                         }, {
                             "url" : '/api/controller/details/all'
                         } ],
-                        '#examine_progress',
+                        ['#examine_loading'], [], [],
                         function(responses) {
                             btnExamine.prop('disabled', false);
                             controllers = responses[1].list;
                             fixControllers();
-                            mainSuccess.fadeOut(200, function() {
-                                mainSuccess.empty();
-                                currentTabelka = tabelka.create(controllers, columnDefinitions);
-                                mainSuccess.append(currentTabelka);
-                                mainSuccess.fadeIn(200);
+                            tabelkaSpace.fadeOut(200, function() {
+                                tabelkaSpace.empty();
+                                tabelkaSpace.append(
+                                    tabelka.create(controllers, columnDefinitions)
+                                );
+                                tabelkaSpace.fadeIn(200);
                             });
                         },
                         function() {

@@ -4,20 +4,34 @@ var progress = {};
     progress.createCircle = createCircle;
     progress.load = load;
     progress.loadMany = loadMany;
-//3 el w ktorym elemencie na stronie koleczko ma sie pojawic #id
-    //4 par. funkcja ktora ma sie wykonac, 5 par. jakby sie nie udalo
-    function load(method, url, jquerySelector, successHandler, optionalErrorHandler, optionalParams) {
-        var parent, elemLoading, elemSuccess, elemError, config;
-        parent = $(jquerySelector);
-        elemLoading = parent.find('.progress-loading');
-        elemSuccess = parent.find('.progress-success');
-        elemError = parent.find('.progress-error');
-        elemError.hide();
-        elemSuccess.hide();
-        elemLoading.hide();
-        elemLoading.empty();
-        elemLoading.append(createCircle());
-        elemLoading.fadeIn(200);
+    /**
+     * @param method 'get' albo 'post'
+     * @param url adres URL z API, serwer musi zwracać JSON-a
+     * @param loadingSelectors tablica selektorów jQuery w których pojawi się animacja ładowania,
+     * np. ['.progress_loading']
+     * @param successSelectors tablica selektorów jQuery które zostaną pokazane przy sukcesie,
+     * np. ['#progress_success', '#button_examine']
+     * @param errorSelectors tablica selektorów jQuery które pojawią się w przypadku błędu,
+     * np. ['#progress_error']
+     * @param successHandler funkcja która się wykona po udanym zrealizowaniu zapytania,
+     * dostanie 1 parametr - odpowiedź serwera (jakiś obiekt DTO)
+     * @param optionalErrorHandler opcjonalna funkcja która się wykona w przypadku błędu
+     * @param optionalParams opcjonalny obiekt który zostanie przesłany do serwera jako JSON (tylko dla POST)
+     */
+    function load(method, url, loadingSelectors, successSelectors, errorSelectors, successHandler, optionalErrorHandler, optionalParams) {
+        var config;
+        eachSelector(errorSelectors, function(e) {
+            e.hide();
+        });
+        eachSelector(successSelectors, function(e) {
+            e.hide();
+        });
+        eachSelector(loadingSelectors, function(e) {
+            e.hide();
+            e.empty();
+            e.append(createCircle());
+            e.fadeIn(200);
+        });
         config = {};
         config.url = url;
         config.dataType = 'json';
@@ -31,24 +45,42 @@ var progress = {};
         config.success = function(response) {
             if ( (typeof response.success !== 'undefined')
                 && (response.success) ) {
-                elemError.hide();
-                elemLoading.hide();
-                elemSuccess.fadeIn(200);
+                eachSelector(errorSelectors, function(e) {
+                    e.hide();
+                });
+                eachSelector(loadingSelectors, function(e) {
+                    e.hide();
+                });
+                eachSelector(successSelectors, function(e) {
+                    e.fadeIn(200);
+                });
                 successHandler(response);
             }
             else {
-                elemSuccess.hide();
-                elemLoading.hide();
-                elemError.fadeIn(200);
+                eachSelector(successSelectors, function(e) {
+                    e.hide();
+                });
+                eachSelector(loadingSelectors, function(e) {
+                    e.hide();
+                });
+                eachSelector(errorSelectors, function(e) {
+                    e.fadeIn(200);
+                });
                 if (typeof optionalErrorHandler !== 'undefined') {
                     optionalErrorHandler(response);
                 }
             }
         };
         config.error = function() {
-            elemSuccess.hide();
-            elemLoading.hide();
-            elemError.fadeIn(200);
+            eachSelector(successSelectors, function(e) {
+                e.hide();
+            });
+            eachSelector(loadingSelectors, function(e) {
+                e.hide();
+            });
+            eachSelector(errorSelectors, function(e) {
+                e.fadeIn(200);
+            });
             if (typeof optionalErrorHandler !== 'undefined') {
                 optionalErrorHandler(null);
             }
@@ -62,18 +94,20 @@ var progress = {};
      "optionalPostData" : false
      }
      */
-    function loadMany(requests, jquerySelector, successHandler, optionalErrorHandler) {
-        var done, responses, req, parent, elemLoading, elemSuccess, elemError, config;
-        parent = $(jquerySelector);
-        elemLoading = parent.find('.progress-loading');
-        elemSuccess = parent.find('.progress-success');
-        elemError = parent.find('.progress-error');
-        elemError.hide();
-        elemSuccess.hide();
-        elemLoading.hide();
-        elemLoading.empty();
-        elemLoading.append(createCircle());
-        elemLoading.fadeIn(200);
+    function loadMany(requests, loadingSelectors, successSelectors, errorSelectors, successHandler, optionalErrorHandler) {
+        var done, responses, req, config;
+        eachSelector(errorSelectors, function(e) {
+            e.hide();
+        });
+        eachSelector(successSelectors, function(e) {
+            e.hide();
+        });
+        eachSelector(loadingSelectors, function(e) {
+            e.hide();
+            e.empty();
+            e.append(createCircle());
+            e.fadeIn(200);
+        });
         done = 0;
         responses = [];
         step();
@@ -102,18 +136,30 @@ var progress = {};
                         step();
                     }
                     else {
-                        elemLoading.hide();
-                        elemSuccess.hide();
-                        elemError.fadeIn(200);
+                        eachSelector(loadingSelectors, function(e) {
+                            e.hide();
+                        });
+                        eachSelector(successSelectors, function(e) {
+                            e.hide();
+                        });
+                        eachSelector(errorSelectors, function(e) {
+                            e.fadeIn(200);
+                        });
                         if(typeof optionalErrorHandler !== 'undefined') {
                             optionalErrorHandler(result);
                         }
                     }
                 };
                 config.error = function() {
-                    elemLoading.hide();
-                    elemSuccess.hide();
-                    elemError.fadeIn(200);
+                    eachSelector(loadingSelectors, function(e) {
+                        e.hide();
+                    });
+                    eachSelector(successSelectors, function(e) {
+                        e.hide();
+                    });
+                    eachSelector(errorSelectors, function(e) {
+                        e.fadeIn(200);
+                    });
                     if(typeof optionalErrorHandler !== 'undefined') {
                         optionalErrorHandler(null);
                     }
@@ -121,11 +167,24 @@ var progress = {};
                 $.ajax(config);
             }
             else {
-                elemLoading.hide();
-                elemError.hide();
-                elemSuccess.fadeIn(200);
+                eachSelector(loadingSelectors, function(e) {
+                    e.hide();
+                });
+                eachSelector(errorSelectors, function(e) {
+                    e.hide();
+                });
+                eachSelector(successSelectors, function(e) {
+                    e.fadeIn(200);
+                });
                 successHandler(responses);
             }
+        }
+    }
+
+    function eachSelector(arr, func) {
+        var i;
+        for(i = 0; i < arr.length; i++) {
+            func($(arr[i]));
         }
     }
 

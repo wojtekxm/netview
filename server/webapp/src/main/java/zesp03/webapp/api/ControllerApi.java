@@ -56,7 +56,8 @@ public class ControllerApi {
             @RequestParam("ipv4") String ipv4,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "communityString", required = false) String communityString,
-            @RequestParam(value = "buildingId", required = false) Long buildingId) {
+            @RequestParam(value = "buildingId", required = false) Long buildingId,
+            @RequestParam(value = "fake", required = false) Boolean fake) {
         return BaseResultDto.make( () -> {
             CreateControllerDto dto = new CreateControllerDto();
 
@@ -65,6 +66,7 @@ public class ControllerApi {
             dto.setDescription(description);
             dto.setCommunityString(communityString);
             dto.setBuildingId(buildingId);
+            dto.setfake(fake);
             controllerService.create(dto);
         } );
     }

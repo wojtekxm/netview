@@ -81,7 +81,17 @@ ul.view li ul li:hover
     z-index: 999;
 }
 
+#tittle{
+    font-size: 17px;
+    display: inline-block;
+}
 
+#content{
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    list-style-type: none;
+    height: 100%;
+}
 
 #devices{
     background-color: whitesmoke;

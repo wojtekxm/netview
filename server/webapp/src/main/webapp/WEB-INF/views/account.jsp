@@ -56,41 +56,47 @@
 </nav>
 
 <div class="container">
-    <div style="height: 100px;"></div>
-    <div class="clearfix">
-        <h4 class="pull-left">Zarządzanie kontem</h4>
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-user"></span> Zarządzanie kontem</div>
+        </div>
     </div>
-    <div class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Aktualne hasło</label>
-            <div class="col-sm-6">
-                <input id="actual_password" type="password" class="form-control">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Nowe hasło</label>
-            <div class="col-sm-6">
-                <input id="new_password" type="password" class="form-control">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Powtórz nowe hasło</label>
-            <div class="col-sm-6">
-                <input id="repeat_password" type="password" class="form-control">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-5 col-sm-7 clearfix">
-                <button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>
-                <div class="pull-left" style="min-height:45px; min-width:60px">
-                    <div id="change_loading" class="later"></div>
+
+    <div style="height: 10px;"></div>
+    <div class="panel panel-default" id="content"><div></div>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Aktualne hasło</label>
+                <div class="col-sm-6">
+                    <input id="actual_password" type="password" class="form-control">
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div id="result_success"></div>
-                <div id="result_error"></div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Nowe hasło</label>
+                <div class="col-sm-6">
+                    <input id="new_password" type="password" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Powtórz nowe hasło</label>
+                <div class="col-sm-6">
+                    <input id="repeat_password" type="password" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-5 col-sm-7 clearfix">
+                    <button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>
+                    <div class="pull-left" style="min-height:45px; min-width:60px">
+                        <div id="change_loading" class="later"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div id="result_success"></div>
+                    <div id="result_error"></div>
+                </div>
             </div>
         </div>
     </div>

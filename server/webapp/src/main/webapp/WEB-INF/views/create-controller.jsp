@@ -58,17 +58,43 @@
 
 <div id="strona">
     <div id="kontent">
-        <div class="form-group">
-            <form method="post" action="/api/controller/create" id="form1">
-                <input form="form1"type="text" class="form-control"  placeholder="Nazwa Kontrolera"
-                       id="new_name" required="required" name="name">
-                <input form="form1" type="text" class="form-control"  placeholder="Adres IPv4"
-                       id="new_ipv4" required="required" name="ipv4">
-                <input form="form1" type="text" class="form-control"  placeholder="Komentarz (opcjonalne)"
-                       id="new_description" name="description">
-                <input form="form1" type="text" class="form-control"  placeholder="Community String"
-                       id="new_communityString" name="communityString">
 
+            <form method="post" action="/api/controller/create" id="form1" class="form-horizontal">
+
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="new_name" >Nazwa kontrolera:</label>
+                    <div class="col-sm-3">
+                        <input form="form1"type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
+                               id="new_name" required="required" name="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new_ipv4" class="control-label col-sm-2 ">Adres IPv4:</label>
+                    <div class="col-sm-3">
+                <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
+                       id="new_ipv4" required="required" name="ipv4">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new_description" class="control-label col-sm-2 ">Komentarz:</label>
+                    <div class="col-sm-3">
+                <input form="form1" type="text" class="form-control"  placeholder="Wprowadź komentarz (opcjonalne)"
+                       id="new_description" name="description">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new_communityString" class="control-label col-sm-2 ">Community String:</label>
+                    <div class="col-sm-3">
+                <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Community String"
+                       id="new_communityString" name="communityString">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="new_building" class="control-label col-sm-2 ">Budynek:</label>
+                    <div class="col-sm-3">
                 <label for="new_building">Wybierz budynek:</label>
 
                 <select form="form1" class="form-control" id="new_building"name="buildingId">
@@ -79,10 +105,30 @@
                         </option>
                         </c:forEach>
                 </select>
-                <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-primary btn-default btn-lg active">
-                <div style="min-height:38px; min-width:60px">
-                    <div id="change_loading" class="later"></div>
+                    </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input form="form1" type="checkbox" <%--class="form-control"--%> id="new_fake" name="fake"> prawdziwy?</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="min-height:38px; min-width:60px">
+                    <div id="change_loading"></div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <span style="display: flex;position: relative;float: left;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                        <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;"></div>
+                    </span>
+                </div>
+                </div>
+                <%--</div>--%>
             </form>
         </div>
         <div class="form-group">
@@ -92,7 +138,7 @@
             </div>
         </div>
     </div>
-</div>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>
@@ -108,8 +154,8 @@ $(document).ready(function () {
             "ipv4": $('#new_ipv4').val(),
             "description": $('#new_description').val(),
             "communityString": $('#new_communityString').val(),
-            "buildingId": $('#new_building').val()
-
+            "buildingId": $('#new_building').val(),
+            "fake": $('#new_fake').val()
         };
         progress.load(
             'post',

@@ -51,35 +51,41 @@
         </div>
     </div>
 </nav>
-<div id="container" id="page">
-    <div class="content">
+
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-user"></span>
+                Tworzenie nowego użytkownika</div>
+        </div>
+    </div>
+
+    <div style="height: 10px;"></div>
+    <div class="panel panel-default" id="content"><div></div>
         <div>
-            <div style="height: 10px;"></div>
-            <div id="wydzial">
-                <div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Tworzenie nowego użytkownika
-                </div>
+            <a href="/all-users" class="btn btn-info" role="button">
+                <span class="glyphicon glyphicon-backward"></span>
+                Powrót do listy użytkowników
+            </a>
+        </div>
+        <br>
+        <div id="settings" class="form-group">
+            <div>
+                <a class="btn btn-success" id="button_create" role="button"><span class="glyphicon glyphicon-plus"></span> Dodaj</a>
             </div>
         </div>
-        <div id="devices" style="padding: 15px;">
-            <div>
-                <a href="/all-users" class="btn btn-info" role="button" style="width: 300px;font-size:17px;">
-                    <span class="glyphicon glyphicon-backward"></span>
-                    Wszyscy użytkownicy
-                </a>
-            </div>
-            <br>
-            <br>
-            <div id="settings" class="form-group">
-                <div>
-                    <a class="btn btn-success" id="button_create" role="button" style="width: 300px;font-size:17px;"><span class="glyphicon glyphicon-plus"></span> Dodaj</a>
-                </div>
-            </div>
-            <div id="result"></div>
+        <div id="result"></div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div id="result_success"></div>
+            <div id="result_error"></div>
         </div>
     </div>
 </div>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script>

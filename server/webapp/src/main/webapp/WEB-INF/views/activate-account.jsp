@@ -51,21 +51,40 @@
         </div>
     </div>
 </nav>
-<div id="container">
+
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-plus"></span>
+                Aktywacja konta użytkownika</div>
+        </div>
+    </div>
+
     <div style="height: 10px;"></div>
-    <h1>Aktywacja konta użytkownika</h1>
-    <form action="/api/user/activate" method="post">
-        <input type="hidden" name="tid" value="${param.tid}">
-        <input type="hidden" name="tv" value="${param.tv}">
-        nazwa użytkownika<br>
-        <input type="text" name="username"><br><br>
-        wybierz hasło<br>
-        <input type="password" name="password"><br><br>
-        powtórz hasło<br>
-        <input type="password" name="repeat"><br><br>
-        <button type="submit">Aktywuj konto</button>
-    </form>
+    <div class="panel panel-default" id="content"><div></div>
+        <form action="/api/user/activate" method="post">
+            <input type="hidden" name="tid" value="${param.tid}">
+            <input type="hidden" name="tv" value="${param.tv}">
+            nazwa użytkownika<br>
+            <input type="text" name="username"><br><br>
+            wybierz hasło<br>
+            <input type="password" name="password"><br><br>
+            powtórz hasło<br>
+            <input type="password" name="repeat"><br><br>
+            <button type="submit">Aktywuj konto</button>
+        </form>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div id="result_success"></div>
+            <div id="result_error"></div>
+        </div>
+    </div>
 </div>
+
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 </body>

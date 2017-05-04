@@ -52,93 +52,97 @@
     </div>
 </nav>
 
-<div style="margin-top:100px"></div>
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-home"></span> Nowy budynek</div>
+        </div>
+    </div>
 
-<div id="strona">
-    <div id="kontent">
+    <div style="height: 10px;"></div>
+    <div class="panel panel-default" id="content"><div></div>
+        <form method="post" action="/api/building/create" class="form-horizontal">
 
-            <form method="post" action="/api/building/create" class="form-horizontal">
-
-                    <div class="form-group">
-                        <label for="new_name" class="col-sm-2 control-label">Nazwa budynku:</label>
-                        <div class="col-sm-3">
-                <input type="text" class="form-control" placeholder="Wprowadź nazwę budynku"
-                       id="new_name" required="required" name="name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_code" class="col-sm-2 control-label">Kod budynku:</label>
-                        <div class="col-sm-3">
-                <input type="text" class="form-control" placeholder="Wprowadź kod budynku"
-                       id="new_code" required="required" name="code">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_street" class="col-sm-2 control-label">Ulica:</label>
-                        <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="Wprowadź nazwę ulicy"
+            <div class="form-group">
+                <label for="new_name" class="col-sm-2 control-label">Nazwa budynku:</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź nazwę budynku"
+                           id="new_name" required="required" name="name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="new_code" class="col-sm-2 control-label">Kod budynku:</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź kod budynku"
+                           id="new_code" required="required" name="code">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="new_street" class="col-sm-2 control-label">Ulica:</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź nazwę ulicy"
                            id="new_street" name="street">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_city" class="col-sm-2 control-label">Miasto:</label>
-                        <div class="col-sm-3">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="new_city" class="col-sm-2 control-label">Miasto:</label>
+                <div class="col-sm-3">
                     <input type="text" class="form-control" placeholder="Wprowadź nazwę miasta"
                            id="new_city" name="city">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_postalCode" class="col-sm-2 control-label">Kod pocztowy:</label>
-                        <div class="col-sm-3">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="new_postalCode" class="col-sm-2 control-label">Kod pocztowy:</label>
+                <div class="col-sm-3">
                     <input type="text" class="form-control" placeholder="Wprowadź kod pocztowy"
                            id="new_postalCode" name="postalCode">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_number" class="col-sm-2 control-label">Numer:</label>
-                        <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="Wprowadź numer"
-                           id="new_number" name="number">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_latitude" class="col-sm-2 control-label">Szerokość geograficzna:</label>
-                        <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="Wprowadź szerokosc geograficzną"
-                           id="new_latitude" required="required" name="latitude">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_longitude" class="col-sm-2 control-label">Długość geograficzna:</label>
-                        <div class="col-sm-3">
-                        <input type="text" class="form-control" placeholder="Wprowadź długość geograficzną"
-                           id="new_longitude" required="required" name="longitude">
-                        </div>
-                    </div>
-
-                    <div style="min-height:38px; min-width:60px">
-                        <div id="change_loading" class="later"></div>
-                <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
-                        </span>
-                    </div>
-                    </div>
-             </form>
-
-    </div>
+                </div>
+            </div>
             <div class="form-group">
-                <div class="col-sm-12">
-                    <div id="result_success"></div>
-                    <div id="result_error"></div>
+                <label for="new_number" class="col-sm-2 control-label">Numer:</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź numer"
+                           id="new_number" name="number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="new_latitude" class="col-sm-2 control-label">Szerokość geograficzna:</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź szerokosc geograficzną"
+                           id="new_latitude" required="required" name="latitude">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="new_longitude" class="col-sm-2 control-label">Długość geograficzna:</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź długość geograficzną"
+                           id="new_longitude" required="required" name="longitude">
                 </div>
             </div>
 
-
+            <div style="min-height:38px; min-width:60px">
+                <div id="change_loading" class="later"></div>
+                <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                            <span style="display: flex;position: relative;float: left;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                        <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div id="result_success"></div>
+            <div id="result_error"></div>
+        </div>
+    </div>
 </div>
+
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>

@@ -52,71 +52,76 @@
     </div>
 </nav>
 
-<div style="margin-top:100px"></div>
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-inbox"></span> Nowy kontroler</div>
+        </div>
+    </div>
 
-<div id="strona">
-    <div id="kontent">
+    <div style="height: 10px;"></div>
+    <div class="panel panel-default" id="content"><div></div>
+        <form method="post" action="/api/controller/create" id="form1" class="form-horizontal">
 
-            <form method="post" action="/api/controller/create" id="form1" class="form-horizontal">
 
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2 " for="new_name" >Nazwa kontrolera:</label>
-                    <div class="col-sm-3">
-                        <input form="form1"type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
-                               id="new_name" required="required" name="name">
-                    </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2 " for="new_name" >Nazwa kontrolera:</label>
+                <div class="col-sm-3">
+                    <input form="form1"type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
+                           id="new_name" required="required" name="name">
                 </div>
-                <div class="form-group">
-                    <label for="new_ipv4" class="control-label col-sm-2 ">Adres IPv4:</label>
-                    <div class="col-sm-3">
-                <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
-                       id="new_ipv4" required="required" name="ipv4">
-                    </div>
+            </div>
+            <div class="form-group">
+                <label for="new_ipv4" class="control-label col-sm-2 ">Adres IPv4:</label>
+                <div class="col-sm-3">
+                    <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
+                           id="new_ipv4" required="required" name="ipv4">
                 </div>
-                <div class="form-group">
-                    <label for="new_description" class="control-label col-sm-2 ">Komentarz:</label>
-                    <div class="col-sm-3">
-                <input form="form1" type="text" class="form-control"  placeholder="Wprowadź komentarz (opcjonalne)"
-                       id="new_description" name="description">
-                    </div>
+            </div>
+            <div class="form-group">
+                <label for="new_description" class="control-label col-sm-2 ">Komentarz:</label>
+                <div class="col-sm-3">
+                    <input form="form1" type="text" class="form-control"  placeholder="Wprowadź komentarz (opcjonalne)"
+                           id="new_description" name="description">
                 </div>
-                <div class="form-group">
-                    <label for="new_communityString" class="control-label col-sm-2 ">Community String:</label>
-                    <div class="col-sm-3">
-                <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Community String"
-                       id="new_communityString" name="communityString">
-                    </div>
+            </div>
+            <div class="form-group">
+                <label for="new_communityString" class="control-label col-sm-2 ">Community String:</label>
+                <div class="col-sm-3">
+                    <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Community String"
+                           id="new_communityString" name="communityString">
                 </div>
+            </div>
 
 
-                <div class="form-group">
-                    <label for="new_building" class="control-label col-sm-2 ">Budynek:</label>
-                    <div class="col-sm-3">
-                <label for="new_building">Wybierz budynek:</label>
+            <div class="form-group">
+                <label for="new_building" class="control-label col-sm-2 ">Budynek:</label>
+                <div class="col-sm-3">
+                    <label for="new_building">Wybierz budynek:</label>
 
-                <select form="form1" class="form-control" id="new_building"name="buildingId">
-                    <option></option>
-                    <c:forEach items="${list}" var="building" >
-                        <option value="${building.id}" >
-                    <c:out value="${building.name}"/>
-                        </option>
+                    <select form="form1" class="form-control" id="new_building"name="buildingId">
+                        <option></option>
+                        <c:forEach items="${list}" var="building" >
+                            <option value="${building.id}" >
+                                <c:out value="${building.name}"/>
+                            </option>
                         </c:forEach>
-                </select>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input form="form1" type="checkbox" <%--class="form-control"--%> id="new_fake" name="fake"> prawdziwy?</label>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="checkbox">
-                            <label>
-                                <input form="form1" type="checkbox" <%--class="form-control"--%> id="new_fake" name="fake"> prawdziwy?</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="min-height:38px; min-width:60px">
-                    <div id="change_loading"></div>
+            <div style="min-height:38px; min-width:60px">
+                <div id="change_loading"></div>
 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
@@ -125,17 +130,19 @@
                         <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;"></div>
                     </span>
                 </div>
-                </div>
-                <%--</div>--%>
-            </form>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div id="result_success"></div>
-                <div id="result_error"></div>
             </div>
+            <%--</div>--%>
+        </form>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div id="result_success"></div>
+            <div id="result_error"></div>
         </div>
     </div>
+</div>
+
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

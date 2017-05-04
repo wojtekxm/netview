@@ -53,49 +53,52 @@
 </nav>
 
 
-<div style="margin-top:100px"></div>
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-home"></span> Nowa jednostka organizacyjna</div>
+        </div>
+    </div>
 
-<div id="strona">
-    <div id="kontent">
-        <div class="form-group">
+    <div style="height: 10px;"></div>
+    <div class="panel panel-default" id="content"><div></div>
+        <form method="post" action="/api/unit/create" class="form-horizontal">
 
-            <form method="post" action="/api/unit/create" class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-2 " for="new_code" >Kod jednostki:</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="Wprowadź kod jednostki"
+                           id="new_code" required="required" name="code"></div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2 " for="new_description" >Nazwa jednostki:</label>
+                <div class="col-sm-3">
+                    <input type="description" class="form-control" placeholder="Wprowadź nazwę jednostki"
+                           id="new_description" required="required" name="description"></div>
+            </div>
 
-                <div class="form-group">
-                    <label class="control-label col-sm-2 " for="new_code" >Kod jednostki:</label>
-                    <div class="col-sm-3">
-                <input type="text" class="form-control" placeholder="Wprowadź kod jednostki"
-                       id="new_code" required="required" name="code"></div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2 " for="new_description" >Nazwa jednostki:</label>
-                    <div class="col-sm-3">
-                <input type="description" class="form-control" placeholder="Wprowadź nazwę jednostki"
-                       id="new_description" required="required" name="description"></div>
-                </div>
-
-                <div style="min-height:38px; min-width:60px">
-                    <div class="change_loading"></div>
+            <div style="min-height:38px; min-width:60px">
+                <div class="change_loading"></div>
 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        < style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                            <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
-                        </span>
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:4%;"></span>
+                        <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
+                    </span>
                 </div>
-                </div>
-            </form>
-
-        <div class="form-group">
-            <div class="col-sm-12">
-                <div id="result_success"></div>
-                <div id="result_error"></div>
             </div>
-        </div>
+        </form>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div id="result_success"></div>
+            <div id="result_error"></div>
         </div>
     </div>
 </div>
+
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

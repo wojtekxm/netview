@@ -52,7 +52,7 @@ ColumnDefinition: {
     "label" : 'nazwa',
     "comparator" : util.comparatorText('name'), // or null
     "extractor" : 'td_name',
-    "optionalCssClass" : 'width1'
+    "cssClass" : 'width-2' // optional
 }
  */
 var tabelka = {};
@@ -116,11 +116,11 @@ var tabelka = {};
         theadRow = $('<tr></tr>');
         tbody = $('<tbody></tbody>');
         colgroup = $('<colgroup></colgroup>');
-        colgroup.append( $('<col span="1" class="width1"/>') );
+        colgroup.append( $('<col span="1" class="width-0"/>') );
         for(i = 0; i < columnDefinitions.length; i++) {
-            if(typeof columnDefinitions[i].optionalCssClass !== 'undefined') {
+            if(typeof columnDefinitions[i].cssClass !== 'undefined') {
                 colgroup.append(
-                    $('<col span="1"/>').addClass(columnDefinitions[i].optionalCssClass)
+                    $('<col span="1"/>').addClass(columnDefinitions[i].cssClass)
                 );
             }
             else {

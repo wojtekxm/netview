@@ -121,16 +121,18 @@ $(document).ready(function(){
         {
             "label" : 'nazwa',
             "comparator" : util.comparatorText('description'),
-            "extractor" : 'td_description'
+            "extractor" : 'td_description',
+            "cssClass" : 'width-12'
         }, {
             "label" : 'kod',
             "comparator" : util.comparatorText('code'),
-            "extractor" : 'td_code'
+            "extractor" : 'td_code',
+            "cssClass" : 'width-4'
         }, {
             "label" : '',
             "comparator" : null,
             "extractor" : 'td_button',
-            "optionalCssClass" : 'width1'
+            "cssClass" : 'width-0'
         }
     ];
 
@@ -183,19 +185,23 @@ $(document).ready(function(){
         {
             "label" : 'nazwa',
             "comparator" : util.comparatorText('name'),
-            "extractor" : 'td_name'
+            "extractor" : 'td_name',
+            "cssClass" : 'width-5'
         }, {
             "label" : 'IP',
             "comparator" : util.comparatorText('ipv4'),
-            "extractor" : 'td_ipv4'
+            "extractor" : 'td_ipv4',
+            "cssClass" : 'width-3'
         }, {
             "label" : 'opis',
             "comparator" : util.comparatorText('description'),
-            "extractor" : 'td_description'
+            "extractor" : 'td_description',
+            "cssClass" : 'width-4'
         }, {
             "label" : 'community string',
             "comparator" : util.comparatorText('communityString'),
-            "extractor" : 'td_community'
+            "extractor" : 'td_community',
+            "cssClass" : 'width-4'
         }
     ];
 

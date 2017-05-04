@@ -80,11 +80,13 @@ $(document).ready( function() {
         {
             "label" : 'nazwa',
             "comparator" : util.comparatorText('description'),
-            "extractor" : 'td_description'
+            "extractor" : 'td_description',
+            "cssClass" : 'width-12'
         }, {
             "label" : 'kod',
             "comparator" : util.comparatorText('code'),
-            "extractor" : 'td_code'
+            "extractor" : 'td_code',
+            "cssClass" : 'width-4'
         }
     ];
 

@@ -12,6 +12,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/tabelka.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -108,16 +109,18 @@ $(document).ready(function() {
         {
             "label": 'nazwa',
             "comparator": util.comparatorText('name'),
-            "extractor": 'td_name'
+            "extractor": 'td_name',
+            "cssClass" : 'width-12'
         },{
             "label" : 'kod',
             "comparator" : util.comparatorText('code'),
-            "extractor" : 'td_code'
+            "extractor" : 'td_code',
+            "cssClass" : 'width-4'
         }, {
             "label" : '',
             "comparator" : null,
             "extractor" : 'td_button',
-            "optionalCssClass" : 'width1'
+            "cssClass" : 'width-0'
         }
     ];
 

@@ -91,27 +91,33 @@ $(document).ready( function() {
         {
             "label" : 'nazwa',
             "comparator" : util.comparatorText('name'),
-            "extractor" : 'td_name'
+            "extractor" : 'td_name',
+            "cssClass" : 'width-3'
         }, {
             "label" : 'IP',
             "comparator" : util.comparatorText('ipv4'),
-            "extractor" : 'td_ipv4'
+            "extractor" : 'td_ipv4',
+            "cssClass" : 'width-2'
         }, {
             "label" : 'opis',
             "comparator" : util.comparatorText('description'),
-            "extractor" : 'td_description'
+            "extractor" : 'td_description',
+            "cssClass" : 'width-3'
         }, {
             "label" : 'community string',
             "comparator" : util.comparatorText('communityString'),
-            "extractor" : 'td_community'
+            "extractor" : 'td_community',
+            "cssClass" : 'width-3'
         }, {
-            "label" : 'liczba urządzeń',
+            "label" : 'urządzenia',
             "comparator" : util.comparatorNumber('numberOfDevices'),
-            "extractor" : 'td_devices'
+            "extractor" : 'td_devices',
+            "cssClass" : 'width-1'
         }, {
             "label" : 'lokalizacja',
             "comparator" : util.comparatorText('cmp_location'),
-            "extractor" : 'td_location'
+            "extractor" : 'td_location',
+            "cssClass" : 'width-4'
         }
     ];
 

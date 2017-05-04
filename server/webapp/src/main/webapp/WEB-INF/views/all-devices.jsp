@@ -144,23 +144,28 @@ $(document).ready( function() {
         {
             "label" : 'nazwa',
             "comparator" : util.comparatorText('name'),
-            "extractor" : 'td_name'
+            "extractor" : 'td_name',
+            "cssClass" : 'width-4'
         }, {
             "label" : 'opis',
             "comparator" : util.comparatorText('description'),
-            "extractor" : 'td_description'
+            "extractor" : 'td_description',
+            "cssClass" : 'width-4'
         }, {
             "label" : '2,4 GHz',
             "comparator" : util.comparatorNumber('cmp_2400'),
-            "extractor" : 'td_2400'
+            "extractor" : 'td_2400',
+            "cssClass" : 'width-2'
         }, {
             "label" : '5 GHz',
             "comparator" : util.comparatorNumber('cmp_5000'),
-            "extractor" : 'td_5000'
+            "extractor" : 'td_5000',
+            "cssClass" : 'width-2'
         }, {
             "label" : 'kontroler',
             "comparator" : util.comparatorText('cmp_controller'),
-            "extractor" : 'td_controller'
+            "extractor" : 'td_controller',
+            "cssClass" : 'width-4'
         }
     ];
 

@@ -81,19 +81,23 @@ $(document).ready( function() {
         {
             "label" : 'nazwa',
             "comparator" : util.comparatorText('cmp_name'),
-            "extractor" : 'td_name'
+            "extractor" : 'td_name',
+            "cssClass" : 'width-6'
         }, {
             "label" : 'typ',
             "comparator" : util.comparatorText('role'),
-            "extractor" : 'td_role'
+            "extractor" : 'td_role',
+            "cssClass" : 'width-6'
         }, {
             "label" : 'aktywne',
             "comparator" : util.comparatorNumber('activated'),
-            "extractor" : 'td_activated'
+            "extractor" : 'td_activated',
+            "cssClass" : 'width-2'
         }, {
             "label" : 'zablokowane',
             "comparator" : util.comparatorNumber('blocked'),
-            "extractor" : 'td_blocked'
+            "extractor" : 'td_blocked',
+            "cssClass" : 'width-2'
         }
     ];
 

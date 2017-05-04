@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lista urządzeń</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
+    <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link rel="stylesheet" href="/css/tabelka.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -61,7 +62,7 @@
     <div class="pull-right on-loaded">
         <button id="btn_examine" class="btn btn-primary pull-right" type="button">
             <span class="glyphicon glyphicon-refresh"></span>
-            zaktualizuj wszystkie
+            zbadaj wszystkie
         </button>
         <div class="pull-right" style="min-height:45px; min-width:60px">
             <span id="examine_loading"></span>
@@ -70,33 +71,75 @@
     <div class="on-loading"></div>
     <div class="on-loaded">
         <div id="tabelka_space"></div>
-        <hr>
-        <div class="radio">
-            <label>
-                <input type="radio"/>
-                Wszystkie
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <input type="radio"/>
-                Starsze niż
-                <input type="text" class="form-control"/>
-            </label>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-primary">Usuń</button>
+        <div style="margin-top: 50px"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Usuwanie starych badań</div>
+            <div class="panel-body">
+                <div class="form-inline"><div class="radio">
+                    <label>
+                        <input type="radio" name="delete_type" value="all" checked>
+                        Wszystkie (<span id="total_all">?</span>)
+                    </label>
+                </div>
+                </div>
+                <div class="form-inline">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="delete_type" value="before"/>
+                            Starsze niż
+                        </label>
+                        <div class='input-group date' id='datetimepicker1'>
+                            <input type='text' class="form-control">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <span id="total_before"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-offset-5 col-sm-7 clearfix">
+                        <button id="btn_delete" class="btn btn-danger pull-left">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Usuń
+                        </button>
+                        <div class="pull-left" style="min-height:45px; min-width:60px">
+                            <div id="delete_loading"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="notify_deleted"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
+<script src="/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/js/progress.js"></script>
 <script src="/js/tabelka.js"></script>
+<script src="/js/notify.js"></script>
 <script>
 "use strict";
 $(document).ready( function() {
-    var devices, columnDefinitions;
+    var $dateTimePicker, devices, columnDefinitions, tabelkaSpace, btnDelete,
+        spanTotalAll, spanTotalBefore, totalBeforeIsPending, totalBeforeChangedAgain;
+
+    $dateTimePicker = $('#datetimepicker1');
+    $dateTimePicker.datetimepicker({
+        "locale": 'pl',
+        "format": 'LLL'
+    });
+    tabelkaSpace = $('#tabelka_space');
+    btnDelete = $('#btn_delete');
+    spanTotalAll = $('#total_all');
+    spanTotalBefore = $('#total_before');
+    totalBeforeIsPending = false;
+    totalBeforeChangedAgain = false;
+
     devices = [];
     columnDefinitions = [
         {
@@ -182,19 +225,61 @@ $(document).ready( function() {
         }
     }
 
-    progress.load(
-        'get',
-        '/api/device/details/all',
+    function refreshTotalBefore() {
+        var t;
+        t = getTimestampBeforeOrNull();
+        if(t == null) {
+            spanTotalBefore.text('');
+            totalBeforeIsPending = false;
+            totalBeforeChangedAgain = false;
+            return;
+        }
+        if(totalBeforeIsPending) {
+            totalBeforeChangedAgain = true;
+            return;
+        }
+        totalBeforeIsPending = true;
+        progress.load(
+            'get',
+            '/api/surveys/total/all/' + t,
+            [], [], [],
+            function(response) {
+                spanTotalBefore.text('(' + response.content + ')');
+                totalBeforeIsPending = false;
+                if(totalBeforeChangedAgain) {
+                    totalBeforeChangedAgain = false;
+                    refreshTotalBefore();
+                }
+            }
+        );
+    }
+
+    function getTimestampBeforeOrNull() {
+        var d = $dateTimePicker.data('DateTimePicker').date();
+        if(d === null) {
+            console.log('$dateTimePicker.data("DateTimePicker").date() is null');
+            return null;
+        }
+        return d.unix();
+    }
+
+    progress.loadMany(
+        [{
+            "url" : '/api/device/details/all'
+        }, {
+            "url" : '/api/surveys/total/all/all'
+        }],
         ['.on-loading'], ['.on-loaded'], [],
-        function(listDtoOfDeviceDetailsDto) {
-            var btnExamine, tabelkaSpace;
+        function(responses) {
+            var btnExamine;
             btnExamine = $('#btn_examine');
-            tabelkaSpace = $('#tabelka_space');
-            devices = listDtoOfDeviceDetailsDto.list;
+            devices = responses[0].list;
             fixDevices();
             tabelkaSpace.append(
                 tabelka.create(devices, columnDefinitions)
             );
+            spanTotalAll.text(responses[1].content);
+            refreshTotalBefore();
             btnExamine.click(function() {
                     btnExamine.prop('disabled', true);
                     progress.loadMany(
@@ -203,11 +288,15 @@ $(document).ready( function() {
                             "optionalPostData" : false
                         }, {
                             "url" : '/api/device/details/all'
+                        }, {
+                            "url" : '/api/surveys/total/all/all'
                         } ],
                         ['#examine_loading'], [], [],
                         function(responses) {
                             btnExamine.prop('disabled', false);
                             devices = responses[1].list;
+                            spanTotalAll.text(responses[2].content);
+                            refreshTotalBefore();
                             fixDevices();
                             tabelkaSpace.fadeOut(200, function() {
                                 tabelkaSpace.empty();
@@ -224,6 +313,55 @@ $(document).ready( function() {
                 });
         }
     );
+
+    btnDelete.click(function() {
+        var radio, urlDelete, t;
+        radio = $('input[type=radio][name=delete_type]:checked');
+        if(radio.length < 1)return;
+        if(radio.val() === 'all') {
+            urlDelete = '/api/surveys/delete/all/all';
+        }
+        else {
+            var t = getTimestampBeforeOrNull();
+            if(t == null) {
+                return;
+            }
+            urlDelete = '/api/surveys/delete/all/' + t;
+        }
+        btnDelete.prop('disabled', true);
+        progress.loadMany(
+            [{
+                "url" : urlDelete,
+                "optionalPostData" : false
+            }, {
+                "url" : '/api/device/details/all'
+            }, {
+                "url" : '/api/surveys/total/all/all'
+            }],
+            ['#delete_loading'], [], [],
+            function(responses) {
+                devices = responses[1].list;
+                spanTotalAll.text(responses[2].content);
+                refreshTotalBefore();
+                fixDevices();
+                tabelkaSpace.fadeOut(200, function() {
+                    tabelkaSpace.empty();
+                    tabelkaSpace.append(
+                        tabelka.create(devices, columnDefinitions)
+                    );
+                    tabelkaSpace.fadeIn(200);
+                });
+                btnDelete.prop('disabled', false);
+                notify.success('#notify_deleted', 'Badania zostały usunięte');
+            },
+            function() {
+                btnDelete.prop('disabled', false);
+                notify.danger('#notify_deleted', 'Akcja się nie powiodła');
+            }
+        );
+    });
+
+    $dateTimePicker.on('dp.change', refreshTotalBefore);
 } );
 </script>
 </body>

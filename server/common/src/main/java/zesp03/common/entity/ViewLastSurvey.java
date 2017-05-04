@@ -18,6 +18,9 @@ public class ViewLastSurvey {
     @Column(name = "survey_id", nullable = true)
     private Long surveyId;
 
+    @Column(name = "frequency_mhz", nullable = false)
+    private Integer frequencyMhz;
+
     @Column(name = "\"timestamp\"", nullable = true)
     private Integer timestamp;
 
@@ -44,6 +47,14 @@ public class ViewLastSurvey {
 
     public void setSurveyId(Long surveyId) {
         this.surveyId = surveyId;
+    }
+
+    public Integer getFrequencyMhz() {
+        return frequencyMhz;
+    }
+
+    public void setFrequencyMhz(Integer frequencyMhz) {
+        this.frequencyMhz = frequencyMhz;
     }
 
     public Integer getTimestamp() {

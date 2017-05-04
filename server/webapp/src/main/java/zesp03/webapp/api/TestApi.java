@@ -2,19 +2,26 @@ package zesp03.webapp.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import zesp03.common.service.SurveyModifyingService;
+import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.service.TestService;
+
+import java.util.Map;
 
 @Deprecated
 @RestController
 @RequestMapping("/api/test")
 public class TestApi {
     @Autowired
-    private SurveyModifyingService surveyModifyingService;
+    private TestService testService;
 
     @Autowired
-    private TestService testService;
+    private SurveyReadingService surveyReadingService;
+
+    @GetMapping("/check-all")
+    public Map<Long, TestService.TestCurrentDeviceState> checkAll() {
+        return testService.checkAll();
+    }
 
     @PostMapping("/mark-test/{deviceId}/{frequencyMhz}/{validAfter}")
     public BaseResultDto postMarkTest(

@@ -6,9 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
+import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.repository.ControllerRepository;
 import zesp03.common.repository.DeviceRepository;
+import zesp03.common.repository.DeviceSurveyRepository;
 import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.CurrentDeviceStateDto;
 import zesp03.webapp.dto.DeviceDetailsDto;
@@ -33,6 +35,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
     private ControllerRepository controllerRepository;
+
+    @Autowired
+    private DeviceSurveyRepository deviceSurveyRepository;
 
     @Override
     public Device findOneNotDeletedOrThrow(Long deviceId) {
@@ -90,6 +95,40 @@ public class DeviceServiceImpl implements DeviceService {
                     return DeviceDetailsDto.make(cds, c);
                 } )
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long countSurveys(Long deviceId) {
+        Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
+        if(!opt.isPresent()) {
+            throw new NotFoundException("device");
+        }
+        Set<Long> ids = opt.get()
+                .getFrequencyList()
+                .stream()
+                .map(DeviceFrequency::getId)
+                .collect(Collectors.toSet());
+        if(ids.isEmpty()) {
+            return 0L;
+        }
+        return deviceSurveyRepository.countForDeviceFrequenciesNotDeleted(ids);
+    }
+
+    @Override
+    public Long countSurveysBefore(Long deviceId, int before) {
+        Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
+        if(!opt.isPresent()) {
+            throw new NotFoundException("device");
+        }
+        Set<Long> ids = opt.get()
+                .getFrequencyList()
+                .stream()
+                .map(DeviceFrequency::getId)
+                .collect(Collectors.toSet());
+        if(ids.isEmpty()) {
+            return 0L;
+        }
+        return deviceSurveyRepository.countBeforeForDeviceFrequenciesNotDeleted(ids, before);
     }
 
     @Override

@@ -6,12 +6,15 @@ import zesp03.common.data.ShortSurvey;
 import zesp03.common.data.SurveyPeriodAvgMinMax;
 import zesp03.common.exception.SNMPException;
 import zesp03.common.exception.ValidationException;
+import zesp03.common.repository.DeviceSurveyRepository;
 import zesp03.common.service.ExamineService;
 import zesp03.common.service.SurveyModifyingService;
 import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.input.ImportFakeSurveysDto;
 import zesp03.webapp.dto.result.BaseResultDto;
+import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
+import zesp03.webapp.service.DeviceService;
 import zesp03.webapp.service.ImportService;
 
 import java.time.Instant;
@@ -30,6 +33,12 @@ public class SurveysApi {
 
     @Autowired
     private ImportService importService;
+
+    @Autowired
+    private DeviceSurveyRepository deviceSurveyRepository;
+
+    @Autowired
+    private DeviceService deviceService;
 
     @PostMapping(value = "/examine/all")
     public BaseResultDto examineAll() {
@@ -62,10 +71,21 @@ public class SurveysApi {
         return result;
     }
 
+    @PostMapping("/delete/all/all")
+    public BaseResultDto deleteForAll() {
+        return BaseResultDto.make( () -> surveyModifyingService.deleteForAll() );
+    }
+
     @PostMapping("/delete/all/{before}")
     public BaseResultDto deleteForAll(
             @PathVariable("before") int before) {
         return BaseResultDto.make( () -> surveyModifyingService.deleteForAll(before) );
+    }
+
+    @PostMapping("/delete/{deviceId}/all")
+    public BaseResultDto deleteForOne(
+            @PathVariable("deviceId") long deviceId) {
+        return BaseResultDto.make( () -> surveyModifyingService.deleteForOne(deviceId) );
     }
 
     @PostMapping("/delete/{deviceId}/{before}")
@@ -78,6 +98,30 @@ public class SurveysApi {
     @PostMapping("/fake")
     public BaseResultDto fakeSurveys(@RequestBody ImportFakeSurveysDto dto) {
         return BaseResultDto.make( () -> importService.fakeSurveys(dto) );
+    }
+
+    @GetMapping("/total/all/all")
+    public ContentDto<Long> totalAll() {
+        return ContentDto.make( () -> deviceSurveyRepository.countNotDeleted() );
+    }
+
+    @GetMapping("/total/all/{before}")
+    public ContentDto<Long> totalAllBefore(
+            @PathVariable("before") int before) {
+        return ContentDto.make( () -> deviceSurveyRepository.countBeforeNotDeleted(before) );
+    }
+
+    @GetMapping("/total/{deviceId}/all")
+    public ContentDto<Long> totalDevice(
+            @PathVariable("deviceId") long deviceId) {
+        return ContentDto.make( () -> deviceService.countSurveys(deviceId) );
+    }
+
+    @GetMapping("/total/{deviceId}/{before}")
+    public ContentDto<Long> totalDeviceBefore(
+            @PathVariable("deviceId") long deviceId,
+            @PathVariable("before") int before) {
+        return ContentDto.make( () -> deviceService.countSurveysBefore(deviceId, before) );
     }
 
     @GetMapping("/original")

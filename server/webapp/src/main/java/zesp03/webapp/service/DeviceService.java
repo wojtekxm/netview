@@ -14,5 +14,7 @@ public interface DeviceService {
     CurrentDeviceStateDto checkOne(Long deviceId);
     List<CurrentDeviceStateDto> checkAll();
     List<DeviceDetailsDto> checkDetailsAll();
+    Long countSurveys(Long deviceId);
+    Long countSurveysBefore(Long deviceId, int before);
     void remove(Long deviceId);
 }

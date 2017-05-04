@@ -104,12 +104,12 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-sm-12 text-center">
+            <div class="col-sm-12 text-center" style="min-height:45px; min-width:60px">
                 <button id="submit" type="button" class="btn btn-primary">Generuj</button>
+                <span id="loading"></span>
             </div>
         </div>
-        <div id="progress" class="row">
-        </div>
+        <div id="notify" class="row"></div>
     </div>
 </div>
 
@@ -118,105 +118,95 @@
 <script src="/js/moment-with-locales.min.js"></script>
 <script src="/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
 <script>
-    $(document).ready(function () {
-        var $dateTimePicker = $('#datetimepicker1');
-        var $submitButton = $('#submit');
-        var $progressArea = $('#progress');
-        var $minInterval = $('#min_interval');
-        var $maxInterval = $('#max_interval');
-        var $numberOfSurveys = $('#number_of_surveys');
-        var $estimatedTimeEnd = $('#estimated_time_end');
-        $dateTimePicker.datetimepicker( {
-            "locale": 'pl',
-            "format": 'LLL'
-        });
-        $minInterval.on('change', updateEstimated);
-        $maxInterval.on('change', updateEstimated);
-        $numberOfSurveys.on('change', updateEstimated);
-        $dateTimePicker.on('dp.change', updateEstimated);
-        function updateEstimated() {
-            var date = $dateTimePicker.data('DateTimePicker').date();
-            if(date === null) {
-                $estimatedTimeEnd.val('?');
-                return;
-            }
-            var timeStart = date.unix();
-            var interval0 = parseInt( $minInterval.val() );
-            var interval1 = parseInt( $maxInterval.val() );
-            var nos = parseInt( $numberOfSurveys.val() );
-            if( isNaN(interval0) || isNaN(interval1) || isNaN(nos) ||
-                (interval0 < 1) || (interval1 < 1) || (nos < 1) ) {
-                $estimatedTimeEnd.val('?');
-                return;
-            }
-            var ete = timeStart + (nos - 1) * (interval0 + interval1) / 2;
-            var momentEnd = moment.unix(ete);
-            momentEnd.locale('pl');
-            $estimatedTimeEnd.val(momentEnd.format('LLL'));
-        }
-
-        $submitButton.click(function () {
-            var obj = {};
-            var date = $dateTimePicker.data('DateTimePicker').date();
-            if(date === null)return;
-            obj.timeStart = date.unix();
-            obj.deviceId = parseInt( $('#device_id').val() );
-            obj.frequencyMhz = parseInt( $('#frequency_mhz').val() );
-            obj.minInterval = parseInt( $('#min_interval').val() );
-            obj.maxInterval = parseInt( $('#max_interval').val() );
-            obj.maxClients = parseInt( $('#max_clients').val() );
-            obj.numberOfSurveys = parseInt( $('#number_of_surveys').val() );
-            if( isNaN(obj.deviceId) )return;
-            if( isNaN(obj.frequencyMhz) )return;
-            if( isNaN(obj.minInterval) )return;
-            if( isNaN(obj.maxInterval) )return;
-            if( isNaN(obj.maxClients) )return;
-            if( isNaN(obj.numberOfSurveys) )return;
-            $submitButton.prop('disabled', true);
-            $progressArea.empty();
-            $progressArea.append( progress.createCircle() );
-            $.ajax( {
-                "url": '/api/surveys/fake',
-                "type": 'post',
-                "dataType": 'json',
-                "contentType": 'application/json',
-                "data": JSON.stringify(obj),
-                "success": function (baseResultDto) {
-                    $progressArea.empty();
-                    $submitButton.prop('disabled', false);
-                    if(baseResultDto.success) {
-                        $progressArea.append(
-                            $('<div></div>').addClass('panel panel-success').append(
-                                $('<div></div>').addClass('panel-heading').append(
-                                    'Sukces ',
-                                    $('<a></a>')
-                                        .attr('href', '/device/' + obj.deviceId)
-                                        .text('sprawdź urządzenie')
-                                )
-                            )
-                        );
-                    }
-                    else {
-                        $progressArea.append(
-                            $('<div></div>').addClass('panel panel-danger').append(
-                                $('<div></div>').addClass('panel-heading').text('Error')
-                            )
-                        );
-                    }
-                },
-                "error": function() {
-                    $progressArea.empty();
-                    $submitButton.prop('disabled', false);
-                    $progressArea.append(
-                        $('<div></div>').addClass('panel panel-danger').append(
-                            $('<div></div>').addClass('panel-heading').text('Error')
-                        )
-                    );
-                }
-            } );
-        });
+$(document).ready(function () {
+    var $dateTimePicker = $('#datetimepicker1');
+    var $submitButton = $('#submit');
+    var $progressArea = $('#progress');
+    var $minInterval = $('#min_interval');
+    var $maxInterval = $('#max_interval');
+    var $numberOfSurveys = $('#number_of_surveys');
+    var $estimatedTimeEnd = $('#estimated_time_end');
+    divNotify = $('#notify');
+    $dateTimePicker.datetimepicker( {
+        "locale": 'pl',
+        "format": 'LLL'
     });
+    $minInterval.on('change', updateEstimated);
+    $maxInterval.on('change', updateEstimated);
+    $numberOfSurveys.on('change', updateEstimated);
+    $dateTimePicker.on('dp.change', updateEstimated);
+    function updateEstimated() {
+        var date = $dateTimePicker.data('DateTimePicker').date();
+        if(date === null) {
+            $estimatedTimeEnd.val('?');
+            return;
+        }
+        var timeStart = date.unix();
+        var interval0 = parseInt( $minInterval.val() );
+        var interval1 = parseInt( $maxInterval.val() );
+        var nos = parseInt( $numberOfSurveys.val() );
+        if( isNaN(interval0) || isNaN(interval1) || isNaN(nos) ||
+            (interval0 < 1) || (interval1 < 1) || (nos < 1) ) {
+            $estimatedTimeEnd.val('?');
+            return;
+        }
+        var ete = timeStart + (nos - 1) * (interval0 + interval1) / 2;
+        var momentEnd = moment.unix(ete);
+        momentEnd.locale('pl');
+        $estimatedTimeEnd.val(momentEnd.format('LLL'));
+    }
+
+    $submitButton.click(function () {
+        var obj = {};
+        var date = $dateTimePicker.data('DateTimePicker').date();
+        if(date === null)return;
+        obj.timeStart = date.unix();
+        obj.deviceId = parseInt( $('#device_id').val() );
+        obj.frequencyMhz = parseInt( $('#frequency_mhz').val() );
+        obj.minInterval = parseInt( $('#min_interval').val() );
+        obj.maxInterval = parseInt( $('#max_interval').val() );
+        obj.maxClients = parseInt( $('#max_clients').val() );
+        obj.numberOfSurveys = parseInt( $('#number_of_surveys').val() );
+        if( isNaN(obj.deviceId) )return;
+        if( isNaN(obj.frequencyMhz) )return;
+        if( isNaN(obj.minInterval) )return;
+        if( isNaN(obj.maxInterval) )return;
+        if( isNaN(obj.maxClients) )return;
+        if( isNaN(obj.numberOfSurveys) )return;
+        $submitButton.prop('disabled', true);
+        progress.load(
+            'post',
+            '/api/surveys/fake',
+            ['#loading'], [], [],
+            function() {
+                $submitButton.prop('disabled', false);
+                divNotify.empty();
+                divNotify.append(
+                    $('<div></div>').addClass('panel panel-success').append(
+                        $('<div></div>').addClass('panel-heading').append(
+                            'Sukces ',
+                            $('<a></a>')
+                                .attr('href', '/device/' + obj.deviceId)
+                                .text('sprawdź urządzenie')
+                        )
+                    )
+                );
+            },
+            function() {
+                $submitButton.prop('disabled', false);
+                divNotify.empty();
+                divNotify.append(
+                    $('<div></div>').addClass('panel panel-danger').append(
+                        $('<div></div>').addClass('panel-heading').text('Error')
+                    )
+                );
+            },
+            obj
+        );
+    });
+});
 </script>
 </body>
 </html>

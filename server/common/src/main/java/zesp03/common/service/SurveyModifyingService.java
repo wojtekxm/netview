@@ -24,7 +24,11 @@ public interface SurveyModifyingService {
      */
     void importSurveys(Long deviceId, Integer frequencyMhz, List<ShortSurvey> data);
 
+    void deleteForAll();
+
     void deleteForAll(int before);
+
+    void deleteForOne(Long deviceId);
 
     void deleteForOne(Long deviceId, int before);
 }

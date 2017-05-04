@@ -61,7 +61,7 @@
     <div class="pull-right on-loaded">
         <button id="btn_examine" class="btn btn-primary pull-right" type="button">
             <span class="glyphicon glyphicon-refresh"></span>
-            zaktualizuj wszystkie
+            zbadaj wszystkie
         </button>
         <div class="pull-right" style="min-height:45px; min-width:60px">
             <span id="examine_loading"></span>

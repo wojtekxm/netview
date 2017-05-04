@@ -5,18 +5,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zesp03.common.data.CurrentDeviceState;
+import zesp03.common.data.ShortSurvey;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
+import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.entity.DeviceSurvey;
 import zesp03.common.repository.ControllerRepository;
 import zesp03.common.repository.DeviceSurveyRepository;
 import zesp03.common.service.SurveyModifyingService;
 import zesp03.common.service.SurveyReadingService;
+import zesp03.webapp.dto.DeviceDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -85,5 +91,53 @@ public class TestService {
                 deviceName, frequencyMhz, -99);
         list.add(si);
         surveyModifyingService.makeDevices(c, list);
+    }
+
+    public Map<Long, TestCurrentDeviceState> checkAll() {
+        Map<Long, TestCurrentDeviceState> result = new HashMap<>();
+        surveyReadingService.checkAll().forEach( (id, cds) -> {
+            result.put(id, TestCurrentDeviceState.make(cds));
+        } );
+        return result;
+    }
+
+    public static class TestCurrentDeviceState {
+        private DeviceDto device;
+        private Map<Integer, ShortSurvey> frequency = new HashMap<>();
+
+        public DeviceDto getDevice() {
+            return device;
+        }
+
+        public void setDevice(DeviceDto device) {
+            this.device = device;
+        }
+
+        public Map<Integer, ShortSurvey> getFrequency() {
+            return frequency;
+        }
+
+        public void setFrequency(Map<Integer, ShortSurvey> frequency) {
+            this.frequency = frequency;
+        }
+
+        public void wrap(CurrentDeviceState cds) {
+            this.device = DeviceDto.make(cds.getDevice());
+            for(Integer mhz : cds.getFrequencies()) {
+                DeviceFrequency df = cds.findFrequency(mhz);
+                DeviceSurvey ds = cds.findSurvey(mhz);
+                ShortSurvey ss = new ShortSurvey();
+                ss.setTimestamp(ds.getTimestamp());
+                ss.setClients(ds.getClientsSum());
+                ss.setEnabled(ds.isEnabled());
+                frequency.put(mhz, ss);
+            }
+        }
+
+        public static TestCurrentDeviceState make(CurrentDeviceState cds) {
+            TestCurrentDeviceState t = new TestCurrentDeviceState();
+            t.wrap(cds);
+            return t;
+        }
     }
 }

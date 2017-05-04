@@ -38,10 +38,8 @@
                     <ul class="dropdown-menu"  style="background-color: #080b08;">
                         <li><a href="/all-buildings">Budynki</a></li>
                         <li><a href="/all-units">Jednostki</a></li>
-                        <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
                     </ul>
                 </li>
-                <%--<li> <a href="#menu-toggle" id="menu-toggle">Filtry</a></li>--%>
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -50,7 +48,7 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  &nbsp;<c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -88,7 +86,7 @@
                     <button id="worst_15" type="button" class="btn btn-default" style="margin-right: 4px;">15 najgorszych urządzeń</button>
                 </div>
                 <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
-                    <button id="back" type="button" class="btn btn-info" style="width: 150px;" onclick="allDevices();setInterval('allDevices()', 30000);"><span class="glyphicon glyphicon-refresh"></span> Powrót</button>
+                    <button id="back" type="button" class="btn btn-info" style="width: 150px;" onclick="back();"><span class="glyphicon glyphicon-refresh"></span> Powrót</button>
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <div class="col-sm-12">
@@ -128,9 +126,41 @@
 <script type="text/javascript" src="/js/progress.js"></script>
 <script src="/js/notify.js"></script>
 
+<%--<script>--%>
+    <%--$(document).ready(function(){--%>
+        <%--$.ajax({--%>
+            <%--type: 'GET',--%>
+            <%--url: '/api/login',--%>
+            <%--dataType: 'json',--%>
+
+            <%--success: function() {--%>
+                <%--alert("");--%>
+            <%--},--%>
+            <%--error: err--%>
+        <%--});--%>
+    <%--});--%>
+<%--</script>--%>
+
+<script type="text/javascript">
+    function back(){
+        $('option', $('#kontrolery')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', false);
+        });
+        $('#kontrolery').multiselect('refresh');
+        $('option', $('#budynki')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', false);
+        });
+        $('#budynki').multiselect('refresh');
+        allDevices();
+        setInterval('allDevices()', 30000);
+    }
+</script>
+
+
 <script type="text/javascript">
     var frequency = "2400";
     var option = "";
+    var ifFilter = true;
 
     $('#top_15').click(function(){
         option = "best";
@@ -301,11 +331,23 @@
         });
 
         if(states.length == 0){
-            notify.danger('#result_error', 'Nie wybrano żadnego stanu');
+            if(ifFilter == true){
+                notify.danger('#result_error', 'Nie wybrano żadnego stanu, wynik prezentuje wszystkie stany');
+            }
+            $('.s').each(function(){
+                stateId = $(this).attr('value');
+                states.push(stateId);
+            });
         }
 
         if(controllers.length == 0){
-            notify.danger('#result_error', 'Nie wybrano żadnego kontrolera');
+            if(ifFilter == true) {
+                notify.danger('#result_error', 'Nie wybrano żadnego kontrolera, wynik prezentuje wszystkie kontrolery');
+            }
+            $('.c').each(function(){
+                controllerId = $(this).attr('value');
+                controllers.push(controllerId);
+            });
         }
 
 
@@ -390,9 +432,16 @@
                 }
             }
         }
+
+
+        if(value == "" && controllerId == "" && stateId == ""){
+            inter = setInterval('allDevices()', 30000);
+            allDevices();
+        }
     }
 
     $('#filters_commit').click(function(){
+        ifFilter = true;
         filter();
     })
 </script>
@@ -644,6 +693,7 @@
 <script type="text/javascript">
     $(function() {
         $('#toggleFrequency').change(function() {
+            ifFilter = false;
             $('#devices li').remove();
             if(frequency == "2400"){
                 frequency = "5000";

@@ -35,10 +35,8 @@
                     <ul class="dropdown-menu"  style="background-color: #080b08;">
                         <li><a href="/all-buildings">Budynki</a></li>
                         <li><a href="/all-units">Jednostki</a></li>
-                        <li><a href="/unitsbuildings">Jedn. Bud.</a></li>
                     </ul>
                 </li>
-                <%--<li> <a href="#menu-toggle" id="menu-toggle">Filtry</a></li>--%>
             </ul>
             <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -47,7 +45,7 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  Mój profil</a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  &nbsp;<c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -81,9 +79,9 @@
 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <span style="display: flex;position: relative;float: left;">
+                        < style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
+                            <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
                         </span>
                 </div>
                 </div>

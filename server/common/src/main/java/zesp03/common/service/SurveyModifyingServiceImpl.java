@@ -67,7 +67,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
                     newSurvey.setClientsSum(0);
                 }
                 newSurvey.setFrequency(deviceFrequency);
-                newSurvey.setDeleted(false);
+                newSurvey.setDeleted(0L);
                 if(previousSurvey == null) {
                     ds2persist.add(newSurvey);
                 }
@@ -100,7 +100,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             return;
         }
         em.createQuery("SELECT d FROM Device d LEFT JOIN FETCH d.frequencyList WHERE " +
-                "d.name IN (:names) AND d.deleted = FALSE", Device.class)
+                "d.name IN (:names) AND d.deleted = 0", Device.class)
                 .setParameter("names", existing.keySet())
                 .getResultList()
                 .forEach( device -> existing.put(device.getName(), device) );
@@ -109,14 +109,17 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             if(device == null) {
                 Device d = new Device();
                 d.setName(name);
+                d.setDescription("");
                 d.setController(controller);
-                d.setKnown(false);
-                d.setDescription(null);
-                d.setDeleted(false);
+                d.setBuilding(null);
+                d.setDeleted(0L);
                 em.persist(d);
                 result.put(name, d);
             }
-            else result.put(name, device);
+            else {
+                device.setController(controller);
+                result.put(name, device);
+            }
         } );
         int createdFrequencies = 0;
         for(SurveyInfo si : surveys) {
@@ -133,7 +136,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
                 freq = new DeviceFrequency();
                 freq.setDevice(d);
                 freq.setFrequency(si.getFrequencyMhz());
-                freq.setDeleted(false);
+                freq.setDeleted(0L);
                 freqList.add(freq);
                 em.persist(freq);
                 createdFrequencies++;
@@ -160,7 +163,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             df = new DeviceFrequency();
             df.setDevice(optDevice.get());
             df.setFrequency(frequencyMhz);
-            df.setDeleted(false);
+            df.setDeleted(0L);
             deviceFrequencyRepository.save(df);
         }
         deviceSurveyRepository.markDeletedAll(df);
@@ -176,7 +179,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             deviceSurvey.setClientsSum(shortSurvey.getClients());
             deviceSurvey.setTimestamp(shortSurvey.getTimestamp());
             deviceSurvey.setEnabled(shortSurvey.isEnabled());
-            deviceSurvey.setDeleted(false);
+            deviceSurvey.setDeleted(0L);
             deviceSurveyRepository.save(deviceSurvey);
             lastDS = deviceSurvey;
         }

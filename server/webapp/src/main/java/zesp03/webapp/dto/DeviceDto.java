@@ -1,13 +1,15 @@
 package zesp03.webapp.dto;
 
+import zesp03.common.entity.Building;
+import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 
 public class DeviceDto {
     private long id;
     private String name;
-    private boolean known;
     private String description;
-    private long controllerId;
+    private Long controllerId;
+    private Long buildingId;
 
     public long getId() {
         return id;
@@ -25,14 +27,6 @@ public class DeviceDto {
         this.name = name;
     }
 
-    public boolean isKnown() {
-        return known;
-    }
-
-    public void setKnown(boolean known) {
-        this.known = known;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -41,20 +35,40 @@ public class DeviceDto {
         this.description = description;
     }
 
-    public long getControllerId() {
+    public Long getControllerId() {
         return controllerId;
     }
 
-    public void setControllerId(long controllerId) {
+    public void setControllerId(Long controllerId) {
         this.controllerId = controllerId;
     }
 
-    public void wrap(Device d) {
-        this.id = d.getId();
-        this.name = d.getName();
-        this.known = d.isKnown();
-        this.description = d.getDescription();
-        this.controllerId = d.getController().getId();
+    public Long getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public void wrap(Device dev) {
+        final Controller con = dev.getController();
+        final Building b = dev.getBuilding();
+        this.id = dev.getId();
+        this.name = dev.getName();
+        this.description = dev.getDescription();
+        if(con != null) {
+            this.controllerId = con.getId();
+        }
+        else {
+            this.controllerId = null;
+        }
+        if(b != null) {
+            this.buildingId = b.getId();
+        }
+        else {
+            this.buildingId = null;
+        }
     }
 
     public static DeviceDto make(Device d) {

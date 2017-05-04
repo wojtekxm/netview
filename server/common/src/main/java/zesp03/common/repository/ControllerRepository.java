@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ControllerRepository extends CrudRepository<Controller, Long> {
-    @Query("SELECT c FROM Controller c WHERE c.id = ?1 AND c.deleted = FALSE")
+    @Query("SELECT c FROM Controller c WHERE c.id = ?1 AND c.deleted = 0")
     Optional<Controller> findOneNotDeleted(Long controllerId);
 
-    @Query("SELECT c FROM Controller c WHERE c.deleted = FALSE")
+    @Query("SELECT c FROM Controller c WHERE c.deleted = 0")
     List<Controller> findAllNotDeleted();
 }

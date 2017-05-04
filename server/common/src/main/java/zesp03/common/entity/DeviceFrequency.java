@@ -20,7 +20,7 @@ public class DeviceFrequency {
     private Integer frequency;
 
     @Column(name = "deleted", nullable = false)
-    private Boolean deleted;
+    private Long deleted;
 
     @OneToMany(mappedBy = "frequency", fetch = FetchType.LAZY)
     private List<DeviceSurvey> surveyList = new ArrayList<>();
@@ -49,11 +49,11 @@ public class DeviceFrequency {
         this.frequency = frequency;
     }
 
-    public Boolean isDeleted() {
+    public Long getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(Long deleted) {
         this.deleted = deleted;
     }
 

@@ -41,6 +41,9 @@ public class Building {
     private List<Controller> controllerList = new ArrayList<>();
 
     @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
+    private List<Device> deviceList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
     private List<LinkUnitBuilding> lubList = new ArrayList<>();
 
     public long getId() {
@@ -89,6 +92,10 @@ public class Building {
 
     public List<Controller> getControllerList() {
         return controllerList;
+    }
+
+    public List<Device> getDeviceList() {
+        return deviceList;
     }
 
     public List<LinkUnitBuilding> getLubList() {

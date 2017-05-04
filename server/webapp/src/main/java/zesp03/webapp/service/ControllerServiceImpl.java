@@ -74,8 +74,8 @@ public class ControllerServiceImpl implements ControllerService {
     @Override
     public void remove(Long controllerId) {
         Controller c =  findOneNotDeletedOrThrow(controllerId);
-        c.setDeleted(true);
-        em.createQuery("UPDATE Device dev SET dev.deleted = true WHERE dev.controller = :c")
+        c.setDeleted(c.getId());
+        em.createQuery("UPDATE Device dev SET dev.deleted = dev.id WHERE dev.controller = :c")
                 .setParameter("c", c)
                 .executeUpdate();
         List<Long> deviceIdsToDelete = em.createQuery("SELECT dev FROM Device dev " +
@@ -87,7 +87,7 @@ public class ControllerServiceImpl implements ControllerService {
                 .map(Device::getId)
                 .collect(Collectors.toList());
         if(deviceIdsToDelete.isEmpty())return;
-        em.createQuery("UPDATE DeviceFrequency df SET df.deleted = true WHERE df.device.id IN (:ids)")
+        em.createQuery("UPDATE DeviceFrequency df SET df.deleted = df.id WHERE df.device.id IN (:ids)")
                 .setParameter("ids", deviceIdsToDelete)
                 .executeUpdate();
     }
@@ -110,7 +110,7 @@ public class ControllerServiceImpl implements ControllerService {
         c.setIpv4(dto.getIpv4());
         c.setDescription(dto.getDescription());
         c.setCommunity(dto.getCommunityString());
-        c.setDeleted(false);
+        c.setDeleted(0L);
         c.setFake(true);//???
         if(dto.getBuildingId() != null) {
             Building b = buildingRepository.findOne(dto.getBuildingId());

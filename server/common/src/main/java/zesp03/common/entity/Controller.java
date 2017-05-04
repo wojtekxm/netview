@@ -29,7 +29,7 @@ public class Controller {
     private String community;
 
     @Column(name = "deleted", nullable = false)
-    private Boolean deleted;
+    private Long deleted;
 
     @Column(name = "is_fake", nullable = false)
     private Boolean fake;
@@ -81,11 +81,11 @@ public class Controller {
         this.community = community;
     }
 
-    public Boolean isDeleted() {
+    public Long getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(Long deleted) {
         this.deleted = deleted;
     }
 

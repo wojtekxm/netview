@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
-import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.exception.NotFoundException;
@@ -18,7 +17,10 @@ import zesp03.webapp.dto.DeviceDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,7 +75,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public List<CurrentDeviceStateDto> checkAll() {
-        return surveyReadingService.checkAll()
+        return surveyReadingService.checkAllFetch()
                 .values()
                 .stream()
                 .map(CurrentDeviceStateDto::make)
@@ -83,17 +85,10 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<DeviceDetailsDto> checkDetailsAll() {
         //TODO sprawdź wydajność SQL
-        Map<Long, Controller> map = new HashMap<>();
-        for(Controller c : controllerRepository.findAllNotDeleted()) {
-            map.put(c.getId(), c);
-        }
-        return surveyReadingService.checkAll()
+        return surveyReadingService.checkAllFetch()
                 .values()
                 .stream()
-                .map( cds -> {
-                    Controller c = map.get( cds.getDevice().getController().getId() );
-                    return DeviceDetailsDto.make(cds, c);
-                } )
+                .map(DeviceDetailsDto::make)
                 .collect(Collectors.toList());
     }
 
@@ -134,8 +129,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public void remove(Long deviceId) {
         Device d = findOneNotDeletedOrThrow(deviceId);
-        d.setDeleted(true);
-        em.createQuery("UPDATE DeviceFrequency df SET df.deleted = true WHERE df.device = :d")
+        d.setDeleted(d.getId());
+        em.createQuery("UPDATE DeviceFrequency df SET df.deleted = df.id WHERE df.device = :d")
                 .setParameter("d", d)
                 .executeUpdate();
     }

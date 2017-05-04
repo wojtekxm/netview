@@ -54,9 +54,9 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
                         "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
                         "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id " +
                         "WHERE dev.id = :deviceId AND " +
-                        "(dev.deleted = FALSE OR dev.deleted IS NULL) AND " +
-                        "( df.deleted = FALSE OR  df.deleted IS NULL) AND " +
-                        "(sur.deleted = FALSE OR sur.deleted IS NULL)",
+                        "(dev.deleted = 0 OR dev.deleted IS NULL) AND " +
+                        "( df.deleted = 0 OR  df.deleted IS NULL) AND " +
+                        "(sur.deleted = 0 OR sur.deleted IS NULL)",
                 Object[].class)
                 .setParameter("deviceId", deviceId)
                 .getResultList();
@@ -87,9 +87,9 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
                         "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
                         "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id " +
                         "WHERE dev.controller = :c AND " +
-                        "(dev.deleted = FALSE OR dev.deleted IS NULL) AND " +
-                        "( df.deleted = FALSE OR  df.deleted IS NULL) AND " +
-                        "(sur.deleted = FALSE OR sur.deleted IS NULL)",
+                        "(dev.deleted = 0 OR dev.deleted IS NULL) AND " +
+                        "( df.deleted = 0 OR  df.deleted IS NULL) AND " +
+                        "(sur.deleted = 0 OR sur.deleted IS NULL)",
                 Object[].class)
                 .setParameter("c", c)
                 .getResultList();
@@ -110,15 +110,15 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
     }
 
     @Override
-    public Map<Long, CurrentDeviceState> checkAll() {
+    public Map<Long, CurrentDeviceState> checkAllFetch() {
         HashMap<Long, CurrentDeviceState> map = new HashMap<>();
-        em.createQuery("SELECT dev, df, sur FROM Device dev " +
+        em.createQuery("SELECT dev, df, sur FROM Device dev LEFT JOIN FETCH dev.controller con LEFT JOIN FETCH dev.building bui " +
                         "LEFT JOIN DeviceFrequency df ON dev.id = df.device.id " +
                         "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
                         "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id WHERE " +
-                        "(dev.deleted = FALSE OR dev.deleted IS NULL) AND " +
-                        "( df.deleted = FALSE OR  df.deleted IS NULL) AND " +
-                        "(sur.deleted = FALSE OR sur.deleted IS NULL)",
+                        "(dev.deleted = 0 OR dev.deleted IS NULL) AND " +
+                        "( df.deleted = 0 OR  df.deleted IS NULL) AND " +
+                        "(sur.deleted = 0 OR sur.deleted IS NULL)",
                 Object[].class)
                 .getResultList()
                 .forEach( arr -> {
@@ -173,7 +173,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         final List<SurveyPeriodAvgMinMax> result = new ArrayList<>();
         Long frequencyId = getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
         List<DeviceSurvey> beforeList = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
-                        "ds.frequency.id = :fi AND ds.timestamp <= :t AND ds.deleted = FALSE " +
+                        "ds.frequency.id = :fi AND ds.timestamp <= :t AND ds.deleted = 0 " +
                         "ORDER BY ds.timestamp DESC",
                 DeviceSurvey.class)
                 .setParameter("fi", frequencyId)

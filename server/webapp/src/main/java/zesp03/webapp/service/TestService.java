@@ -95,7 +95,7 @@ public class TestService {
 
     public Map<Long, TestCurrentDeviceState> checkAll() {
         Map<Long, TestCurrentDeviceState> result = new HashMap<>();
-        surveyReadingService.checkAll().forEach( (id, cds) -> {
+        surveyReadingService.checkAllFetch().forEach( (id, cds) -> {
             result.put(id, TestCurrentDeviceState.make(cds));
         } );
         return result;

@@ -177,25 +177,49 @@ INSERT INTO link_unit_building (unit_id, building_id) VALUES
   ( (SELECT id FROM unit WHERE code ='9002290000'), (SELECT id FROM building WHERE code = 'CM_DS-3') );
 
 
-INSERT INTO controller (`name`, ipv4, description, community_string, is_fake, building_id) VALUES
-  ('WiFi-2',  '102.102.102.102', 'wifi #2', '', TRUE, NULL),
-  ('WiFi-3',  '103.103.103.103', 'wifi #3', '', TRUE, NULL),
-  ('WiFi-5',  '105.105.105.105', '', 'abc', TRUE, 1),
-  ('WiFi-6',  '106.106.106.106', '', '1234!@#$', TRUE, 3),
-  ('WiFi-7',  '107.107.107.107', '', '', TRUE, 5),
-  ('WiFi-10', '110.110.110.110', '', '', TRUE, 7),
-  ('WiFi-11', '111.111.111.111', '', '', TRUE, 8),
-  ('WiFi-99', '199.199.199.199', '', '', TRUE, 7),
-  ('prawdziwy', '158.75.113.4', 'prawdziwy kontroler z UCI do testów', 'monitor', FALSE, NULL);
+INSERT INTO controller (`name`, ipv4, description, community_string, is_fake, building_id, deleted) VALUES
+  ('WiFi-2',  '102.102.102.102', 'wifi #2', '', TRUE, NULL, 0),
+  ('WiFi-3',  '103.103.103.103', 'wifi #3', '', TRUE, NULL, 0),
+  ('WiFi-5',  '105.105.105.105', '', 'abc', TRUE, 1, 0),
+  ('WiFi-6',  '106.106.106.106', '', '1234!@#$', TRUE, 3, 0),
+  ('WiFi-7',  '107.107.107.107', '', '', TRUE, 5, 0),
+  ('WiFi-10', '110.110.110.110', '', '', TRUE, 7, 0),
+  ('WiFi-11', '111.111.111.111', '', '', TRUE, 8, 0),
+  ('WiFi-99', '199.199.199.199', '', '', TRUE, 7, 0),
+  ('prawdziwy', '158.75.113.4', 'prawdziwy kontroler z UCI do testów', 'monitor', FALSE, NULL, 0);
 
 INSERT INTO `user` (name, secret, is_activated, is_blocked, role) VALUES
   ('adam', NULL, TRUE, TRUE, 'NORMAL');
 
+INSERT INTO device (name, description, controller_id, building_id, deleted) VALUES
+  ('FIZ-120_K112', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-121_K21', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-122_P230', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-123_COK', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-124_P424', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-125_LFW', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-126_P490', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-127_LFZ', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-128_K215', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-129_COK', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-130_FAMO', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-131_K201', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-132_K395', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-133_K255', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-134_P391', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-135_S20', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-136_P384', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-137_P563', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-138_wahadlo', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-139_S26', '', NULL, (SELECT id FROM building WHERE code='0801'), 0),
+  ('FIZ-140_P505', '', NULL, (SELECT id FROM building WHERE code='0801'), 0);
+
 DELETE FROM hibernate_sequences;
 
 INSERT INTO hibernate_sequences (sequence_name, next_val) VALUES
-  ( "controller", ( SELECT MAX(id)+1000 FROM controller ) ),
-  ( "building", ( SELECT MAX(id)+1000 FROM building ) ),
-  ( "unit", ( SELECT MAX(id)+1000 FROM unit ) ),
-  ( "link_unit_building", ( SELECT MAX(id)+1000 FROM link_unit_building ) ),
-  ( "user", ( SELECT MAX(id)+1000 FROM `user` ) );
+  ( 'controller', ( SELECT MAX(id)+1000 FROM controller ) ),
+  ( 'building', ( SELECT MAX(id)+1000 FROM building ) ),
+  ( 'unit', ( SELECT MAX(id)+1000 FROM unit ) ),
+  ( 'link_unit_building', ( SELECT MAX(id)+1000 FROM link_unit_building ) ),
+  ( 'user', ( SELECT MAX(id)+1000 FROM `user` ) ),
+  ( 'device', ( SELECT MAX(id)+1000 FROM device ) );

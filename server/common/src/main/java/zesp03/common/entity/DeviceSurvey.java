@@ -24,7 +24,7 @@ public class DeviceSurvey {
     private Integer clientsSum;
 
     @Column(name = "deleted", nullable = false)
-    private Boolean deleted;
+    private Long deleted;
 
     public Long getId() {
         return id;
@@ -66,11 +66,11 @@ public class DeviceSurvey {
         this.clientsSum = clientsSum;
     }
 
-    public Boolean isDeleted() {
+    public Long getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(Long deleted) {
         this.deleted = deleted;
     }
 }

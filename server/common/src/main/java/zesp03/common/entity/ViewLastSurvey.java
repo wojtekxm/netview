@@ -31,7 +31,7 @@ public class ViewLastSurvey {
     private Integer clientsSum;
 
     @Column(name = "deleted", nullable = true)
-    private Boolean deleted;
+    private Long deleted;
 
     public Long getFrequencyId() {
         return frequencyId;
@@ -81,11 +81,11 @@ public class ViewLastSurvey {
         this.clientsSum = clientsSum;
     }
 
-    public Boolean isDeleted() {
+    public Long getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(Long deleted) {
         this.deleted = deleted;
     }
 }

@@ -22,6 +22,7 @@ public class DevicePage {
     public String getDevice(
             @PathVariable("deviceId") long deviceId,
             ModelMap model) {
+        //TODO pobieraj te rzeczy przez api
         DeviceDto device = deviceService.getOne(deviceId);
         ControllerDto controller = controllerService.getOne(device.getControllerId());
         model.put("device", device);

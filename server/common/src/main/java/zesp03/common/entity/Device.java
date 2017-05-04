@@ -15,18 +15,19 @@ public class Device {
     @Column(name = "\"name\"", length = 85, nullable = false)
     private String name;
 
-    @Column(name = "is_known", nullable = false)
-    private Boolean known;
-
-    @Column(length = 1000)
+    @Column(length = 1000, nullable = false)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "controller_id", nullable = false)
+    @JoinColumn(name = "controller_id", nullable = true)
     private Controller controller;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "building_id", nullable = true)
+    private Building building;
+
     @Column(name = "deleted", nullable = false)
-    private Boolean deleted;
+    private Long deleted;
 
     @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
     private List<DeviceFrequency> frequencyList = new ArrayList<>();
@@ -47,14 +48,6 @@ public class Device {
         this.name = name;
     }
 
-    public Boolean isKnown() {
-        return known;
-    }
-
-    public void setKnown(Boolean known) {
-        this.known = known;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -71,11 +64,19 @@ public class Device {
         this.controller = controller;
     }
 
-    public Boolean isDeleted() {
+    public Building getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
+    }
+
+    public Long getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(Long deleted) {
         this.deleted = deleted;
     }
 

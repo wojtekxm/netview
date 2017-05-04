@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DeviceFrequencyRepository extends CrudRepository<DeviceFrequency, Long> {
-    @Query("SELECT f FROM DeviceFrequency f WHERE f.id = ?1 AND f.deleted = FALSE")
+    @Query("SELECT f FROM DeviceFrequency f WHERE f.id = ?1 AND f.deleted = 0")
     Optional<DeviceFrequency> findOneNotDeleted(Long frequencyId);
 
-    @Query("SELECT f FROM DeviceFrequency f WHERE f.deleted = FALSE")
+    @Query("SELECT f FROM DeviceFrequency f WHERE f.deleted = 0")
     List<DeviceFrequency> findAllNotDeleted();
 
-    @Query("SELECT f FROM DeviceFrequency f WHERE f.device.id = ?1 AND f.frequency = ?2 AND f.deleted = FALSE")
+    @Query("SELECT f FROM DeviceFrequency f WHERE f.device.id = ?1 AND f.frequency = ?2 AND f.deleted = 0")
     Optional<DeviceFrequency> findByDeviceAndFrequencyNotDeleted(Long deviceId, Integer frequencyMhz);
 }

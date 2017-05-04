@@ -31,7 +31,7 @@ public class GarbageCollectingServiceImpl implements GarbageCollectingService {
             throw new IllegalArgumentException("maxDeletedRows < 1");
         }
         List<DeviceSurvey> list = em.createQuery(
-                "SELECT ds FROM DeviceSurvey ds WHERE ds.deleted = TRUE",
+                "SELECT ds FROM DeviceSurvey ds WHERE ds.deleted > 0",
                 DeviceSurvey.class)
                 .setMaxResults(maxDeletedRows)
                 .getResultList();
@@ -40,7 +40,7 @@ public class GarbageCollectingServiceImpl implements GarbageCollectingService {
         if(deleted < maxDeletedRows) {
             list = em.createQuery("SELECT ds FROM " +
                             "DeviceSurvey ds LEFT JOIN ds.frequency f " +
-                            "WHERE f.deleted = TRUE",
+                            "WHERE f.deleted > 0",
                     DeviceSurvey.class)
                     .setMaxResults(maxDeletedRows - deleted)
                     .getResultList();
@@ -58,7 +58,7 @@ public class GarbageCollectingServiceImpl implements GarbageCollectingService {
         }
         List<Object[]> list = em.createQuery("SELECT f, COUNT(sur.id) FROM " +
                         "DeviceFrequency f LEFT JOIN f.surveyList sur " +
-                        "WHERE f.deleted = TRUE " +
+                        "WHERE f.deleted > 0 " +
                         "GROUP BY f HAVING COUNT(sur.id) = 0",
                 Object[].class)
                 .setMaxResults(maxDeletedRows)
@@ -84,7 +84,7 @@ public class GarbageCollectingServiceImpl implements GarbageCollectingService {
         }
         List<Object[]> list = em.createQuery("SELECT dev, COUNT(freq.id) FROM " +
                         "Device dev LEFT JOIN dev.frequencyList freq " +
-                        "WHERE dev.deleted = TRUE " +
+                        "WHERE dev.deleted > 0 " +
                         "GROUP BY dev HAVING COUNT(freq.id) = 0",
                 Object[].class)
                 .setMaxResults(maxDeletedRows)
@@ -110,7 +110,7 @@ public class GarbageCollectingServiceImpl implements GarbageCollectingService {
         }
         List<Object[]> list = em.createQuery("SELECT con, COUNT(dev.id) FROM " +
                         "Controller con LEFT JOIN con.deviceList dev " +
-                        "WHERE con.deleted = TRUE " +
+                        "WHERE con.deleted > 0 " +
                         "GROUP BY con HAVING COUNT(dev.id) = 0",
                 Object[].class)
                 .setMaxResults(maxDeletedRows)

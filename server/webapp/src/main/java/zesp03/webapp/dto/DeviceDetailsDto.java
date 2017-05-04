@@ -2,6 +2,7 @@ package zesp03.webapp.dto;
 
 import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.data.ShortSurvey;
+import zesp03.common.entity.Building;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceSurvey;
@@ -12,9 +13,9 @@ import java.util.Map;
 public class DeviceDetailsDto {
     private long id;
     private String name;
-    private boolean known;
     private String description;
     private ControllerDto controller;
+    private BuildingDto building;
     private Map<Integer, ShortSurvey> frequency;
 
     public long getId() {
@@ -33,14 +34,6 @@ public class DeviceDetailsDto {
         this.name = name;
     }
 
-    public boolean isKnown() {
-        return known;
-    }
-
-    public void setKnown(boolean known) {
-        this.known = known;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -57,6 +50,14 @@ public class DeviceDetailsDto {
         this.controller = controller;
     }
 
+    public BuildingDto getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(BuildingDto building) {
+        this.building = building;
+    }
+
     public Map<Integer, ShortSurvey> getFrequency() {
         return frequency;
     }
@@ -65,16 +66,28 @@ public class DeviceDetailsDto {
         this.frequency = frequency;
     }
 
-    public void wrap(CurrentDeviceState s, Controller c) {
-        final Device d = s.getDevice();
-        this.id = d.getId();
-        this.name = d.getName();
-        this.description = d.getDescription();
-        this.known = d.isKnown();
-        this.controller = ControllerDto.make(c);
+    public void wrap(CurrentDeviceState cds) {
+        final Device dev = cds.getDevice();
+        final Controller con = dev.getController();
+        final Building b = dev.getBuilding();
+        this.id = dev.getId();
+        this.name = dev.getName();
+        this.description = dev.getDescription();
+        if(con != null) {
+            this.controller = ControllerDto.make(con);
+        }
+        else {
+            this.controller = null;
+        }
+        if(b != null) {
+            this.building = BuildingDto.make(b);
+        }
+        else {
+            this.building = null;
+        }
         this.frequency = new HashMap<>();
-        for(Integer freq : s.getFrequencies() ) {
-            DeviceSurvey survey = s.findSurvey(freq);
+        for(Integer freq : cds.getFrequencies() ) {
+            DeviceSurvey survey = cds.findSurvey(freq);
             if(survey != null) {
                 ShortSurvey dto = ShortSurvey.make(survey);
                 this.frequency.put(freq, dto);
@@ -85,9 +98,9 @@ public class DeviceDetailsDto {
         }
     }
 
-    public static DeviceDetailsDto make(CurrentDeviceState s, Controller c) {
+    public static DeviceDetailsDto make(CurrentDeviceState s) {
         DeviceDetailsDto dto = new DeviceDetailsDto();
-        dto.wrap(s, c);
+        dto.wrap(s);
         return dto;
     }
 }

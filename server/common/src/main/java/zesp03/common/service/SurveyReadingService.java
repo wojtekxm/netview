@@ -16,7 +16,7 @@ public interface SurveyReadingService {
     // kluczem w mapie jest id urządzenia
     Map<Long, CurrentDeviceState> checkForController(Controller c);
     // kluczem w mapie jest id urządzenia
-    Map<Long, CurrentDeviceState> checkAll();
+    Map<Long, CurrentDeviceState> checkAllFetch();
 
     /**
      * Zwraca listę badań dla urządzenia o id równym <code>device</code>.

@@ -178,19 +178,16 @@
         if (jsondata.content.frequencySurvey['2400']==undefined &&
             jsondata.content.frequencySurvey['5000']!=undefined){console.log("TYLKO 5ghz");
             frequency=5000;$('#control3').hide();
-            alert("Dostępne badania tylko dla częstotliwości 5ghz!");
         }
 
         if (jsondata.content.frequencySurvey['2400']!=undefined &&
             jsondata.content.frequencySurvey['5000']==undefined){console.log("TYLKO 2,4ghz");
             frequency=2400;$('#control3').hide();
-            alert("Dostępne badania tylko dla częstotliwości 2,4ghz!");
         }
 
         if (jsondata.content.frequencySurvey['2400']!=undefined &&
             jsondata.content.frequencySurvey['5000']!=undefined){console.log("OBIE");
             frequency=2400;
-            alert("Dostępne badania dla obu częstotliwości. Domyślna częstotliwość=2,4Ghz");
         }
         if (jsondata.content.frequencySurvey['2400']==undefined &&
             jsondata.content.frequencySurvey['5000']==undefined){console.log("Zadna");
@@ -200,7 +197,6 @@
             ('#control3').hide();
             ('#control4').hide();
             ('#control5').hide();
-            alert("BRAK BADAN!");
         }
 
     };

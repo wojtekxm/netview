@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
-import zesp03.common.data.ShortSurvey;
+import zesp03.common.data.SampleRaw;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
@@ -148,8 +148,8 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     }
 
     @Override
-    public void importSurveys(Long deviceId, Integer frequencyMhz, List<ShortSurvey> data) {
-        data.sort(Comparator.comparingInt(ShortSurvey::getTimestamp));
+    public void importSurveys(Long deviceId, Integer frequencyMhz, List<SampleRaw> data) {
+        data.sort(Comparator.comparingInt(SampleRaw::getTimestamp));
         Optional<DeviceFrequency> opt = deviceFrequencyRepository.findByDeviceAndFrequencyNotDeleted(deviceId, frequencyMhz);
         DeviceFrequency df;
         if(opt.isPresent()) {
@@ -168,17 +168,17 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
         }
         deviceSurveyRepository.markDeletedAll(df);
         DeviceSurvey lastDS = null;
-        for(ShortSurvey shortSurvey : data) {
-            if(shortSurvey.getTimestamp() < 0) {
+        for(SampleRaw sampleRaw : data) {
+            if(sampleRaw.getTimestamp() < 0) {
                 throw new IllegalArgumentException("survey time < 0");
             }
             if( (lastDS != null) &&
-                    (shortSurvey.getTimestamp() <= lastDS.getTimestamp()) )continue;
+                    (sampleRaw.getTimestamp() <= lastDS.getTimestamp()) )continue;
             DeviceSurvey deviceSurvey = new DeviceSurvey();
             deviceSurvey.setFrequency(df);
-            deviceSurvey.setClientsSum(shortSurvey.getClients());
-            deviceSurvey.setTimestamp(shortSurvey.getTimestamp());
-            deviceSurvey.setEnabled(shortSurvey.isEnabled());
+            deviceSurvey.setClientsSum(sampleRaw.getClients());
+            deviceSurvey.setTimestamp(sampleRaw.getTimestamp());
+            deviceSurvey.setEnabled(sampleRaw.isEnabled());
             deviceSurvey.setDeleted(0L);
             deviceSurveyRepository.save(deviceSurvey);
             lastDS = deviceSurvey;

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import zesp03.common.data.ShortSurvey;
+import zesp03.common.data.SampleRaw;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.service.SurveyModifyingService;
 import zesp03.common.util.RandomUtil;
@@ -32,12 +32,12 @@ public class ImportServiceImpl implements ImportService {
             throw new ValidationException("timeStart", "less than zero");
         }
         final RandomUtil ru = new RandomUtil();
-        final List<ShortSurvey> list = new ArrayList<>();
+        final List<SampleRaw> list = new ArrayList<>();
         int lastTime = 0;
         int lastClients = ru.choose(0, dto.getMaxClients());
         boolean lastEnabled = true;
         for(int i = 0; i < dto.getNumberOfSurveys(); i++) {
-            ShortSurvey ss = new ShortSurvey();
+            SampleRaw ss = new SampleRaw();
             int time, clients, diff;
             boolean enabled;
             if(i == 0) {

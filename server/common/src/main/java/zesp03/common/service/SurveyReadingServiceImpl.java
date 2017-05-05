@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
-import zesp03.common.data.ShortSurvey;
-import zesp03.common.data.SurveyPeriodAvgMinMax;
+import zesp03.common.data.RangeSamples;
+import zesp03.common.data.SampleAvgMinMax;
+import zesp03.common.data.SampleRaw;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
@@ -138,21 +139,51 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
     }
 
     @Override
-    public List<ShortSurvey> getOriginal(long deviceId, int frequencyMhz, int start, int end) {
+    public RangeSamples<SampleRaw> getOriginal(long deviceId, int frequencyMhz, int start, int end) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
         if(start >= end)
             throw new IllegalArgumentException("start >= end");
 
-        Long frequencyId = getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
-        return deviceSurveyRepository.findFromPeriodNotDeletedOrderByTime(frequencyId, start, end)
+        final Long frequencyId = getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
+        final List<SampleRaw> list = deviceSurveyRepository
+                .findFromPeriodNotDeletedOrderByTime(frequencyId, start, end)
                 .stream()
-                .map(ShortSurvey::make)
+                .map(SampleRaw::make)
                 .collect(Collectors.toList());
+        final List<DeviceSurvey> beforeList = em.createQuery("SELECT ds FROM DeviceSurvey ds " +
+                        "WHERE ds.frequency.id = :fid AND ds.deleted = 0 AND " +
+                        "ds.timestamp < :t ORDER BY ds.timestamp DESC",
+                DeviceSurvey.class)
+                .setParameter("fid", frequencyId)
+                .setParameter("t", start)
+                .setMaxResults(1)
+                .getResultList();
+        SampleRaw before = null;
+        if(! beforeList.isEmpty()) {
+            before = SampleRaw.make( beforeList.get(0) );
+        }
+        final List<DeviceSurvey> afterList = em.createQuery("SELECT ds FROM DeviceSurvey ds " +
+                        "WHERE ds.frequency.id = :fid AND ds.deleted = 0 AND " +
+                        "ds.timestamp >= :end ORDER BY ds.timestamp ASC",
+                DeviceSurvey.class)
+                .setParameter("fid", frequencyId)
+                .setParameter("end", end)
+                .setMaxResults(1)
+                .getResultList();
+        SampleRaw after = null;
+        if(! afterList.isEmpty()) {
+            after = SampleRaw.make( afterList.get(0) );
+        }
+        final RangeSamples<SampleRaw> ranged = new RangeSamples<>();
+        ranged.setBefore(before);
+        ranged.setList(list);
+        ranged.setAfter(after);
+        return ranged;
     }
 
     @Override
-    public List<SurveyPeriodAvgMinMax> getMultiAvgMinMax(final long deviceId, final int frequencyMhz, final int start, int end, final int groupTime) {
+    public RangeSamples<SampleAvgMinMax> getMultiAvgMinMax(final long deviceId, final int frequencyMhz, final int start, int end, final int groupTime) {
         if(start < 0) {
             throw new ValidationException("start", "less than 0");
         }
@@ -166,26 +197,37 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         if(end > now) {
             end = now + 1;
         }
+
+        final List<SampleAvgMinMax> mainList = new ArrayList<>();
+        final RangeSamples<SampleAvgMinMax> ranged = new RangeSamples<>();
+        ranged.setList(mainList);
         if(start >= end) {
-            return new ArrayList<>();
+            return ranged;
         }
 
-        final List<SurveyPeriodAvgMinMax> result = new ArrayList<>();
-        Long frequencyId = getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
-        List<DeviceSurvey> beforeList = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
-                        "ds.frequency.id = :fi AND ds.timestamp <= :t AND ds.deleted = 0 " +
+        final Long frequencyId = getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
+        final List<DeviceSurvey> beforeList = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
+                        "ds.frequency.id = :fid AND ds.deleted = 0 AND ds.timestamp <= :t " +
                         "ORDER BY ds.timestamp DESC",
                 DeviceSurvey.class)
-                .setParameter("fi", frequencyId)
+                .setParameter("fid", frequencyId)
                 .setParameter("t", start)
-                .setMaxResults(1)
+                .setMaxResults(2)
                 .getResultList();
         int timeBegin;
         if(beforeList.isEmpty()) {
             timeBegin = start;
         }
         else {
-            timeBegin = beforeList.get(0).getTimestamp();
+            final DeviceSurvey survey = beforeList.get(0);
+            timeBegin = survey.getTimestamp();
+            if(survey.getTimestamp() < start) {
+                ranged.setBefore(SampleRaw.make(survey));
+            }
+            else if(beforeList.size() > 1) {
+                final DeviceSurvey next = beforeList.get(1);
+                ranged.setBefore(SampleRaw.make(next));
+            }
         }
         ArrayList<DeviceSurvey> surveys;
         final List<DeviceSurvey> originalSurveys = deviceSurveyRepository.findFromPeriodNotDeletedOrderByTime(frequencyId, timeBegin, end);
@@ -200,7 +242,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         }
 
         if(surveys.isEmpty()) {
-            return result;
+            return ranged;
         }
         final DeviceSurvey first = surveys.get(0);
         int t0, t1, processed;
@@ -252,17 +294,28 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
             final long duration = t1 - cumulativeEndTime;
             cumulative += duration * cumulativeEndClients;
             double avg = (double)cumulative / (t1 - t0);
-            SurveyPeriodAvgMinMax elem = new SurveyPeriodAvgMinMax();
+            SampleAvgMinMax elem = new SampleAvgMinMax();
             elem.setTimeStart(t0);
             elem.setTimeEnd(t1);
             elem.setMin(min);
             elem.setMax(max);
             elem.setAverage(avg);
             elem.setSurveySpan(span);
-            result.add(elem);
+            mainList.add(elem);
             t0 = t1;
             t1 = t0 + groupTime;
         }
-        return result;
+        final List<DeviceSurvey> afterList = em.createQuery("SELECT ds FROM DeviceSurvey ds " +
+                "WHERE ds.frequency.id = :fid AND ds.deleted = 0 AND " +
+                "ds.timestamp >= :end ORDER BY ds.timestamp ASC",
+                DeviceSurvey.class)
+                .setParameter("fid", frequencyId)
+                .setParameter("end", end)
+                .setMaxResults(1)
+                .getResultList();
+        if(! afterList.isEmpty()) {
+            ranged.setAfter( SampleRaw.make( afterList.get(0) ) );
+        }
+        return ranged;
     }
 }

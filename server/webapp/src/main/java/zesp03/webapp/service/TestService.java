@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
-import zesp03.common.data.ShortSurvey;
+import zesp03.common.data.SampleRaw;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.DeviceFrequency;
@@ -103,7 +103,7 @@ public class TestService {
 
     public static class TestCurrentDeviceState {
         private DeviceDto device;
-        private Map<Integer, ShortSurvey> frequency = new HashMap<>();
+        private Map<Integer, SampleRaw> frequency = new HashMap<>();
 
         public DeviceDto getDevice() {
             return device;
@@ -113,11 +113,11 @@ public class TestService {
             this.device = device;
         }
 
-        public Map<Integer, ShortSurvey> getFrequency() {
+        public Map<Integer, SampleRaw> getFrequency() {
             return frequency;
         }
 
-        public void setFrequency(Map<Integer, ShortSurvey> frequency) {
+        public void setFrequency(Map<Integer, SampleRaw> frequency) {
             this.frequency = frequency;
         }
 
@@ -126,7 +126,7 @@ public class TestService {
             for(Integer mhz : cds.getFrequencies()) {
                 DeviceFrequency df = cds.findFrequency(mhz);
                 DeviceSurvey ds = cds.findSurvey(mhz);
-                ShortSurvey ss = new ShortSurvey();
+                SampleRaw ss = new SampleRaw();
                 ss.setTimestamp(ds.getTimestamp());
                 ss.setClients(ds.getClientsSum());
                 ss.setEnabled(ds.isEnabled());

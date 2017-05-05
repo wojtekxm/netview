@@ -2,8 +2,9 @@ package zesp03.webapp.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import zesp03.common.data.ShortSurvey;
-import zesp03.common.data.SurveyPeriodAvgMinMax;
+import zesp03.common.data.RangeSamples;
+import zesp03.common.data.SampleAvgMinMax;
+import zesp03.common.data.SampleRaw;
 import zesp03.common.exception.SNMPException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.DeviceSurveyRepository;
@@ -13,7 +14,6 @@ import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.input.ImportFakeSurveysDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
-import zesp03.webapp.dto.result.ListDto;
 import zesp03.webapp.service.DeviceService;
 import zesp03.webapp.service.ImportService;
 
@@ -125,7 +125,7 @@ public class SurveysApi {
     }
 
     @GetMapping("/original")
-    public ListDto<ShortSurvey> getOriginal(
+    public ContentDto< RangeSamples<SampleRaw> > getOriginal(
             @RequestParam("device") long device,
             @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
@@ -137,16 +137,16 @@ public class SurveysApi {
             throw new ValidationException("end", "end must be after start");
         }
 
-        return ListDto.make( () -> surveyReadingService.getOriginal(device, frequencyMhz, start, end) );
+        return ContentDto.make( () -> surveyReadingService.getOriginal(device, frequencyMhz, start, end) );
     }
 
     @GetMapping("/avg-min-max")
-    public ListDto<SurveyPeriodAvgMinMax> getMultiAvgMinMax2(
+    public ContentDto< RangeSamples<SampleAvgMinMax> > getMultiAvgMinMax2(
             @RequestParam("device") long device,
             @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("end") int end,
             @RequestParam("groupTime") int groupTime) {
-        return ListDto.make( () -> surveyReadingService.getMultiAvgMinMax(device, frequencyMhz, start, end, groupTime) );
+        return ContentDto.make( () -> surveyReadingService.getMultiAvgMinMax(device, frequencyMhz, start, end, groupTime) );
     }
 }

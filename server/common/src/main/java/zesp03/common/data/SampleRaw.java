@@ -2,7 +2,7 @@ package zesp03.common.data;
 
 import zesp03.common.entity.DeviceSurvey;
 
-public class ShortSurvey {
+public class SampleRaw {
     private int timestamp;
     private int clients;
     private boolean enabled;
@@ -37,8 +37,8 @@ public class ShortSurvey {
         this.enabled = s.isEnabled();
     }
 
-    public static ShortSurvey make(DeviceSurvey s) {
-        ShortSurvey dto = new ShortSurvey();
+    public static SampleRaw make(DeviceSurvey s) {
+        SampleRaw dto = new SampleRaw();
         dto.wrap(s);
         return dto;
     }

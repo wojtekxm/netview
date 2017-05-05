@@ -1,6 +1,6 @@
 package zesp03.common.data;
 
-public class SurveyPeriodAvgMinMax {
+public class SampleAvgMinMax {
     private int timeStart;
     private int timeEnd;
     private double average;

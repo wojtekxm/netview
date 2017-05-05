@@ -1,7 +1,7 @@
 package zesp03.webapp.dto;
 
 import zesp03.common.data.CurrentDeviceState;
-import zesp03.common.data.ShortSurvey;
+import zesp03.common.data.SampleRaw;
 import zesp03.common.entity.Building;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
@@ -16,7 +16,7 @@ public class CurrentDeviceStateDto {
     private String description;
     private Long controllerId;
     private Long buildingId;
-    private Map<Integer, ShortSurvey> frequencySurvey;
+    private Map<Integer, SampleRaw> frequencySurvey;
 
     public long getId() {
         return id;
@@ -58,11 +58,11 @@ public class CurrentDeviceStateDto {
         this.buildingId = buildingId;
     }
 
-    public Map<Integer, ShortSurvey> getFrequencySurvey() {
+    public Map<Integer, SampleRaw> getFrequencySurvey() {
         return frequencySurvey;
     }
 
-    public void setFrequencySurvey(Map<Integer, ShortSurvey> frequencySurvey) {
+    public void setFrequencySurvey(Map<Integer, SampleRaw> frequencySurvey) {
         this.frequencySurvey = frequencySurvey;
     }
 
@@ -89,7 +89,7 @@ public class CurrentDeviceStateDto {
         for(Integer freq : cds.getFrequencies() ) {
             DeviceSurvey survey = cds.findSurvey(freq);
             if(survey != null) {
-                ShortSurvey dto = ShortSurvey.make(survey);
+                SampleRaw dto = SampleRaw.make(survey);
                 frequencySurvey.put(freq, dto);
             }
             else {

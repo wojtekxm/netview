@@ -1,6 +1,6 @@
 package zesp03.common.service;
 
-import zesp03.common.data.ShortSurvey;
+import zesp03.common.data.SampleRaw;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
 import zesp03.common.util.SurveyInfoCollection;
@@ -22,7 +22,7 @@ public interface SurveyModifyingService {
      * Jeśli urządzenie nie ma takiej częstotliwości, to ją dodaje.
      * Spreparowane badania mogą być w dowolnej kolejności (nie muszą być posortowane po czasie).
      */
-    void importSurveys(Long deviceId, Integer frequencyMhz, List<ShortSurvey> data);
+    void importSurveys(Long deviceId, Integer frequencyMhz, List<SampleRaw> data);
 
     void deleteForAll();
 

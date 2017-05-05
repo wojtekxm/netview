@@ -58,23 +58,24 @@
 <div class="container">
     <div style="height: 80px;"></div>
     <div class="panel panel-default">
-        <div class="panel-body">
+        <div class="panel-body" style="background-color: #f8fafe;">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:</div>
         </div>
     </div>
-    <div style="display: inline-block; margin-bottom: 5px;">
+    <div style="margin-bottom: 5px;">
+        <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
             <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
         </button>
-        <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
+        <button id="back" type="button" class="btn btn-success" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
     </div>
     <div id="filters" class="collapse">
         <div class="panel panel-default">
             <div class="panel-body">
                 <select id="stan" multiple="multiple">
-                    <option type="checkbox" class="s" value="active">Aktywne</option>
-                    <option type="checkbox" class="s" value="inactive">Niektywne</option>
-                    <option type="checkbox" class="s" value="off">Wyłączone</option>
+                    <option type="checkbox" class="s" value="active" selected="true">Aktywne</option>
+                    <option type="checkbox" class="s" value="inactive" selected="true">Niektywne</option>
+                    <option type="checkbox" class="s" value="off" selected="true">Wyłączone</option>
                 </select>
                 <select id="kontrolery" multiple="multiple"></select>
                 <select id="budynki" multiple="multiple"></select>
@@ -85,14 +86,9 @@
                     <button id="top_15" type="button" class="btn btn-default" style="">15 najlepszych urządzeń</button>
                     <button id="worst_15" type="button" class="btn btn-default" style="margin-right: 4px;">15 najgorszych urządzeń</button>
                 </div>
-                <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
-                    <button id="back" type="button" class="btn btn-info" style="width: 150px;" onclick="back();"><span class="glyphicon glyphicon-refresh"></span> Powrót</button>
-                </div>
                 <div class="form-group" style="margin-top: 20px;">
-                    <div class="col-sm-12">
-                        <div id="result_success"></div>
-                        <div id="result_error"></div>
-                    </div>
+                    <div id="result_success"></div>
+                    <div id="result_error"></div>
                 </div>
             </div>
         </div>
@@ -142,31 +138,38 @@
 <%--</script>--%>
 
 <script type="text/javascript">
-    function back(){
+    function resetFilters(){
+        $('option', $('#stan')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#stan').multiselect('refresh');
         $('option', $('#kontrolery')).each(function(element) {
-            $(this).removeAttr('selected').prop('selected', false);
+            $(this).removeAttr('selected').prop('selected', true);
         });
         $('#kontrolery').multiselect('refresh');
         $('option', $('#budynki')).each(function(element) {
-            $(this).removeAttr('selected').prop('selected', false);
+            $(this).removeAttr('selected').prop('selected', true);
         });
         $('#budynki').multiselect('refresh');
-        allDevices();
-        setInterval('allDevices()', 30000);
+        filterChoice = "filter";
+        filter();
     }
 </script>
 
 
 <script type="text/javascript">
+    var filterChoice = "filter";
     var frequency = "2400";
     var option = "";
     var ifFilter = true;
 
     $('#top_15').click(function(){
+        filterChoice = "top";
         option = "best";
         topDevices(option);
     });
     $('#worst_15').click(function(){
+        filterChoice = "worst";
         option = "worst";
         topDevices(option);
     });
@@ -222,7 +225,7 @@
             );
 
             $('#devices').append(line);
-            $('#progress_area').hide(500);
+            $('#progress_area').remove();
 
         line.tooltip();
     }
@@ -332,24 +335,20 @@
 
         if(states.length == 0){
             if(ifFilter == true){
-                notify.danger('#result_error', 'Nie wybrano żadnego stanu, wynik prezentuje wszystkie stany');
+                notify.danger('#result_error', 'Nie wybrano żadnego stanu');
             }
-            $('.s').each(function(){
-                stateId = $(this).attr('value');
-                states.push(stateId);
-            });
         }
 
         if(controllers.length == 0){
             if(ifFilter == true) {
-                notify.danger('#result_error', 'Nie wybrano żadnego kontrolera, wynik prezentuje wszystkie kontrolery');
+                notify.danger('#result_error', 'Nie wybrano żadnego kontrolera');
             }
-            $('.c').each(function(){
-                controllerId = $(this).attr('value');
-                controllers.push(controllerId);
-            });
         }
 
+        var ac = 0;
+        var inac = 0;
+        var of = 0;
+        var al = 0;
 
         for(var i=0;i<controllers.length;i++){
             for(var j=0;j<devices.length;j++){
@@ -388,6 +387,7 @@
 
                         if (isEnabled == true) {
                             if(states[k] == 'active') {
+                                ac++;
                                 if (sum > 0 && sum <= 10) {
                                     clazz = "greenDiode1";
                                     active++;
@@ -402,6 +402,7 @@
                                     active++;
                                 }
                             }else if(states[k] == 'inactive'){
+                                inac++;
                                 if (sum == 0) {
                                     clazz = "redDiode";
                                     inactive++;
@@ -409,6 +410,7 @@
                             }
                         } else if (isEnabled == false) {
                             if(states[k] == 'off'){
+                                of++;
                                 clazz = "greyDiode";
                                 sum = '-';
                                 off++;
@@ -423,7 +425,7 @@
 
                         if (active + inactive + off != 0) {
                             $('#devices').append(line);
-                            $('#progress_area').hide(500);
+                            $('#progress_area').remove();
                         }
 
                         line.tooltip();
@@ -433,15 +435,37 @@
             }
         }
 
+//        al = ac+inac+of;
+//
+//
+//        var date = new Date(time*1000);
+//        var n = date.toLocaleString();
+//
+//        if(n == "Invalid Date"){
+//            n = "";
+//            setTimeout(function(){
+//                $('#data').replaceWith(n);
+//                $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
+//            }, 5000);
+//        }else {
+//            $('#data').replaceWith(n);
+//            $('#data_tittle').replaceWith(" &nbsp;Ostatnie badanie przeprowadzono:");
+//            $('#countActive').text('aktywne: ' + ac);
+//            $('#countInactive').text('nieaktywne: ' + inac);
+//            $('#countOff').text('wyłączone: ' + of);
+//            $('#countAll').text('wszystkie: ' + al);
+//        }
 
-        if(value == "" && controllerId == "" && stateId == ""){
-            inter = setInterval('allDevices()', 30000);
-            allDevices();
-        }
+
+//        if(value == "" && controllerId == "" && stateId == ""){
+//            inter = setInterval('allDevices()', 30000);
+//            allDevices();
+//        }
     }
 
     $('#filters_commit').click(function(){
         ifFilter = true;
+        filterChoice = "filter";
         filter();
     })
 </script>
@@ -457,7 +481,7 @@
         return x.localeCompare(y);
     }
 
-    $(document).ready(function () {
+    $(document).ready(function(){
         var devices = new Array();
         var buildings = new Array();
         var controllers = new Array();
@@ -478,9 +502,10 @@
                     var opt = $('<option></option>', {
                         type: 'checkbox',
                         id: item.id,
-                        value: item.name,
+                        value: item.id,
                         text: item.name,
-                        class: 'b'
+                        class: 'b',
+                        selected: true
                     });
                     opt.attr('id', '1')
                     opt.appendTo(b);
@@ -502,16 +527,17 @@
                 controllers.sort(compare);
 
                 $.each(controllers, function(index, item){
-                    var opt = $('<option></option>', {
-                        type: 'checkbox',
-                        value: item.id,
-                        text: item.name,
-                        class: 'c',
-                    });
-
-
-                    opt.appendTo(c);
-                    c.multiselect('rebuild');
+                    if(item.id != null){
+                        var opt = $('<option></option>', {
+                            type: 'checkbox',
+                            value: item.id,
+                            text: item.name,
+                            class: 'c',
+                            selected: true
+                        });
+                        opt.appendTo(c);
+                        c.multiselect('rebuild');
+                    }
                 })
             }
         });
@@ -520,6 +546,7 @@
         $('#stan').multiselect({
             includeSelectAllOption: true,
             nonSelectedText:'Stan urządzeń',
+            allSelectedText: 'Stan urządzeń',
             enableCaseInsensitiveFiltering: true,
             maxHeight: 300
         });
@@ -527,6 +554,7 @@
             enableFiltering: true,
             includeSelectAllOption: true,
             nonSelectedText:'Budynki',
+            allSelectedText: 'Budynki',
             enableCaseInsensitiveFiltering: true,
             maxHeight: 300
         });
@@ -535,6 +563,7 @@
             enableFiltering: true,
             includeSelectAllOption: true,
             nonSelectedText:'Kontrolery',
+            allSelectedText: 'Kontrolery',
             enableCaseInsensitiveFiltering: true,
             maxHeight: 300
         });
@@ -557,7 +586,7 @@
         $('#progress_area').show();
         setTimeout(function()
         {
-            $('#progress_area').hide(500);
+            $('#progress_area').remove();
         }, 5000);
     }
 
@@ -654,7 +683,7 @@
                 );
             if(active+inactive+off != 0){
                 $('#devices').append(line);
-                $('#progress_area').hide(500);
+                $('#progress_area').remove();
             }else{
                 err();
             }
@@ -701,7 +730,16 @@
                 frequency = "2400";
             }
 
-            filter();
+            if(filterChoice == "filter"){
+                filter();
+            }else if(filterChoice == "top"){
+                option = "best";
+                topDevices(option);
+            }else if(filterChoice == "worst"){
+                option = "worst";
+                topDevices(option);
+            }
+
         })
     })
 </script>

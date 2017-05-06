@@ -115,7 +115,7 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input form="form1" type="checkbox" <%--class="form-control"--%> id="new_fake" name="fake"> prawdziwy?</label>
+                            <input form="form1" type="checkbox" <%--value="false" class="form-control"--%> id="new_fake" name="fake"> Prawdziwy </label>
                     </div>
                 </div>
             </div>
@@ -127,11 +127,11 @@
                     <div class="col-sm-offset-2 col-sm-10">
                         <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;"></div>
-                    </span>
+                        <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;">
+                    </span></div>
                 </div>
             </div>
-            <%--</div>--%>
+
         </form>
 
     </div>
@@ -151,8 +151,10 @@
 <script>
 "use strict";
 $(document).ready(function () {
+
     var btnSubmit = $('#btn_submit');
     btnSubmit.click(function () {
+
         btnSubmit.prop('disabled', true);
         var createControllerDto = {
             "name": $('#new_name').val(),
@@ -160,8 +162,13 @@ $(document).ready(function () {
             "description": $('#new_description').val(),
             "communityString": $('#new_communityString').val(),
             "buildingId": $('#new_building').val(),
-            "fake": $('#new_fake').val()
+            "fake" : $('#new_fake')[0].checked ? false : true
+
+
+//            "fake": isChecked
         };
+
+
         progress.load(
             'post',
             '/api/controller/create',

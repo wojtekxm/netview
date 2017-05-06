@@ -107,10 +107,10 @@
             <span class='glyphicon glyphicon-time'></span><div id="data_tittle"></div> &nbsp;&nbsp;<div id="data"></div>
         </div>
         <div class="panel-body">
-            <div id="countActive" style="display:inline"></div><br>
-            <div id="countInactive" style="display:inline"></div><br>
-            <div id="countOff" style="display:inline"></div><br>
-            <div id="countAll" style="display:inline"></div><br>
+            <div id="countActive" style="display: inline;"></div><br>
+            <div id="countInactive" style="display: inline;"></div><br>
+            <div id="countOff" style="display: inline;"></div><br>
+            <div id="countAll" style="display: inline;"></div><br>
         </div>
     </div>
 </div>
@@ -301,6 +301,20 @@
                     }
                 }
 
+                if(option == "best"){
+                    $('#countActive').text("15 urządzeń z największą liczbą użytkowników");
+                    $('#countInactive').css("display", "none");
+                    $('#countOff').css("display", "none");
+                    $('#countAll').css("display", "none");
+                }else if(option == "worst"){
+                    $('#countActive').text("15 urządzeń z najmniejszą liczbą użytkowników");
+                    $('#countInactive').css("display", "none");
+                    $('#countOff').css("display", "none");
+                    $('#countAll').css("display", "none");
+                }
+
+
+
             },
             error: function(){
                 $('#data').remove();
@@ -334,6 +348,14 @@
             controllers.push(controllerId);
         });
 
+
+        var buildings = new Array();
+        var buildingId = "";
+        $('.b :checkbox:checked').each(function(){
+            buildingId = $(this).attr('value');
+            buildings.push(buildingId);
+        });
+
         if(states.length == 0){
             if(ifFilter == true){
                 notify.danger('#result_error', 'Nie wybrano żadnego stanu');
@@ -346,13 +368,56 @@
             }
         }
 
+        if(buildings.length == 0){
+            if(ifFilter == true) {
+                notify.danger('#result_error', 'Nie wybrano żadnego budynku');
+            }
+        }
+
         var ac = 0;
         var inac = 0;
         var of = 0;
         var al = 0;
 
-        for(var i=0;i<controllers.length;i++){
-            for(var j=0;j<devices.length;j++){
+
+//        function count(device){
+//            if(device.){
+//
+//            }
+//        }
+
+        for(var j=0;j<devices.length;j++){
+            var currentDeviceStateDto = devices[j];
+            var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+            var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+            if (frequency == "2400") {
+                if (typeof state2400 === 'undefined') {
+                    continue;
+                }
+                if(state2400 === null){
+                    var isEnabled = false;
+                }
+                else {
+                    var sum = state2400.clients;
+                    var isEnabled = state2400.enabled;
+                    var time = state2400.timestamp;
+                }
+            } else if (frequency == "5000") {
+                if (typeof state5000 === 'undefined') {
+                    continue;
+                }
+                if(state5000 === null){
+                    var isEnabled = false;
+                }
+                else {
+                    var sum = state5000.clients;
+                    var isEnabled = state5000.enabled;
+                    var time = state5000.timestamp;
+                }
+            }
+
+
+            for(var i=0;i<controllers.length;i++){
                 for(var k=0;k<states.length;k++) {
                     if (controllers[i] == devices[j].controllerId.toString()) {
                         var active = 0;
@@ -361,40 +426,11 @@
                         var all = 0;
                         var style = 'list-style-type: none;color:white;text-decoration:none;';
 
-                        var currentDeviceStateDto = devices[j];
-                        var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
-                        var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-                        if (frequency == "2400") {
-                            if (typeof state2400 === 'undefined') {
-                                continue;
-                            }
-                            if(state2400 === null){
-                                var isEnabled = false;
-                            }
-                            else {
-                                var sum = state2400.clients;
-                                var isEnabled = state2400.enabled;
-                                var time = state2400.timestamp;
-                            }
-                        } else if (frequency == "5000") {
-                            if (typeof state5000 === 'undefined') {
-                                continue;
-                            }
-                            if(state5000 === null){
-                                var isEnabled = false;
-                            }
-                            else {
-                                var sum = state5000.clients;
-                                var isEnabled = state5000.enabled;
-                                var time = state5000.timestamp;
-                            }
-                        }
                         var h = "/device?id=" + currentDeviceStateDto.id;
                         var clazz = '';
 
                         if (isEnabled == true) {
                             if(states[k] == 'active') {
-                                ac++;
                                 if (sum > 0 && sum <= 10) {
                                     clazz = "greenDiode1";
                                     active++;
@@ -409,7 +445,6 @@
                                     active++;
                                 }
                             }else if(states[k] == 'inactive'){
-                                inac++;
                                 if (sum == 0) {
                                     clazz = "redDiode";
                                     inactive++;
@@ -417,7 +452,6 @@
                             }
                         } else if (isEnabled == false) {
                             if(states[k] == 'off'){
-                                of++;
                                 clazz = "greyDiode";
                                 sum = '-';
                                 off++;
@@ -431,6 +465,15 @@
                             );
 
                         if (active + inactive + off != 0) {
+                            if(isEnabled == true){
+                                if(sum > 0){
+                                    ac++;
+                                }else if(sum == 0){
+                                    inac++;
+                                }
+                            }else if(isEnabled == false){
+                                of++;
+                            }
                             $('#devices').append(line);
                             $('#progress_area').remove();
                         }
@@ -442,26 +485,29 @@
             }
         }
 
-//        al = ac+inac+of;
-//
-//
-//        var date = new Date(time*1000);
-//        var n = date.toLocaleString();
-//
-//        if(n == "Invalid Date"){
-//            n = "";
-//            setTimeout(function(){
-//                $('#data').replaceWith(n);
-//                $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
-//            }, 5000);
-//        }else {
-//            $('#data').replaceWith(n);
-//            $('#data_tittle').replaceWith(" &nbsp;Ostatnie badanie przeprowadzono:");
-//            $('#countActive').text('aktywne: ' + ac);
-//            $('#countInactive').text('nieaktywne: ' + inac);
-//            $('#countOff').text('wyłączone: ' + of);
-//            $('#countAll').text('wszystkie: ' + al);
-//        }
+        al = ac+inac+of;
+
+
+        var date = new Date(time*1000);
+        var n = date.toLocaleString();
+
+        if(n == "Invalid Date"){
+            n = "";
+            setTimeout(function(){
+                $('#data').replaceWith(n);
+                $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
+            }, 5000);
+        }else {
+            $('#data').replaceWith(n);
+            $('#data_tittle').replaceWith(" &nbsp;Ostatnie badanie przeprowadzono:");
+            $('#countInactive').css("display", "inline");
+            $('#countOff').css("display", "inline");
+            $('#countAll').css("display", "inline");
+            $('#countActive').text('aktywne: ' + ac);
+            $('#countInactive').text('nieaktywne: ' + inac);
+            $('#countOff').text('wyłączone: ' + of);
+            $('#countAll').text('wszystkie: ' + al);
+        }
 
 
 //        if(value == "" && controllerId == "" && stateId == ""){
@@ -508,13 +554,11 @@
                 $.each(buildings, function(index, item){
                     var opt = $('<option></option>', {
                         type: 'checkbox',
-                        id: item.id,
                         value: item.id,
                         text: item.name,
                         class: 'b',
                         selected: true
                     });
-                    opt.attr('id', '1')
                     opt.appendTo(b);
                     b.multiselect('rebuild');
                 })
@@ -534,17 +578,15 @@
                 controllers.sort(compare);
 
                 $.each(controllers, function(index, item){
-                    if(item.id != null){
-                        var opt = $('<option></option>', {
-                            type: 'checkbox',
-                            value: item.id,
-                            text: item.name,
-                            class: 'c',
-                            selected: true
-                        });
-                        opt.appendTo(c);
-                        c.multiselect('rebuild');
-                    }
+                    var opt = $('<option></option>', {
+                        type: 'checkbox',
+                        value: item.id,
+                        text: item.name,
+                        class: 'c',
+                        selected: true
+                    });
+                    opt.appendTo(c);
+                    c.multiselect('rebuild');
                 })
             }
         });

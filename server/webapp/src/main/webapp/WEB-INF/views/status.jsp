@@ -368,6 +368,9 @@
                             if (typeof state2400 === 'undefined') {
                                 continue;
                             }
+                            if(state2400 === null){
+                                var isEnabled = false;
+                            }
                             else {
                                 var sum = state2400.clients;
                                 var isEnabled = state2400.enabled;
@@ -376,6 +379,9 @@
                         } else if (frequency == "5000") {
                             if (typeof state5000 === 'undefined') {
                                 continue;
+                            }
+                            if(state5000 === null){
+                                var isEnabled = false;
                             }
                             else {
                                 var sum = state5000.clients;
@@ -636,6 +642,9 @@
                 if(typeof state2400 === 'undefined') {
                     continue;
                 }
+                if(state2400 === null){
+                    var isEnabled = false;
+                }
                 else {
                     var sum = state2400.clients;
                     var isEnabled = state2400.enabled;
@@ -644,6 +653,9 @@
             }else if(frequency == "5000"){
                 if(typeof state5000 === 'undefined') {
                     continue;
+                }
+                if(state5000 === null){
+                    var isEnabled = false;
                 }
                 else {
                     var sum = state5000.clients;
@@ -685,6 +697,15 @@
             if(active+inactive+off != 0){
                 $('#devices').append(line);
                 $('#progress_area').remove();
+
+                var date = new Date(time*1000);
+                var n = date.toLocaleString();
+
+                if(n == "Invalid Date"){
+                    n = "";
+                    $('#data').replaceWith(n);
+                    $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
+                }
             }else{
                 err();
             }
@@ -704,7 +725,7 @@
             setTimeout(function(){
                 $('#data').replaceWith(n);
                 $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
-            }, 5000);
+            }, 4000);
         }else {
             $('#data').replaceWith(n);
             $('#data_tittle').replaceWith(" &nbsp;Ostatnie badanie przeprowadzono:");

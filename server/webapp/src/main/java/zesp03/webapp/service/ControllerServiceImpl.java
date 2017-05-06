@@ -111,7 +111,7 @@ public class ControllerServiceImpl implements ControllerService {
         c.setDescription(dto.getDescription());
         c.setCommunity(dto.getCommunityString());
         c.setDeleted(0L);
-        c.setFake(true);//???
+        c.setFake(dto.isfake());//???
         if(dto.getBuildingId() != null) {
             Building b = buildingRepository.findOne(dto.getBuildingId());
             c.setBuilding(b);
@@ -143,6 +143,7 @@ public class ControllerServiceImpl implements ControllerService {
         c.setIpv4(dto.getIpv4());
         c.setDescription(dto.getDescription());
         c.setCommunity(dto.getCommunityString());
+        c.setFake(dto.isFake());
         if(dto.getBuildingId() != null) {
             Building b = buildingRepository.findOne(dto.getBuildingId());
             c.setBuilding(b);

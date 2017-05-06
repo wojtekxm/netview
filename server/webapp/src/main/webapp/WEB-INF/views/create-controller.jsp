@@ -45,8 +45,7 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  &nbsp;<c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -116,7 +115,7 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input form="form1" type="checkbox" <%--class="form-control"--%> id="new_fake" name="fake"> prawdziwy?</label>
+                            <input form="form1" type="checkbox" <%--value="false" class="form-control"--%> id="new_fake" name="fake"> Prawdziwy </label>
                     </div>
                 </div>
             </div>
@@ -133,7 +132,7 @@
                     </div>
                 </div>
             </div>
-            <%--</div>--%>
+
         </form>
 
     </div>
@@ -153,8 +152,10 @@
 <script>
 "use strict";
 $(document).ready(function () {
+
     var btnSubmit = $('#btn_submit');
     btnSubmit.click(function () {
+
         btnSubmit.prop('disabled', true);
         var createControllerDto = {
             "name": $('#new_name').val(),
@@ -162,8 +163,13 @@ $(document).ready(function () {
             "description": $('#new_description').val(),
             "communityString": $('#new_communityString').val(),
             "buildingId": $('#new_building').val(),
-            "fake": $('#new_fake').val()
+            "fake" : $('#new_fake')[0].checked ? false : true
+
+
+//            "fake": isChecked
         };
+
+
         progress.load(
             'post',
             '/api/controller/create',

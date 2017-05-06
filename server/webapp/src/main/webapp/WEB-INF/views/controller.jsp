@@ -91,11 +91,24 @@
 
             <c:if test="${ controller.building != null && controller.building.name != ''}">
 
-                <tr onclick="window.document.location='/building/${controller.building.id}';">
+               <tr>
                     <td>Budynek</td>
-                    <td><c:out value="${controller.building.name}"/></td>
+                    <td><a href="/building/${controller.building.id}"><c:out value="${controller.building.name}"/></a> </td>
                 </tr>
             </c:if>
+            <c:if test="${ controller.fake == false}">
+            <tr>
+                <td>Rodzaj kontrolera </td>
+                <td>Prawdziwy</td>
+            </tr>
+            </c:if>
+            <c:if test="${ controller.fake == true}">
+                <tr>
+                    <td>Rodzaj kontrolera </td>
+                    <td>Sztuczny</td>
+                </tr>
+            </c:if>
+
         </table>
         <div class="clearfix">
             <form class="pull-left" method="POST" action="${actionRemove}">

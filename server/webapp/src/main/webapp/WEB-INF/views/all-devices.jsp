@@ -83,11 +83,11 @@
                 <div class="form-inline">
                     <div class="radio">
                         <label>
-                            <input type="radio" name="delete_type" value="before"/>
+                            <input id="radio_delete_before" type="radio" name="delete_type" value="before"/>
                             Starsze niż
                         </label>
                         <div class='input-group date' id='datetimepicker1'>
-                            <input type='text' class="form-control">
+                            <input id="input_calendar" type='text' class="form-control" disabled>
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -265,6 +265,17 @@ $(document).ready( function() {
     });
 
     $dateTimePicker.on('dp.change', refreshTotalBefore);
+
+    $('input[type=radio][name=delete_type]').change(function() {
+        if( $('#radio_delete_before').prop('checked') ) {
+            console.log('radio change before checked');
+            $('#input_calendar').prop('disabled', false);
+        }
+        else {
+            console.log('radio change before not checked');
+            $('#input_calendar').prop('disabled', true);
+        }
+    });
 
     function fixDevices() {
         var i, dev, controller, freq, survey;

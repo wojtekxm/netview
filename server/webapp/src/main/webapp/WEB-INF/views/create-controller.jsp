@@ -55,14 +55,13 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="background-color: #f8fafe;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-inbox"></span> Nowy kontroler</div>
         </div>
     </div>
 
-    <div style="height: 10px;"></div>
-    <div class="panel panel-default" id="content"><div></div>
+    <div class="panel panel-default" id="content">
         <form method="post" action="/api/controller/create" id="form1" class="form-horizontal">
 
 

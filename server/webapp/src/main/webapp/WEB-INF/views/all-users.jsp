@@ -55,8 +55,12 @@
     </div>
 </nav>
 <div class="container">
-    <div style="height: 100px;"></div>
-    <h4 class="pull-left">Użytkownicy</h4>
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body" style="background-color: #f8fafe;">
+            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-user"></span> Użytkownicy:</div>
+        </div>
+    </div>
     <div id="main_loading" class="later"></div>
     <div id="main_success" class="later">
         <div id="tabelka_space"></div>

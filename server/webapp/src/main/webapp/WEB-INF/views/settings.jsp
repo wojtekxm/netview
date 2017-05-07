@@ -55,39 +55,79 @@
         </div>
     </div>
 </nav>
+
 <div class="container">
-    <div style="height: 100px;"></div>
-    <div class="clearfix">
-        <h4 class="pull-left">Ustawienia</h4>
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default" style="background-color: #f8fafe;">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-wrench"></span> Ustawienia </div>
+        </div>
     </div>
-    <div id="notifyDiv" style="height: 100px">
+
+    <div class="panel panel-default" id="content">
+        <div id="notifyDiv" style="height: 100px">
+        </div>
+        <form action="/settings" method="POST" class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Okres badań (sekundy)</label>
+                <div class="col-sm-6">
+                    <input type="text" name="examineInterval" class="form-control" value="${examineInterval}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Okres odśmiecania bazy (sekundy)</label>
+                <div class="col-sm-6">
+                    <input type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Opóźnienie API (milisekundy)</label>
+                <div class="col-sm-6">
+                    <input type="text" name="serverDelay" class="form-control" value="${serverDelay}">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12 text-center">
+                    <input class="btn btn-primary" type="submit" value="Zapisz">
+                </div>
+            </div>
+        </form>
     </div>
-    <form action="/settings" method="POST" class="form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Okres badań (sekundy)</label>
-            <div class="col-sm-6">
-                <input type="text" name="examineInterval" class="form-control" value="${examineInterval}">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Okres odśmiecania bazy (sekundy)</label>
-            <div class="col-sm-6">
-                <input type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Opóźnienie API (milisekundy)</label>
-            <div class="col-sm-6">
-                <input type="text" name="serverDelay" class="form-control" value="${serverDelay}">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-12 text-center">
-                <input class="btn btn-primary" type="submit" value="Zapisz">
-            </div>
-        </div>
-    </form>
 </div>
+
+<%--<div class="container">--%>
+    <%--<div style="height: 100px;"></div>--%>
+    <%--<div class="clearfix">--%>
+        <%--<h4 class="pull-left">Ustawienia</h4>--%>
+    <%--</div>--%>
+    <%--<div id="notifyDiv" style="height: 100px">--%>
+    <%--</div>--%>
+    <%--<form action="/settings" method="POST" class="form-horizontal">--%>
+        <%--<div class="form-group">--%>
+            <%--<label class="col-sm-3 control-label">Okres badań (sekundy)</label>--%>
+            <%--<div class="col-sm-6">--%>
+                <%--<input type="text" name="examineInterval" class="form-control" value="${examineInterval}">--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<div class="form-group">--%>
+            <%--<label class="col-sm-3 control-label">Okres odśmiecania bazy (sekundy)</label>--%>
+            <%--<div class="col-sm-6">--%>
+                <%--<input type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<div class="form-group">--%>
+            <%--<label class="col-sm-3 control-label">Opóźnienie API (milisekundy)</label>--%>
+            <%--<div class="col-sm-6">--%>
+                <%--<input type="text" name="serverDelay" class="form-control" value="${serverDelay}">--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<div class="form-group">--%>
+            <%--<div class="col-sm-12 text-center">--%>
+                <%--<input class="btn btn-primary" type="submit" value="Zapisz">--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</form>--%>
+<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/notify.js"></script>

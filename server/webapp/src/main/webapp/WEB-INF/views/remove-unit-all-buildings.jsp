@@ -55,41 +55,76 @@
         </div>
     </div>
 </nav>
-
-<div id="all" class="container-fluid">
-    <div id="container">
-        <div class="content">
-            <div>
-                <div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kliknij budynek, z którym chcesz usunąć powiązanie :</div></div>
-            </div>
-
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-                    Powiązane budynki:
-                </div>
-
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
-
-                    <tr>
-                        <td>Kod</td>
-                        <td>Nazwa</td>
-                        <td>Szerokość geograficzna</td>
-                        <td>Długość geograficzna</td>
-                    </tr>
-                    <c:forEach items="${buildings}" var="building">
-                        <tr onclick="window.document.location='remove-unit-buildings?id_unit=${unit.id}&id_building=${building.id}';">
-                            <td><c:out value="${building.code}"/></td>
-                            <td> <c:out value="${building.name}"/></td>
-                            <td> <c:out value="${building.latitude}"/></td>
-                            <td> <c:out value="${building.longitude}"/></td>
-                        </tr>
-                    </c:forEach>
-
-                </table>
-            </div>
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body" style="background-color: #f8fafe;">
+            <div id="tittle"><span class="glyphicon glyphicon-home"></span> Kliknij budynek, z którym chcesz usunąć powiązanie :</div>
         </div>
     </div>
+
+    <div class="panel panel-default" id="content">
+
+        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+            Powiązane budynki:
+        </div>
+
+        <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+
+            <tr>
+                <td>Kod</td>
+                <td>Nazwa</td>
+                <td>Szerokość geograficzna</td>
+                <td>Długość geograficzna</td>
+            </tr>
+            <c:forEach items="${buildings}" var="building">
+                <tr onclick="window.document.location='remove-unit-buildings?id_unit=${unit.id}&id_building=${building.id}';">
+                    <td><c:out value="${building.code}"/></td>
+                    <td> <c:out value="${building.name}"/></td>
+                    <td> <c:out value="${building.latitude}"/></td>
+                    <td> <c:out value="${building.longitude}"/></td>
+                </tr>
+            </c:forEach>
+
+        </table>
+
+    </div>
 </div>
+
+<%--<div id="all" class="container-fluid">--%>
+    <%--<div id="container">--%>
+        <%--<div class="content">--%>
+            <%--<div>--%>
+                <%--<div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kliknij budynek, z którym chcesz usunąć powiązanie :</div></div>--%>
+            <%--</div>--%>
+
+            <%--<div id="devices" class="panel panel-default" style="padding: 15px;">--%>
+                <%--<div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">--%>
+                    <%--Powiązane budynki:--%>
+                <%--</div>--%>
+
+                <%--<table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">--%>
+
+                    <%--<tr>--%>
+                        <%--<td>Kod</td>--%>
+                        <%--<td>Nazwa</td>--%>
+                        <%--<td>Szerokość geograficzna</td>--%>
+                        <%--<td>Długość geograficzna</td>--%>
+                    <%--</tr>--%>
+                    <%--<c:forEach items="${buildings}" var="building">--%>
+                        <%--<tr onclick="window.document.location='remove-unit-buildings?id_unit=${unit.id}&id_building=${building.id}';">--%>
+                            <%--<td><c:out value="${building.code}"/></td>--%>
+                            <%--<td> <c:out value="${building.name}"/></td>--%>
+                            <%--<td> <c:out value="${building.latitude}"/></td>--%>
+                            <%--<td> <c:out value="${building.longitude}"/></td>--%>
+                        <%--</tr>--%>
+                    <%--</c:forEach>--%>
+
+                <%--</table>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
 
 
 <script src="/js/jquery-3.1.1.min.js"></script>

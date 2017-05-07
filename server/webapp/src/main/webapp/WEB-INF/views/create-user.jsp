@@ -56,15 +56,14 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="background-color: #f8fafe;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-user"></span>
                 Tworzenie nowego użytkownika</div>
         </div>
     </div>
 
-    <div style="height: 10px;"></div>
-    <div class="panel panel-default" id="content"><div></div>
+    <div class="panel panel-default" id="content">
         <div>
             <a href="/all-users" class="btn btn-info" role="button">
                 <span class="glyphicon glyphicon-backward"></span>

@@ -31,7 +31,7 @@
     </h1></c:if>
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-            <div class="login-panel panel panel-default" style="margin-bottom: 0px; padding-bottom: 0px;">
+            <div class="login-panel panel panel-default" style="width:350px!important;margin-bottom: 0px; padding-bottom: 0px;">
                 <div class="panel-heading" style="background-color: #121612;color:#cdd6cd;">
                     <h3 class="panel-title" style="font-size:17px !important;">Network-Monitor</h3>
                 </div>
@@ -79,8 +79,6 @@
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="/js/metisMenu.min.js"></script>
 <script src="/js/sb-admin-2.js"></script>
 <script>

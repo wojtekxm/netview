@@ -112,8 +112,8 @@
         </div>
         <div id="control4"> Rodzaj wykresu
             <form action="" class="forma">
-                <input type="radio" class="rad" name="responsive" value="1"> Wykres responsywny</br>
-                <input type="radio" class="rad" name="responsive" value="2"> Wykres z suwakiem</br>
+                <input type="radio" class="rad" id="resp" name="responsive" value="1" id="resp1"> Wykres responsywny</br>
+                <input type="radio" class="rad" name="responsive" value="2" id="resp2"> Wykres z suwakiem</br>
             </form></br>
         </div>
         <div id="control5"> Rozmiary wykresu
@@ -151,10 +151,12 @@
 </style>
 
 <script>
+
     $('#apply').hide();
     $(function () {$('#datetimepicker1').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
     $(function () {$('#datetimepicker2').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
     $('#default_chart').prop("checked", true);
+    $('#resp').prop("checked", true);
     $('#control5').hide();
     $('#control2').hide();
     var id=<c:out value="${device.id}"/>;
@@ -427,11 +429,11 @@
             request.onload = function () {
                 var jsondata = JSON.parse(request.responseText);
                 //console.log(JSON.stringify(jsondata));
-                var ilosc=Object.keys(jsondata.list).length;
+                var ilosc=Object.keys(jsondata.content.list).length;
                 console.log("ilosc badan:"+ilosc);
                 for (i = 0; i < ilosc; i++) {
-                    values_avg.push(Math.round(jsondata.list[i].clients));
-                    tags.push(convert(Number(jsondata.list[i].timestamp)));
+                    values_avg.push(Math.round(jsondata.content.list[i].clients));
+                    tags.push(convert(Number(jsondata.content.list[i].timestamp)));
                 }
                 var myFirstChart = Chart.Line(mycanvas, {data: data2, options: options});
             };
@@ -447,13 +449,13 @@
             request.onload = function () {
                 var jsondata = JSON.parse(request.responseText);
                 //console.log(JSON.stringify(jsondata));
-                var ilosc=Object.keys(jsondata.list).length;
+                var ilosc=Object.keys(jsondata.content.list).length;
                 console.log("ilosc badan:"+ilosc);
                 for (i = 0; i < ilosc; i++) {
-                    values_avg.push(Math.round(jsondata.list[i].average));
-                    values_min.push(jsondata.list[i].min);
-                    values_max.push(jsondata.list[i].max);
-                    tags.push(convert(Number(jsondata.list[i].timeStart)));
+                    values_avg.push(Math.round(jsondata.content.list[i].average));
+                    values_min.push(jsondata.content.list[i].min);
+                    values_max.push(jsondata.content.list[i].max);
+                    tags.push(convert(Number(jsondata.content.list[i].timeStart)));
                     console.log("_____________________");
                 }
                 var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});

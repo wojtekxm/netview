@@ -1,5 +1,5 @@
 "use strict";
-var devices = new Array();
+var devices = [];
 var interGreen;
 
 // $(document).ready(function(){
@@ -12,7 +12,7 @@ function onlyGreen()
     $('[data-toggle="tooltip"]').tooltip('destroy');
     $.ajax({
         type: 'GET',
-        url: '/api/all-devices',
+        url: '/api/device/info/all',
         dataType: 'json',
 
         success: function(listDtoOfCurrentDeviceStateDto) {
@@ -152,7 +152,7 @@ function onlyRed()
     $('[data-toggle="tooltip"]').tooltip('destroy');
     $.ajax({
         type: 'GET',
-        url: '/api/all-devices',
+        url: '/api/device/info/all',
         dataType: 'json',
 
         success: function(listDtoOfCurrentDeviceStateDto) {
@@ -267,7 +267,7 @@ function onlyGrey()
     $('[data-toggle="tooltip"]').tooltip('destroy');
     $.ajax({
         type: 'GET',
-        url: '/api/all-devices',
+        url: '/api/device/info/all',
         dataType: 'json',
 
         success: function(listDtoOfCurrentDeviceStateDto) {

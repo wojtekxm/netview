@@ -10,6 +10,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -90,9 +91,7 @@
                     <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
                         <input form="form2" type="submit" value=" Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
-                         <div style="min-height:38px; min-width:60px">
-                    <div id="change_loading" class="later"></div>
-                         </div>
+                        <div id="change_loading" class="later progress-space"></div>
                     </span>
                 </div>
             </div>
@@ -123,8 +122,11 @@ $(document).ready(function () {
 
         };
         progress.load(
-            'post',
-            '/api/accept-modify-unit',
+            [{
+                "url" : '/api/accept-modify-unit',
+                "method" : 'post',
+                "postData" : unitDto
+            }],
             ['#change_loading'], [], [],
             function(unitDto) {
                 btnSubmit.prop('disabled', false);
@@ -133,9 +135,7 @@ $(document).ready(function () {
             function() {
                 btnSubmit.prop('disabled', false);
                 notify.danger('#result_error', 'Nie udało się zmienić danych.');
-            },
-            unitDto
-
+            }
         );
     });
 });

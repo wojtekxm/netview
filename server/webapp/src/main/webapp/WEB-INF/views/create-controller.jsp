@@ -10,6 +10,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -120,16 +121,14 @@
                 </div>
             </div>
 
-            <div style="min-height:38px; min-width:60px">
-                <div id="change_loading"></div>
+            <div id="change_loading" class="progress-space"></div>
 
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;"></div>
-                    </span>
-                </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <span style="display: flex;position: relative;float: left;">
+                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                    <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;"></div>
+                </span>
             </div>
             <%--</div>--%>
         </form>
@@ -163,8 +162,11 @@ $(document).ready(function () {
             "fake": $('#new_fake').val()
         };
         progress.load(
-            'post',
-            '/api/controller/create',
+            [{
+                "url" : '/api/controller/create',
+                "method" : 'post',
+                "postData" : createControllerDto
+            }],
             ['#change_loading'], [], [],
             function(createControllerDto) {
                 btnSubmit.prop('disabled', false);
@@ -173,8 +175,7 @@ $(document).ready(function () {
             function() {
                 btnSubmit.prop('disabled', false);
                 notify.danger('#result_error', 'Nie udało się dodać kontrolera.');
-            },
-            createControllerDto
+            }
         );
     });
 });

@@ -10,6 +10,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -121,16 +122,14 @@
                 </div>
             </div>
 
-            <div style="min-height:38px; min-width:60px">
-                <div id="change_loading" class="later"></div>
-                <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                            <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
-                    </span>
-                </div>
+            <div id="change_loading" class="progress-space later"></div>
+            <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                        <span style="display: flex;position: relative;float: left;">
+                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                    <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
+                </span>
             </div>
         </form>
     </div>
@@ -165,8 +164,11 @@ $(document).ready(function () {
 
         };
         progress.load(
-            'post',
-            '/api/building/create',
+            [{
+                "url" : '/api/building/create',
+                "method" : 'post',
+                "postData" : createBuildingDto
+            }],
             ['#change_loading'], [], [],
             function( response ) {
                 btnSubmit.prop( 'disabled', false );
@@ -175,8 +177,7 @@ $(document).ready(function () {
             function( response ) {
                 btnSubmit.prop( 'disabled', false );
                 notify.danger( '#result_error', 'Nie udało się dodać budynku.'); //(response == null ||  response.error == null ||  response.error == '' ) ? 'Błąd operacji' : response.error  );
-            },
-            createBuildingDto
+            }
         );
 
     });

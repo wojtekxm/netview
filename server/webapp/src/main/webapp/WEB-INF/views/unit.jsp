@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/tabelka.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -118,7 +119,6 @@ $(document).ready(function() {
             "cssClass" : 'width-4'
         }, {
             "label" : '',
-            "comparator" : null,
             "extractor" : 'td_button',
             "cssClass" : 'width-0'
         }
@@ -144,10 +144,11 @@ $(document).ready(function() {
                         "unitId" : unit.id,
                         "buildingId" : event.data.buildingId
                     };
-                    progress.loadMany(
+                    progress.load(
                         [ {
                             "url" : '/api/building/unlink-unit/',
-                            "optionalPostData" : buildingAndUnitDto
+                            "method" : 'post',
+                            "postData" : buildingAndUnitDto
                         }, {
                             "url" : '/api/unit/buildings/' + unit.id
                         } ],
@@ -169,8 +170,7 @@ $(document).ready(function() {
         }
     }
 
-    progress.load(
-        'get',
+    progress.loadGet(
         '/api/unit/details/${id}',
         ['#main_loading'], [], [],
         function(contentDtoOfUnitDetailsDto) {
@@ -185,8 +185,6 @@ $(document).ready(function() {
             fixBuildings();
             tabelkaBuildings = $('#tabelka_buildings');
             tabelkaBuildings.append(tabelka.create(buildings, buildingDefinitions));
-
-
         }
     );
 });

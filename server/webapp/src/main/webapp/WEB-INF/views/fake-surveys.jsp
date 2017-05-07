@@ -9,8 +9,8 @@
     <title>Generator sztucznych badań</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
-    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -102,9 +102,9 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-sm-12 text-center" style="min-height:45px; min-width:60px">
+            <div class="col-sm-12 text-center">
                 <button id="submit" type="button" class="btn btn-primary">Generuj</button>
-                <span id="loading"></span>
+                <div id="loading" class="progress-space"></div>
             </div>
         </div>
         <div id="notify" class="row"></div>
@@ -175,8 +175,11 @@ $(document).ready(function () {
         if( isNaN(obj.numberOfSurveys) )return;
         $submitButton.prop('disabled', true);
         progress.load(
-            'post',
-            '/api/surveys/fake',
+            [{
+                "url" : '/api/surveys/fake',
+                "method" : 'post',
+                "postData" : obj
+            }],
             ['#loading'], [], [],
             function() {
                 $submitButton.prop('disabled', false);
@@ -200,8 +203,7 @@ $(document).ready(function () {
                         $('<div></div>').addClass('panel-heading').text('Error')
                     )
                 );
-            },
-            obj
+            }
         );
     });
 });

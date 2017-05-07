@@ -10,6 +10,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -118,10 +119,7 @@
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
                         <input form="form1" id="btn_submit" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
                     </span>
-                    <div style="min-height:38px; min-width:60px">
-                        <div id="change_loading" class="later"></div>
-                    </div>
-
+                    <div id="change_loading" class="later progress-space"></div>
                 </div>
             </div>
             <div class="form-group">
@@ -157,8 +155,11 @@ $(document).ready(function () {
 
         };
         progress.load(
-            'post',
-            '/api/accept-modify-building',
+            [{
+                "url" : '/api/accept-modify-building',
+                "method" : 'post',
+                "postData" : BuildingDto
+            }],
             ['#change_loading'], [], [],
             function(BuildingDto) {
                 btnSubmit.prop('disabled', false);
@@ -167,8 +168,7 @@ $(document).ready(function () {
             function() {
                 btnSubmit.prop('disabled', false);
                 notify.danger('#result_error', 'Nie udało się zmienić danych.');
-            },
-            BuildingDto
+            }
         );
     });
 });

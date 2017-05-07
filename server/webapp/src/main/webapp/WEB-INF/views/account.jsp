@@ -85,8 +85,8 @@
             <div class="form-group">
                 <div class="col-sm-offset-5 col-sm-7 clearfix">
                     <button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>
-                    <div class="pull-left" style="min-height:45px; min-width:60px">
-                        <div id="change_loading" class="later"></div>
+                    <div class="pull-left">
+                        <div id="change_loading" class="later progress-space"></div>
                     </div>
                 </div>
             </div>
@@ -114,18 +114,20 @@ $(document).ready(function () {
             "repeat": $('#repeat_password').val()
         };
         progress.load(
-            'post',
-            '/api/change-password',
+            [{
+                "url" : '/api/change-password',
+                "method" : 'post',
+                "postData" : changePasswordDto
+            }],
             ['#change_loading'], [], [],
-            function(contentDtoOfAccessDto) {
+            function() {
                 btnSubmit.prop('disabled', false);
                 notify.success('#result_success', 'Hasło zostało zmienione');
             },
             function() {
                 btnSubmit.prop('disabled', false);
                 notify.danger('#result_error', 'Nie udało się zmienić hasła');
-            },
-            changePasswordDto
+            }
         );
     });
 });

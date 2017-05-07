@@ -58,7 +58,7 @@
     <h4 class="pull-left">Budynki</h4>
     <div id="main_loading" class="later"></div>
     <div id="main_success" class="later">
-        <div id="tabelka_space"></div>
+        <div id="tabelka_buildings"></div>
         <div>
             <a href="/create-building" class="btn btn-success" role="button" style="width: 200px;">
                 <span class="glyphicon glyphicon-plus"></span>
@@ -74,8 +74,8 @@
 <script>
 "use strict";
 $(document).ready( function() {
-    var buildings, columnDefinitions, currentTabelka;
-    currentTabelka = null;
+    var buildings, columnDefinitions, tabelkaBuildings;
+    tabelkaBuildings = $('#tabelka_buildings');
     buildings = [];
     columnDefinitions = [
         {
@@ -102,14 +102,13 @@ $(document).ready( function() {
         }
     }
 
-    progress.load(
-        'get',
-        '/api/building/all',
+    progress.loadGet(
+        '/api/building/info/all',
         ['#main_loading'], ['#main_success'], [],
         function(listDtoOfBuildingDto) {
             buildings = listDtoOfBuildingDto.list;
             fixBuildings();
-            $('#tabelka_space').append(
+            tabelkaBuildings.append(
                 tabelka.create(buildings, columnDefinitions)
             );
         }

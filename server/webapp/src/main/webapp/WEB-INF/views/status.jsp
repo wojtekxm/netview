@@ -233,7 +233,7 @@
     function topDevices(option){
         $.ajax({
             type: 'GET',
-            url: '/api/all-devices',
+            url: '/api/device/info/all',
             dataType: 'json',
 
             success: function(listDtoOfCurrentDeviceStateDto) {
@@ -488,7 +488,7 @@
 
         $.ajax({
             type: 'GET',
-            url: '/api/building/all',
+            url: '/api/building/info/all',
             dataType: 'json',
 
             success: function(listDtoOfBuildingDto){
@@ -596,7 +596,7 @@
         $('[data-toggle="tooltip"]').tooltip('destroy');
         $.ajax({
             type: 'GET',
-            url: '/api/all-devices',
+            url: '/api/device/info/all',
             dataType: 'json',
 
             success: function(listDtoOfCurrentDeviceStateDto) {

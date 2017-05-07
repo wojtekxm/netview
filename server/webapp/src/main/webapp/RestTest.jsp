@@ -129,7 +129,7 @@
             );
             $.ajax({
                 type: 'GET',
-                url: '/api/all-devices',
+                url: '/api/device/info/all',
                 dataType: 'json',
                 success: function (listDtoOfDeviceStateDto) {
                     if(!listDtoOfDeviceStateDto.success) {

@@ -48,7 +48,8 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     public int update(Controller controller, SurveyInfoCollection collection) {
         final int timestamp = (int) Instant.now().getEpochSecond();
         makeDevices(controller, collection);
-        final Map<Long, CurrentDeviceState> id2current = surveyReadingService.checkForController(controller);
+        final Map<Long, CurrentDeviceState> id2current = surveyReadingService
+                .checkForControllerFetch( controller.getId() );
         final List<DeviceSurvey> ds2persist = new ArrayList<>();
         id2current.forEach( (deviceId, currentState) -> {
             for(Integer frequencyMhz : currentState.getFrequencies()) {

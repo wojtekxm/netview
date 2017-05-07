@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.entity.Building;
+import zesp03.common.entity.Controller;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.BuildingRepository;
@@ -66,6 +67,17 @@ public class BuildingServiceImpl implements BuildingService {
         return b.getLubList()
                 .stream()
                 .map( lub -> UnitDto.make(lub.getUnit()) )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ControllerDto> getControllers(Long buildingId) {
+        return em.createQuery("SELECT c FROM Controller c WHERE c.building.id = :bid",
+                Controller.class)
+                .setParameter("bid", buildingId)
+                .getResultList()
+                .stream()
+                .map(ControllerDto::make)
                 .collect(Collectors.toList());
     }
 

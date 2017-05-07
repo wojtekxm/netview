@@ -47,17 +47,24 @@ var util = {};
     }
 })();
 
-/*
-ColumnDefinition: {
-    "label" : 'nazwa',
-    "comparator" : util.comparatorText('name'), // or null
-    "extractor" : 'td_name',
-    "cssClass" : 'width-2' // optional
-}
- */
 var tabelka = {};
 (function(){
     tabelka.create = create;
+    tabelka.builder = builder;
+
+    /**
+     * object ColumnDefinition {
+     * "label" : string
+     * "comparator" : optional function (if not specified, sorting is disabled)
+     * "extractor" : string, name of data property holding <td> content
+     * "cssClass" : optional string
+     * }
+     * @param data tabela danych, każdy element będzie pokazany w jednym wierszu
+     * @param columnDefinitions, tabela ColumnDefinition, gdzie każdy element opisuje kolejną kolumnę
+     * @param optionalPaginationThresold
+     * @param optionalPageSizes
+     * @returns {*|jQuery|HTMLElement}
+     */
     function create(data, columnDefinitions, optionalPaginationThresold, optionalPageSizes) {
         var i, k, tmp, last, sortIndex, sortAscending, sortedData, paginationBar,
             paginationSizeSelect, paginationNavList, pageIndex, pageCapacity, pageSizes,
@@ -157,7 +164,7 @@ var tabelka = {};
                 th.append(
                     $('<span></span>').text(definition.label)
                 );
-                if(definition.comparator !== null) {
+                if(typeof definition.comparator === 'function') {
                     th.attr('style', 'cursor: pointer');
                     span = $('<span class="pull-right glyphicon"></span>');
                     if (i === sortIndex) {
@@ -262,6 +269,114 @@ var tabelka = {};
                     }
                 }
             }
+        }
+    }
+
+    function builder() {
+        var bl = {};
+        bl.definitions = [];
+        bl.generators = [];
+        bl.column = column;
+        bl.special = special;
+        bl.deviceFrequency = deviceFrequency;
+        bl.build = build;
+        return bl;
+
+        /**
+         * @param label string, column header
+         * @param sortType string, 'text' or 'number' or null
+         * @param propertyName string
+         * @param width16 integer 0-16
+         * @param columnGenerator function
+         * @returns builder
+         */
+        function column(label, sortType, propertyName, width16, columnGenerator) {
+            var comparator, extractor;
+            if(sortType === 'text') {
+                comparator = util.comparatorText(propertyName);
+            }
+            else if(sortType === 'number') {
+                comparator = util.comparatorNumber(propertyName);
+            }
+            /*else if(sortType === null) {
+                comparator = undefined;
+            }*/
+            extractor = '!#_' + propertyName; // some unique property name
+            bl.definitions.push( {
+                "label" : label,
+                "comparator" : comparator,
+                "extractor" : extractor,
+                "cssClass" : 'width-' + width16
+            } );
+            bl.generators.push(columnGenerator);
+            return bl;
+        }
+
+        /**
+         * shorter version of column(), without sorting
+         * @param label string, column header
+         * @param width16 integer 0-16
+         * @param columnGenerator function
+         * @returns builder
+         */
+        function special(label, width16, columnGenerator) {
+            var extractor;
+            extractor = '!#_' + bl.definitions.length; // some unique property name
+            bl.definitions.push( {
+                "label" : label,
+                "extractor" : extractor,
+                "cssClass" : 'width-' + width16
+            } );
+            bl.generators.push(columnGenerator);
+            return bl;
+        }
+
+        /**
+         * Only for DeviceDetailsDto
+         * @param label string, column header
+         * @param mhz integer or string, 2400 or 5000 or '2400' or '5000'
+         * @param width16 integer 0-16
+         * @returns builder
+         */
+        function deviceFrequency(label, mhz, width16) {
+            var cmpProperty = '!#_cmp_' + mhz;
+            return bl.column(label, 'number', cmpProperty, width16, function(deviceDetailsDto) {
+                var sur, span;
+                span = $('<span></span>');
+                if(typeof deviceDetailsDto.frequency[mhz] !== 'undefined') {
+                    sur = deviceDetailsDto.frequency[mhz];
+                    if(sur !== null && sur.enabled) {
+                        deviceDetailsDto[cmpProperty] = sur.clients;
+                        span.text(sur.clients);
+                    }
+                    else {
+                        deviceDetailsDto[cmpProperty] = -1;
+                        span.text('wył.');
+                    }
+                }
+                else {
+                    deviceDetailsDto[cmpProperty] = -2;
+                    span.text('-');
+                }
+                return span;
+            });
+        }
+
+        function build(tabelkaSelector, data) {
+            var where, i, k, e, def, gen;
+            for(i = 0; i < data.length; i++) {
+                e = data[i];
+                for(k = 0; k < bl.generators.length; k++) {
+                    def = bl.definitions[k];
+                    gen = bl.generators[k];
+                    e[def.extractor] = gen(e);
+                }
+            }
+            where = $(tabelkaSelector);
+            where.empty();
+            where.append(
+                tabelka.create(data, bl.definitions)
+            );
         }
     }
 })();

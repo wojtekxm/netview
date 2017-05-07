@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -80,7 +81,7 @@
     $(document).ready( function() {
         $.ajax( {
             type: 'get',
-            url: '/api/all-devices',
+            url: '/api/device/info/all',
             dataType: 'json',
             success: function(listDtoOfCurrentDeviceStateDto) {
                 if(!listDtoOfCurrentDeviceStateDto.success) {

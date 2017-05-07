@@ -9,7 +9,6 @@ import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.data.RangeSamples;
 import zesp03.common.data.SampleAvgMinMax;
 import zesp03.common.data.SampleRaw;
-import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.entity.DeviceSurvey;
@@ -48,29 +47,56 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
     }
 
     @Override
-    public Optional<CurrentDeviceState> checkOne(Long deviceId) {
+    public Map<Long, CurrentDeviceState> checkAllFetch() {
+        HashMap<Long, CurrentDeviceState> map = new HashMap<>();
+        List<Object[]> list = em.createQuery(
+                selectCheck(""),
+                Object[].class)
+                .getResultList();
+        for(Object[] arr : list) {
+            merge(map, arr);
+        }
+        return map;
+    }
+
+    @Override
+    public Map<Long, CurrentDeviceState> checkForControllerFetch(Long controllerId) {
+        HashMap<Long, CurrentDeviceState> map = new HashMap<>();
+        List<Object[]> list = em.createQuery(
+                selectCheck("dev.controller.id = :cid AND"),
+                Object[].class)
+                .setParameter("cid", controllerId)
+                .getResultList();
+        for(Object[] arr : list) {
+            merge(map, arr);
+        }
+        return map;
+    }
+
+    @Override
+    public Map<Long, CurrentDeviceState> checkForBuildingFetch(Long buildingId) {
+        HashMap<Long, CurrentDeviceState> map = new HashMap<>();
+        List<Object[]> list = em.createQuery(
+                selectCheck("dev.building.id = :bid AND"),
+                Object[].class)
+                .setParameter("bid", buildingId)
+                .getResultList();
+        for(Object[] arr : list) {
+            merge(map, arr);
+        }
+        return map;
+    }
+
+    @Override
+    public Optional<CurrentDeviceState> checkOneFetch(Long deviceId) {
         CurrentDeviceState result = null;
-        List<Object[]> list = em.createQuery("SELECT dev, df, sur FROM Device dev " +
-                        "LEFT JOIN DeviceFrequency df ON dev.id = df.device.id " +
-                        "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
-                        "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id " +
-                        "WHERE dev.id = :deviceId AND " +
-                        "(dev.deleted = 0 OR dev.deleted IS NULL) AND " +
-                        "( df.deleted = 0 OR  df.deleted IS NULL) AND " +
-                        "(sur.deleted = 0 OR sur.deleted IS NULL)",
+        List<Object[]> list = em.createQuery(
+                selectCheck("dev.id = :deviceId AND"),
                 Object[].class)
                 .setParameter("deviceId", deviceId)
                 .getResultList();
         for(Object[] arr : list) {
-            Device dev = (Device)arr[0];
-            DeviceFrequency df = (DeviceFrequency)arr[1];
-            DeviceSurvey sur = (DeviceSurvey)arr[2];
-            CurrentDeviceState current = new CurrentDeviceState(dev, df, sur);
-            if (result != null) {
-                result.merge(current);
-            } else {
-                result = current;
-            }
+            result = merge(result, arr);
         }
         if(result != null) {
             return Optional.of(result);
@@ -80,62 +106,38 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         }
     }
 
-    @Override
-    public Map<Long, CurrentDeviceState> checkForController(Controller c) {
-        HashMap<Long, CurrentDeviceState> map = new HashMap<>();
-        List<Object[]> list = em.createQuery("SELECT dev, df, sur FROM Device dev " +
-                        "LEFT JOIN DeviceFrequency df ON dev.id = df.device.id " +
-                        "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
-                        "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id " +
-                        "WHERE dev.controller = :c AND " +
-                        "(dev.deleted = 0 OR dev.deleted IS NULL) AND " +
-                        "( df.deleted = 0 OR  df.deleted IS NULL) AND " +
-                        "(sur.deleted = 0 OR sur.deleted IS NULL)",
-                Object[].class)
-                .setParameter("c", c)
-                .getResultList();
-        for(Object[] arr : list) {
-            Device dev = (Device)arr[0];
-            DeviceFrequency df = (DeviceFrequency)arr[1];
-            DeviceSurvey sur = (DeviceSurvey)arr[2];
-            CurrentDeviceState current = new CurrentDeviceState(dev, df, sur);
-            CurrentDeviceState found = map.get(dev.getId());
-            if(found != null) {
-                found.merge(current);
-            }
-            else {
-                map.put(dev.getId(), current);
-            }
-        }
-        return map;
+    private String selectCheck(String filter) {
+        return "SELECT dev, df, sur FROM Device dev " +
+                "LEFT JOIN FETCH dev.controller con " +
+                "LEFT JOIN FETCH dev.building bui " +
+                "LEFT JOIN DeviceFrequency df ON dev.id = df.device.id " +
+                "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
+                "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id WHERE " +
+                filter +
+                " (dev.deleted = 0 OR dev.deleted IS NULL) AND " +
+                "( df.deleted = 0 OR  df.deleted IS NULL) AND " +
+                "(sur.deleted = 0 OR sur.deleted IS NULL)";
     }
 
-    @Override
-    public Map<Long, CurrentDeviceState> checkAllFetch() {
-        HashMap<Long, CurrentDeviceState> map = new HashMap<>();
-        em.createQuery("SELECT dev, df, sur FROM Device dev LEFT JOIN FETCH dev.controller con LEFT JOIN FETCH dev.building bui " +
-                        "LEFT JOIN DeviceFrequency df ON dev.id = df.device.id " +
-                        "LEFT JOIN ViewLastSurvey vfs ON df.id = vfs.frequencyId " +
-                        "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id WHERE " +
-                        "(dev.deleted = 0 OR dev.deleted IS NULL) AND " +
-                        "( df.deleted = 0 OR  df.deleted IS NULL) AND " +
-                        "(sur.deleted = 0 OR sur.deleted IS NULL)",
-                Object[].class)
-                .getResultList()
-                .forEach( arr -> {
-                    Device dev = (Device)arr[0];
-                    DeviceFrequency df = (DeviceFrequency)arr[1];
-                    DeviceSurvey sur = (DeviceSurvey)arr[2];
-                    CurrentDeviceState current = new CurrentDeviceState(dev, df, sur);
-                    CurrentDeviceState found = map.get(dev.getId());
-                    if(found != null) {
-                        found.merge(current);
-                    }
-                    else {
-                        map.put(dev.getId(), current);
-                    }
-                } );
-        return map;
+    private CurrentDeviceState merge(CurrentDeviceState currentOrNull, Object[] arrDevFreqSur) {
+        final Device dev = (Device)arrDevFreqSur[0];
+        final DeviceFrequency df = (DeviceFrequency)arrDevFreqSur[1];
+        final DeviceSurvey sur = (DeviceSurvey)arrDevFreqSur[2];
+        final CurrentDeviceState next = new CurrentDeviceState(dev, df, sur);
+        if(currentOrNull != null) {
+            currentOrNull.merge(next);
+            return currentOrNull;
+        }
+        else {
+            return next;
+        }
+    }
+
+    private void merge(Map<Long, CurrentDeviceState> map, Object[] arrDevFreqSur) {
+        Long deviceId = ((Device)arrDevFreqSur[0]).getId();
+        CurrentDeviceState current = map.get(deviceId);
+        CurrentDeviceState result = merge(current, arrDevFreqSur);
+        map.put(deviceId, result);
     }
 
     @Override

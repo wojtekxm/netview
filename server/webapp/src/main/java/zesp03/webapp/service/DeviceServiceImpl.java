@@ -4,16 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zesp03.common.data.CurrentDeviceState;
+import zesp03.common.entity.Building;
+import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
 import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.exception.NotFoundException;
+import zesp03.common.repository.BuildingRepository;
 import zesp03.common.repository.ControllerRepository;
 import zesp03.common.repository.DeviceRepository;
 import zesp03.common.repository.DeviceSurveyRepository;
 import zesp03.common.service.SurveyReadingService;
-import zesp03.webapp.dto.CurrentDeviceStateDto;
 import zesp03.webapp.dto.DeviceDetailsDto;
 import zesp03.webapp.dto.DeviceDto;
+import zesp03.webapp.dto.DeviceNowDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,6 +40,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
     private ControllerRepository controllerRepository;
+
+    @Autowired
+    private BuildingRepository buildingRepository;
 
     @Autowired
     private DeviceSurveyRepository deviceSurveyRepository;
@@ -65,20 +71,11 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public CurrentDeviceStateDto checkOne(Long deviceId) {
-        Optional<CurrentDeviceState> opt = surveyReadingService.checkOne(deviceId);
-        if( ! opt.isPresent() ) {
-            throw new NotFoundException("device");
-        }
-        return CurrentDeviceStateDto.make( opt.get() );
-    }
-
-    @Override
-    public List<CurrentDeviceStateDto> checkAll() {
+    public List<DeviceNowDto> checkAll() {
         return surveyReadingService.checkAllFetch()
                 .values()
                 .stream()
-                .map(CurrentDeviceStateDto::make)
+                .map(DeviceNowDto::make)
                 .collect(Collectors.toList());
     }
 
@@ -90,6 +87,42 @@ public class DeviceServiceImpl implements DeviceService {
                 .stream()
                 .map(DeviceDetailsDto::make)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DeviceDetailsDto> checkDetailsByController(Long controllerId) {
+        return surveyReadingService.checkForControllerFetch(controllerId)
+                .values()
+                .stream()
+                .map(DeviceDetailsDto::make)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DeviceDetailsDto> checkDetailsByBuilding(Long buildingId) {
+        return surveyReadingService.checkForBuildingFetch(buildingId)
+                .values()
+                .stream()
+                .map(DeviceDetailsDto::make)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public DeviceNowDto checkOne(Long deviceId) {
+        Optional<CurrentDeviceState> opt = surveyReadingService.checkOneFetch(deviceId);
+        if( ! opt.isPresent() ) {
+            throw new NotFoundException("device");
+        }
+        return DeviceNowDto.make( opt.get() );
+    }
+
+    @Override
+    public DeviceDetailsDto checkDetailsOne(Long deviceId) {
+        Optional<CurrentDeviceState> opt = surveyReadingService.checkOneFetch(deviceId);
+        if( ! opt.isPresent() ) {
+            throw new NotFoundException("device");
+        }
+        return DeviceDetailsDto.make( opt.get() );
     }
 
     @Override
@@ -133,5 +166,50 @@ public class DeviceServiceImpl implements DeviceService {
         em.createQuery("UPDATE DeviceFrequency df SET df.deleted = df.id WHERE df.device = :d")
                 .setParameter("d", d)
                 .executeUpdate();
+    }
+
+    @Override
+    public void linkController(Long deviceId, Long controllerId) {
+        Optional<Device> odev = deviceRepository.findOneNotDeleted(deviceId);
+        if(! odev.isPresent()) {
+            throw new NotFoundException("device");
+        }
+        Optional<Controller> ocon = controllerRepository.findOneNotDeleted(controllerId);
+        if(! ocon.isPresent() ) {
+            throw new NotFoundException("controller");
+        }
+        odev.get().setController(ocon.get());
+        //TODO merge?
+    }
+
+    @Override
+    public void linkBuilding(Long deviceId, Long buildingId) {
+        Optional<Device> odev = deviceRepository.findOneNotDeleted(deviceId);
+        if(! odev.isPresent()) {
+            throw new NotFoundException("device");
+        }
+        Building bui = buildingRepository.findOne(buildingId);
+        if(bui == null) {
+            throw new NotFoundException("building");
+        }
+        odev.get().setBuilding(bui);
+    }
+
+    @Override
+    public void unlinkController(Long deviceId) {
+        Optional<Device> odev = deviceRepository.findOneNotDeleted(deviceId);
+        if(! odev.isPresent()) {
+            throw new NotFoundException("device");
+        }
+        odev.get().setController(null);
+    }
+
+    @Override
+    public void unlinkBuilding(Long deviceId) {
+        Optional<Device> odev = deviceRepository.findOneNotDeleted(deviceId);
+        if(! odev.isPresent()) {
+            throw new NotFoundException("device");
+        }
+        odev.get().setBuilding(null);
     }
 }

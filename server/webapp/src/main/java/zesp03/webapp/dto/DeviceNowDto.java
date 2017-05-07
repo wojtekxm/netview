@@ -10,7 +10,7 @@ import zesp03.common.entity.DeviceSurvey;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CurrentDeviceStateDto {
+public class DeviceNowDto {
     private long id;
     private String name;
     private String description;
@@ -98,8 +98,8 @@ public class CurrentDeviceStateDto {
         }
     }
 
-    public static CurrentDeviceStateDto make(CurrentDeviceState c) {
-        CurrentDeviceStateDto dto = new CurrentDeviceStateDto();
+    public static DeviceNowDto make(CurrentDeviceState c) {
+        DeviceNowDto dto = new DeviceNowDto();
         dto.wrap(c);
         return dto;
     }

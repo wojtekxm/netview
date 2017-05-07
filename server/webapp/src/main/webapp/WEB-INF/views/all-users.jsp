@@ -142,8 +142,7 @@ $(document).ready( function() {
         }
     }
 
-    progress.load(
-        'get',
+    progress.loadGet(
         '/api/user/all',
         ['#main_loading'], ['#main_success'], [],
         function(listDtoOfUserDto) {

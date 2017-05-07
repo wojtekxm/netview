@@ -61,9 +61,7 @@
             <span class="glyphicon glyphicon-refresh"></span>
             zbadaj wszystkie
         </button>
-        <div class="pull-right" style="min-height:45px; min-width:60px">
-            <span id="examine_loading"></span>
-        </div>
+        <div id="examine_loading" class="pull-right progress-space"></div>
     </div>
     <div class="on-loading"></div>
     <div class="on-loaded">
@@ -148,8 +146,7 @@ $(document).ready( function() {
         }
     }
 
-    progress.load(
-        'get',
+    progress.loadGet(
         '/api/controller/details/all',
         ['.on-loading'], ['.on-loaded'], [],
         function(listDtoOfControllerDetailsDto) {
@@ -164,10 +161,10 @@ $(document).ready( function() {
             btnExamine.click(
                 function() {
                     btnExamine.prop('disabled', true);
-                    progress.loadMany(
+                    progress.load(
                         [ {
                             "url" : '/api/surveys/examine/all',
-                            "optionalPostData" : false
+                            "method" : 'post'
                         }, {
                             "url" : '/api/controller/details/all'
                         } ],

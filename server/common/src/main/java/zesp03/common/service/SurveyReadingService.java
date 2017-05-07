@@ -4,7 +4,6 @@ import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.data.RangeSamples;
 import zesp03.common.data.SampleAvgMinMax;
 import zesp03.common.data.SampleRaw;
-import zesp03.common.entity.Controller;
 
 import java.util.Map;
 import java.util.Optional;
@@ -12,11 +11,16 @@ import java.util.Optional;
 public interface SurveyReadingService {
     Long getFrequencyIdNotDeletedOrThrow(Long deviceId, Integer frequencyMhz);
 
-    Optional<CurrentDeviceState> checkOne(Long deviceId);
-    // kluczem w mapie jest id urządzenia
-    Map<Long, CurrentDeviceState> checkForController(Controller c);
     // kluczem w mapie jest id urządzenia
     Map<Long, CurrentDeviceState> checkAllFetch();
+
+    // kluczem w mapie jest id urządzenia
+    Map<Long, CurrentDeviceState> checkForControllerFetch(Long controllerId);
+
+    // kluczem w mapie jest id urządzenia
+    Map<Long, CurrentDeviceState> checkForBuildingFetch(Long buildingId);
+
+    Optional<CurrentDeviceState> checkOneFetch(Long deviceId);
 
     /**
      * Zwraca listę badań dla urządzenia o id równym <code>device</code>.

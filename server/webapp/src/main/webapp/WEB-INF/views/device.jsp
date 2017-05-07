@@ -18,7 +18,8 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="/css/progress.css"><link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/progress.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
@@ -170,7 +171,7 @@
 
     // SPRAWDZANIE OBSLUGIWANYCH PASM CZESTOTLIWOSCI
     var request = new XMLHttpRequest();
-    request.open('Get', '/api/device?id='+id);
+    request.open('Get', '/api/device/info/'+id);
     request.onload = function () {
         var jsondata = JSON.parse(request.responseText);
         if (jsondata.content.frequencySurvey['2400']==undefined &&

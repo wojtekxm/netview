@@ -101,8 +101,7 @@ $(document).ready( function() {
         }
     }
 
-    progress.load(
-        'get',
+    progress.loadGet(
         '/api/unit/all',
         ['#main_loading'], ['#main_success'], [],
         function(listDtoOfUnitDto) {

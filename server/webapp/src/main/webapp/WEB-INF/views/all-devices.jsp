@@ -63,9 +63,7 @@
             <span class="glyphicon glyphicon-refresh"></span>
             zbadaj wszystkie
         </button>
-        <div class="pull-right" style="min-height:45px; min-width:60px">
-            <span id="examine_loading"></span>
-        </div>
+        <div id="examine_loading" class="pull-right progress-space"></div>
     </div>
     <div class="on-loading"></div>
     <div class="on-loaded">
@@ -102,9 +100,7 @@
                             <span class="glyphicon glyphicon-trash"></span>
                             Usuń
                         </button>
-                        <div class="pull-left" style="min-height:45px; min-width:60px">
-                            <div id="delete_loading"></div>
-                        </div>
+                        <div id="delete_loading" class="pull-left progress-space"></div>
                     </div>
                 </div>
                 <div class="row">
@@ -168,6 +164,106 @@ $(document).ready( function() {
             "cssClass" : 'width-4'
         }
     ];
+
+    progress.loadParallel(
+        [{
+            "url" : '/api/device/details/all'
+        }, {
+            "url" : '/api/surveys/total/all/all'
+        }],
+        ['.on-loading'], ['.on-loaded'], [],
+        function(responses) {
+            var btnExamine;
+            btnExamine = $('#btn_examine');
+            devices = responses[0].list;
+            fixDevices();
+            tabelkaSpace.append(
+                tabelka.create(devices, columnDefinitions)
+            );
+            spanTotalAll.text(responses[1].content);
+            refreshTotalBefore();
+            btnExamine.click(function() {
+                    btnExamine.prop('disabled', true);
+                    progress.load(
+                        [ {
+                            "url" : '/api/surveys/examine/all',
+                            "method" : 'post'
+                        }, {
+                            "url" : '/api/device/details/all'
+                        }, {
+                            "url" : '/api/surveys/total/all/all'
+                        } ],
+                        ['#examine_loading'], [], [],
+                        function(responses) {
+                            btnExamine.prop('disabled', false);
+                            devices = responses[1].list;
+                            spanTotalAll.text(responses[2].content);
+                            refreshTotalBefore();
+                            fixDevices();
+                            tabelkaSpace.fadeOut(200, function() {
+                                tabelkaSpace.empty();
+                                tabelkaSpace.append(
+                                    tabelka.create(devices, columnDefinitions)
+                                );
+                                tabelkaSpace.fadeIn(200);
+                            });
+                        },
+                        function() {
+                            btnExamine.prop('disabled', false);
+                        }
+                    );
+                });
+        }
+    );
+
+    btnDelete.click(function() {
+        var radio, urlDelete, t;
+        radio = $('input[type=radio][name=delete_type]:checked');
+        if(radio.length < 1)return;
+        if(radio.val() === 'all') {
+            urlDelete = '/api/surveys/delete/all/all';
+        }
+        else {
+            var t = getTimestampBeforeOrNull();
+            if(t == null) {
+                return;
+            }
+            urlDelete = '/api/surveys/delete/all/' + t;
+        }
+        btnDelete.prop('disabled', true);
+        progress.load(
+            [{
+                "url" : urlDelete,
+                "method" : 'post'
+            }, {
+                "url" : '/api/device/details/all'
+            }, {
+                "url" : '/api/surveys/total/all/all'
+            }],
+            ['#delete_loading'], [], [],
+            function(responses) {
+                devices = responses[1].list;
+                spanTotalAll.text(responses[2].content);
+                refreshTotalBefore();
+                fixDevices();
+                tabelkaSpace.fadeOut(200, function() {
+                    tabelkaSpace.empty();
+                    tabelkaSpace.append(
+                        tabelka.create(devices, columnDefinitions)
+                    );
+                    tabelkaSpace.fadeIn(200);
+                });
+                btnDelete.prop('disabled', false);
+                notify.success('#notify_deleted', 'Badania zostały usunięte');
+            },
+            function() {
+                btnDelete.prop('disabled', false);
+                notify.danger('#notify_deleted', 'Akcja się nie powiodła');
+            }
+        );
+    });
+
+    $dateTimePicker.on('dp.change', refreshTotalBefore);
 
     function fixDevices() {
         var i, dev, controller, freq, survey;
@@ -243,8 +339,7 @@ $(document).ready( function() {
             return;
         }
         totalBeforeIsPending = true;
-        progress.load(
-            'get',
+        progress.loadGet(
             '/api/surveys/total/all/' + t,
             [], [], [],
             function(response) {
@@ -266,106 +361,6 @@ $(document).ready( function() {
         }
         return d.unix();
     }
-
-    progress.loadMany(
-        [{
-            "url" : '/api/device/details/all'
-        }, {
-            "url" : '/api/surveys/total/all/all'
-        }],
-        ['.on-loading'], ['.on-loaded'], [],
-        function(responses) {
-            var btnExamine;
-            btnExamine = $('#btn_examine');
-            devices = responses[0].list;
-            fixDevices();
-            tabelkaSpace.append(
-                tabelka.create(devices, columnDefinitions)
-            );
-            spanTotalAll.text(responses[1].content);
-            refreshTotalBefore();
-            btnExamine.click(function() {
-                    btnExamine.prop('disabled', true);
-                    progress.loadMany(
-                        [ {
-                            "url" : '/api/surveys/examine/all',
-                            "optionalPostData" : false
-                        }, {
-                            "url" : '/api/device/details/all'
-                        }, {
-                            "url" : '/api/surveys/total/all/all'
-                        } ],
-                        ['#examine_loading'], [], [],
-                        function(responses) {
-                            btnExamine.prop('disabled', false);
-                            devices = responses[1].list;
-                            spanTotalAll.text(responses[2].content);
-                            refreshTotalBefore();
-                            fixDevices();
-                            tabelkaSpace.fadeOut(200, function() {
-                                tabelkaSpace.empty();
-                                tabelkaSpace.append(
-                                    tabelka.create(devices, columnDefinitions)
-                                );
-                                tabelkaSpace.fadeIn(200);
-                            });
-                        },
-                        function() {
-                            btnExamine.prop('disabled', false);
-                        }
-                    );
-                });
-        }
-    );
-
-    btnDelete.click(function() {
-        var radio, urlDelete, t;
-        radio = $('input[type=radio][name=delete_type]:checked');
-        if(radio.length < 1)return;
-        if(radio.val() === 'all') {
-            urlDelete = '/api/surveys/delete/all/all';
-        }
-        else {
-            var t = getTimestampBeforeOrNull();
-            if(t == null) {
-                return;
-            }
-            urlDelete = '/api/surveys/delete/all/' + t;
-        }
-        btnDelete.prop('disabled', true);
-        progress.loadMany(
-            [{
-                "url" : urlDelete,
-                "optionalPostData" : false
-            }, {
-                "url" : '/api/device/details/all'
-            }, {
-                "url" : '/api/surveys/total/all/all'
-            }],
-            ['#delete_loading'], [], [],
-            function(responses) {
-                devices = responses[1].list;
-                spanTotalAll.text(responses[2].content);
-                refreshTotalBefore();
-                fixDevices();
-                tabelkaSpace.fadeOut(200, function() {
-                    tabelkaSpace.empty();
-                    tabelkaSpace.append(
-                        tabelka.create(devices, columnDefinitions)
-                    );
-                    tabelkaSpace.fadeIn(200);
-                });
-                btnDelete.prop('disabled', false);
-                notify.success('#notify_deleted', 'Badania zostały usunięte');
-            },
-            function() {
-                btnDelete.prop('disabled', false);
-                notify.danger('#notify_deleted', 'Akcja się nie powiodła');
-            }
-        );
-    });
-
-    $dateTimePicker.on('dp.change', refreshTotalBefore);
 } );
 </script>
 </body>

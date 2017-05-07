@@ -56,7 +56,7 @@
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input name="remember" type="checkbox" value="Remember Me">Zapamiętaj mnie
+                                    <input name="remember" type="checkbox" value="true">Zapamiętaj mnie
                                 </label>
                             </div>
                             <%--<input class="btn btn-lg btn-success btn-block" type="submit" value="Zaloguj">--%>

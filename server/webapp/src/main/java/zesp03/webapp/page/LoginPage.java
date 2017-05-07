@@ -27,26 +27,40 @@ public class LoginPage {
     public String post(
             @RequestParam("username") String username,
             @RequestParam("password") String password,
+            @RequestParam(value = "remember", required = false) String remember,
             ModelMap model,
             HttpServletResponse resp) {
         AccessDto result = loginService.login(username, password);
         if (result != null) {
-            Cookie cu = new Cookie(
+            final int maxAge = (remember != null && remember.length() > 0) ? (60 * 60 * 24 * 30) : -1;
+            log.debug("maxAge={}", maxAge);
+
+            final Cookie cu = new Cookie(
                     AuthenticationFilter.COOKIE_USERID,
                     Long.toString( result.getUserId() )
             );
-            cu.setMaxAge(60 * 60 * 24 * 30);
+            cu.setMaxAge(maxAge);
             cu.setPath("/");
             resp.addCookie(cu);
-            Cookie cp = new Cookie(
+            final Cookie cp = new Cookie(
                     AuthenticationFilter.COOKIE_PASSTOKEN,
                     result.getPassToken()
             );
-            cp.setMaxAge(60 * 60 * 24 * 30);
+            cp.setMaxAge(maxAge);
             cp.setPath("/");
             resp.addCookie(cp);
+
             return "redirect:/";
         } else {
+            final Cookie cu = new Cookie(AuthenticationFilter.COOKIE_USERID,"");
+            cu.setMaxAge(0);
+            cu.setPath("/");
+            resp.addCookie(cu);
+            final Cookie cp = new Cookie(AuthenticationFilter.COOKIE_PASSTOKEN,"");
+            cp.setMaxAge(0);
+            cp.setPath("/");
+            resp.addCookie(cp);
+
             model.put("failed", true);
             return "home-public";
         }

@@ -54,57 +54,107 @@
     </div>
 </nav>
 
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body" style="background-color: #f8fafe;">
+            <div id="tittle"><span class="glyphicon glyphicon-home"></span> <c:out value="${unit.description}"/>: </div>
+            <form method="post" action="/api/accept-modify-unit" id="form2"></form>
+        </div>
+    </div>
 
-<div id="all" class="container-fluid">
-    <div id="container">
-        <div class="content">
-            <div style="height: 10px;"></div>
-            <div>
-                <div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> <c:out value="${unit.description}"/>: </div></div>
-                <form method="post" action="/api/accept-modify-unit" id="form2"></form>
-            </div>
+    <div class="panel panel-default" id="content">
 
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-                    Modyfikuj jednostkę:
-                </div>
+        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+            Modyfikuj jednostkę:
+        </div>
 
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
+        <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
 
-                    <tr>
+            <tr>
 
-                        <input form="form2" id="id" type="hidden" name="id" value="${unit.id}" />
+                <input form="form2" id="id" type="hidden" name="id" value="${unit.id}" />
 
-                    </tr>
-                    <tr>
-                        <td style="color:red" >*Kod</td>
-                        <td ><input form="form2" id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
-                    </tr>
+            </tr>
+            <tr>
+                <td style="color:red" >*Kod</td>
+                <td ><input form="form2" id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
+            </tr>
 
-                    <tr>
-                        <td  style="color:red">*Nazwa</td>
-                        <td ><input form="form2" id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
-                    </tr>
+            <tr>
+                <td  style="color:red">*Nazwa</td>
+                <td ><input form="form2" id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
+            </tr>
 
-                </table>
-                <div>
-                    <a href="/unit/${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
-                    <span style="display: flex;position: relative;float: left;">
+        </table>
+        <div style="height: 40px;">
+            <a href="/unit/${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
+            <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
                         <input form="form2" type="submit" value=" Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
                         <div id="change_loading" class="later progress-space"></div>
                     </span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div id="result_success"></div>
-                    <div id="result_error"></div>
-                </div>
-            </div>
+        </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div id="result_success"></div>
+            <div id="result_error"></div>
         </div>
     </div>
 </div>
+
+<%--<div id="all" class="container-fluid">--%>
+    <%--<div id="container">--%>
+        <%--<div class="content">--%>
+            <%--<div style="height: 10px;"></div>--%>
+            <%--<div>--%>
+                <%--<div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-arrow-right"></span> <c:out value="${unit.description}"/>: </div></div>--%>
+                <%--<form method="post" action="/api/accept-modify-unit" id="form2"></form>--%>
+            <%--</div>--%>
+
+            <%--<div id="devices" class="panel panel-default" style="padding: 15px;">--%>
+                <%--<div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">--%>
+                    <%--Modyfikuj jednostkę:--%>
+                <%--</div>--%>
+
+                <%--<table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">--%>
+
+                    <%--<tr>--%>
+
+                        <%--<input form="form2" id="id" type="hidden" name="id" value="${unit.id}" />--%>
+
+                    <%--</tr>--%>
+                    <%--<tr>--%>
+                        <%--<td style="color:red" >*Kod</td>--%>
+                        <%--<td ><input form="form2" id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>--%>
+                    <%--</tr>--%>
+
+                    <%--<tr>--%>
+                        <%--<td  style="color:red">*Nazwa</td>--%>
+                        <%--<td ><input form="form2" id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>--%>
+                    <%--</tr>--%>
+
+                <%--</table>--%>
+                <%--<div>--%>
+                    <%--<a href="/unit/${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>--%>
+                    <%--<span style="display: flex;position: relative;float: left;">--%>
+                        <%--<span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>--%>
+                        <%--<input form="form2" type="submit" value=" Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >--%>
+                        <%--<div id="change_loading" class="later progress-space"></div>--%>
+                    <%--</span>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<div class="form-group">--%>
+                <%--<div class="col-sm-12">--%>
+                    <%--<div id="result_success"></div>--%>
+                    <%--<div id="result_error"></div>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>

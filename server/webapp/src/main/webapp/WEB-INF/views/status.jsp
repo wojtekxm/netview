@@ -380,11 +380,6 @@
         var al = 0;
 
 
-//        function count(device){
-//            if(device.){
-//
-//            }
-//        }
 
         for(var j=0;j<devices.length;j++){
             var currentDeviceStateDto = devices[j];

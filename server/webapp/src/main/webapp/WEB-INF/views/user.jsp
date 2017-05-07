@@ -63,8 +63,7 @@
         </div>
     </div>
 
-    <div style="height: 10px;"></div>
-    <div class="panel panel-default" id="content"><div></div>
+    <div class="panel panel-default" id="content">
         <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
             Szczegóły użytkownika:
         </div>

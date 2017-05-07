@@ -56,14 +56,13 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="background-color: #f8fafe;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-user"></span> Zarządzanie kontem</div>
         </div>
     </div>
 
-    <div style="height: 10px;"></div>
-    <div class="panel panel-default" id="content"><div></div>
+    <div class="panel panel-default" id="content">
         <div class="form-horizontal">
             <div class="form-group">
                 <label class="col-sm-3 control-label">Aktualne hasło</label>

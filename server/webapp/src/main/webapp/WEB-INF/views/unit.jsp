@@ -57,8 +57,8 @@
     </div>
 </nav>
 <div class="container" style="margin-top:100px">
-    <div id="main_loading" class="later"></div>
-    <div id="main_success" class="later">
+    <div class="on-loading"></div>
+    <div class="on-loaded">
         <div class="row">
             <%--<div class="col-md-6">--%>
                 <div class="panel panel-default">
@@ -105,41 +105,26 @@
 <script>
 "use strict";
 $(document).ready(function() {
-    var unit, buildings,  buildingDefinitions;
+    var unit;
 
-    buildingDefinitions = [
-        {
-            "label": 'nazwa',
-            "comparator": util.comparatorText('name'),
-            "extractor": 'td_name',
-            "cssClass" : 'width-12'
-        },{
-            "label" : 'kod',
-            "comparator" : util.comparatorText('code'),
-            "extractor" : 'td_code',
-            "cssClass" : 'width-4'
-        }, {
-            "label" : '',
-            "extractor" : 'td_button',
-            "cssClass" : 'width-0'
-        }
-    ];
-
-    function fixBuildings() {
-        var i, b;
-        for(i = 0; i < buildings.length; i++) {
-            b = buildings[i];
-            b.td_name = $('<a></a>')
-                .attr('href', '/building/' + b.id)
-                .text(b.name);
-            b.td_code = $('<span></span>').text(b.code);
-            b.td_button = $('<button class="btn btn-danger btn-xs"></button>')
-                .click( {
-                    "buildingId" : b.id
+    function fixBuildings(listOfBuildingDto) {
+        tabelka.builder()
+            .column('nazwa', 'text', 'name', 12, function(building) {
+                return $('<a></a>')
+                    .attr('href', '/building/' + building.id)
+                    .text(building.name);
+            })
+            .column('kod', 'text', 'code', 3, function(building) {
+                return $('<span></span>').text(building.code);
+            })
+            .special('', 1, function(building) {
+                building.button = $('<button class="btn btn-danger btn-xs pull-right"></button>');
+                building.button.click( {
+                    "buildingId" : building.id
                 }, function(event) {
                     var i, buildingAndUnitDto;
-                    for(i = 0; i < buildings.length; i++) {
-                        buildings[i].td_button.prop('disabled', true);
+                    for(i = 0; i < listOfBuildingDto.length; i++) {
+                        listOfBuildingDto[i].button.prop('disabled', true);
                     }
                     buildingAndUnitDto = {
                         "unitId" : unit.id,
@@ -153,39 +138,34 @@ $(document).ready(function() {
                         }, {
                             "url" : '/api/unit/buildings/' + unit.id
                         } ],
-                        ['#main_loading'], ['#main_success'], [],
+                        [], [], [], //TODO...
                         function(responses) {
                             var i, tabelkaBuildings;
-                            for(i = 0; i < buildings.length; i++) {
-                                buildings[i].td_button.prop('disabled', false);
+                            for(i = 0; i < listOfBuildingDto.length; i++) {
+                                listOfBuildingDto[i].button.prop('disabled', false);
                             }
-                            buildings = responses[1].list;
-                            fixBuildings();
-                            tabelkaBuildings = $('#tabelka_buildings');
-                            tabelkaBuildings.empty();
-                            tabelkaBuildings.append(tabelka.create(buildings, buildingDefinitions));
+                            fixBuildings(responses[1].list);
                         } );
                 } ).append(
                     $('<span class="glyphicon glyphicon-minus"></span>')
                 );
-        }
+                return $('<div class="clearfix"></div>').append(
+                    building.button,
+                    $('<div class="progress-space-xs pull-right"></div>')
+                        .attr('id', 'loading_unlink_building_' + building.id)
+                );
+            })
+            .build('#tabelka_buildings', listOfBuildingDto);
     }
 
     progress.loadGet(
         '/api/unit/details/${id}',
-        ['#main_loading'], [], [],
+        ['.on-loading'], ['.on-loaded'], [],
         function(contentDtoOfUnitDetailsDto) {
-            var fieldDescription, fieldCode, tabelkaBuildings;
-            buildings = contentDtoOfUnitDetailsDto.content.buildings;
             unit = contentDtoOfUnitDetailsDto.content.unit;
-            fieldDescription = $('#field_description');
-            fieldDescription.text(unit.description);
-            fieldCode = $('#field_code');
-            fieldCode.text(unit.code);
-
-            fixBuildings();
-            tabelkaBuildings = $('#tabelka_buildings');
-            tabelkaBuildings.append(tabelka.create(buildings, buildingDefinitions));
+            $('#field_description').text(unit.description);
+            $('#field_code').text(unit.code);
+            fixBuildings(contentDtoOfUnitDetailsDto.content.buildings);
         }
     );
 });

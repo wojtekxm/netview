@@ -81,13 +81,10 @@
             </div>
 
             <div class="change_loading" class="progress-space"></div>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:4%;"></span>
-                        <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
-                        </span>
-                    </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:4%;"></span>
+                    <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
                 </div>
             </div>
         </form>
@@ -124,7 +121,7 @@ $(document).ready(function () {
                 "postData" : createUnitDto
             }],
             ['#change_loading'], [], [],
-            function(createUnitDto) {
+            function() {
                 btnSubmit.prop('disabled', false);
                 notify.success('#result_success', 'Jednostka została dodana.');
             },

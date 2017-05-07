@@ -91,24 +91,15 @@
                         <td>Community String</td>
                         <td><input form="form1" type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
                     </tr>
-                    <c:if test="${ controller.fake == false}">
                     <tr>
                         <td>
-
                             <label>
-                                <input form="form1" type="checkbox" checked="checked" id="new_fake" name="fake"> Prawdziwy </label>
+                                <input id="new_fake" name="fake" form="form1" type="checkbox"
+                                       <c:if test="${ controller.fake == false}">checked="checked"</c:if> >
+                                Prawdziwy
+                            </label>
                         </td>
                     </tr>
-                    </c:if>
-                    <c:if test="${ controller.fake == true}">
-                    <tr>
-                        <td>
-
-                            <label>
-                                <input form="form1" type="checkbox" id="new_fake" name="fake"> Prawdziwy </label>
-                        </td>
-                    </tr>
-                    </c:if>
 
                     <label for="new_building">Wybierz budynek:</label>
 
@@ -159,7 +150,7 @@ $(document).ready(function () {
             "ipv4": $('#new_ipv4').val(),
             "description": $('#new_description').val(),
             "communityString": $('#new_communityString').val(),
-            "fake" : $('#new_fake')[0].checked ? false : true,
+            "fake" : !( $('#new_fake')[0].checked ),
             "buildingId": $('#new_building').val()
 
         };
@@ -170,7 +161,7 @@ $(document).ready(function () {
                 "postData" : controllerDto
             }],
             ['#change_loading'], [], [],
-            function(controllerDto) {
+            function() {
                 btnSubmit.prop('disabled', false);
                 notify.success('#result_success', 'Dane zostały zmienione.');
             },

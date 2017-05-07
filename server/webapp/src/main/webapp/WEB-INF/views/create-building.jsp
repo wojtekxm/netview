@@ -123,25 +123,14 @@
                 </div>
             </div>
 
-            <div style="min-height:38px; min-width:60px">
-                <div id="change_loading" class="later"></div>
-                <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <span style="display: flex;position: relative;float: left;">
-                            <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                            <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
-                        </span>
-                    </div>
-                </div>
             <div id="change_loading" class="progress-space later"></div>
-            <%--<input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-primary btn-default btn-lg active">--%>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                        <span style="display: flex;position: relative;float: left;">
-                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                    <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
-                </span>
+                    <span style="display: flex;position: relative;float: left;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                        <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
+                    </span>
+                </div>
             </div>
         </form>
     </div>
@@ -182,11 +171,11 @@ $(document).ready(function () {
                 "postData" : createBuildingDto
             }],
             ['#change_loading'], [], [],
-            function( response ) {
+            function() {
                 btnSubmit.prop( 'disabled', false );
                 notify.success( '#result_success', 'Budynek został dodany.' );
             },
-            function( response ) {
+            function() {
                 btnSubmit.prop( 'disabled', false );
                 notify.danger( '#result_error', 'Nie udało się dodać budynku.'); //(response == null ||  response.error == null ||  response.error == '' ) ? 'Błąd operacji' : response.error  );
             }

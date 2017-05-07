@@ -122,17 +122,14 @@
             </div>
 
             <div id="change_loading" class="progress-space"></div>
-
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <span style="display: flex;position: relative;float: left;">
+                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
                         <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;">
-                        </span>
-                    </div>
+                    </span>
                 </div>
             </div>
-
         </form>
 
     </div>
@@ -161,7 +158,7 @@ $(document).ready(function () {
             "description": $('#new_description').val(),
             "communityString": $('#new_communityString').val(),
             "buildingId": $('#new_building').val(),
-            "fake" : $('#new_fake')[0].checked ? false : true
+            "fake" : !( $('#new_fake')[0].checked )
         };
         progress.load(
             [{
@@ -170,7 +167,7 @@ $(document).ready(function () {
                 "postData" : createControllerDto
             }],
             ['#change_loading'], [], [],
-            function(createControllerDto) {
+            function() {
                 btnSubmit.prop('disabled', false);
                 notify.success('#result_success', 'Kontroler został dodany.');
             },

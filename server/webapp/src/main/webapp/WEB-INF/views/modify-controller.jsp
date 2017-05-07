@@ -10,7 +10,6 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -74,12 +73,12 @@
                     </tr>
 
                     <tr>
-                        <td style="color:red">*Nazwa</td>
+                        <td><font color="red" ><b>*</b></font> Nazwa</td>
                         <td><input form="form1" id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
                     </tr>
 
                     <tr>
-                        <td style="color:red">*IPv4</td>
+                        <td ><font color="red" ><b>*</b></font> IPv4</td>
                         <td><input form="form1" type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
                     </tr>
 
@@ -92,6 +91,7 @@
                         <td><input form="form1" type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
                     </tr>
                     <tr>
+                        <td></td>
                         <td>
                             <label>
                                 <input id="new_fake" name="fake" form="form1" type="checkbox"
@@ -103,8 +103,10 @@
 
                     <label for="new_building">Wybierz budynek:</label>
 
-                    <select form="form1" class="form-control" id="new_building"name="buildingId">
-                        <option></option>
+                    <select form="form1" class="form-control" id="new_building"name="buildingId" >
+
+                        <c:if test="${ controller.fake == false}">checked="checked"</c:if> >
+                        <option  value = "0"></option>
                         <c:forEach items="${list}" var="building" >
                             <option value="${building.id}" >
                                 <c:out value="${building.name}"/>

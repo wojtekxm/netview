@@ -67,14 +67,14 @@
 
 
             <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_name"  style="color:red" >*Nazwa kontrolera:</label>
+                <label class="control-label col-sm-2 " for="new_name" ><font color="red" ><b>*</b></font> Nazwa kontrolera:</label>
                 <div class="col-sm-3">
                     <input form="form1"type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
                            id="new_name" required="required" name="name">
                 </div>
             </div>
             <div class="form-group">
-                <label for="new_ipv4" class="control-label col-sm-2 " style="color:red">*Adres IPv4:</label>
+                <label for="new_ipv4" class="control-label col-sm-2 "><font color="red" ><b>*</b></font> Adres IPv4:</label>
                 <div class="col-sm-3">
                     <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
                            id="new_ipv4" required="required" name="ipv4">

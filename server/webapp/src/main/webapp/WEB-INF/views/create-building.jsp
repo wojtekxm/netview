@@ -66,14 +66,14 @@
         <form method="post" action="/api/building/create" class="form-horizontal">
 
             <div class="form-group">
-                <label for="new_name" class="col-sm-2 control-label">Nazwa budynku:</label>
+               <label for="new_name"class="col-sm-2 control-label" style="color:red"><b>*Nazwa budynku:</b></label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" placeholder="Wprowadź nazwę budynku"
                            id="new_name" required="required" name="name">
                 </div>
             </div>
             <div class="form-group">
-                <label for="new_code" class="col-sm-2 control-label">Kod budynku:</label>
+                <label for="new_code" class="col-sm-2 control-label" style="color:red">*Kod budynku:</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" placeholder="Wprowadź kod budynku"
                            id="new_code" required="required" name="code">
@@ -108,14 +108,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="new_latitude" class="col-sm-2 control-label">Szerokość geograficzna:</label>
+                <label for="new_latitude" class="col-sm-2 control-label" style="color:red">*Szerokość geograficzna:</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" placeholder="Wprowadź szerokosc geograficzną"
                            id="new_latitude" required="required" name="latitude">
                 </div>
             </div>
             <div class="form-group">
-                <label for="new_longitude" class="col-sm-2 control-label">Długość geograficzna:</label>
+                <label for="new_longitude" class="col-sm-2 control-label" style="color:red">*Długość geograficzna:</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" placeholder="Wprowadź długość geograficzną"
                            id="new_longitude" required="required" name="longitude">

@@ -73,12 +73,12 @@
                     </tr>
 
                     <tr>
-                        <td>Nazwa</td>
+                        <td style="color:red">*Nazwa</td>
                         <td><input form="form1" id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
                     </tr>
 
                     <tr>
-                        <td>IP</td>
+                        <td style="color:red">*IPv4</td>
                         <td><input form="form1" type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
                     </tr>
 

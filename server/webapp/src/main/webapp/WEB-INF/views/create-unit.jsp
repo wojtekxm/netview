@@ -67,13 +67,13 @@
         <form method="post" action="/api/unit/create" class="form-horizontal">
 
             <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_code" >Kod jednostki:</label>
+                <label class="control-label col-sm-2 " for="new_code"  style="color:red">*Kod jednostki:</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" placeholder="Wprowadź kod jednostki"
                            id="new_code" required="required" name="code"></div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_description" >Nazwa jednostki:</label>
+                <label class="control-label col-sm-2 " for="new_description"  style="color:red">*Nazwa jednostki:</label>
                 <div class="col-sm-3">
                     <input type="description" class="form-control" placeholder="Wprowadź nazwę jednostki"
                            id="new_description" required="required" name="description"></div>

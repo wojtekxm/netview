@@ -76,12 +76,12 @@
 
                     </tr>
                     <tr>
-                        <td >Kod</td>
+                        <td style="color:red" >*Kod</td>
                         <td ><input form="form2" id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
                     </tr>
 
                     <tr>
-                        <td >Opis</td>
+                        <td  style="color:red">*Nazwa</td>
                         <td ><input form="form2" id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
                     </tr>
 

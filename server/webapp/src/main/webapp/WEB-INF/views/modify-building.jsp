@@ -72,12 +72,12 @@
                     <input form="form1" type="hidden" id="id" name="id" value="${building.id}" />
                 </tr>
                 <tr>
-                    <td>Kod</td>
+                    <td  style="color:red">*Kod</td>
                     <td><input form="form1" type="text" id="new_code" name="code" value="${building.code}" style="width: 30%;"/></td>
                 </tr>
 
                 <tr>
-                    <td>Nazwa</td>
+                    <td style="color:red">*Nazwa</td>
                     <td><input form="form1" type="text" id="new_name" name="name" value="${building.name}" style="width: 30%;" />
                 </tr>
 
@@ -102,12 +102,12 @@
                 </tr>
 
                 <tr>
-                    <td>Szerokość geograficzna</td>
+                    <td style="color:red">*Szerokość geograficzna</td>
                     <td><input form="form1" type="text" id="new_latitude" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
                 </tr>
 
                 <tr>
-                    <td>Długość geograficzna</td>
+                    <td style="color:red">*Długość geograficzna</td>
                     <td><input form="form1" type="text" id="new_longitude" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
 
                 </tr>

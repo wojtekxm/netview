@@ -45,7 +45,8 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  &nbsp;<c:out value="${loggedUser.name}"/></a></li>
+                <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -89,7 +90,24 @@
                         <td>Community String</td>
                         <td><input form="form1" type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
                     </tr>
+                    <c:if test="${ controller.fake == false}">
+                    <tr>
+                        <td>
 
+                            <label>
+                                <input form="form1" type="checkbox" checked="checked" id="new_fake" name="fake"> Prawdziwy </label>
+                        </td>
+                    </tr>
+                    </c:if>
+                    <c:if test="${ controller.fake == true}">
+                    <tr>
+                        <td>
+
+                            <label>
+                                <input form="form1" type="checkbox" id="new_fake" name="fake"> Prawdziwy </label>
+                        </td>
+                    </tr>
+                    </c:if>
 
                     <label for="new_building">Wybierz budynek:</label>
 
@@ -107,7 +125,7 @@
                     <a href="/controller/${controller.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
                     <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <input form="form1" type="submit" value=" Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
                          <div class="pull-left" style="min-height:38px; min-width:60px">
                     <div id="change_loading" class="later"></div>
                 </div>
@@ -140,7 +158,9 @@ $(document).ready(function () {
             "ipv4": $('#new_ipv4').val(),
             "description": $('#new_description').val(),
             "communityString": $('#new_communityString').val(),
+            "fake" : $('#new_fake')[0].checked ? false : true,
             "buildingId": $('#new_building').val()
+
 
         };
         progress.load(

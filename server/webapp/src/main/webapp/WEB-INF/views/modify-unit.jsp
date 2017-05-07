@@ -46,7 +46,8 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  &nbsp;<c:out value="${loggedUser.name}"/></a></li>
+                <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -76,12 +77,12 @@
 
                     </tr>
                     <tr>
-                        <td >Kod</td>
+                        <td style="color:red" >*Kod</td>
                         <td ><input form="form2" id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
                     </tr>
 
                     <tr>
-                        <td >Opis</td>
+                        <td  style="color:red">*Nazwa</td>
                         <td ><input form="form2" id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
                     </tr>
 

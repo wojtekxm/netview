@@ -67,14 +67,14 @@
 
 
             <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_name" >Nazwa kontrolera:</label>
+                <label class="control-label col-sm-2 " for="new_name"  style="color:red" >*Nazwa kontrolera:</label>
                 <div class="col-sm-3">
                     <input form="form1"type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
                            id="new_name" required="required" name="name">
                 </div>
             </div>
             <div class="form-group">
-                <label for="new_ipv4" class="control-label col-sm-2 ">Adres IPv4:</label>
+                <label for="new_ipv4" class="control-label col-sm-2 " style="color:red">*Adres IPv4:</label>
                 <div class="col-sm-3">
                     <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
                            id="new_ipv4" required="required" name="ipv4">
@@ -116,21 +116,23 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input form="form1" type="checkbox" <%--class="form-control"--%> id="new_fake" name="fake"> prawdziwy?</label>
+                            <input form="form1" type="checkbox" <%--value="false" class="form-control"--%> id="new_fake" name="fake"> Prawdziwy </label>
                     </div>
                 </div>
             </div>
 
             <div id="change_loading" class="progress-space"></div>
 
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <span style="display: flex;position: relative;float: left;">
-                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                    <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;"></div>
-                </span>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <span style="display: flex;position: relative;float: left;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                        <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;">
+                        </span>
+                    </div>
+                </div>
             </div>
-            <%--</div>--%>
+
         </form>
 
     </div>
@@ -159,7 +161,7 @@ $(document).ready(function () {
             "description": $('#new_description').val(),
             "communityString": $('#new_communityString').val(),
             "buildingId": $('#new_building').val(),
-            "fake": $('#new_fake').val()
+            "fake" : $('#new_fake')[0].checked ? false : true
         };
         progress.load(
             [{

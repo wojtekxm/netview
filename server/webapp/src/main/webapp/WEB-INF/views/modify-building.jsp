@@ -46,7 +46,8 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  &nbsp;<c:out value="${loggedUser.name}"/></a></li>
+                <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -72,12 +73,12 @@
                     <input form="form1" type="hidden" id="id" name="id" value="${building.id}" />
                 </tr>
                 <tr>
-                    <td>Kod</td>
+                    <td  style="color:red">*Kod</td>
                     <td><input form="form1" type="text" id="new_code" name="code" value="${building.code}" style="width: 30%;"/></td>
                 </tr>
 
                 <tr>
-                    <td>Nazwa</td>
+                    <td style="color:red">*Nazwa</td>
                     <td><input form="form1" type="text" id="new_name" name="name" value="${building.name}" style="width: 30%;" />
                 </tr>
 
@@ -102,12 +103,12 @@
                 </tr>
 
                 <tr>
-                    <td>Szerokość geograficzna</td>
+                    <td style="color:red">*Szerokość geograficzna</td>
                     <td><input form="form1" type="text" id="new_latitude" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
                 </tr>
 
                 <tr>
-                    <td>Długość geograficzna</td>
+                    <td style="color:red">*Długość geograficzna</td>
                     <td><input form="form1" type="text" id="new_longitude" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
 
                 </tr>
@@ -117,7 +118,7 @@
                     <a href="/building/${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
                     <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
-                        <input form="form1" id="btn_submit" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <input form="form1" id="btn_submit" type="submit" value=" Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
                     </span>
                     <div id="change_loading" class="later progress-space"></div>
                 </div>

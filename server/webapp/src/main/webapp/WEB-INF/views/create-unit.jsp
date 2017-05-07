@@ -46,7 +46,8 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  &nbsp;<c:out value="${loggedUser.name}"/></a></li>
+                <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -67,13 +68,13 @@
         <form method="post" action="/api/unit/create" class="form-horizontal">
 
             <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_code" >Kod jednostki:</label>
+                <label class="control-label col-sm-2 " for="new_code"  style="color:red">*Kod jednostki:</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" placeholder="Wprowadź kod jednostki"
                            id="new_code" required="required" name="code"></div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_description" >Nazwa jednostki:</label>
+                <label class="control-label col-sm-2 " for="new_description"  style="color:red">*Nazwa jednostki:</label>
                 <div class="col-sm-3">
                     <input type="description" class="form-control" placeholder="Wprowadź nazwę jednostki"
                            id="new_description" required="required" name="description"></div>
@@ -81,11 +82,13 @@
 
             <div class="change_loading" class="progress-space"></div>
 
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:4%;"></span>
-                    <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;"></div>
-                </span>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:4%;"></span>
+                        <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
+                        </span>
+                    </div>
+                </div>
             </div>
         </form>
 

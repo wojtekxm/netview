@@ -46,7 +46,8 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  &nbsp;<c:out value="${loggedUser.name}"/></a></li>
+                <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -73,12 +74,12 @@
                     </tr>
 
                     <tr>
-                        <td>Nazwa</td>
+                        <td style="color:red">*Nazwa</td>
                         <td><input form="form1" id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
                     </tr>
 
                     <tr>
-                        <td>IP</td>
+                        <td style="color:red">*IPv4</td>
                         <td><input form="form1" type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
                     </tr>
 
@@ -90,7 +91,24 @@
                         <td>Community String</td>
                         <td><input form="form1" type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
                     </tr>
+                    <c:if test="${ controller.fake == false}">
+                    <tr>
+                        <td>
 
+                            <label>
+                                <input form="form1" type="checkbox" checked="checked" id="new_fake" name="fake"> Prawdziwy </label>
+                        </td>
+                    </tr>
+                    </c:if>
+                    <c:if test="${ controller.fake == true}">
+                    <tr>
+                        <td>
+
+                            <label>
+                                <input form="form1" type="checkbox" id="new_fake" name="fake"> Prawdziwy </label>
+                        </td>
+                    </tr>
+                    </c:if>
 
                     <label for="new_building">Wybierz budynek:</label>
 
@@ -141,6 +159,7 @@ $(document).ready(function () {
             "ipv4": $('#new_ipv4').val(),
             "description": $('#new_description').val(),
             "communityString": $('#new_communityString').val(),
+            "fake" : $('#new_fake')[0].checked ? false : true,
             "buildingId": $('#new_building').val()
 
         };

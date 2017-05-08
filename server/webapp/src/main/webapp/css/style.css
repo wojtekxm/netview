@@ -432,9 +432,7 @@ ul li#wydzial
 
 
 
-#filters{
-    /*display: none;*/
-    margin-top: 10px;
+.filters{
     width: 100%;
     height: 100%;
 }

@@ -29,7 +29,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;Network Monitor</a></li>
+                <li><a style="font-weight:bold;background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -64,11 +64,11 @@
         </div>
     </div>
     <div style="margin-bottom: 5px;">
-        <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
             <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
         </button>
         <button id="back" type="button" class="btn btn-success" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
+        <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
     </div>
     <div id="filters" class="collapse">
         <div class="panel panel-default">
@@ -103,8 +103,8 @@
     </ul>
 
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <span class='glyphicon glyphicon-time'></span><div id="data_tittle"></div> &nbsp;&nbsp;<div id="data"></div>
+        <div class="panel-heading" style="display:flex; font-size: 15px;">
+            <span class='glyphicon glyphicon-time'></span><div id="data_tittle" style="margin-left: 6px;"></div> &nbsp;&nbsp;&nbsp; <div id="data"></div>
         </div>
         <div class="panel-body">
             <div id="countActive" style="display: inline;"></div><br>
@@ -123,20 +123,6 @@
 <script type="text/javascript" src="/js/progress.js"></script>
 <script src="/js/notify.js"></script>
 
-<%--<script>--%>
-    <%--$(document).ready(function(){--%>
-        <%--$.ajax({--%>
-            <%--type: 'GET',--%>
-            <%--url: '/api/login',--%>
-            <%--dataType: 'json',--%>
-
-            <%--success: function() {--%>
-                <%--alert("");--%>
-            <%--},--%>
-            <%--error: err--%>
-        <%--});--%>
-    <%--});--%>
-<%--</script>--%>
 
 <script type="text/javascript">
     function resetFilters(){
@@ -153,12 +139,16 @@
         });
         $('#budynki').multiselect('refresh');
         filterChoice = "filter";
-        filter();
+        clearInterval(inter);
+        getFilteredDevices();
+        inter = setInterval('getFilteredDevices()', 30000);
     }
 </script>
 
 
 <script type="text/javascript">
+    var clicked = "all";
+    var inter;
     var filterChoice = "filter";
     var frequency = "2400";
     var option = "";
@@ -318,7 +308,7 @@
             },
             error: function(){
                 $('#data').remove();
-                $('#data_tittle').replaceWith(" &nbsp;Wystąpił błąd podczas pobierania danych");
+                $('#data_tittle').text("Wystąpił błąd podczas pobierania danych");
             }
         });
     }
@@ -327,8 +317,29 @@
 
 
 <script type="text/javascript">
+    function getFilteredDevices(){
+        $('[data-toggle="tooltip"]').tooltip('destroy');
+        $.ajax({
+            type: 'GET',
+            url: '/api/device/info/all',
+            dataType: 'json',
+
+            success: function(listDtoOfCurrentDeviceStateDto) {
+                if(!listDtoOfCurrentDeviceStateDto.success) {
+                    err();
+                    return;
+                }
+                devices = listDtoOfCurrentDeviceStateDto.list;
+                filter();
+            },
+            error: function(){
+                $('#data').remove();
+                $('#data_tittle').text("Wystąpił błąd podczas pobierania danych");
+            }
+        });
+    }
+
     function filter(){
-        clearInterval(inter);
         var value = "";
 
         $("#devices li").remove();
@@ -421,7 +432,7 @@
                         var all = 0;
                         var style = 'list-style-type: none;color:white;text-decoration:none;';
 
-                        var h = "/device?id=" + currentDeviceStateDto.id;
+                        var h = "/device/" + currentDeviceStateDto.id;
                         var clazz = '';
 
                         if (isEnabled == true) {
@@ -474,7 +485,6 @@
                         }
 
                         line.tooltip();
-
                     }
                 }
             }
@@ -489,12 +499,12 @@
         if(n == "Invalid Date"){
             n = "";
             setTimeout(function(){
-                $('#data').replaceWith(n);
-                $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
+                $('#data').text(n);
+                $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
             }, 5000);
         }else {
-            $('#data').replaceWith(n);
-            $('#data_tittle').replaceWith(" &nbsp;Ostatnie badanie przeprowadzono:");
+            $('#data').text(n);
+            $('#data_tittle').text("Ostatnie badanie przeprowadzono:");
             $('#countInactive').css("display", "inline");
             $('#countOff').css("display", "inline");
             $('#countAll').css("display", "inline");
@@ -503,18 +513,14 @@
             $('#countOff').text('wyłączone: ' + of);
             $('#countAll').text('wszystkie: ' + al);
         }
-
-
-//        if(value == "" && controllerId == "" && stateId == ""){
-//            inter = setInterval('allDevices()', 30000);
-//            allDevices();
-//        }
     }
 
     $('#filters_commit').click(function(){
         ifFilter = true;
         filterChoice = "filter";
-        filter();
+        clearInterval(inter);
+        getFilteredDevices();
+        inter = setInterval('getFilteredDevices()', 30000);
     })
 </script>
 
@@ -622,9 +628,6 @@
 </script>
 
 <script type="text/javascript">
-    var frequency = "2400";
-    var clicked = "all";
-    var inter;
 
     function err() {
         $('#progress_area').show();
@@ -653,7 +656,7 @@
             },
             error: function(){
                 $('#data').remove();
-                $('#data_tittle').replaceWith(" &nbsp;Wystąpił błąd podczas pobierania danych");
+                $('#data_tittle').text("Wystąpił błąd podczas pobierania danych");
             }
         });
     }
@@ -740,8 +743,8 @@
 
                 if(n == "Invalid Date"){
                     n = "";
-                    $('#data').replaceWith(n);
-                    $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
+                    $('#data').text(n);
+                    $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
                 }
             }else{
                 err();
@@ -760,12 +763,12 @@
         if(n == "Invalid Date"){
             n = "";
             setTimeout(function(){
-                $('#data').replaceWith(n);
-                $('#data_tittle').replaceWith(" &nbsp;Nie przeprowadzono jeszcze żadnych badań");
+                $('#data').text(n);
+                $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
             }, 4000);
         }else {
-            $('#data').replaceWith(n);
-            $('#data_tittle').replaceWith(" &nbsp;Ostatnie badanie przeprowadzono:");
+            $('#data').text(n);
+            $('#data_tittle').text("Ostatnie badanie przeprowadzono:");
             $('#countActive').text('aktywne: ' + active);
             $('#countInactive').text('nieaktywne: ' + inactive);
             $('#countOff').text('wyłączone: ' + off);
@@ -791,11 +794,15 @@
             }
 
             if(filterChoice == "filter"){
-                filter();
+                clearInterval(inter);
+                getFilteredDevices();
+                inter = setInterval('getFilteredDevices()', 30000);
             }else if(filterChoice == "top"){
+                clearInterval(inter);
                 option = "best";
                 topDevices(option);
             }else if(filterChoice == "worst"){
+                clearInterval(inter);
                 option = "worst";
                 topDevices(option);
             }

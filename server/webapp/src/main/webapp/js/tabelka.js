@@ -1,4 +1,5 @@
 "use strict";
+// wymaga: progress.js i tabelka.css
 var util = {};
 (function(){
     util.comparatorText = comparatorText;
@@ -183,19 +184,20 @@ var tabelka = {};
                     th.click(
                         { "columnIndex": i },
                         function(event) {
-                            if(event.data.columnIndex === sortIndex) {
+                            var newSortIndex = event.data.columnIndex;
+                            if(newSortIndex === sortIndex) {
                                 sortAscending = !sortAscending;
+                                sortedData.reverse();
                             }
                             else {
-                                sortIndex = event.data.columnIndex;
+                                sortIndex = newSortIndex;
                                 sortAscending = true;
+                                sortedData.sort(
+                                    util.chooseComparator(
+                                        columnDefinitions[sortIndex].comparator
+                                    )
+                                );
                             }
-                            sortedData.sort(
-                                util.chooseComparator(
-                                    columnDefinitions[sortIndex].comparator,
-                                    sortAscending
-                                )
-                            );
                             refresh();
                         }
                     );
@@ -272,13 +274,27 @@ var tabelka = {};
         }
     }
 
-    function builder() {
+    /**
+     *
+     * @param uniquePrefix undefined|string. Prefiks od którego będą się zaczynać pola danych dodane przez buildera.
+     * Należy wybrać taki by uniknąć kolizji z innymi polami w danych. Domyślnie '!'.
+     * @returns object builder
+     */
+    function builder(uniquePrefix) {
         var bl = {};
         bl.definitions = [];
         bl.generators = [];
+        if(typeof uniquePrefix === 'string') {
+            bl.uniquePrefix = uniquePrefix;
+        }
+        else {
+            bl.uniquePrefix = '!';
+        }
+        bl.futureData = [];
         bl.column = column;
         bl.special = special;
         bl.deviceFrequency = deviceFrequency;
+        bl.buttonUnlink = buttonUnlink;
         bl.build = build;
         return bl;
 
@@ -286,12 +302,19 @@ var tabelka = {};
          * @param label string, column header
          * @param sortType string, 'text' or 'number' or null
          * @param propertyName string
-         * @param width16 integer 0-16
+         * @param width16 optional integer|string 0-16 or css class
          * @param columnGenerator function
          * @returns builder
+         * function ColumnGenerator(dataRow) : jQuery element
          */
         function column(label, sortType, propertyName, width16, columnGenerator) {
-            var comparator, extractor;
+            var comparator, clazz;
+            if(typeof width16 === 'string') {
+                clazz = width16;
+            }
+            else if(typeof width16 === 'number') {
+                clazz = 'width-' + width16;
+            }
             if(sortType === 'text') {
                 comparator = util.comparatorText(propertyName);
             }
@@ -301,12 +324,11 @@ var tabelka = {};
             /*else if(sortType === null) {
                 comparator = undefined;
             }*/
-            extractor = '!#_' + propertyName; // some unique property name
             bl.definitions.push( {
                 "label" : label,
                 "comparator" : comparator,
-                "extractor" : extractor,
-                "cssClass" : 'width-' + width16
+                "extractor" : bl.uniquePrefix + bl.definitions.length + '_td',
+                "cssClass" : clazz
             } );
             bl.generators.push(columnGenerator);
             return bl;
@@ -315,17 +337,22 @@ var tabelka = {};
         /**
          * shorter version of column(), without sorting
          * @param label string, column header
-         * @param width16 integer 0-16
+         * @param width16 optional integer|string 0-16 or css class
          * @param columnGenerator function
          * @returns builder
          */
         function special(label, width16, columnGenerator) {
-            var extractor;
-            extractor = '!#_' + bl.definitions.length; // some unique property name
+            var clazz;
+            if(typeof width16 === 'string') {
+                clazz = width16;
+            }
+            else if(typeof width16 === 'number') {
+                clazz = 'width-' + width16;
+            }
             bl.definitions.push( {
                 "label" : label,
-                "extractor" : extractor,
-                "cssClass" : 'width-' + width16
+                "extractor" : bl.uniquePrefix + bl.definitions.length + '_td',
+                "cssClass" : clazz
             } );
             bl.generators.push(columnGenerator);
             return bl;
@@ -335,11 +362,11 @@ var tabelka = {};
          * Only for DeviceDetailsDto
          * @param label string, column header
          * @param mhz integer or string, 2400 or 5000 or '2400' or '5000'
-         * @param width16 integer 0-16
+         * @param width16 optional integer|string 0-16 or css class
          * @returns builder
          */
         function deviceFrequency(label, mhz, width16) {
-            var cmpProperty = '!#_cmp_' + mhz;
+            var cmpProperty = bl.uniquePrefix + bl.definitions.length + '_cmp';
             return bl.column(label, 'number', cmpProperty, width16, function(deviceDetailsDto) {
                 var sur, span;
                 span = $('<span></span>');
@@ -362,8 +389,69 @@ var tabelka = {};
             });
         }
 
+        /**
+         * Tylko dla danych gdzie każdy wiersz ma pole 'id'
+         * @param label string, nagłówek kolumny
+         * @param requestsGenerator function, w stylu RequestsGenerator
+         * @param successHandler function, w stylu progress.load()*SuccessHandler
+         * @param errorHandler optional function, w stylu progress.load()*ErrorHandler
+         * function RequestsGenerator(rowId) : tablica obiektów Request do progress.load()
+         */
+        function buttonUnlink(label, requestsGenerator, successHandler, errorHandler) {
+            var btnProperty = bl.uniquePrefix + bl.definitions.length + '_btn';
+            return bl.special(label, 0, function(row) {
+                var divLoading, divContainer, span, btn;
+                divLoading = $('<div class="pull-right progress-space-xs later"></div>');
+                span = $('<span class="glyphicon glyphicon-minus"></span>');
+                btn = $('<button class="btn btn-danger btn-xs pull-right"></button>');
+                btn.click({
+                    "rowId" : row.id,
+                    "divLoading" : divLoading
+                }, function(event) {
+                    var rowId, divLoading, i, arr;
+                    rowId = event.data.rowId;
+                    divLoading = event.data.divLoading;
+                    arr = bl.futureData;
+                    for(i = 0; i < arr.length; i++) {
+                        arr[i][btnProperty].prop('disabled', true);
+                    }
+                    progress.load(
+                        requestsGenerator(rowId),
+                        [divLoading], [], [],
+                        function(responses) {
+                            var i, arr;
+                            arr = bl.futureData;
+                            for(i = 0; i < arr.length; i++) {
+                                arr[i][btnProperty].prop('disabled', false);
+                            }
+                            successHandler(responses);
+                        },
+                        function(responses) {
+                            var i, arr;
+                            arr = bl.futureData;
+                            for(i = 0; i < arr.length; i++) {
+                                arr[i][btnProperty].prop('disabled', false);
+                            }
+                            if(typeof errorHandler === 'function') {
+                                errorHandler(responses);
+                            }
+                        },
+                        'xs'
+                    );
+                });
+                divContainer = $('<div class="clearfix" style="width:48px"></div>');
+                divContainer.append(
+                    btn.append(span),
+                    divLoading
+                );
+                row[btnProperty] = btn;
+                return divContainer;
+            });
+        }
+
         function build(tabelkaSelector, data) {
             var where, i, k, e, def, gen;
+            bl.futureData = data;
             for(i = 0; i < data.length; i++) {
                 e = data[i];
                 for(k = 0; k < bl.generators.length; k++) {

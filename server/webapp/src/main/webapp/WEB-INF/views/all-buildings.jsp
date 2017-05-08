@@ -57,8 +57,8 @@
 <div class="container">
     <div style="height: 100px;"></div>
     <h4 class="pull-left">Budynki</h4>
-    <div id="main_loading" class="later"></div>
-    <div id="main_success" class="later">
+    <div class="on-loading progress-space-lg"></div>
+    <div class="on-loaded">
         <div id="tabelka_buildings"></div>
         <div>
             <a href="/create-building" class="btn btn-success" role="button" style="width: 200px;">
@@ -75,43 +75,40 @@
 <script>
 "use strict";
 $(document).ready( function() {
-    var buildings, columnDefinitions, tabelkaBuildings;
-    tabelkaBuildings = $('#tabelka_buildings');
-    buildings = [];
-    columnDefinitions = [
-        {
-            "label" : 'nazwa',
-            "comparator" : util.comparatorText('name'),
-            "extractor" : 'td_name',
-            "cssClass" : 'width-12'
-        }, {
-            "label" : 'kod',
-            "comparator" : util.comparatorText('code'),
-            "extractor" : 'td_code',
-            "cssClass" : 'width-4'
-        }
-    ];
-
-    function fixBuildings() {
-        var i, b;
-        for(i = 0; i < buildings.length; i++) {
-            b = buildings[i];
-            b.td_name = $('<a></a>')
-                .attr('href', '/building/' + b.id)
-                .text(b.name);
-            b.td_code = $('<span></span>').text(b.code);
-        }
+    function fixBuildings2(listOfBuildingDto) {
+        tabelka.builder('!')
+            .column('nazwa', 'text', 'name', 7, function(building) {
+                return $('<a></a>')
+                    .attr('href', '/building/' + building.id)
+                    .text(building.name);
+            })
+            .column('kod', 'text', 'code', 2, function(building) {
+                return $('<span></span>').text(building.code);
+            })
+            .column('ulica', 'text', '_s', 3, function(b) {
+                b._s = '';
+                if(b.street !== null) {
+                    b._s += b.street;
+                }
+                if(b.number !== null) {
+                    b._s += ' ' + b.number;
+                }
+                return $('<span></span>').text(b._s);
+            })
+            .column('kod pocztowy', 'text', 'postalCode', 2, function(b) {
+                return $('<span></span>').text(b.postalCode);
+            })
+            .column('miasto', 'text', 'city', 2, function(b) {
+                return $('<span></span>').text(b.city);
+            })
+            .build('#tabelka_buildings', listOfBuildingDto);
     }
 
     progress.loadGet(
         '/api/building/info/all',
-        ['#main_loading'], ['#main_success'], [],
+        ['.on-loading'], ['.on-loaded'], [],
         function(listDtoOfBuildingDto) {
-            buildings = listDtoOfBuildingDto.list;
-            fixBuildings();
-            tabelkaBuildings.append(
-                tabelka.create(buildings, columnDefinitions)
-            );
+            fixBuildings2(listDtoOfBuildingDto.list);
         }
     );
 } );

@@ -9,9 +9,9 @@ public class BuildingDto {
     private String code;
     private String name;
     private String street;
-    private String city;
-    private String postalCode;
     private String number;
+    private String postalCode;
+    private String city;
     private BigDecimal latitude;
     private BigDecimal longitude;
 

@@ -8,12 +8,12 @@ var progress = {};
 
     /**
      * @param url adres URL z API, serwer musi zwracać JSON-a
-     * @param loadingSelectors array of strings, jQuery selectors,
-     * that will show progress animation during loading
-     * @param successSelectors array of strings, jQuery selectors,
-     * that will be shown when all requests have finished successfully
-     * @param errorSelectors array of strings, jQuery selectors,
-     * that will be shown when some request has failed
+     * @param loadingSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element będzie pokazywać animację progresu w trakcie wczytywania.
+     * @param successSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element będzie pokazany po udanym wczytaniu zasobu.
+     * @param errorSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element zostanie pokazany jeśli nie uda się wczytać zasobu.
      * @param successHandler function Handler that will be called after all requests have completed
      * @param errorHandler optional function ErrorHandler that will be called after some request has failed
      * @param sizeLabel optional string, 'xs' or 'lg' or 'md'
@@ -43,12 +43,12 @@ var progress = {};
      * function ErrorHandler(response)
      * response - server response or null
      * @param requests array of Request objects
-     * @param loadingSelectors array of strings, jQuery selectors,
-     * that will show progress animation during loading
-     * @param successSelectors array of strings, jQuery selectors,
-     * that will be shown when all requests have finished successfully
-     * @param errorSelectors array of strings, jQuery selectors,
-     * that will be shown when some request has failed
+     * @param loadingSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element będzie pokazywać animację progresu w trakcie wczytywania.
+     * @param successSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element będzie pokazany po udanym wczytaniu zasobu.
+     * @param errorSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element zostanie pokazany jeśli nie uda się wczytać zasobu.
      * @param successHandler function Handler, will be called after all requests have completed
      * @param errorHandler optional function ErrorHandler, will be called after some request has failed
      * @param sizeLabel optional string, 'xs' or 'lg' or 'md'
@@ -117,12 +117,12 @@ var progress = {};
      * responses - array where each element is either server response object or null.
      * Responses are ordered by requests.
      * @param requests array of Request objects
-     * @param loadingSelectors array of strings, jQuery selectors,
-     * that will show progress animation during loading
-     * @param successSelectors array of strings, jQuery selectors,
-     * that will be shown when all requests have finished successfully
-     * @param errorSelectors array of strings, jQuery selectors,
-     * that will be shown when some request has failed
+     * @param loadingSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element będzie pokazywać animację progresu w trakcie wczytywania.
+     * @param successSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element będzie pokazany po udanym wczytaniu zasobu.
+     * @param errorSelectors tablica, gdzie każdy element jest stringiem jQuery selectorem albo jQuery zaznaczeniem.
+     * Każdy element zostanie pokazany jeśli nie uda się wczytać zasobu.
      * @param successHandler function Handler that will be called after all requests have completed
      * @param errorHandler optional function ErrorHandler that will be called after some request has failed
      * @param sizeLabel optional string, 'xs' or 'lg' or 'md'
@@ -193,51 +193,86 @@ var progress = {};
     }
 
     function showLoading(loadingSelectors, successSelectors, errorSelectors, sizeLabel) {
-        var i, e;
+        var i, jq;
         for(i = 0; i < errorSelectors.length; i++) {
-            $(errorSelectors[i]).hide();
+            jq = errorSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.hide();
         }
         for(i = 0; i < successSelectors.length; i++) {
-            $(successSelectors[i]).hide();
+            jq = successSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.hide();
         }
         for(i = 0; i < loadingSelectors.length; i++) {
-            e = $(loadingSelectors[i]);
-            e.hide();
-            e.empty();
+            jq = loadingSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.hide();
+            jq.empty();
             if(sizeLabel === 'xs') {
-                e.append(createCircle(16));
+                jq.append(createCircle(16));
             }
             else if(sizeLabel === 'lg') {
-                e.append(createCircle(64));
+                jq.append(createCircle(64));
             }
             else {
-                e.append(createCircle(32));
+                jq.append(createCircle(32));
             }
-            e.fadeIn(200);
+            jq.fadeIn(200);
         }
     }
     function showSuccess(loadingSelectors, successSelectors, errorSelectors) {
-        var i;
+        var i, jq;
         for(i = 0; i < loadingSelectors.length; i++) {
-            $(loadingSelectors[i]).hide();
+            jq = loadingSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.hide();
         }
         for(i = 0; i < errorSelectors.length; i++) {
-            $(errorSelectors[i]).hide();
+            jq = errorSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.hide();
         }
         for(i = 0; i < successSelectors.length; i++) {
-            $(successSelectors[i]).fadeIn(200);
+            jq = successSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.fadeIn(200);
         }
     }
     function showError(loadingSelectors, successSelectors, errorSelectors) {
-        var i;
+        var i, jq;
         for(i = 0; i < loadingSelectors.length; i++) {
-            $(loadingSelectors[i]).hide();
+            jq = loadingSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.hide();
         }
         for(i = 0; i < successSelectors.length; i++) {
-            $(successSelectors[i]).hide();
+            jq = successSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.hide();
         }
         for(i = 0; i < errorSelectors.length; i++) {
-            $(errorSelectors[i]).fadeIn(200);
+            jq = errorSelectors[i];
+            if(typeof jq === 'string') {
+                jq = $(jq);
+            }
+            jq.fadeIn(200);
         }
     }
 

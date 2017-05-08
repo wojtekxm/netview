@@ -4,17 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zesp03.webapp.dto.ControllerDetailsDto;
 import zesp03.webapp.dto.ControllerDto;
+import zesp03.webapp.dto.DeviceDetailsDto;
 import zesp03.webapp.dto.input.CreateControllerDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
 import zesp03.webapp.service.ControllerService;
+import zesp03.webapp.service.DeviceService;
 
 @RestController
 @RequestMapping("/api/controller")
 public class ControllerApi {
     @Autowired
     private ControllerService controllerService;
+
+    @Autowired
+    private DeviceService deviceService;
 
     @GetMapping("/all")
     public ListDto<ControllerDto> getAll() {
@@ -36,6 +41,12 @@ public class ControllerApi {
     public ContentDto<ControllerDetailsDto> getDetailsOne(
             @PathVariable("controllerId") long controllerId) {
         return ContentDto.make( () -> controllerService.getDetailsOne(controllerId) );
+    }
+
+    @GetMapping("/devices-details/{controllerId}")
+    public ListDto<DeviceDetailsDto> getDevicesDetails(
+            @PathVariable("controllerId") long controllerId) {
+        return ListDto.make( () -> deviceService.checkDetailsByController(controllerId) );
     }
 
     @PostMapping("/remove/{controllerId}")

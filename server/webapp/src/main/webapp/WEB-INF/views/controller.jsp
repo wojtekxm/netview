@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/progress.css">
+    <link rel="stylesheet" href="/css/tabelka.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
@@ -67,7 +68,7 @@
     <div style="height: 10px;"></div>
     <div class="panel panel-default" id="content"><div></div>
         <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-            Szczegóły urządzenia:
+            Szczegóły kontrolera:
         </div>
 
         <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0; margin-bottom: inherit">
@@ -121,11 +122,65 @@
             </a>
         </div>
     </div>
+    <div class="on-loading progress-space-lg"></div>
+    <div id="tabelka_devices" class="on-loaded"></div>
 </div>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>
+<script src="/js/tabelka.js"></script>
+<script>
+"use strict";
+$(document).ready(function() {
+    function fixDevices(listOfDeviceDetailsDto) {
+        tabelka.builder('!')
+            .column('nazwa', 'text', 'name', 3, function(dev) {
+                return $('<a></a>')
+                    .attr('href', '/device/' + dev.id)
+                    .text(dev.name);
+            })
+            .column('opis', 'text', 'description', 3, function(dev) {
+                return $('<span></span>').text(dev.description);
+            })
+            .deviceFrequency('2,4 GHz', 2400, 2)
+            .deviceFrequency('5 GHz', 5000, 2)
+            .column('lokalizacja', 'text', 'cmp_location', 6, function(dev) {
+                var b = dev.building;
+                if(b === null) {
+                    dev.cmp_location = '';
+                    return $('<span></span>').text('-');
+                }
+                else {
+                    dev.cmp_location = b.name;
+                    return $('<a></a>')
+                        .attr('href', '/building/' + b.id)
+                        .text(b.name);
+                }
+            })
+            .buttonUnlink('usuń', function(deviceId) {
+                return [ {
+                    "url" : '/api/device/unlink-controller/' + deviceId,
+                    "method" : 'post'
+                }, {
+                    "url" : '/api/controller/devices-details/' + ${controller.id}
+                } ];
+            }, function(responses) {
+                fixDevices(responses[1].list);
+            })
+            .build('#tabelka_devices', listOfDeviceDetailsDto);
+    }
 
+    progress.loadGet(
+        '/api/controller/devices-details/' + ${controller.id},
+        ['.on-loading'], ['.on-loaded'], [],
+        function(listDtoOfDeviceDetailsDto) {
+            fixDevices(listDtoOfDeviceDetailsDto.list);
+        },
+        undefined,
+        'lg'
+    );
+});
+</script>
 </body>
 </html>

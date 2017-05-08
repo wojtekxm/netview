@@ -10,16 +10,26 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js" type="text/javascript"></script>
-    <script
-            src="https://code.jquery.com/jquery-3.2.0.min.js"
-            integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I="
-            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <style>
+        .input-group{max-width: 200px;}
+        #control{  display: flex; justify-content: space-between;  padding: 20px;  }
+        #control1{display:flex;flex-direction: column;}
+        #control2{display:flex;flex-direction: column;}
+        #control3{display:flex;flex-direction: column;}
+        #control4{display:flex;flex-direction: column;}
+        .forma {
+            margin-bottom:5px;
+            padding:10px;
+            margin-top: -1px;
+            vertical-align: middle;
+        }
+        #wykresy {max-width: 100%;max-height:80%;  }
+    </style>
 </head>
 <body>
 
@@ -65,100 +75,87 @@
 <div id="container">
     <div id="control">
         <div id="control1"> Zakres wyswietlanych danych
-            <form action="" class="forma">
-                <input type="radio" class="rad" id="default_chart" name="range" value="dzien" > Dzien </br>
-                <input type="radio" class="rad" name="range" value="tydzien"> Tydzien</br>
-                <input type="radio" class="rad" name="range" value="miesiac"> Miesiac</br>
-                <input type="radio" class="rad" name="range" value="rok"> Rok</br>
-                <input type="radio" class="rad" name="range" value="custom"> Ustawienia niestandardowe</br>
-            </form></br>
+            <div class="forma">
+                <input type="radio" class="rad" id="default_chart" name="range" value="dzien" > Dzien <br>
+                <input type="radio" class="rad" name="range" value="tydzien"> Tydzien<br>
+                <input type="radio" class="rad" name="range" value="miesiac"> Miesiac<br>
+                <input type="radio" class="rad" name="range" value="rok"> Rok<br>
+                <input type="radio" class="rad" name="range" value="custom"> Ustawienia niestandardowe<br>
+            </div><br>
         </div>
         <div id="control2"> Ustawienia niestandardowe
-            <form action="" class="forma">
-                <div class='input-group date' id='datetimepicker1' width="100px">
+            <div class="forma">
+                <div class='input-group date' id='datetimepicker1'>
                     <input id="time_start" type='text'  data-date-end-date="0d" class="form-control"> Od
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
-                </br>
-                <div class='input-group date' id='datetimepicker2' width="100px">
+                <br>
+                <div class='input-group date' id='datetimepicker2'>
                     <input id="time_end" type='text'  data-date-end-date="0d" class="form-control"> Do
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
-            </form>
-            </br>
-            <form name="testform">
-                <select name="range" id="range_picker" size="1">
-                    <option value=1>Badania oryginalne</option>
-                    <option selected value=2>Grupowanie sugerowane</option>
-                    <option value=3>5 minut</option>
-                    <option value=4>15 minut</option>
-                    <option value=5>godzina</option>
-                    <option value=6>3 godziny</option>
-                    <option value=7>dzień</option>
-                    <option value=8>tydzień</option>
-                    <option value=9>miesiąc</option>
-                    <option value=10>rok</option>
-                </select>
-            </form>
-            </form>
+            </div>
+            <br>
+            <select name="range" id="range_picker" size="1">
+                <option value=1>Badania oryginalne</option>
+                <option selected value=2>Grupowanie sugerowane</option>
+                <option value=3>5 minut</option>
+                <option value=4>15 minut</option>
+                <option value=5>godzina</option>
+                <option value=6>3 godziny</option>
+                <option value=7>dzień</option>
+                <option value=8>tydzień</option>
+                <option value=9>miesiąc</option>
+                <option value=10>rok</option>
+            </select>
         </div>
         <div id="control3"> Określenie badań z danej częstotliwości
-            <form action="" class="forma">
-                <input type="radio" class="rad" id="2400" name="frequency" value="1"> Częstotliwość 2,4Ghz</br>
-                <input type="radio" class="rad" id="5000" name="frequency" value="2"> Częstotliwość 5Ghz</br>
-            </form>
+            <div class="forma">
+                <input type="radio" class="rad" id="2400" name="frequency" value="1"> Częstotliwość 2,4Ghz<br>
+                <input type="radio" class="rad" id="5000" name="frequency" value="2"> Częstotliwość 5Ghz<br>
+            </div>
         </div>
         <div id="control4"> Rodzaj wykresu
-            <form action="" class="forma">
-                <input type="radio" class="rad" id="resp" name="responsive" value="1" id="resp1"> Wykres responsywny</br>
-                <input type="radio" class="rad" name="responsive" value="2" id="resp2"> Wykres z suwakiem</br>
-            </form></br>
+            <div class="forma">
+                <input type="radio" class="rad" id="resp" name="responsive" value="1" id="resp1"> Wykres responsywny<br>
+                <input type="radio" class="rad" name="responsive" value="2" id="resp2"> Wykres z suwakiem<br>
+            </div><br>
         </div>
         <div id="control5"> Rozmiary wykresu
-            <form action="" class="forma">
+            <div class="forma">
                 <input type="text" width="20" id="chartSize1" value="1000"> Szerokość wykresu (w px)
-                </br>
-                <input type="text" mwidth="20" id="chartSize2" value="500"> Wysokość wykresu (w px)
-            </form></br>
+                <br>
+                <input type="text" id="chartSize2" value="500"> Wysokość wykresu (w px)
+            </div><br>
         </div>
     </div>
     <button type="button" id="generate">Odswież wykres</button>
-    <button type="button" id="apply">Zatwierdz zmiany</button>
+    <button type="button" id="btn_apply">Zatwierdz zmiany</button>
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/bootstrap-3.3.7.min.js"></script>
     <script src="/js/moment-with-locales.min.js"></script>
     <script src="/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/js/Chart.js"></script>
     <script src="/js/progress.js"></script>
-    <br/>
     <div id="wykresy">
         <canvas id="mycanvas" width="1000px" height="100px"></canvas>
-    </div></br>
+    </div>
 </div>
-
-
-
-<style>
-    .input-group{max-width: 200px;}
-    #control{  display: flex; justify-content: space-between;  padding: 20px;  }
-    #control1{display:flex;flex-direction: column;}
-    #control2{display:flex;flex-direction: column;}
-    #control3{display:flex;flex-direction: column;}
-    #control4{display:flex;flex-direction: column;}
-    .forma{ margin-bottom:5px; padding:10px;margin-top: -1px;  vertical-align: middle;}
-    #wykresy {max-width: 100%;max-height:80%;  }
-</style>
-
 <script>
-
-    $('#apply').hide();
+"use strict";
+$(document).ready(function() {
+    var btnApply;
+    btnApply = $('#apply');
+    btnApply.hide();
     $(function () {$('#datetimepicker1').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
     $(function () {$('#datetimepicker2').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
     $('#default_chart').prop("checked", true);
     $('#resp').prop("checked", true);
+    $('#2400').prop("checked", true);
     $('#control5').hide();
     $('#control2').hide();
     var id=<c:out value="${device.id}"/>;
@@ -174,47 +171,53 @@
 
     // SPRAWDZANIE OBSLUGIWANYCH PASM CZESTOTLIWOSCI
     var request = new XMLHttpRequest();
-    request.open('Get', '/api/device/info/'+id);
+    request.open('Get', '/api/device/info/' + ${device.id});
     request.onload = function () {
         var jsondata = JSON.parse(request.responseText);
-        if (jsondata.content.frequencySurvey['2400']==undefined &&
-            jsondata.content.frequencySurvey['5000']!=undefined){console.log("TYLKO 5ghz");
-            frequency=5000;$('#control3').hide();
+        if (jsondata.content.frequencySurvey['2400']===undefined &&
+            jsondata.content.frequencySurvey['5000']!==undefined){
+            console.log("TYLKO 5ghz");
+            frequency=5000;
+            $('#control3').hide();
         }
 
-        if (jsondata.content.frequencySurvey['2400']!=undefined &&
-            jsondata.content.frequencySurvey['5000']==undefined){console.log("TYLKO 2,4ghz");
-            frequency=2400;$('#control3').hide();
+        if (jsondata.content.frequencySurvey['2400']!==undefined &&
+            jsondata.content.frequencySurvey['5000']===undefined){
+            console.log("TYLKO 2,4ghz");
+            frequency=2400;
+            $('#control3').hide();
         }
 
-        if (jsondata.content.frequencySurvey['2400']!=undefined &&
-            jsondata.content.frequencySurvey['5000']!=undefined){console.log("OBIE");
+        if (jsondata.content.frequencySurvey['2400']!==undefined &&
+            jsondata.content.frequencySurvey['5000']!==undefined){
+            console.log("OBIE");
             frequency=2400;
         }
-        if (jsondata.content.frequencySurvey['2400']==undefined &&
-            jsondata.content.frequencySurvey['5000']==undefined){console.log("Zadna");
-            frequency=undefined;$
-            ('#control1').hide();
-            ('#control2').hide();
-            ('#control3').hide();
-            ('#control4').hide();
-            ('#control5').hide();
+        if (jsondata.content.frequencySurvey['2400']===undefined &&
+            jsondata.content.frequencySurvey['5000']===undefined){
+            console.log("Zadna");
+            frequency=undefined;
+            $('#control1').hide();
+            $('#control2').hide();
+            $('#control3').hide();
+            $('#control4').hide();
+            $('#control5').hide();
         }
 
     };
     request.send();
 
     setTimeout(function () {
-        generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
+        generateChart(mycanvas, ${device.id},range1,range2,group,etykietka,frequency,type);
     },1000);
     <%-------------------------------------------------------------------------------------------------------------------------------%>
-    $(document).ready(function() {
+    (function() {
         $('input[type=radio][name=range]').change(function() {
             if (this.value=='dzien') {
                 $('#range_picker select').val(0);
                 $('#control2').hide();
                 $('#generate').show();
-                $('#apply').hide();
+                btnApply.hide();
                 type="original"; console.log("Wartosc type:"+type);
                 group=300; console.log("okres grupowania:" + group);
                 etykietka="Wykres dzienny - badania oryginalne";
@@ -227,7 +230,7 @@
                 $('#range_picker select').val(0);
                 $('#control2').hide();
                 $('#generate').show();
-                $('#apply').hide();
+                btnApply.hide();
                 type="group";console.log("Wartosc type:"+type);
                 group=10800; console.log("okres grupowania:" + group);
                 etykietka="Wykres tygodniowy - grupowanie:3 godziny";
@@ -240,7 +243,7 @@
                 $('#range_picker select').val(0);
                 $('#control2').hide();
                 $('#generate').show();
-                $('#apply').hide();
+                btnApply.hide();
                 type="group";console.log("Wartosc type:"+type);
                 group=86400; console.log("okres grupowania:" + group);
                 etykietka="Wykres miesięczny - grupowanie:1 dzien";
@@ -253,7 +256,7 @@
                 $('#range_picker select').val(0);
                 $('#control2').hide();
                 $('#generate').show();
-                $('#apply').hide();
+                btnApply.hide();
                 type="group";console.log("Wartosc type:"+type);
                 group=2592000; console.log("okres grupowania:" + group);
                 etykietka="Wykres roczny - grupowanie:1 miesiac";
@@ -265,13 +268,13 @@
             if (this.value=='custom') {
                 $('#control2').show();
                 $('#generate').hide();
-                $('#apply').show();
+                btnApply.show();
             }
         });
-    });
+    })();
 
     <%-------------------------------------------------------------------------------------------------------------------------------%>
-    $(document).ready(function() {
+    (function() {
         $('input[type=radio][name=frequency]').change(function() {
             if (this.value=='1') {
                 frequency=2400; console.log("Czestotliwosc:"+frequency);
@@ -283,9 +286,9 @@
                 generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
         });
-    });
+    })();
     <%-------------------------------------------------------------------------------------------------------------------------------%>
-    $(document).ready(function() {
+    (function() {
         $('input[type=radio][name=responsive]').change(function() {
             if (this.value=='1') {
                 respons=true; console.log("Responsywny:"+respons);
@@ -301,7 +304,7 @@
                 generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
             }
         });
-    });
+    })();
     <%-------------------------------------------------------------------------------------------------------------------------------%>
     var gnr=document.getElementById("generate");
     gnr.addEventListener("click", function(){
@@ -309,10 +312,10 @@
     });
 
     <%-------------------------------------------------------------------------------------------------------------------------------%>
-    $(document).ready(function() {
+    (function() {
         $(window).keydown(function(event){
             if(event.keyCode == 13) {event.preventDefault();return false;}});
-    });
+    })();
 
     <%-------------------------------------------------------------------------------------------------------------------------------%>
     function convert(time) {
@@ -335,14 +338,15 @@
     }
 
     <%-------------------------------------------------------------------------------------------------------------------------------%>
-    $('#apply').click(
+    btnApply.click(
         function () {
+            var tmp1, tmp2, range, temper;
             tmp1=Math.round(Number($('#datetimepicker1').data('DateTimePicker').date())/1000);
             tmp2=Math.round(Number($('#datetimepicker2').data('DateTimePicker').date())/1000);
             ranged=Number($('#zakres').val());
-            var temper=$('#range_picker').val();
+            temper=$('#range_picker').val();
             console.log("TEMPER="+temper);
-            $('#range_picker select').val(0);
+            $('#range_picker').find('select').val(0);
             if (temper==1){type="original"; range=0;}
             if (temper==2){type="group";range=Math.round((tmp2-tmp1)/100); console.log("zakres grupowania:"+range);}
             if (temper==3){type="group";range=300;}
@@ -429,15 +433,15 @@
                 '&end='+timestamp2
             );
             request.onload = function () {
-                var jsondata = JSON.parse(request.responseText);
-                //console.log(JSON.stringify(jsondata));
-                var ilosc=Object.keys(jsondata.content.list).length;
+                var jsondata, ilosc, i;
+                jsondata = JSON.parse(request.responseText);
+                ilosc = Object.keys(jsondata.content.list).length;
                 console.log("ilosc badan:"+ilosc);
                 for (i = 0; i < ilosc; i++) {
                     values_avg.push(Math.round(jsondata.content.list[i].clients));
                     tags.push(convert(Number(jsondata.content.list[i].timestamp)));
                 }
-                var myFirstChart = Chart.Line(mycanvas, {data: data2, options: options});
+                Chart.Line(mycanvas, {data: data2, options: options});
             };
         }
         else{
@@ -449,53 +453,21 @@
                 '&end='+timestamp2
             );
             request.onload = function () {
-                var jsondata = JSON.parse(request.responseText);
-                //console.log(JSON.stringify(jsondata));
-                var ilosc=Object.keys(jsondata.content.list).length;
+                var jsondata, ilosc, i;
+                jsondata = JSON.parse(request.responseText);
+                ilosc=Object.keys(jsondata.content.list).length;
                 console.log("ilosc badan:"+ilosc);
                 for (i = 0; i < ilosc; i++) {
                     values_avg.push(Math.round(jsondata.content.list[i].average));
                     values_min.push(jsondata.content.list[i].min);
                     values_max.push(jsondata.content.list[i].max);
                     tags.push(convert(Number(jsondata.content.list[i].timeStart)));
-                    console.log("_____________________");
                 }
-                var myFirstChart = Chart.Line(mycanvas, {data: data, options: options});
+                Chart.Line(mycanvas, {data: data, options: options});
             };}
         request.send();
     }
-
+});
 </script>
-
-
 </body>
 </html>
-
-<%-- <div class="panel panel-default">
-     <div class="panel-heading">
-         szczegóły urządzenia
-     </div>
-     <table class="table table-bordered">
-         <tr>
-             <td>nazwa</td>
-             <td><c:out value="${device.name}"/></td>
-         </tr>
-         <tr>
-             <td>opis</td>
-             <td><c:out value="${device.description}"/></td>
-         </tr>
-         <tr>
-             <td>nazwa kontrolera</td>
-             <td><c:out value="${controller.name}"/></td>
-         </tr>
-         <tr>
-             <td>IP kontrolera</td>
-             <td><c:out value="${controller.ipv4}"/></td>
-         </tr>
-         <tr>
-             <td>opis kontrolera</td>
-             <td><c:out value="${controller.description}"/></td>
-         </tr>
-     </table>
- </div>
- --%>

@@ -135,7 +135,7 @@ $(document).ready( function() {
             cont.td_devices = $('<span></span>').text(cont.numberOfDevices);
 
             if(building === null) {
-                cont.cmp_location = null;
+                cont.cmp_location = '';
                 cont.td_location = $('<span></span>').text('-');
             }
             else {

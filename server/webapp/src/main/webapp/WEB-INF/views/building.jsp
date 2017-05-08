@@ -266,7 +266,7 @@ $(document).ready(function(){
                     .attr('href', '/device/' + dev.id)
                     .text(dev.name);
             })
-            .column('opis', 'text', 'description', 3, function(dev) {
+            .column('opis', 'text', 'description', 4, function(dev) {
                 return $('<span></span>').text(dev.description);
             })
             .deviceFrequency('2,4 GHz', 2400, 2)
@@ -282,39 +282,15 @@ $(document).ready(function(){
                 }
                 return $('<span></span>').text('-');
             })
-            .special('', 1, function(dev) {
-                dev.button = $('<button class="btn btn-danger btn-xs pull-right"></button>')
-                    .click( {
-                        "deviceId" : dev.id
-                    }, function(event) {
-                        var i, devId;
-                        devId = event.data.deviceId;
-                        for(i = 0; i < listOfDeviceDetailsDto.length; i++) {
-                            listOfDeviceDetailsDto[i].button.prop('disabled', true);
-                        }
-                        progress.load(
-                            [ {
-                                "url" : '/api/device/unlink-building/' + devId,
-                                "method" : 'post'
-                            }, {
-                                "url" : '/api/building/devices-details/' + building.id
-                            } ],
-                            ['#loading_unlink_device_' + devId], [], [],
-                            function(responses) {
-                                var i;
-                                for(i = 0; i < listOfDeviceDetailsDto.length; i++) {
-                                    listOfDeviceDetailsDto[i].button.prop('disabled', false);
-                                }
-                                fixDevices(responses[1].list);
-                            }, undefined, 'xs' );
-                    } ).append(
-                        $('<span class="glyphicon glyphicon-minus"></span>')
-                    );
-                return $('<div class="clearfix"></div>').append(
-                    dev.button,
-                    $('<div class="progress-space-xs pull-right"></div>')
-                        .attr('id', 'loading_unlink_device_' + dev.id)
-                );
+            .buttonUnlink('usuń', function(deviceId) {
+                return [ {
+                    "url" : '/api/device/unlink-building/' + deviceId,
+                    "method" : 'post'
+                }, {
+                    "url" : '/api/building/devices-details/' + building.id
+                } ];
+            }, function(responses) {
+                fixDevices(responses[1].list);
             })
             .build('#tabelka_devices', listOfDeviceDetailsDto);
         currentDevices = listOfDeviceDetailsDto;

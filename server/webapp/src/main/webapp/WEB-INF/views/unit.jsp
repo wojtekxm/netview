@@ -108,52 +108,45 @@ $(document).ready(function() {
     var unit;
 
     function fixBuildings(listOfBuildingDto) {
-        tabelka.builder()
-            .column('nazwa', 'text', 'name', 12, function(building) {
+        tabelka.builder('!')
+            .column('nazwa', 'text', 'name', 7, function(building) {
                 return $('<a></a>')
                     .attr('href', '/building/' + building.id)
                     .text(building.name);
             })
-            .column('kod', 'text', 'code', 3, function(building) {
+            .column('kod', 'text', 'code', 2, function(building) {
                 return $('<span></span>').text(building.code);
             })
-            .special('', 1, function(building) {
-                building.button = $('<button class="btn btn-danger btn-xs pull-right"></button>');
-                building.button.click( {
-                    "buildingId" : building.id
-                }, function(event) {
-                    var i, buildingAndUnitDto;
-                    for(i = 0; i < listOfBuildingDto.length; i++) {
-                        listOfBuildingDto[i].button.prop('disabled', true);
-                    }
-                    buildingAndUnitDto = {
-                        "unitId" : unit.id,
-                        "buildingId" : event.data.buildingId
-                    };
-                    progress.load(
-                        [ {
-                            "url" : '/api/building/unlink-unit/',
-                            "method" : 'post',
-                            "postData" : buildingAndUnitDto
-                        }, {
-                            "url" : '/api/unit/buildings/' + unit.id
-                        } ],
-                        [], [], [], //TODO...
-                        function(responses) {
-                            var i, tabelkaBuildings;
-                            for(i = 0; i < listOfBuildingDto.length; i++) {
-                                listOfBuildingDto[i].button.prop('disabled', false);
-                            }
-                            fixBuildings(responses[1].list);
-                        } );
-                } ).append(
-                    $('<span class="glyphicon glyphicon-minus"></span>')
-                );
-                return $('<div class="clearfix"></div>').append(
-                    building.button,
-                    $('<div class="progress-space-xs pull-right"></div>')
-                        .attr('id', 'loading_unlink_building_' + building.id)
-                );
+            .column('ulica', 'text', '_s', 3, function(b) {
+                b._s = '';
+                if(b.street !== null) {
+                    b._s += b.street;
+                }
+                if(b.number !== null) {
+                    b._s += ' ' + b.number;
+                }
+                return $('<span></span>').text(b._s);
+            })
+            .column('kod pocztowy', 'text', 'postalCode', 2, function(b) {
+                return $('<span></span>').text(b.postalCode);
+            })
+            .column('miasto', 'text', 'city', 2, function(b) {
+                return $('<span></span>').text(b.city);
+            })
+            .buttonUnlink('usuń', function(buildingId) {
+                var buildingAndUnitDto = {
+                    "unitId" : unit.id,
+                    "buildingId" : buildingId
+                };
+                return [ {
+                    "url" : '/api/building/unlink-unit/',
+                    "method" : 'post',
+                    "postData" : buildingAndUnitDto
+                }, {
+                    "url" : '/api/unit/buildings/' + unit.id
+                } ];
+            }, function(responses) {
+                fixBuildings(responses[1].list);
             })
             .build('#tabelka_buildings', listOfBuildingDto);
     }

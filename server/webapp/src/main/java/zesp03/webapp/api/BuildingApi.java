@@ -13,6 +13,7 @@ import zesp03.webapp.service.DeviceService;
 
 import java.math.BigDecimal;
 
+//TODO /api/building
 @RestController
 public class BuildingApi {
     @Autowired

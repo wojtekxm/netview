@@ -404,19 +404,14 @@ var tabelka = {};
                 divLoading = $('<div class="pull-right progress-space-xs later"></div>');
                 span = $('<span class="glyphicon glyphicon-minus"></span>');
                 btn = $('<button class="btn btn-danger btn-xs pull-right"></button>');
-                btn.click({
-                    "rowId" : row.id,
-                    "divLoading" : divLoading
-                }, function(event) {
-                    var rowId, divLoading, i, arr;
-                    rowId = event.data.rowId;
-                    divLoading = event.data.divLoading;
+                btn.get()[0].addEventListener('click', function() {
+                    var i, arr;
                     arr = bl.futureData;
                     for(i = 0; i < arr.length; i++) {
                         arr[i][btnProperty].prop('disabled', true);
                     }
                     progress.load(
-                        requestsGenerator(rowId),
+                        requestsGenerator(row.id),
                         [divLoading], [], [],
                         function(responses) {
                             var i, arr;

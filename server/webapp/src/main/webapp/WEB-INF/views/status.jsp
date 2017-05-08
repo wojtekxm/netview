@@ -60,7 +60,7 @@
     <div style="height: 80px;"></div>
     <div class="panel panel-default">
         <div class="panel-body" style="background-color: #f8fafe;">
-            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-th"></span> Aktualny stan urządzeń:</div>
+            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Aktualny stan urządzeń:</div>
         </div>
     </div>
     <div style="margin-bottom: 5px;">
@@ -380,11 +380,6 @@
         var al = 0;
 
 
-//        function count(device){
-//            if(device.){
-//
-//            }
-//        }
 
         for(var j=0;j<devices.length;j++){
             var currentDeviceStateDto = devices[j];

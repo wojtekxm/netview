@@ -63,8 +63,7 @@
         </div>
     </div>
 
-    <div style="height: 10px;"></div>
-    <div class="panel panel-default" id="content"><div></div>
+    <div class="panel panel-default" id="content">
         <form action="/api/user/activate" method="post">
             <input type="hidden" name="tid" value="${param.tid}">
             <input type="hidden" name="tv" value="${param.tv}">

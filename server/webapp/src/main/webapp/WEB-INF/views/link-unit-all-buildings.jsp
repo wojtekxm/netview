@@ -55,46 +55,86 @@
         </div>
     </div>
 </nav>
-<div id="all" class="container-fluid">
-    <div id="container">
-        <div class="content">
-            <div>
-                <div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kliknij aby powiązać z danym budynkiem:</div></div>
-            </div>
-            <div id="devices" class="panel panel-default" style="padding: 15px;">
-
-                <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-                    Budynki:
-                </div>
-
-
-
-                <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;cursor: pointer;">
-                    <tr>
-                        <%--<td>ID</td>--%>
-                        <td>Kod</td>
-                        <td>Nazwa</td>
-                        <td>Szerokość geograficzna</td>
-                        <td>Długość geograficzna</td>
-                    </tr>
-
-                    <c:forEach items="${buildings}" var="building">
-                        <tr onclick="window.document.location='link-unit-buildings?id_unit=${unit.id}&id_building=${building.id}';">
-                            <%--<td> <c:out value="${building.id}"/></td>--%>
-                            <td> <c:out value="${building.code}"/></td>
-                            <td> <c:out value="${building.name}"/></td>
-                            <td> <c:out value="${building.latitude}"/></td>
-                            <td> <c:out value="${building.longitude}"/></td>
-
-                        </tr>
-                        <%--</a>--%>
-                    </c:forEach>
-                </table>
-            </div>
-
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default" style="background-color: #f8fafe;">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-home"></span> Kliknij aby powiązać z danym budynkiem:</div>
         </div>
     </div>
+
+    <div class="panel panel-default" id="content">
+
+
+        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+            Budynki:
+        </div>
+
+
+
+        <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;cursor: pointer;">
+            <tr>
+                <%--<td>ID</td>--%>
+                <td>Kod</td>
+                <td>Nazwa</td>
+                <td>Szerokość geograficzna</td>
+                <td>Długość geograficzna</td>
+            </tr>
+
+            <c:forEach items="${buildings}" var="building">
+                <tr onclick="window.document.location='link-unit-buildings?id_unit=${unit.id}&id_building=${building.id}';">
+                        <%--<td> <c:out value="${building.id}"/></td>--%>
+                    <td> <c:out value="${building.code}"/></td>
+                    <td> <c:out value="${building.name}"/></td>
+                    <td> <c:out value="${building.latitude}"/></td>
+                    <td> <c:out value="${building.longitude}"/></td>
+
+                </tr>
+                <%--</a>--%>
+            </c:forEach>
+        </table>
+    </div>
 </div>
+<%--<div id="all" class="container-fluid">--%>
+    <%--<div id="container">--%>
+        <%--<div class="content">--%>
+            <%--<div>--%>
+                <%--<div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kliknij aby powiązać z danym budynkiem:</div></div>--%>
+            <%--</div>--%>
+            <%--<div id="devices" class="panel panel-default" style="padding: 15px;">--%>
+
+                <%--<div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">--%>
+                    <%--Budynki:--%>
+                <%--</div>--%>
+
+
+
+                <%--<table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;cursor: pointer;">--%>
+                    <%--<tr>--%>
+                        <%--&lt;%&ndash;<td>ID</td>&ndash;%&gt;--%>
+                        <%--<td>Kod</td>--%>
+                        <%--<td>Nazwa</td>--%>
+                        <%--<td>Szerokość geograficzna</td>--%>
+                        <%--<td>Długość geograficzna</td>--%>
+                    <%--</tr>--%>
+
+                    <%--<c:forEach items="${buildings}" var="building">--%>
+                        <%--<tr onclick="window.document.location='link-unit-buildings?id_unit=${unit.id}&id_building=${building.id}';">--%>
+                            <%--&lt;%&ndash;<td> <c:out value="${building.id}"/></td>&ndash;%&gt;--%>
+                            <%--<td> <c:out value="${building.code}"/></td>--%>
+                            <%--<td> <c:out value="${building.name}"/></td>--%>
+                            <%--<td> <c:out value="${building.latitude}"/></td>--%>
+                            <%--<td> <c:out value="${building.longitude}"/></td>--%>
+
+                        <%--</tr>--%>
+                        <%--&lt;%&ndash;</a>&ndash;%&gt;--%>
+                    <%--</c:forEach>--%>
+                <%--</table>--%>
+            <%--</div>--%>
+
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 </body>

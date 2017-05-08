@@ -56,7 +56,11 @@
 </nav>
 <div class="container">
     <div style="height: 100px;"></div>
-    <h4 class="pull-left">Budynki</h4>
+    <div class="panel panel-default">
+        <div class="panel-body" style="background-color: #f8fafe;">
+            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-home"></span> Budynki:</div>
+        </div>
+    </div>
     <div class="on-loading progress-space-lg"></div>
     <div class="on-loaded">
         <div id="tabelka_buildings"></div>

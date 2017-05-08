@@ -56,9 +56,10 @@
     </div>
 </nav>
 
-<div id="all" class="container-fluid">
-    <div id="container">
-        <div style="height: 10px;"></div>
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default" id="content">
+
         <div class="list-group ">
             <div class="row list-group-item list-group-item-heading list-group-item-success">
                 <div class="col-md-1">Id</div>
@@ -75,23 +76,60 @@
             </div>
 
             <c:forEach var="lub" items="${list}">
-            <div class="row list-group-item list-group-item-info">
-                <div class="col-md-1"><c:out value="${lub.id}"/></div>
-                <div class="col-md-1"><c:out value="${lub.building.id}"/></div>
-                <div class="col-md-1"><c:out value="${lub.building.code}"/></div>
-                <div class="col-md-3"><c:out value="${lub.building.name}"/></div>
-                <div class="col-md-1"><c:out value="${lub.building.latitude}"/></div>
-                <div class="col-md-1"><c:out value="${lub.building.longitude}"/></div>
+                <div class="row list-group-item list-group-item-info">
+                    <div class="col-md-1"><c:out value="${lub.id}"/></div>
+                    <div class="col-md-1"><c:out value="${lub.building.id}"/></div>
+                    <div class="col-md-1"><c:out value="${lub.building.code}"/></div>
+                    <div class="col-md-3"><c:out value="${lub.building.name}"/></div>
+                    <div class="col-md-1"><c:out value="${lub.building.latitude}"/></div>
+                    <div class="col-md-1"><c:out value="${lub.building.longitude}"/></div>
 
-                <div class="col-md-1"><c:out value="${lub.unit.id}"/></div>
-                <div class="col-md-1"><c:out value="${lub.unit.code}"/></div>
-                <div class="col-md-2"><c:out value="${lub.unit.description}"/></div>
+                    <div class="col-md-1"><c:out value="${lub.unit.id}"/></div>
+                    <div class="col-md-1"><c:out value="${lub.unit.code}"/></div>
+                    <div class="col-md-2"><c:out value="${lub.unit.description}"/></div>
 
-            </div>
+                </div>
             </c:forEach>
         </div>
+
     </div>
 </div>
+
+<%--<div id="all" class="container-fluid">--%>
+    <%--<div id="container">--%>
+        <%--<div class="list-group ">--%>
+            <%--<div class="row list-group-item list-group-item-heading list-group-item-success">--%>
+                <%--<div class="col-md-1">Id</div>--%>
+                <%--<div class="col-md-1">Id - Budynki</div>--%>
+                <%--<div class="col-md-1">Kod</div>--%>
+                <%--<div class="col-md-3">Nazwa</div>--%>
+                <%--<div class="col-md-1">Szer. Geo</div>--%>
+                <%--<div class="col-md-1">Dł. Geo</div>--%>
+                <%--<div class="col-md-1">Id - Jednostki</div>--%>
+                <%--<div class="col-md-1">Kod</div>--%>
+                <%--<div class="col-md-2">Opis</div>--%>
+
+
+            <%--</div>--%>
+
+            <%--<c:forEach var="lub" items="${list}">--%>
+            <%--<div class="row list-group-item list-group-item-info">--%>
+                <%--<div class="col-md-1"><c:out value="${lub.id}"/></div>--%>
+                <%--<div class="col-md-1"><c:out value="${lub.building.id}"/></div>--%>
+                <%--<div class="col-md-1"><c:out value="${lub.building.code}"/></div>--%>
+                <%--<div class="col-md-3"><c:out value="${lub.building.name}"/></div>--%>
+                <%--<div class="col-md-1"><c:out value="${lub.building.latitude}"/></div>--%>
+                <%--<div class="col-md-1"><c:out value="${lub.building.longitude}"/></div>--%>
+
+                <%--<div class="col-md-1"><c:out value="${lub.unit.id}"/></div>--%>
+                <%--<div class="col-md-1"><c:out value="${lub.unit.code}"/></div>--%>
+                <%--<div class="col-md-2"><c:out value="${lub.unit.description}"/></div>--%>
+
+            <%--</div>--%>
+            <%--</c:forEach>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

@@ -59,14 +59,13 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="background-color: #f8fafe;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o kontrolerze: </div>
         </div>
     </div>
 
-    <div style="height: 10px;"></div>
-    <div class="panel panel-default" id="content"><div></div>
+    <div class="panel panel-default" id="content">
         <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
             Szczegóły kontrolera:
         </div>

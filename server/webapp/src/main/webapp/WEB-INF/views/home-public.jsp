@@ -25,7 +25,7 @@
     </h1></c:if>
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-            <div class="login-panel panel panel-default" style="margin-bottom: 0px; padding-bottom: 0px;">
+            <div class="login-panel panel panel-default" style="width:350px!important;margin-bottom: 0px; padding-bottom: 0px;">
                 <div class="panel-heading" style="background-color: #121612;color:#cdd6cd;">
                     <h3 class="panel-title" style="font-size:17px !important;">Network-Monitor</h3>
                 </div>

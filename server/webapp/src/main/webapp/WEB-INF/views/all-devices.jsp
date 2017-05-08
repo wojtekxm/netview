@@ -57,10 +57,14 @@
     </div>
 </nav>
 <div class="container">
-    <div style="height: 100px;"></div>
-    <h4 class="pull-left">Urządzenia</h4>
-    <div class="pull-right on-loaded">
-        <button id="btn_examine" class="btn btn-primary pull-right" type="button">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body" style="background-color: #f8fafe;">
+            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Urządzenia:</div>
+        </div>
+    </div>
+    <div class="pull-left on-loaded" style="margin-bottom: 15px;">
+        <button id="btn_examine" class="btn btn-primary pull-left" type="button">
             <span class="glyphicon glyphicon-refresh"></span>
             zbadaj wszystkie
         </button>

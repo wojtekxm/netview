@@ -73,51 +73,52 @@
                 <input form="form1" type="hidden" id="id" name="id" value="${building.id}" />
             </tr>
             <tr>
-                <td  style="color:red">*Kod</td>
+                <td><font color="red" ><b>*</b></font> Kod:</td>
                 <td><input form="form1" type="text" id="new_code" name="code" value="${building.code}" style="width: 30%;"/></td>
             </tr>
 
             <tr>
-                <td style="color:red">*Nazwa</td>
+                <td ><font color="red" ><b>*</b></font> Nazwa:</td>
                 <td><input form="form1" type="text" id="new_name" name="name" value="${building.name}" style="width: 30%;" />
             </tr>
 
             <tr>
-                <td>Ulica</td>
+                <td>Ulica:</td>
                 <td><input form="form1" type="text" id="new_street" name="street" value="${building.street}" style="width: 30%;" />
             </tr>
 
             <tr>
-                <td>Numer</td>
+                <td>Numer:</td>
                 <td><input form="form1" type="text" id="new_number" name="number" value="${building.number}" style="width: 30%;" />
             </tr>
 
             <tr>
-                <td>Kod pocztowy</td>
+                <td>Kod pocztowy:</td>
                 <td><input form="form1" type="text" id="new_postalCode" name="postalCode" value="${building.postalCode}" style="width: 30%;" />
             </tr>
 
             <tr>
-                <td>Miasto</td>
+                <td>Miasto:</td>
                 <td><input form="form1" type="text" id="new_city" name="city" value="${building.city}" style="width: 30%;" />
             </tr>
 
             <tr>
-                <td style="color:red">*Szerokość geograficzna</td>
+                <td><font color="red" ><b>*</b></font> Szerokość geograficzna:</td>
                 <td><input form="form1" type="text" id="new_latitude" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
             </tr>
 
             <tr>
-                <td style="color:red">*Długość geograficzna</td>
+                <td ><font color="red" ><b>*</b></font> Długość geograficzna:</td>
                 <td><input form="form1" type="text" id="new_longitude" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
 
             </tr>
         </table>
         <div style="height: 40px;">
             <a href="/building/${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
-            <span style="display: flex;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:20%;"></span>
-                        <input form="form1" id="btn_submit" type="submit" value=" Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
+            <span style="display: flex;position: relative;float: left;">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:19%;"></span>
+
+                        <input form="form1" id="btn_submit" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
                     </span>
             <div id="change_loading" class="later progress-space"></div>
         </div>

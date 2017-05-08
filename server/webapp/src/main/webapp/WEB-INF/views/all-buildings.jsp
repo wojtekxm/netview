@@ -28,7 +28,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="font-weight:bold;background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView</a></li>
+                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -49,7 +49,7 @@
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
                 <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
                 <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
-                <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
+                <li><a href="/logout" style="margin-right: 10px;"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
     </div>
@@ -65,7 +65,7 @@
     <div class="on-loaded">
         <div id="tabelka_buildings"></div>
         <div>
-            <a href="/create-building" class="btn btn-success" role="button" style="width: 200px;">
+            <a href="/create-building" class="btn btn-success" role="button" style="width: 200px; margin-bottom:20px;">
                 <span class="glyphicon glyphicon-plus"></span>
                 Dodaj nowy budynek
             </a>

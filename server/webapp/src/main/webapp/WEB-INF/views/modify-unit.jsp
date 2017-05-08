@@ -27,7 +27,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;Network Monitor</a></li>
+                <li><a style="font-weight:bold;background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -77,12 +77,12 @@
 
             </tr>
             <tr>
-                <td style="color:red" >*Kod</td>
+                <td  ><font color="red" ><b>*</b></font> Kod:</td>
                 <td ><input form="form2" id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
             </tr>
 
             <tr>
-                <td  style="color:red">*Nazwa</td>
+                <td><font color="red" ><b>*</b></font> Nazwa:</td>
                 <td ><input form="form2" id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
             </tr>
 

@@ -27,7 +27,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;Network Monitor</a></li>
+                <li><a style="font-weight:bold;background-color: black;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -74,24 +74,25 @@
             </tr>
 
             <tr>
-                <td style="color:red">*Nazwa</td>
+                <td ><font color="red" ><b>*</b></font> Nazwa:</td>
                 <td><input form="form1" id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
             </tr>
 
             <tr>
-                <td style="color:red">*IPv4</td>
+                <td ><font color="red" ><b>*</b></font> IPv4:</td>
                 <td><input form="form1" type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
             </tr>
 
             <tr>
-                <td>Opis</td>
+                <td>Opis:</td>
                 <td><input form="form1" type="text" id="new_description" name="description" value="${controller.description}" style="width: 30%;" />
             </tr>
             <tr>
-                <td>Community String</td>
+                <td>Community String:</td>
                 <td><input form="form1" type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
             </tr>
             <tr>
+                <td></td>
                 <td>
                     <label>
                         <input id="new_fake" name="fake" form="form1" type="checkbox"
@@ -100,23 +101,34 @@
                     </label>
                 </td>
             </tr>
+            <tr>
+                <td>Budynek:</td>
+                <td>
+            <%--<label for="new_building">Wybierz budynek:</label>--%>
 
-            <label for="new_building">Wybierz budynek:</label>
+                    <select form="form1" class="form-control" id="new_building"name="buildingId" data-width="auto" >
 
-            <select form="form1" class="form-control" id="new_building"name="buildingId">
-                <option></option>
-                <c:forEach items="${list}" var="building" >
-                    <option value="${building.id}" >
-                        <c:out value="${building.name}"/>
-                    </option>
-                </c:forEach>
-            </select>
-        </table>
-        <div style="height: 40px;">
+                        <option value="0"> </option>
+
+                         <c:forEach items="${list}" var="building" >
+
+                             <option <c:if test="${ controller.buildingId == building.id}">
+                             selected = "selected"   </c:if>   value="${building.id}"  >
+                                <c:out value="${building.name}"/>
+                            </option>
+
+                        </c:forEach>
+                    </select>
+                </td>
+            </tr>
+
+                </table>
+
+        <div style="margin-bottom: 60px;">
 
             <a href="/controller/${controller.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
             <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%; left:15%;"></span>
                         <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
                         <div class="pull-left progress-space">
                     <div id="change_loading" class="later"></div>

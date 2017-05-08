@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Network Monitor</title>
+    <title>NetView</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/progress.css">
     <link rel="stylesheet" href="/css/loginStyle.css">
@@ -27,7 +27,7 @@
         <div class="col-md-4 col-md-offset-4">
             <div class="login-panel panel panel-default" style="width:350px!important;margin-bottom: 0px; padding-bottom: 0px;">
                 <div class="panel-heading" style="background-color: #121612;color:#cdd6cd;">
-                    <h3 class="panel-title" style="font-size:17px !important;">Network-Monitor</h3>
+                    <h3 class="panel-title" style="font-size:17px !important;">NetView</h3>
                 </div>
                 <div class="panel-body" style="display: none;">
                     <form action="/login" method="post" role="form">

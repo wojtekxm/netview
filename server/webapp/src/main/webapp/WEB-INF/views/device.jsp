@@ -16,19 +16,11 @@
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <style>
-        .input-group{max-width: 200px;}
-        #control{  display: flex; justify-content: space-between;  padding: 20px;  }
-        #control1{display:flex;flex-direction: column;}
-        #control2{display:flex;flex-direction: column;}
-        #control3{display:flex;flex-direction: column;}
-        #control4{display:flex;flex-direction: column;}
-        .forma {
-            margin-bottom:5px;
-            padding:10px;
-            margin-top: -1px;
-            vertical-align: middle;
+        .box {
+            width: 100%;
+            padding: 5px;
+            height: 200px;
         }
-        #wykresy {max-width: 100%;max-height:80%;  }
     </style>
 </head>
 <body>
@@ -72,257 +64,489 @@
         </div>
     </div>
 </nav>
-<div id="container">
-    <div id="control">
-        <div id="control1"> Zakres wyswietlanych danych
-            <div class="forma">
-                <input type="radio" class="rad" id="default_chart" name="range" value="dzien" > Dzien <br>
-                <input type="radio" class="rad" name="range" value="tydzien"> Tydzien<br>
-                <input type="radio" class="rad" name="range" value="miesiac"> Miesiac<br>
-                <input type="radio" class="rad" name="range" value="rok"> Rok<br>
-                <input type="radio" class="rad" name="range" value="custom"> Ustawienia niestandardowe<br>
-            </div><br>
-        </div>
-        <div id="control2"> Ustawienia niestandardowe
-            <div class="forma">
-                <div class='input-group date' id='datetimepicker1'>
-                    <input id="time_start" type='text'  data-date-end-date="0d" class="form-control"> Od
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-                <br>
-                <div class='input-group date' id='datetimepicker2'>
-                    <input id="time_end" type='text'  data-date-end-date="0d" class="form-control"> Do
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+<div class="container">
+    <div style="margin-top:80px"></div>
+    <div class="on-loading progress-space"></div>
+    <div class="on-loaded">
+        <div class="row">
+            <div class="col-sm-2">
+                <div id="settings_freq" class="box">
+                    Pasmo
+                    <br>
+
+                    <input type="radio" id="radio_freq_2400" name="frequency" value="2400">
+                    <label id="label_2400" for="radio_freq_2400">2,4 Ghz</label>
+                    <br>
+
+                    <input type="radio" id="radio_freq_5000" name="frequency" value="5000">
+                    <label id="label_5000" for="radio_freq_5000">5 Ghz</label>
+                    <br>
+                    <button type="button" id="btn_refresh" class="btn btn-primary">Odswież wykres</button>
                 </div>
             </div>
-            <br>
-            <select name="range" id="range_picker" size="1">
-                <option value=1>Badania oryginalne</option>
-                <option selected value=2>Grupowanie sugerowane</option>
-                <option value=3>5 minut</option>
-                <option value=4>15 minut</option>
-                <option value=5>godzina</option>
-                <option value=6>3 godziny</option>
-                <option value=7>dzień</option>
-                <option value=8>tydzień</option>
-                <option value=9>miesiąc</option>
-                <option value=10>rok</option>
-            </select>
-        </div>
-        <div id="control3"> Określenie badań z danej częstotliwości
-            <div class="forma">
-                <input type="radio" class="rad" id="2400" name="frequency" value="1"> Częstotliwość 2,4Ghz<br>
-                <input type="radio" class="rad" id="5000" name="frequency" value="2"> Częstotliwość 5Ghz<br>
+            <div class="col-sm-3">
+                <div id="settings_chart" class="box">
+                    Typ
+                    <br>
+
+                    <input type="radio" id="radio_chart_day" name="chart" value="day" checked>
+                    <label for="radio_freq_5000">dzienny</label>
+                    <br>
+
+                    <input type="radio" id="radio_chart_week" name="chart" value="week">
+                    <label for="radio_chart_week">tygodniowy</label>
+                    <br>
+
+                    <input type="radio" id="radio_chart_month" name="chart" value="month">
+                    <label for="radio_chart_month">miesięczny</label>
+                    <br>
+
+                    <input type="radio" id="radio_chart_year" name="chart" value="year">
+                    <label for="radio_chart_year">roczny</label>
+                    <br>
+
+                    <input type="radio" id="radio_chart_other" name="chart" value="other">
+                    <label for="radio_chart_other">niestandardowy</label>
+                    <br>
+                </div><br>
+            </div>
+            <div class="col-sm-3">
+                <div id="settings_calendar" class="box">
+                    początek<br>
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input id="time_start" type='text'  data-date-end-date="0d" class="form-control">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    koniec<br>
+                    <div class='input-group date' id='datetimepicker2'>
+                        <input id="time_end" type='text'  data-date-end-date="0d" class="form-control">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <br>
+                    <br>
+                    Agregacja badań
+                    <select name="group" id="select_group" size="1">
+                        <option value="0">brak</option>
+                        <option value="300">5 minut</option>
+                        <option value="900">15 minut</option>
+                        <option value="3600">godzina</option>
+                        <option value="10800">3 godziny</option>
+                        <option value="86400">dzień</option>
+                        <option value="604800">7 dni</option>
+                        <option value="2592000">30 dni</option>
+                        <option value="31536000">365 dni</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div id="settings_size" class="box">
+                    Rozmiar wykresu<br>
+                    <input type="radio" id="radio_size_auto" name="size" value="auto" checked> automatyczny<br>
+                    <input type="radio" id="radio_size_custom" name="size" value="custom"> inny<br>
+                    szerokość (piksele)
+                    <input type="text" id="custom_size_width" class="form-control" value="1000" disabled>
+                    wysokość (piksele)
+                    <input type="text" id="custom_size_height" class="form-control" value="500" disabled>
+                </div>
             </div>
         </div>
-        <div id="control4"> Rodzaj wykresu
-            <div class="forma">
-                <input type="radio" class="rad" id="resp" name="responsive" value="1" id="resp1"> Wykres responsywny<br>
-                <input type="radio" class="rad" name="responsive" value="2" id="resp2"> Wykres z suwakiem<br>
-            </div><br>
+        <div id="chart_loading" class="later"></div>
+        <div id="chart_area" class="later">
+            <canvas id="mycanvas" width="1000px" height="500px"></canvas>
         </div>
-        <div id="control5"> Rozmiary wykresu
-            <div class="forma">
-                <input type="text" width="20" id="chartSize1" value="1000"> Szerokość wykresu (w px)
-                <br>
-                <input type="text" id="chartSize2" value="500"> Wysokość wykresu (w px)
-            </div><br>
-        </div>
-    </div>
-    <button type="button" id="generate">Odswież wykres</button>
-    <button type="button" id="btn_apply">Zatwierdz zmiany</button>
-    <script src="/js/jquery-3.1.1.min.js"></script>
-    <script src="/js/bootstrap-3.3.7.min.js"></script>
-    <script src="/js/moment-with-locales.min.js"></script>
-    <script src="/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="/js/Chart.js"></script>
-    <script src="/js/progress.js"></script>
-    <div id="wykresy">
-        <canvas id="mycanvas" width="1000px" height="100px"></canvas>
     </div>
 </div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
+<script src="/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/js/Chart.js"></script>
+<script src="/js/progress.js"></script>
 <script>
 "use strict";
 $(document).ready(function() {
-    var btnApply;
-    btnApply = $('#apply');
-    btnApply.hide();
-    $(function () {$('#datetimepicker1').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
-    $(function () {$('#datetimepicker2').datetimepicker({format: 'DD-MM-YYYY HH:mm:ss'});});
-    $('#default_chart').prop("checked", true);
-    $('#resp').prop("checked", true);
-    $('#2400').prop("checked", true);
-    $('#control5').hide();
-    $('#control2').hide();
-    var id=<c:out value="${device.id}"/>;
-    var range1=Math.round((Date.now() - 86400000)/1000);
-    var range2=Math.round(Date.now()/1000);
-    var ranged;
-    var group=300;
-    var frequency;
-    var etykietka="Domyślny wykres dniowy";
-    var type="original";
-    var respons="true";
-    var range_picker;
+    var device, chartLoading, chartArea, btnRefresh,
+        radioFreq, radioChartDay, radioChartWeek, radioChartMonth, radioChartYear,
+        radioChartOther, radioSizeAuto, radioSizeCustom, myCanvas, myChart,
+        settingsFreq, settingsChart, settingsCalendar, settingsSize, selectGroup,
+        customSizeWidth, customSizeHeight;
+    device = {};
+    chartLoading = $('#chart_loading');
+    chartArea = $('#chart_area');
+    btnRefresh = $('#btn_refresh');
+    radioFreq = {};
+    radioFreq[2400] = $('#radio_freq_2400');
+    radioFreq[5000] = $('#radio_freq_5000');
+    radioChartDay = $('#radio_chart_day');
+    radioChartWeek = $('#radio_chart_week');
+    radioChartMonth = $('#radio_chart_month');
+    radioChartYear = $('#radio_chart_year');
+    radioChartOther = $('#radio_chart_other');
+    radioSizeAuto = $('#radio_size_auto');
+    radioSizeCustom = $('#radio_size_custom');
+    myCanvas = $('#mycanvas');
+    settingsFreq = $('#settings_freq');
+    settingsChart = $('#settings_chart');
+    settingsCalendar = $('#settings_calendar');
+    settingsSize = $('#settings_size');
+    selectGroup = $('#select_group');
+    customSizeWidth = $('#custom_size_width');
+    customSizeHeight = $('#custom_size_height');
+    $('#datetimepicker1').datetimepicker({
+        "locale": 'pl',
+        "format": 'LLL'
+    });
+    $('#datetimepicker2').datetimepicker({
+        "locale": 'pl',
+        "format": 'LLL'
+    });
+    settingsCalendar.hide();
+    settingsSize.hide();
 
-    // SPRAWDZANIE OBSLUGIWANYCH PASM CZESTOTLIWOSCI
-    var request = new XMLHttpRequest();
-    request.open('Get', '/api/device/info/' + ${device.id});
-    request.onload = function () {
-        var jsondata = JSON.parse(request.responseText);
-        if (jsondata.content.frequencySurvey['2400']===undefined &&
-            jsondata.content.frequencySurvey['5000']!==undefined){
-            console.log("TYLKO 5ghz");
-            frequency=5000;
-            $('#control3').hide();
-        }
+    progress.loadGet('/api/device/details/' + ${device.id},
+        ['.on-loading'], ['.on-loaded'], [],
+        function(contentDtoOfDeviceDetailsDto) {
+            var arr, i, k;
+            device = contentDtoOfDeviceDetailsDto.content;
+            arr = [2400, 5000];
+            for(i = 0; i < arr.length; i++) {
+                k = arr[i];
+                if(typeof device.frequency[k] !== 'undefined') {
+                    radioFreq[k].prop('checked', true);
+                    break;
+                }
+            }
+            for(i = 0; i < arr.length; i++) {
+                k = arr[i];
+                if(typeof device.frequency[k] !== 'undefined') {
+                    radioFreq[k].prop('disabled', false);
+                }
+                else {
+                    radioFreq[k].prop('disabled', true);
+                    $('#label_' + k).wrapInner('<s></s>');
+                }
+            }
+            refresh();
+            $('input[type=radio][name=frequency]').change(function() {
+                console.log("$('input[type=radio][name=frequency]').change");
+                refresh();
+            });
+            $('input[type=radio][name=chart]').change(function() {
+                console.log("$('input[type=radio][name=chart]').change");
+                if(radioChartOther.prop('checked')) {
+                    console.log('checked');
+                    settingsCalendar.fadeIn(500);
+                    settingsSize.fadeIn(500);
+                }
+                else {
+                    console.log('not');
+                    settingsCalendar.fadeOut(500);
+                    settingsSize.fadeOut(500);
+                }
+            });
+            $('input[type=radio][name=size]').change(function() {
+                if(radioSizeAuto.prop('checked')) {
+                    customSizeWidth.prop('disabled', true);
+                    customSizeHeight.prop('disabled', true);
+                }
+                else {
+                    customSizeWidth.prop('disabled', false);
+                    customSizeHeight.prop('disabled', false);
+                }
+            });
+        },
+        undefined,
+        'md'
+    );
 
-        if (jsondata.content.frequencySurvey['2400']!==undefined &&
-            jsondata.content.frequencySurvey['5000']===undefined){
-            console.log("TYLKO 2,4ghz");
-            frequency=2400;
-            $('#control3').hide();
-        }
-
-        if (jsondata.content.frequencySurvey['2400']!==undefined &&
-            jsondata.content.frequencySurvey['5000']!==undefined){
-            console.log("OBIE");
-            frequency=2400;
-        }
-        if (jsondata.content.frequencySurvey['2400']===undefined &&
-            jsondata.content.frequencySurvey['5000']===undefined){
-            console.log("Zadna");
-            frequency=undefined;
-            $('#control1').hide();
-            $('#control2').hide();
-            $('#control3').hide();
-            $('#control4').hide();
-            $('#control5').hide();
-        }
-
-    };
-    request.send();
-
-    setTimeout(function () {
-        generateChart(mycanvas, ${device.id},range1,range2,group,etykietka,frequency,type);
-    },1000);
-    <%-------------------------------------------------------------------------------------------------------------------------------%>
-    (function() {
-        $('input[type=radio][name=range]').change(function() {
-            if (this.value=='dzien') {
-                $('#range_picker select').val(0);
-                $('#control2').hide();
-                $('#generate').show();
-                btnApply.hide();
-                type="original"; console.log("Wartosc type:"+type);
-                group=300; console.log("okres grupowania:" + group);
-                etykietka="Wykres dzienny - badania oryginalne";
-                range1=Math.round((Date.now() - 86400000)/1000); console.log("zakres1:" + convert(range1));
-                range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                type="original";
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
-            }
-            if (this.value=='tydzien') {
-                $('#range_picker select').val(0);
-                $('#control2').hide();
-                $('#generate').show();
-                btnApply.hide();
-                type="group";console.log("Wartosc type:"+type);
-                group=10800; console.log("okres grupowania:" + group);
-                etykietka="Wykres tygodniowy - grupowanie:3 godziny";
-                range1=Math.round((Date.now() - 604800000)/1000); console.log("zakres1:" + convert(range1));
-                range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                type="group";
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
-            }
-            if (this.value=='miesiac') {
-                $('#range_picker select').val(0);
-                $('#control2').hide();
-                $('#generate').show();
-                btnApply.hide();
-                type="group";console.log("Wartosc type:"+type);
-                group=86400; console.log("okres grupowania:" + group);
-                etykietka="Wykres miesięczny - grupowanie:1 dzien";
-                range1=Math.round((Date.now() - 2629743830)/1000); console.log("zakres1:" + convert(range1));
-                range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                type="group";
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
-            }
-            if (this.value=='rok') {
-                $('#range_picker select').val(0);
-                $('#control2').hide();
-                $('#generate').show();
-                btnApply.hide();
-                type="group";console.log("Wartosc type:"+type);
-                group=2592000; console.log("okres grupowania:" + group);
-                etykietka="Wykres roczny - grupowanie:1 miesiac";
-                range1=Math.round((Date.now() - 31536000000)/1000); console.log("zakres1:" + convert(range1));
-                range2=Math.round(Date.now()/1000); console.log("zakres2:" + convert(range2));
-                type="group";
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
-            }
-            if (this.value=='custom') {
-                $('#control2').show();
-                $('#generate').hide();
-                btnApply.show();
-            }
-        });
-    })();
-
-    <%-------------------------------------------------------------------------------------------------------------------------------%>
-    (function() {
-        $('input[type=radio][name=frequency]').change(function() {
-            if (this.value=='1') {
-                frequency=2400; console.log("Czestotliwosc:"+frequency);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
-            }
-            if (this.value=='2') {
-                frequency = 5000;
-                console.log("Czestotliwosc:" + frequency);
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
-            }
-        });
-    })();
-    <%-------------------------------------------------------------------------------------------------------------------------------%>
-    (function() {
-        $('input[type=radio][name=responsive]').change(function() {
-            if (this.value=='1') {
-                respons=true; console.log("Responsywny:"+respons);
-                $('#wykresy').css('overflow', 'visible');
-                $('#control5').hide();
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
-            }
-            if (this.value=='2') {
-                respons=false;
-                console.log("Responsywny:" + respons);
-                $('#wykresy').css('overflow', 'scroll');
-                $('#control5').show();
-                generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
-            }
-        });
-    })();
-    <%-------------------------------------------------------------------------------------------------------------------------------%>
-    var gnr=document.getElementById("generate");
-    gnr.addEventListener("click", function(){
-        generateChart(mycanvas, <c:out value="${device.id}"/>,range1,range2,group,etykietka,frequency,type);
+    btnRefresh.click(function() {
+        refresh();
     });
 
-    <%-------------------------------------------------------------------------------------------------------------------------------%>
-    (function() {
-        $(window).keydown(function(event){
-            if(event.keyCode == 13) {event.preventDefault();return false;}});
-    })();
+    function refresh() {
+        var mhz, isOriginal, t0, t1, url, groupTime;
 
-    <%-------------------------------------------------------------------------------------------------------------------------------%>
+        mhz = null;
+        if(radioFreq[2400].prop('checked'))mhz = 2400;
+        else if(radioFreq[5000].prop('checked'))mhz = 5000;
+        if(mhz === null)return;//!
+
+        isOriginal = false;
+        if(!radioChartOther.prop('checked')) {
+            t1 = Math.round(Date.now() / 1000);//TODO wyrównać do pełnej doby...
+            if(radioChartDay.prop('checked')) {
+                t0 = t1 - 60 * 60 * 24;
+                isOriginal = true;
+                groupTime = null;
+            }
+            else if(radioChartWeek.prop('checked')) {
+                t0 = t1 - 60 * 60 * 24 * 7;//TODO tydzień
+                groupTime = 60 * 60;
+            }
+            else if(radioChartMonth.prop('checked')) {
+                t0 = t1 - 60 * 60 * 24 * 30;//TODO miesiąc
+                groupTime = 60 * 60 * 6;
+            }
+            else {
+                t0 = t1 - 60 * 60 * 24 * 365;//TODO rok
+                groupTime = 60 * 60 * 24;
+            }
+        }
+        else {
+            t1 = getTimestampOrNull(2);
+            t0 = getTimestampOrNull(1);
+            if(t0 === null || t1 === null || t1 <= t0) {
+                alert('wybierz poprawny przedział czasu');//!
+            }
+            groupTime = parseInt(selectGroup.val());
+            if(groupTime === 0) {
+                groupTime = null;
+                isOriginal = true;
+            }
+        }
+        if(isOriginal) {
+            url = '/api/surveys/original?device=' + device.id +
+                '&frequency=' + mhz +
+                '&start=' + t0 +
+                '&end=' + t1;
+            progress.loadGet(url,
+                [chartLoading], [chartArea], [],
+                function (response) {
+                    genOriginal(response.content.list);
+                },
+                undefined,
+                'md'
+            );
+        }
+        else {
+            url = '/api/surveys/avg-min-max?device=' + device.id +
+            '&frequency=' + mhz +
+            '&start=' + t0 +
+            '&groupTime=' + groupTime +
+            '&end=' + t1;
+            progress.loadGet(url,
+                [chartLoading], [chartArea], [],
+                function (response) {
+                    genAMM(response.content.list);
+                },
+                undefined,
+                'md'
+            );
+        }
+    }
+
+    function genAMM(surveys) {
+        var data, options, values_min, values_avg, values_max, tags, i;
+        /*myCanvas.remove();
+        myCanvas = $('<canvas id="mycanvas"></canvas>');
+        $('#wykresy').append(myCanvas);
+        myCanvas.css({
+            "width": parseInt($('#chartSize1').val()) + "px",
+            "height": parseInt($('#chartSize2').val()) + "px"
+        });*/
+        if(typeof myChart !== 'undefined') {
+            myChart.destroy();
+            myChart = undefined;
+        }
+        values_min = [];
+        values_max = [];
+        values_avg = [];
+        tags = [];
+        options = {
+            "tooltips": {
+                "mode": 'index'
+            },
+            "legend": {
+                "display": true
+            },
+            "title": {
+                "display": true,
+                "text": 'Domyślny wykres dniowy'
+            },
+            "hover": {
+                "intersect": false,
+                "mode": 'x'
+            },
+            "label": {
+                "display": true
+            },
+            "scales": {
+                "xAxes": [{
+                    "display": true,
+                    "barPercentage": 1,
+                    "autoSkip": true,
+                    "ticks": {
+                        "maxRotation": 0,
+                        "maxTicksLimit": 2
+                    }
+                }],
+                "yAxes": [{
+                    "stacked": false,
+                    "display": true,
+                    "scaleLabel": {
+                        "display": true,
+                        "labelString": 'Ilosc klientów'
+                    },
+                    "ticks": {
+                        "ticks": {
+                            "autoSkip": false,
+                            "fixedStepSize": 10,
+                            "beginAtZero": true,
+                            "Min": -5,
+                            "suggestedMax": 100
+                        }
+                    }
+                }]
+            },
+            "maintainAspectRatio": false,
+            "responsive": radioSizeAuto.prop('checked'),
+            "steppedLine": true,
+            "elements": {
+                "line": {
+                    "tension": 0
+                }
+            }
+        };
+        data = {
+            "showLine": false,
+            "labels": tags,
+            "datasets": [{
+                "label": "Minimalna ilosc",
+                "data": values_min,
+                "fill": false,
+                "borderColor": "rgba(255,0,0,1)",
+                "backgroundColor": "rgba(255,0,0,1)",
+                "hoverBackgroundColor": "rgba(0,0,0,1)"
+            }, {
+                "label": "Srednia ilosc",
+                "data": values_avg,
+                "fill": false,
+                "borderColor": "rgba(255,155,0,1)",
+                "backgroundColor": "rgba(255,200,0,1)",
+                "hoverBackgroundColor": "rgba(0,0,0,1)"
+            }, {
+                "label": "Maksymalna ilosc",
+                "data": values_max,
+                "fill": false,
+                "borderColor": "rgba(8, 95, 41,1)",
+                "backgroundColor": "rgba(8, 139, 41,1)",
+                "hoverBackgroundColor": "rgba(8, 139, 41,1)"
+            }]
+        };
+        for(i = 0; i < surveys.length; i++) {
+            values_avg.push(surveys[i].average);
+            values_min.push(surveys[i].min);
+            values_max.push(surveys[i].max);
+            tags.push( convert(surveys[i].timeStart) );
+        }
+        myChart = Chart.Line(myCanvas, {
+            "data": data,
+            "options": options
+        });
+    }
+
+    function genOriginal(surveys) {
+        var data, options, values, tags, i;
+        /*myCanvas.remove();
+        myCanvas = $('<canvas id="mycanvas"></canvas>');
+        $('#wykresy').append(myCanvas);
+        myCanvas.css({
+            "width": parseInt($('#chartSize1').val()) + "px",
+            "height": parseInt($('#chartSize2').val()) + "px"
+        });*/
+        if(typeof myChart !== 'undefined') {
+            myChart.destroy();
+            myChart = undefined;
+        }
+        values = [];
+        tags = [];
+        options = {
+            "tooltips": {
+                "mode": 'index'
+            },
+            "legend": {
+                "display": true
+            },
+            "title": {
+                "display": true,
+                "text": 'Domyślny wykres dniowy'
+            },
+            "hover": {
+                "intersect": false,
+                "mode": 'x'
+            },
+            "label": {
+                "display": true
+            },
+            "scales": {
+                "xAxes": [{
+                    "display": true,
+                    "barPercentage": 1,
+                    "autoSkip": true,
+                    "ticks": {
+                        "maxRotation": 0,
+                        "maxTicksLimit": 2
+                    }
+                }],
+                "yAxes": [{
+                    "stacked": false,
+                    "display": true,
+                    "scaleLabel": {
+                        "display": true,
+                        "labelString": 'Ilosc klientów'
+                    },
+                    "ticks": {
+                        "ticks": {
+                            "autoSkip": false,
+                            "fixedStepSize": 10,
+                            "beginAtZero": true,
+                            "Min": -5,
+                            "suggestedMax": 100
+                        }
+                    }
+                }]
+            },
+            "maintainAspectRatio": false,
+            "responsive": radioSizeAuto.prop('checked'),
+            "steppedLine": true,
+            "elements": {
+                "line": {
+                    "tension": 0
+                }
+            }
+        };
+        data = {
+            "showLine": false,
+            "labels": tags,
+            "datasets": [{
+                "label": 'Ilosc klientów',
+                "data": values,
+                "fill": false,
+                "borderColor": 'rgba(255,155,0,1)',
+                "backgroundColor": 'rgba(255,200,0,1)',
+                "pointBorderWidth": 1,
+                "hoverBackgroundColor": 'rgba(0,0,0,1)'
+            }]
+        };
+        for(i = 0; i < surveys.length; i++) {
+            values.push( Math.round(surveys[i].clients) );
+            tags.push( convert( Number(surveys[i].timestamp) ) );
+        }
+        myChart = Chart.Line(myCanvas, {
+            "data": data,
+            "options": options
+        });
+    }
+
     function convert(time) {
         var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
         var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
             "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
-        time=time*1000;
+        time = time * 1000;
         var temp = new Date(time);
         var Seconds = temp.getSeconds();
         var Minutes = temp.getMinutes();
@@ -337,135 +561,12 @@ $(document).ready(function() {
             Day + " " + MonthName[Month] + " " + Year + " (" + DayName[WeekDay] + ") ";
     }
 
-    <%-------------------------------------------------------------------------------------------------------------------------------%>
-    btnApply.click(
-        function () {
-            var tmp1, tmp2, range, temper;
-            tmp1=Math.round(Number($('#datetimepicker1').data('DateTimePicker').date())/1000);
-            tmp2=Math.round(Number($('#datetimepicker2').data('DateTimePicker').date())/1000);
-            ranged=Number($('#zakres').val());
-            temper=$('#range_picker').val();
-            console.log("TEMPER="+temper);
-            $('#range_picker').find('select').val(0);
-            if (temper==1){type="original"; range=0;}
-            if (temper==2){type="group";range=Math.round((tmp2-tmp1)/100); console.log("zakres grupowania:"+range);}
-            if (temper==3){type="group";range=300;}
-            if (temper==4){type="group";range=1500;}
-            if (temper==5){type="group";range=3600;}
-            if (temper==6){type="group";range=10800;}
-            if (temper==7){type="group";range=86400;}
-            if (temper==8){type="group";range=604800;}
-            if (temper==9){type="group";range=31536000;}
-            etykietka=("Zakres od \n"+convert(tmp1)+"\n"+"do "+convert(tmp2));
-            if (tmp1>=tmp2){alert("Wybrano niepoprawne parametry!!!!");}
-            else{
-                if (temper==1){
-                    generateChart(mycanvas, <c:out value="${device.id}"/>,tmp1,tmp2,range,etykietka,frequency,'original',respons);
-                }
-                else{
-                    generateChart(mycanvas, <c:out value="${device.id}"/>,tmp1,tmp2,range,etykietka,frequency,'group',respons);
-                }
-            }
+    function getTimestampOrNull(oneOrTwo) {
+        var d = $('#datetimepicker' + oneOrTwo).data('DateTimePicker').date();
+        if(d === null) {
+            return null;
         }
-    );
-    <%-------------------------------------------------------------------------------------------------------------------------------%>
-    function generateChart(mycanvas, id,timestamp,timestamp2,range,etykieta,frequency,type) {
-        var tags = [];      //WSZYSTKO
-        var values_avg = [];    //WSZYSTKO
-        var values_min = [];    //WSZYSTKO
-        var values_max = [];    //WSZYSTKO
-        var request = new XMLHttpRequest();
-        var szerokosctmp=Number($('#chartSize1').val())+"px";
-        var wysokosctmp=Number($('#chartSize2').val())+"px";
-        $('#mycanvas').remove();
-        $('#wykresy').append('<canvas id="mycanvas"</canvas>');
-        mycanvas=$('#mycanvas');
-        $('#mycanvas').css({'width':szerokosctmp,'height':wysokosctmp});
-        $('#mycanvas').css({'max-width':szerokosctmp,'max-height':wysokosctmp});
-        mycanvas = document.querySelector('#mycanvas');
-
-        var options = {tooltips: {mode: 'index'}, legend: {display: true},
-            title: {display: true, text: etykieta},
-            hover: {intersect: false, mode:'x'},
-            label: {display: true},
-            scales: {xAxes: [{display:true,barPercentage:1, autoSkip: true, ticks: {maxRotation: 0,maxTicksLimit: 2}}],
-                yAxes: [{stacked: false, display: true, scaleLabel: {display: true, labelString: 'Ilosc klientów'},
-                    ticks: {ticks: {autoSkip: false, fixedStepSize: 10, beginAtZero:true, Min: -5, suggestedMax: 100}}}]},
-            maintainAspectRatio:false, responsive: respons, steppedLine: true, elements: {line: {tension: 0}}
-        };
-        var data2={showLine:false, labels: tags,
-            datasets: [{label: "Ilosc klientów", data: values_avg, fill: false,
-                borderColor:"rgba(255,155,0,1)",
-                backgroundColor: "rgba(255,200,0,1)",
-                pointBorderWidth: 1,
-                hoverBackgroundColor:"rgba(0,0,0,1)"}]};
-        var data = {
-            showLine:false,
-            labels: tags,
-            datasets: [{
-                label: "Minimalna ilosc",
-                data: values_min,
-                fill:false,
-                borderColor:"rgba(255,0,0,1)",
-                backgroundColor: "rgba(255,0,0,1)",
-                hoverBackgroundColor:"rgba(0,0,0,1)"
-
-            },{
-                label: "Srednia ilosc",
-                data: values_avg,
-                fill: false,
-                borderColor:"rgba(255,155,0,1)",
-                backgroundColor: "rgba(255,200,0,1)",
-                hoverBackgroundColor:"rgba(0,0,0,1)"
-
-            },{
-                label: "Maksymalna ilosc",
-                data: values_max,
-                fill: false,
-                borderColor: "rgba(8, 95, 41,1)",
-                backgroundColor: "rgba(8, 139, 41,1)",
-                hoverBackgroundColor:"rgba(8, 139, 41,1)"}]};
-
-        if (type=="original"){
-            request.open('Get', '/api/surveys/original?device='+id+
-                '&frequency='+frequency+
-                '&start='+timestamp+
-                '&end='+timestamp2
-            );
-            request.onload = function () {
-                var jsondata, ilosc, i;
-                jsondata = JSON.parse(request.responseText);
-                ilosc = Object.keys(jsondata.content.list).length;
-                console.log("ilosc badan:"+ilosc);
-                for (i = 0; i < ilosc; i++) {
-                    values_avg.push(Math.round(jsondata.content.list[i].clients));
-                    tags.push(convert(Number(jsondata.content.list[i].timestamp)));
-                }
-                Chart.Line(mycanvas, {data: data2, options: options});
-            };
-        }
-        else{
-
-            request.open('Get', '/api/surveys/avg-min-max?device='+id+
-                '&frequency='+frequency+
-                '&start='+timestamp+
-                '&groupTime='+range+
-                '&end='+timestamp2
-            );
-            request.onload = function () {
-                var jsondata, ilosc, i;
-                jsondata = JSON.parse(request.responseText);
-                ilosc=Object.keys(jsondata.content.list).length;
-                console.log("ilosc badan:"+ilosc);
-                for (i = 0; i < ilosc; i++) {
-                    values_avg.push(Math.round(jsondata.content.list[i].average));
-                    values_min.push(jsondata.content.list[i].min);
-                    values_max.push(jsondata.content.list[i].max);
-                    tags.push(convert(Number(jsondata.content.list[i].timeStart)));
-                }
-                Chart.Line(mycanvas, {data: data, options: options});
-            };}
-        request.send();
+        return d.unix();
     }
 });
 </script>

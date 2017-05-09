@@ -40,16 +40,6 @@ public class UnitApi {
         return ListDto.make( () -> unitService.getAllLinkUnitBuildings() );
     }
 
-    @PostMapping(value = "/api/unit/create", consumes = "application/x-www-form-urlencoded")
-    public BaseResultDto create(
-            @RequestParam("code") String code,
-            @RequestParam(value = "description", required = false) String description) {
-        CreateUnitDto dto = new CreateUnitDto();
-        dto.setCode(code);
-        dto.setDescription(description);
-        return BaseResultDto.make( () -> unitService.create(dto) );
-    }
-
     @PostMapping(value = "/api/unit/create", consumes = "application/json")
     public BaseResultDto create(
             @RequestBody CreateUnitDto dto) {
@@ -83,20 +73,6 @@ public class UnitApi {
     public BaseResultDto acceptModifyUnit(
             @RequestBody UnitDto dto) {
         return BaseResultDto.make( () -> unitService.acceptModifyUnit(dto) );
-    }
-
-    @PostMapping(value = "/api/accept-modify-unit", consumes = "application/x-www-form-urlencoded")
-    public BaseResultDto acceptModifyUnit(
-            @RequestParam("id") long id,
-            @RequestParam("code") String code,
-            @RequestParam("description") String description) {
-        return BaseResultDto.make( () -> {
-            UnitDto dto = new UnitDto();
-            dto.setId(id);
-            dto.setCode(code);
-            dto.setDescription(description);
-            unitService.acceptModifyUnit(dto);
-        } );
     }
 
     @GetMapping("/api/link-unit-all-buildings")

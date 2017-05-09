@@ -62,34 +62,33 @@
     </div>
 
     <div class="panel panel-default" id="content">
-        <form method="post" action="/api/controller/create" id="form1" class="form-horizontal">
 
-
+        <div class="form-horizontal">
             <div class="form-group">
                 <label class="control-label col-sm-2 " for="new_name" ><font color="red" ><b>*</b></font> Nazwa kontrolera:</label>
                 <div class="col-sm-3">
-                    <input form="form1"type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
+                    <input type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
                            id="new_name" required="required" name="name">
                 </div>
             </div>
             <div class="form-group">
                 <label for="new_ipv4" class="control-label col-sm-2 "><font color="red" ><b>*</b></font> Adres IPv4:</label>
                 <div class="col-sm-3">
-                    <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
+                    <input type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
                            id="new_ipv4" required="required" name="ipv4">
                 </div>
             </div>
             <div class="form-group">
                 <label for="new_description" class="control-label col-sm-2 ">Komentarz:</label>
                 <div class="col-sm-3">
-                    <input form="form1" type="text" class="form-control"  placeholder="Wprowadź komentarz (opcjonalne)"
+                    <input  type="text" class="form-control"  placeholder="Wprowadź komentarz (opcjonalne)"
                            id="new_description" name="description">
                 </div>
             </div>
             <div class="form-group">
                 <label for="new_communityString" class="control-label col-sm-2 ">Community String:</label>
                 <div class="col-sm-3">
-                    <input form="form1" type="text" class="form-control"  placeholder="Wprowadź Community String"
+                    <input type="text" class="form-control"  placeholder="Wprowadź Community String"
                            id="new_communityString" name="communityString">
                 </div>
             </div>
@@ -100,7 +99,7 @@
                 <div class="col-sm-3">
                     <label for="new_building">Wybierz budynek:</label>
 
-                    <select form="form1" class="form-control" id="new_building"name="buildingId">
+                    <select  class="form-control" id="new_building"name="buildingId">
                         <option></option>
                         <c:forEach items="${list}" var="building" >
                             <option value="${building.id}" >
@@ -115,7 +114,7 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input form="form1" type="checkbox" <%--value="false" class="form-control"--%> id="new_fake" name="fake"> Prawdziwy </label>
+                            <input  type="checkbox" <%--value="false" class="form-control"--%> id="new_fake" name="fake"> Prawdziwy </label>
                     </div>
                 </div>
             </div>
@@ -125,11 +124,11 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <span style="display: flex;position: relative;float: left;">
                     <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input form="form1" type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;">
+                        <input  type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;">
                     </span>
                 </div>
             </div>
-        </form>
+        </div>
 
     </div>
     <div class="form-group">

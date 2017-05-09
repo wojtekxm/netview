@@ -85,30 +85,6 @@ public class BuildingApi {
         return BaseResultDto.make( () -> buildingService.createBuilding(dto) );
     }
 
-    @PostMapping(value = "/api/building/create", consumes = "application/x-www-form-urlencoded")
-    public BaseResultDto createBuilding(
-            @RequestParam("code") String code,
-            @RequestParam("name") String name,
-            @RequestParam(value = "street", required = false) String street,
-            @RequestParam(value = "city", required = false) String city,
-            @RequestParam(value = "postalCode", required = false) String postalCode,
-            @RequestParam(value = "number", required = false) String number,
-            @RequestParam("latitude")  BigDecimal latitude,
-            @RequestParam("longitude")  BigDecimal longitude) {
-        CreateBuildingDto dto = new CreateBuildingDto();
-
-        dto.setCode(code);
-        dto.setName(name);
-        dto.setStreet(street);
-        dto.setCity(city);
-        dto.setPostalCode(postalCode);
-        dto.setNumber(number);
-        dto.setLatitude(latitude);
-        dto.setLongitude(longitude);
-
-        return BaseResultDto.make( () -> buildingService.createBuilding(dto) );
-    }
-
     @GetMapping("/api/modify-building")
     public ContentDto<BuildingDto> modifyBuilding(
             @RequestParam("id") long id) {
@@ -121,34 +97,7 @@ public class BuildingApi {
         return BaseResultDto.make( () -> buildingService.acceptModifyBuilding(dto) );
     }
 
-    @PostMapping(value = "/api/accept-modify-building", consumes = "application/x-www-form-urlencoded")
-    public BaseResultDto acceptModifyBuilding(
-            @RequestParam("id") long id,
-            @RequestParam("code") String code,
-            @RequestParam("name") String name,
-            @RequestParam("street") String street,
-            @RequestParam("city") String city,
-            @RequestParam("postalCode") String postalCode,
-            @RequestParam("number") String number,
-            @RequestParam("latitude") BigDecimal latitude,
-            @RequestParam("longitude") BigDecimal longitude) {
-        return BaseResultDto.make(() -> {
-            BuildingDto dto = new BuildingDto();
 
-            dto.setId(id);
-            dto.setCode(code);
-            dto.setName(name);
-            dto.setStreet(street);
-            dto.setCity(city);
-            dto.setPostalCode(postalCode);
-            dto.setNumber(number);
-            dto.setLatitude(latitude);
-            dto.setLongitude(longitude);
-
-            buildingService.acceptModifyBuilding(dto);
-        });
-
-    }
 }
 
 

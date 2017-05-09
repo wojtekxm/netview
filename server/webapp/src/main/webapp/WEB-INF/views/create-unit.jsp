@@ -64,7 +64,7 @@
     </div>
 
     <div class="panel panel-default" id="content">
-        <form method="post" action="/api/unit/create" class="form-horizontal">
+        <div class="form-horizontal">
 
             <div class="form-group">
                 <label class="control-label col-sm-2 " for="new_code"><font color="red" ><b>*</b></font> Kod jednostki:</label>
@@ -86,7 +86,7 @@
                     <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
                 </div>
             </div>
-        </form>
+        </div>
 
     </div>
     <div class="form-group">

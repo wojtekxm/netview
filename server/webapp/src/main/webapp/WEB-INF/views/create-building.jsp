@@ -63,8 +63,8 @@
     </div>
 
     <div class="panel panel-default" id="content">
-        <form method="post" action="/api/building/create" class="form-horizontal">
 
+        <div class="form-horizontal">
             <div class="form-group">
                <label for="new_name"class="col-sm-2 control-label"><font color="red" ><b>*</b></font> Nazwa budynku: </label>
                 <div class="col-sm-3">
@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            <div id="change_loading" class="progress-space later"></div>
+            <div id="change_loading" class="progress-space"></div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <span style="display: flex;position: relative;float: left;">
@@ -131,7 +131,9 @@
                     </span>
                 </div>
             </div>
-        </form>
+
+        </div>
+
     </div>
     <div class="form-group">
         <div class="col-sm-12">

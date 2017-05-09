@@ -58,7 +58,7 @@
     <div class="panel panel-default">
         <div class="panel-body" style="background-color: #f8fafe;">
             <div id="tittle"><span class="glyphicon glyphicon-inbox"></span> <c:out value="${controller.name}"/>: </div>
-            <form method="post" action="/api/controller/accept-modify-controller" id="form1"></form>
+            <%--<form method="post" action="/api/controller/accept-modify-controller" id="form1"></form>--%>
         </div>
     </div>
 
@@ -70,32 +70,32 @@
 
         <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
             <tr>
-                <input form="form1" id="id" type="hidden" name="id" value="${controller.id}" />
+                <input id="id" type="hidden" name="id" value="${controller.id}" />
             </tr>
 
             <tr>
                 <td ><font color="red" ><b>*</b></font> Nazwa:</td>
-                <td><input form="form1" id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
+                <td><input  id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
             </tr>
 
             <tr>
                 <td ><font color="red" ><b>*</b></font> IPv4:</td>
-                <td><input form="form1" type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
+                <td><input type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
             </tr>
 
             <tr>
                 <td>Opis:</td>
-                <td><input form="form1" type="text" id="new_description" name="description" value="${controller.description}" style="width: 30%;" />
+                <td><input  type="text" id="new_description" name="description" value="${controller.description}" style="width: 30%;" />
             </tr>
             <tr>
                 <td>Community String:</td>
-                <td><input form="form1" type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
+                <td><input  type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
             </tr>
             <tr>
                 <td></td>
                 <td>
                     <label>
-                        <input id="new_fake" name="fake" form="form1" type="checkbox"
+                        <input id="new_fake" name="fake" type="checkbox"
                                <c:if test="${ controller.fake == false}">checked="checked"</c:if> >
                         Prawdziwy
                     </label>
@@ -106,7 +106,7 @@
                 <td>
             <%--<label for="new_building">Wybierz budynek:</label>--%>
 
-                    <select form="form1" class="form-control" id="new_building"name="buildingId" data-width="auto" >
+                    <select class="form-control" id="new_building"name="buildingId" data-width="auto" >
 
                         <option value="0"> </option>
 
@@ -129,7 +129,7 @@
             <a href="/controller/${controller.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
             <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%; left:15%;"></span>
-                        <input form="form1" type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <input type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
                         <div class="pull-left progress-space">
                     <div id="change_loading" class="later"></div>
                 </div>

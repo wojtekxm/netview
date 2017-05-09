@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            <div id="change_loading" class="progress-space"></div>
+            <div class="change_loading" class="progress-space"></div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <span style="display: flex;position: relative;float: left;">

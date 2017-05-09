@@ -273,7 +273,7 @@ $(document).ready(function() {
         mhz = null;
         if(radioFreq[2400].prop('checked'))mhz = 2400;
         else if(radioFreq[5000].prop('checked'))mhz = 5000;
-        if(mhz === null)return;//!
+        if(mhz === null)return;//?
 
         isOriginal = false;
         if(!radioChartOther.prop('checked')) {
@@ -365,7 +365,7 @@ $(document).ready(function() {
             },
             "title": {
                 "display": true,
-                "text": 'Domyślny wykres dniowy'
+                "text": 'wykres'//TODO ?
             },
             "hover": {
                 "intersect": false,
@@ -473,7 +473,7 @@ $(document).ready(function() {
             },
             "title": {
                 "display": true,
-                "text": 'Domyślny wykres dniowy'
+                "text": 'wykres'//TODO ?
             },
             "hover": {
                 "intersect": false,

@@ -2,10 +2,7 @@ package zesp03.webapp.dto;
 
 import zesp03.common.entity.Controller;
 
-import javax.validation.constraints.Pattern;
-
 public class ControllerDetailsDto {
-
     private long id;
     private String name;
     private String ipv4;

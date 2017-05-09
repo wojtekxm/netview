@@ -13,7 +13,6 @@ import java.util.Map;
 public class DeviceNowDto {
     private long id;
     private String name;
-    private String description;
     private Long controllerId;
     private Long buildingId;
     private Map<Integer, SampleRaw> frequencySurvey;
@@ -32,14 +31,6 @@ public class DeviceNowDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Long getControllerId() {
@@ -72,7 +63,6 @@ public class DeviceNowDto {
         final Building b = dev.getBuilding();
         this.id = dev.getId();
         this.name = dev.getName();
-        this.description = dev.getDescription();
         if(con != null) {
             this.controllerId = con.getId();
         }

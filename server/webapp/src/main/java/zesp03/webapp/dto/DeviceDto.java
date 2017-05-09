@@ -7,7 +7,6 @@ import zesp03.common.entity.Device;
 public class DeviceDto {
     private long id;
     private String name;
-    private String description;
     private Long controllerId;
     private Long buildingId;
 
@@ -25,14 +24,6 @@ public class DeviceDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Long getControllerId() {
@@ -56,7 +47,6 @@ public class DeviceDto {
         final Building b = dev.getBuilding();
         this.id = dev.getId();
         this.name = dev.getName();
-        this.description = dev.getDescription();
         if(con != null) {
             this.controllerId = con.getId();
         }

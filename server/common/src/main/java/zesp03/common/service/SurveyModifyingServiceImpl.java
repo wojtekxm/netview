@@ -110,7 +110,6 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             if(device == null) {
                 Device d = new Device();
                 d.setName(name);
-                d.setDescription("");
                 d.setController(controller);
                 d.setBuilding(null);
                 d.setDeleted(0L);

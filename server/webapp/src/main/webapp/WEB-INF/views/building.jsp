@@ -261,17 +261,14 @@ $(document).ready(function(){
     function fixDevices(listOfDeviceDetailsDto) {
         var i;
         tabelka.builder()
-            .column('nazwa', 'text', 'name', 4, function(dev) {
+            .column('nazwa', 'text', 'name', 6, function(dev) {
                 return $('<a></a>')
                     .attr('href', '/device/' + dev.id)
                     .text(dev.name);
             })
-            .column('opis', 'text', 'description', 4, function(dev) {
-                return $('<span></span>').text(dev.description);
-            })
             .deviceFrequency('2,4 GHz', 2400, 2)
             .deviceFrequency('5 GHz', 5000, 2)
-            .column('kontroler', 'text', 'cmp_controller', 4, function(dev) {
+            .column('kontroler', 'text', 'cmp_controller', 6, function(dev) {
                 var con = dev.controller;
                 dev.cmp_controller = null;
                 if(con !== null) {
@@ -302,17 +299,14 @@ $(document).ready(function(){
 
     function fixModalDevices(listOfDeviceDetailsDto) {
         tabelka.builder()
-            .column('nazwa', 'text', 'name', 4, function(dev) {
+            .column('nazwa', 'text', 'name', 6, function(dev) {
                 return $('<a></a>')
                     .attr('href', '/device/' + dev.id)
                     .text(dev.name);
             })
-            .column('opis', 'text', 'description', 3, function(dev) {
-                return $('<span></span>').text(dev.description);
-            })
             .deviceFrequency('2,4 GHz', 2400, 2)
             .deviceFrequency('5 GHz', 5000, 2)
-            .column('kontroler', 'text', 'cmp_controller', 4, function(dev) {
+            .column('kontroler', 'text', 'cmp_controller', 6, function(dev) {
                 var con = dev.controller;
                 dev.cmp_controller = null;
                 if(con !== null) {

@@ -79,7 +79,7 @@
 <script>
 "use strict";
 $(document).ready( function() {
-    function fixBuildings2(listOfBuildingDto) {
+    function fixBuildings(listOfBuildingDto) {
         tabelka.builder('!')
             .column('nazwa', 'text', 'name', 7, function(building) {
                 return $('<a></a>')
@@ -112,7 +112,7 @@ $(document).ready( function() {
         '/api/building/info/all',
         ['.on-loading'], ['.on-loaded'], [],
         function(listDtoOfBuildingDto) {
-            fixBuildings2(listDtoOfBuildingDto.list);
+            fixBuildings(listDtoOfBuildingDto.list);
         }
     );
 } );

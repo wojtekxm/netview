@@ -154,14 +154,6 @@
                                             $('<td></td>').text(device.name)
                                         ),
                                         $('<tr></tr>').append(
-                                            $('<td></td>').text('opis'),
-                                            $('<td></td>').append(
-                                                device.description === null ?
-                                                    $('<em></em>').text('(brak)') :
-                                                    $('<span></span>').text(device.description)
-                                            )
-                                        ),
-                                        $('<tr></tr>').append(
                                             $('<td></td>').text('znany'),
                                             $('<td></td>').text(device.known ? 'tak' : 'nie')
                                         ),

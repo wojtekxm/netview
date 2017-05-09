@@ -146,12 +146,7 @@ $(document).ready( function() {
             "label" : 'nazwa',
             "comparator" : util.comparatorText('name'),
             "extractor" : 'td_name',
-            "cssClass" : 'width-4'
-        }, {
-            "label" : 'opis',
-            "comparator" : util.comparatorText('description'),
-            "extractor" : 'td_description',
-            "cssClass" : 'width-4'
+            "cssClass" : 'width-6'
         }, {
             "label" : '2,4 GHz',
             "comparator" : util.comparatorNumber('cmp_2400'),
@@ -166,7 +161,7 @@ $(document).ready( function() {
             "label" : 'kontroler',
             "comparator" : util.comparatorText('cmp_controller'),
             "extractor" : 'td_controller',
-            "cssClass" : 'width-4'
+            "cssClass" : 'width-6'
         }
     ];
 
@@ -291,8 +286,6 @@ $(document).ready( function() {
             dev.td_name = $('<a></a>')
                 .attr('href', '/device/' + dev.id)
                 .text(dev.name);
-
-            dev.td_description = $('<span></span>').text(dev.description);
 
             dev.td_2400 = $('<span></span>');
             if(typeof freq['2400'] !== 'undefined') {

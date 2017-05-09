@@ -134,17 +134,14 @@
 $(document).ready(function() {
     function fixDevices(listOfDeviceDetailsDto) {
         tabelka.builder('!')
-            .column('nazwa', 'text', 'name', 3, function(dev) {
+            .column('nazwa', 'text', 'name', 4, function(dev) {
                 return $('<a></a>')
                     .attr('href', '/device/' + dev.id)
                     .text(dev.name);
             })
-            .column('opis', 'text', 'description', 3, function(dev) {
-                return $('<span></span>').text(dev.description);
-            })
             .deviceFrequency('2,4 GHz', 2400, 2)
             .deviceFrequency('5 GHz', 5000, 2)
-            .column('lokalizacja', 'text', 'cmp_location', 6, function(dev) {
+            .column('lokalizacja', 'text', 'cmp_location', 8, function(dev) {
                 var b = dev.building;
                 if(b === null) {
                     dev.cmp_location = '';

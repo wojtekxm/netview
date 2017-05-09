@@ -220,7 +220,7 @@ public class BuildingServiceImpl implements BuildingService {
             // object[11] = description
             // object[12] = building_id
             for( Object[] object : list ) {
-                
+
                 if( object[5] != null ) {
 
                     unit = new UnitDto();

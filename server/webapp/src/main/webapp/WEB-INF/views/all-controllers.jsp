@@ -98,7 +98,7 @@ $(document).ready( function() {
         '/api/controller/details/all',
         ['.on-loading'], ['.on-loaded'], [],
         function(listDtoOfControllerDetailsDto) {
-            fixControllers(controllers, false);
+            fixControllers(listDtoOfControllerDetailsDto.list, false);
             btnExamine.click(function() {
                     btnExamine.prop('disabled', true);
                     progress.load(
@@ -111,7 +111,7 @@ $(document).ready( function() {
                         ['#examine_loading'], [], [],
                         function(responses) {
                             btnExamine.prop('disabled', false);
-                            fixControllers(controllers, true);
+                            fixControllers(responses[1].list, true);
                         },
                         function() {
                             btnExamine.prop('disabled', false);

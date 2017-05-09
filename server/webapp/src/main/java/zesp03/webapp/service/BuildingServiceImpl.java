@@ -8,11 +8,9 @@ import zesp03.common.entity.Controller;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.BuildingRepository;
+import zesp03.common.repository.DeviceRepository;
 import zesp03.common.repository.LinkUnitBuildingRepository;
-import zesp03.webapp.dto.BuildingDetailsDto;
-import zesp03.webapp.dto.BuildingDto;
-import zesp03.webapp.dto.ControllerDto;
-import zesp03.webapp.dto.UnitDto;
+import zesp03.webapp.dto.*;
 import zesp03.webapp.dto.input.CreateBuildingDto;
 
 import javax.persistence.EntityManager;
@@ -30,6 +28,9 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
     private BuildingRepository buildingRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Autowired
     private LinkUnitBuildingRepository linkUnitBuildingRepository;
@@ -71,13 +72,30 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public List<ControllerDto> getControllers(Long buildingId) {
-        return em.createQuery("SELECT c FROM Controller c WHERE c.building.id = :bid",
+    public List<ControllerDto> getControllersInfo(Long buildingId) {
+        return em.createQuery("SELECT c FROM Controller c " +
+                        "WHERE c.building.id = :bid",
                 Controller.class)
                 .setParameter("bid", buildingId)
                 .getResultList()
                 .stream()
                 .map(ControllerDto::make)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ControllerDetailsDto> getControllersDetails(Long buildingId) {
+        //TODO sprawdź wydajność SQL
+        return em.createQuery("SELECT c FROM Controller c " +
+                        "LEFT JOIN FETCH c.building " +
+                        "WHERE c.building.id = :bid",
+                Controller.class)
+                .setParameter("bid", buildingId)
+                .getResultList()
+                .stream()
+                .map( c -> ControllerDetailsDto.make(c,
+                        deviceRepository.countByController(c.getId()).intValue()
+                ))
                 .collect(Collectors.toList());
     }
 
@@ -202,10 +220,7 @@ public class BuildingServiceImpl implements BuildingService {
             // object[11] = description
             // object[12] = building_id
             for( Object[] object : list ) {
-
-                controller = null;
-                unit = null;
-
+                
                 if( object[5] != null ) {
 
                     unit = new UnitDto();

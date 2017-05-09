@@ -19,4 +19,7 @@ public interface DeviceRepository extends CrudRepository<Device, Long> {
 
     @Query("SELECT d FROM Device d LEFT JOIN FETCH d.controller LEFT JOIN FETCH d.building WHERE d.id = ?1 AND d.deleted = 0")
     Optional<Device> findOneFetchNotDeleted(Long deviceId);
+
+    @Query("SELECT COUNT(d.id) FROM Device d WHERE d.controller.id = ?1")
+    Number countByController(Long controllerId);
 }

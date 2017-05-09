@@ -77,13 +77,17 @@ public class ControllerDetailsDto {
     }
 
     public void wrap(Controller c) {
+        wrap(c, c.getDeviceList().size());
+    }
+
+    public void wrap(Controller c, int numberOfDevices) {
         this.id = c.getId();
         this.name = c.getName();
         this.ipv4 = c.getIpv4();
         this.description = c.getDescription();
         this.communityString = c.getCommunity();
         this.fake = c.isFake();
-        this.numberOfDevices = c.getDeviceList().size();
+        this.numberOfDevices = numberOfDevices;
         if(c.getBuilding() != null) {
             this.building = BuildingDto.make(c.getBuilding());
         }
@@ -92,9 +96,9 @@ public class ControllerDetailsDto {
         }
     }
 
-    public static ControllerDetailsDto make(Controller c) {
+    public static ControllerDetailsDto make(Controller c, int numberOfDevices) {
         ControllerDetailsDto dto = new ControllerDetailsDto();
-        dto.wrap(c);
+        dto.wrap(c, numberOfDevices);
         return dto;
     }
 }

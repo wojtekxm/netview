@@ -40,9 +40,15 @@ public class BuildingApi {
     }
 
     @GetMapping("/api/building/controllers/{buildingId}")
-    public ListDto<ControllerDto> getControllers(
+    public ListDto<ControllerDto> getControllersInfo(
             @PathVariable("buildingId") long buildingId) {
-        return ListDto.make( () -> buildingService.getControllers(buildingId) );
+        return ListDto.make( () -> buildingService.getControllersInfo(buildingId) );
+    }
+
+    @GetMapping("/api/building/controllers-details/{buildingId}")
+    public ListDto<ControllerDetailsDto> getControllersDetails(
+            @PathVariable("buildingId") long buildingId) {
+        return ListDto.make( () -> buildingService.getControllersDetails(buildingId) );
     }
 
     @GetMapping("/api/building/devices-details/{buildingId}")

@@ -86,9 +86,22 @@ public class ControllerApi {
         } );
     }
 
+    @PostMapping("/link-building/{controllerId}/{buildingId}")
+    public BaseResultDto linkBuilding(
+            @PathVariable("controllerId") long controllerId,
+            @PathVariable("buildingId") long buildingId) {
+        return BaseResultDto.make( () -> controllerService.linkBuilding(controllerId, buildingId) );
+    }
+
+    @PostMapping("/unlink-building/{controllerId}")
+    public BaseResultDto unlinkBuilding(
+            @PathVariable("controllerId") long controllerId) {
+        return BaseResultDto.make( () -> controllerService.unlinkBuilding(controllerId) );
+    }
+
     @GetMapping("/modify-controller/{controllerId}")
     public ContentDto<ControllerDto> modifyController(
-            @RequestParam("id") long controllerId) {
+            @RequestParam("controllerId") long controllerId) {
         return ContentDto.make( () -> controllerService.getOne(controllerId) );
     }
 
@@ -135,6 +148,4 @@ public class ControllerApi {
             controllerService.acceptModifyController(dto);
         } );
     }
-
-
 }

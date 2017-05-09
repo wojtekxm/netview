@@ -17,4 +17,6 @@ public interface ControllerService {
     void create(CreateControllerDto dto);
     ControllerDto modifyController(Long controllerId);
     void acceptModifyController(ControllerDto dto);
+    void linkBuilding(Long controllerId, Long buildingId);
+    void unlinkBuilding(Long controllerId);
 }

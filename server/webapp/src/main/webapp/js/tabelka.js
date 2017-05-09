@@ -275,6 +275,10 @@ var tabelka = {};
     }
 
     /**
+     * function ColumnGenerator(dataRow) : jQuery element, albo tekst który zostanie wstawiony w kolumnie wiersza
+     */
+
+    /**
      *
      * @param uniquePrefix undefined|string. Prefiks od którego będą się zaczynać pola danych dodane przez buildera.
      * Należy wybrać taki by uniknąć kolizji z innymi polami w danych. Domyślnie '!'.
@@ -303,9 +307,9 @@ var tabelka = {};
          * @param sortType string, 'text' or 'number' or null
          * @param propertyName string
          * @param width16 optional integer|string 0-16 or css class
-         * @param columnGenerator function
+         * @param columnGenerator function|string funkcja typu ColumnGenerator,
+         * albo nazwa pola które zawiera text do wstawienia
          * @returns builder
-         * function ColumnGenerator(dataRow) : jQuery element
          */
         function column(label, sortType, propertyName, width16, columnGenerator) {
             var comparator, clazz;
@@ -330,7 +334,14 @@ var tabelka = {};
                 "extractor" : bl.uniquePrefix + bl.definitions.length + '_td',
                 "cssClass" : clazz
             } );
-            bl.generators.push(columnGenerator);
+            if(typeof columnGenerator === 'string') {
+                bl.generators.push(function(row) {
+                    return $('<span></span>').text(row[columnGenerator]);
+                });
+            }
+            else {
+                bl.generators.push(columnGenerator);
+            }
             return bl;
         }
 
@@ -338,7 +349,8 @@ var tabelka = {};
          * shorter version of column(), without sorting
          * @param label string, column header
          * @param width16 optional integer|string 0-16 or css class
-         * @param columnGenerator function
+         * @param columnGenerator function|string funkcja typu ColumnGenerator,
+         * albo nazwa pola które zawiera text do wstawienia
          * @returns builder
          */
         function special(label, width16, columnGenerator) {
@@ -354,7 +366,14 @@ var tabelka = {};
                 "extractor" : bl.uniquePrefix + bl.definitions.length + '_td',
                 "cssClass" : clazz
             } );
-            bl.generators.push(columnGenerator);
+            if(typeof columnGenerator === 'string') {
+                bl.generators.push(function(row) {
+                    return $('<span></span>').text(row[columnGenerator]);
+                });
+            }
+            else {
+                bl.generators.push(columnGenerator);
+            }
             return bl;
         }
 
@@ -445,14 +464,18 @@ var tabelka = {};
         }
 
         function build(tabelkaSelector, data) {
-            var where, i, k, e, def, gen;
+            var where, i, k, row, def, generator, tdContent;
             bl.futureData = data;
             for(i = 0; i < data.length; i++) {
-                e = data[i];
+                row = data[i];
                 for(k = 0; k < bl.generators.length; k++) {
                     def = bl.definitions[k];
-                    gen = bl.generators[k];
-                    e[def.extractor] = gen(e);
+                    generator = bl.generators[k];
+                    tdContent = generator(row);
+                    if(typeof tdContent === 'string') {
+                        tdContent = $('<span></span>').text(tdContent);
+                    }
+                    row[def.extractor] = tdContent;
                 }
             }
             where = $(tabelkaSelector);

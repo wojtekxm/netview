@@ -154,7 +154,7 @@ $(document).ready(function(){
         }, {
             "url" : '/api/building/units/${id}'
         }, {
-            "url" : '/api/building/controllers/${id}'
+            "url" : '/api/building/controllers-details/${id}'
         }, {
             "url" : '/api/building/devices-details/${id}'
         }],
@@ -202,60 +202,65 @@ $(document).ready(function(){
             .column('kod', 'text', 'code', 4, function(unit) {
                     return $('<span></span>').text(unit.code);
             })
-            .special('', 0, function(unit) {
-                unit.button = $('<button class="btn btn-danger btn-xs"></button>')
-                    .click( {
-                        "unitId" : unit.id
-                    }, function(event) {
-                        var i, buildingAndUnitDto;
-                        for(i = 0; i < listOfUnitDto.length; i++) {
-                            listOfUnitDto[i].button.prop('disabled', true);
-                        }
-                        buildingAndUnitDto = {
-                            "buildingId" : building.id,
-                            "unitId" : event.data.unitId
-                        };
-                        progress.load(
-                            [ {
-                                "url" : '/api/building/unlink-unit/',
-                                "method" : 'post',
-                                "postData" : buildingAndUnitDto
-                            }, {
-                                "url" : '/api/building/units/' + building.id
-                            } ],
-                            [], [], [], //TODO...
-                            function(responses) {
-                                var i;
-                                for(i = 0; i < listOfUnitDto.length; i++) {
-                                    listOfUnitDto[i].button.prop('disabled', false);
-                                }
-                                fixUnits(responses[1].list);
-                            } );
-                    } ).append(
-                        $('<span class="glyphicon glyphicon-minus"></span>')
-                    );
-                return unit.button;
+            .buttonUnlink('usuń', function(unitId) {
+                return [ {
+                    "url" : '/api/building/unlink-unit/',
+                    "method" : 'post',
+                    "postData" : {
+                        "buildingId" : building.id,
+                        "unitId" : unitId
+                    }
+                }, {
+                    "url" : '/api/building/units/' + building.id
+                } ];
+            }, function(responses) {
+                fixUnits(responses[1].list);
             })
             .build('#tabelka_units', listOfUnitDto);
     }
 
-    function fixControllers(listOfControllerDto) {
-        tabelka.builder()
-            .column('nazwa', 'text', 'name', 5, function(cont) {
+    function fixControllers(listOfControllerDetailsDto) {
+        tabelka.builder('!')
+            .column('nazwa', 'text', 'name', 3, function(cont) {
                 return $('<a></a>')
                     .attr('href', '/controller/' + cont.id)
                     .text(cont.name);
             })
+            .column('opis', 'text', 'description', 3, 'description')
             .column('IP', 'text', 'ipv4', 3, function(cont) {
-                return $('<span></span>').text(cont.ipv4);
+                return $('<samp></samp>').text(cont.ipv4);
             })
-            .column('opis', 'text', 'description', 4, function(cont) {
-                return $('<span></span>').text(cont.description);
+            .column('community', 'text', 'communityString', 3, function(cont) {
+                return $('<samp></samp>').text(cont.communityString);
             })
-            .column('community string', 'text', 'communityString', 4, function(cont) {
-                return $('<span></span>').text(cont.communityString);
+            .column('prawdziwy', 'number', 'cmp_fake', 2, function(cont) {
+                if(cont.fake) {
+                    cont.cmp_fake = 0;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>'),
+                        ' tak'
+                    );
+                }
+                else {
+                    cont.cmp_fake = 1;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-unchecked" style="color:#d9534f"></span>'),
+                        ' nie'
+                    );
+                }
             })
-            .build('#tabelka_controllers', listOfControllerDto);
+            .column('urządzenia', 'number', 'numberOfDevices', 2, 'numberOfDevices')
+            .buttonUnlink('usuń', function(controllerId) {
+                return [ {
+                    "url" : '/api/controller/unlink-building/' + controllerId,
+                    "method" : 'post'
+                }, {
+                    "url" : '/api/building/controllers-details/' + building.id
+                } ];
+            }, function(responses) {
+                fixControllers(responses[1].list);
+            })
+            .build('#tabelka_controllers', listOfControllerDetailsDto);
     }
 
     function fixDevices(listOfDeviceDetailsDto) {

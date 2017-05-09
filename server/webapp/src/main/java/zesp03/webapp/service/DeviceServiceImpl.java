@@ -170,46 +170,30 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void linkController(Long deviceId, Long controllerId) {
-        Optional<Device> odev = deviceRepository.findOneNotDeleted(deviceId);
-        if(! odev.isPresent()) {
-            throw new NotFoundException("device");
-        }
         Optional<Controller> ocon = controllerRepository.findOneNotDeleted(controllerId);
         if(! ocon.isPresent() ) {
             throw new NotFoundException("controller");
         }
-        odev.get().setController(ocon.get());
+        findOneNotDeletedOrThrow(deviceId).setController(ocon.get());
         //TODO merge?
     }
 
     @Override
     public void linkBuilding(Long deviceId, Long buildingId) {
-        Optional<Device> odev = deviceRepository.findOneNotDeleted(deviceId);
-        if(! odev.isPresent()) {
-            throw new NotFoundException("device");
-        }
         Building bui = buildingRepository.findOne(buildingId);
         if(bui == null) {
             throw new NotFoundException("building");
         }
-        odev.get().setBuilding(bui);
+        findOneNotDeletedOrThrow(deviceId).setBuilding(bui);
     }
 
     @Override
     public void unlinkController(Long deviceId) {
-        Optional<Device> odev = deviceRepository.findOneNotDeleted(deviceId);
-        if(! odev.isPresent()) {
-            throw new NotFoundException("device");
-        }
-        odev.get().setController(null);
+        findOneNotDeletedOrThrow(deviceId).setController(null);
     }
 
     @Override
     public void unlinkBuilding(Long deviceId) {
-        Optional<Device> odev = deviceRepository.findOneNotDeleted(deviceId);
-        if(! odev.isPresent()) {
-            throw new NotFoundException("device");
-        }
-        odev.get().setBuilding(null);
+        findOneNotDeletedOrThrow(deviceId).setBuilding(null);
     }
 }

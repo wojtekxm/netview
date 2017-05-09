@@ -115,7 +115,7 @@ $(document).ready(function() {
                     .attr('href', '/building/' + building.id)
                     .text(building.name);
             })
-            .column('kod', 'text', 'code', 2, function(building) {
+            .column('kod', 'text', 'code', 3, function(building) {
                 return $('<span></span>').text(building.code);
             })
             .column('ulica', 'text', '_s', 3, function(b) {
@@ -128,10 +128,7 @@ $(document).ready(function() {
                 }
                 return $('<span></span>').text(b._s);
             })
-            .column('kod pocztowy', 'text', 'postalCode', 2, function(b) {
-                return $('<span></span>').text(b.postalCode);
-            })
-            .column('miasto', 'text', 'city', 2, function(b) {
+            .column('miasto', 'text', 'city', 3, function(b) {
                 return $('<span></span>').text(b.city);
             })
             .buttonUnlink('usuń', function(buildingId) {

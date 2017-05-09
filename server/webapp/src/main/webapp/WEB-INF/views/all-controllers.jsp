@@ -90,83 +90,16 @@
 <script>
 "use strict";
 $(document).ready( function() {
-    var controllers, columnDefinitions;
-    controllers = [];
-    columnDefinitions = [
-        {
-            "label" : 'nazwa',
-            "comparator" : util.comparatorText('name'),
-            "extractor" : 'td_name',
-            "cssClass" : 'width-3'
-        }, {
-            "label" : 'IP',
-            "comparator" : util.comparatorText('ipv4'),
-            "extractor" : 'td_ipv4',
-            "cssClass" : 'width-2'
-        }, {
-            "label" : 'opis',
-            "comparator" : util.comparatorText('description'),
-            "extractor" : 'td_description',
-            "cssClass" : 'width-3'
-        }, {
-            "label" : 'community string',
-            "comparator" : util.comparatorText('communityString'),
-            "extractor" : 'td_community',
-            "cssClass" : 'width-3'
-        }, {
-            "label" : 'urządzenia',
-            "comparator" : util.comparatorNumber('numberOfDevices'),
-            "extractor" : 'td_devices',
-            "cssClass" : 'width-1'
-        }, {
-            "label" : 'lokalizacja',
-            "comparator" : util.comparatorText('cmp_location'),
-            "extractor" : 'td_location',
-            "cssClass" : 'width-4'
-        }
-    ];
-
-    function fixControllers() {
-        var i, cont, building;
-        for(i = 0; i < controllers.length; i++) {
-            cont = controllers[i];
-            building = cont.building;
-
-            cont.td_name = $('<a></a>')
-                .attr('href', '/controller/' + cont.id)
-                .text(cont.name);
-            cont.td_ipv4 = $('<span></span>').text(cont.ipv4);
-            cont.td_description = $('<span></span>').text(cont.description);
-            cont.td_community = $('<span></span>').text(cont.communityString);
-            cont.td_devices = $('<span></span>').text(cont.numberOfDevices);
-
-            if(building === null) {
-                cont.cmp_location = '';
-                cont.td_location = $('<span></span>').text('-');
-            }
-            else {
-                cont.cmp_location = building.name;
-                cont.td_location = $('<a></a>')
-                    .attr('href', '/building/' + building.id)
-                    .text(building.name);
-            }
-        }
-    }
+    var tabelkaSpace, btnExamine;
+    tabelkaSpace = $('#tabelka_space');
+    btnExamine = $('#btn_examine');
 
     progress.loadGet(
         '/api/controller/details/all',
         ['.on-loading'], ['.on-loaded'], [],
         function(listDtoOfControllerDetailsDto) {
-            var btnExamine, tabelkaSpace;
-            btnExamine = $('#btn_examine');
-            tabelkaSpace = $('#tabelka_space');
-            controllers = listDtoOfControllerDetailsDto.list;
-            fixControllers();
-            tabelkaSpace.append(
-                tabelka.create(controllers, columnDefinitions)
-            );
-            btnExamine.click(
-                function() {
+            fixControllers(controllers, false);
+            btnExamine.click(function() {
                     btnExamine.prop('disabled', true);
                     progress.load(
                         [ {
@@ -178,23 +111,69 @@ $(document).ready( function() {
                         ['#examine_loading'], [], [],
                         function(responses) {
                             btnExamine.prop('disabled', false);
-                            controllers = responses[1].list;
-                            fixControllers();
-                            tabelkaSpace.fadeOut(200, function() {
-                                tabelkaSpace.empty();
-                                tabelkaSpace.append(
-                                    tabelka.create(controllers, columnDefinitions)
-                                );
-                                tabelkaSpace.fadeIn(200);
-                            });
+                            fixControllers(controllers, true);
                         },
                         function() {
                             btnExamine.prop('disabled', false);
                         }
                     );
-                }
-            );
+            });
     } );
+
+    function fixControllers(listOfControllerDetailsDto, replacingOld) {
+        var builder = tabelka.builder('!')
+            .column('nazwa', 'text', 'name', 2, function(cont) {
+                return $('<a></a>')
+                    .attr('href', '/controller/' + cont.id)
+                    .text(cont.name);
+            })
+            .column('opis', 'text', 'description', 2, 'description')
+            .column('IP', 'text', 'ipv4', 2, function(cont) {
+                return $('<samp></samp>').text(cont.ipv4);
+            })
+            .column('community', 'text', 'communityString', 2, function(cont) {
+                return $('<samp></samp>').text(cont.communityString);
+            })
+            .column('prawdziwy', 'number', 'cmp_fake', 2, function(cont) {
+                if(cont.fake) {
+                    cont.cmp_fake = 0;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>'),
+                        ' tak'
+                    );
+                }
+                else {
+                    cont.cmp_fake = 1;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-unchecked" style="color:#d9534f"></span>'),
+                        ' nie'
+                    );
+                }
+            })
+            .column('urządzenia', 'number', 'numberOfDevices', 2, 'numberOfDevices')
+            .column('lokalizacja', 'text', 'cmp_location', 4, function(cont) {
+                var b = cont.building;
+                if(b === null) {
+                    cont.cmp_location = '';
+                    return '-';
+                }
+                else {
+                    cont.cmp_location = b.name;
+                    return $('<a></a>')
+                        .attr('href', '/building/' + b.id)
+                        .text(b.name);
+                }
+            });
+        if(replacingOld) {
+            tabelkaSpace.fadeOut(200, function() {
+                builder.build('#tabelka_space', listOfControllerDetailsDto);
+                tabelkaSpace.fadeIn(200);
+            });
+        }
+        else {
+            builder.build('#tabelka_space', listOfControllerDetailsDto);
+        }
+    }
 } );
 </script>
 </body>

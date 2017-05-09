@@ -10,6 +10,7 @@ import zesp03.common.exception.NotFoundException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.BuildingRepository;
 import zesp03.common.repository.ControllerRepository;
+import zesp03.common.repository.DeviceRepository;
 import zesp03.common.util.IPv4;
 import zesp03.webapp.dto.ControllerDetailsDto;
 import zesp03.webapp.dto.ControllerDto;
@@ -30,6 +31,9 @@ public class ControllerServiceImpl implements ControllerService {
 
     @Autowired
     private ControllerRepository controllerRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Autowired
     private BuildingRepository buildingRepository;
@@ -61,14 +65,21 @@ public class ControllerServiceImpl implements ControllerService {
     public List<ControllerDetailsDto> getDetailsAll() {
         List<ControllerDetailsDto> result = new ArrayList<>();
         for(Controller c : controllerRepository.findAllNotDeleted()) {
-            result.add(ControllerDetailsDto.make(c));
+            result.add(
+                    ControllerDetailsDto.make(c,
+                            deviceRepository.countByController(c.getId()).intValue()
+                    )
+            );
         }
         return result;
     }
 
     @Override
     public ControllerDetailsDto getDetailsOne(Long controllerId) {
-        return ControllerDetailsDto.make( findOneNotDeletedOrThrow(controllerId) );
+        Controller c = findOneNotDeletedOrThrow(controllerId);
+        return ControllerDetailsDto.make(c,
+                deviceRepository.countByController(c.getId()).intValue()
+        );
     }
 
     @Override
@@ -149,9 +160,19 @@ public class ControllerServiceImpl implements ControllerService {
             c.setBuilding(b);
         }
         controllerRepository.save(c);
-
-        }
-
-
     }
 
+    @Override
+    public void linkBuilding(Long controllerId, Long buildingId) {
+        Building b = buildingRepository.findOne(buildingId);
+        if(b == null) {
+            throw new NotFoundException("building");
+        }
+        findOneNotDeletedOrThrow(controllerId).setBuilding(b);
+    }
+
+    @Override
+    public void unlinkBuilding(Long controllerId) {
+        findOneNotDeletedOrThrow(controllerId).setBuilding(null);
+    }
+}

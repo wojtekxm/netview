@@ -13,4 +13,7 @@ public interface ControllerRepository extends CrudRepository<Controller, Long> {
 
     @Query("SELECT c FROM Controller c WHERE c.deleted = 0")
     List<Controller> findAllNotDeleted();
+
+    @Query("SELECT COUNT(c.id) FROM Controller c WHERE c.building.id = ?1")
+    Number countByBuilding(Long buildingId);
 }

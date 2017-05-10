@@ -54,7 +54,7 @@
         </div>
     </div>
 </nav>
-<div class="container" style="margin-top:100px">
+<div class="container" style="margin-top:80px">
     <div class="on-loading"></div>
     <div class="on-loaded">
         <div class="row">

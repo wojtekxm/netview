@@ -20,9 +20,9 @@
             padding: 5px;
             height: 200px;
         }
-        body {
-            background-color: rgb(217, 224, 231);
-        }
+        /*body {*/
+            /*background-color: rgb(217, 224, 231);*/
+        /*}*/
     </style>
 </head>
 <body>

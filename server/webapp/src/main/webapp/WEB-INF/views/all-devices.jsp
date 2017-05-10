@@ -59,7 +59,7 @@
 <div class="container">
     <div style="height: 80px;"></div>
     <div class="panel panel-default">
-        <div class="panel-body" style="background-color: #f8fafe;">
+        <div class="panel-body" id="header">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Urządzenia:</div>
         </div>
     </div>

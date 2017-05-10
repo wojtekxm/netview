@@ -57,7 +57,7 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
+    <div class="panel panel-default" id="header">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o użytkowniku: </div>
         </div>

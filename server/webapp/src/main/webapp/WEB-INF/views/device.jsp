@@ -526,8 +526,8 @@ $(document).ready(function() {
                 "text": ''
             },
             "hover": {
-                "intersect": true,
-                "mode": 'x'
+                "intersect": false,
+                "mode": 'nearest'
             },
             "label": {
                 "display": true
@@ -686,8 +686,8 @@ $(document).ready(function() {
                 "text": ''
             },
             "hover": {
-                "intersect": false,
-                "mode": 'x'
+                "intersect": true,
+                "mode": 'nearest'
             },
             "label": {
                 "display": true
@@ -696,7 +696,6 @@ $(document).ready(function() {
                 "xAxes": [{
                     "type" : 'time',
                     "time" : {
-                        "minUnit" : 'minute',
                         "tooltipFormat" : 'dddd, D MMMM YYYY, h:mm:ss',
                         "displayFormats" : {
                             "minute" : 'HH:mm',
@@ -707,16 +706,11 @@ $(document).ready(function() {
                         },
                         "min" : t0 * 1000,
                         "max" : t1 * 1000
-                    }
-                    /*"type" : 'linear',
-                    "position": 'bottom',
-                    "display": true,
-                    "barPercentage": 1,
-                    "autoSkip": true,
+                    },
                     "ticks": {
-                        "maxRotation": 0,
-                        "maxTicksLimit": 2
-                    }*/
+                        "autoSkip" : true,
+                        "maxRotation": 0
+                    }
                 }],
                 "yAxes": [{
                     "stacked": false,

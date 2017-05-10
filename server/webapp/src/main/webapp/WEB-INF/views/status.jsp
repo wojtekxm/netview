@@ -400,9 +400,62 @@
         var h = '';
         var bId;
         var cId;
+        var resultDevices = new Array();
+
 
 
         $("#devices li").remove();
+
+//        for(var j=0;j<devices.length;j++){
+//            var currentDeviceStateDto = devices[j];
+//            var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+//            var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+//            if (frequency == "2400") {
+//                if (typeof state2400 === 'undefined') {
+//                    continue;
+//                }
+//                if(state2400 === null){
+//                    isEnabled = false;
+//                }
+//                else {
+//                    sum = state2400.clients;
+//                    isEnabled = state2400.enabled;
+//                    time = state2400.timestamp;
+//                }
+//            } else if (frequency == "5000") {
+//                if (typeof state5000 === 'undefined') {
+//                    continue;
+//                }
+//                if(state5000 === null){
+//                    isEnabled = false;
+//                }
+//                else {
+//                    sum = state5000.clients;
+//                    isEnabled = state5000.enabled;
+//                    time = state5000.timestamp;
+//                }
+//            }
+//            for(var s=0;s<states.length;s++){
+//                if (isEnabled == true) {
+//                    if (states[s] == 'active') {
+//                        if (sum > 0) {
+//                            resultDevices.push(devices[j]);
+//                        }
+//                    } else if (states[s] == 'inactive') {
+//                        if (sum == 0) {
+//                            resultDevices.push(devices[j]);
+//                        }
+//                    }
+//                } else if (isEnabled == false) {
+//                    if (states[s] == 'off') {
+//                        resultDevices.push(devices[j]);
+//                    }
+//                }
+//            }
+//        }
+
+
+
 
         function filtersWithoutNulls(){
             for(var j=0;j<devices.length;j++){

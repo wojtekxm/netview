@@ -5,7 +5,7 @@ body
     font-size:14px;
     background-attachment: scroll;
     background-size:contain;
-    background-color: white;
+    background-color: #ecf2ff;
 }
 
 .navbar {
@@ -99,7 +99,7 @@ ul.view li ul li:hover
 }
 
 #devices{
-    background-color: whitesmoke;
+    background-color: white;
     display: table;
     position: relative;
     min-height: 100px;

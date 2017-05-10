@@ -137,7 +137,7 @@ var tabelka = {};
                 );
             }
         }
-        table = $('<table class="table table-striped table-bordered"></table>')
+        table = $('<table class="table table-striped table-bordered" style="background-color: white;"></table>')
             .append(
                 colgroup,
                 $('<thead></thead>').append(theadRow),

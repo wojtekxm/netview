@@ -268,6 +268,8 @@ $(document).ready(function() {
     arrFreqs = [2400, 5000];
     timeJump = 0;
     moment.locale('pl');
+    Chart.defaults.global.tooltips.caretSize = 8;
+    Chart.defaults.global.hover.animationDuration = 100;
     $('#datetimepicker1').datetimepicker({
         "locale": 'pl',
         "format": 'LLL'
@@ -487,13 +489,13 @@ $(document).ready(function() {
         else {
             url = '/api/surveys/avg-min-max?device=' + device.id +
             '&frequency=' + mhz +
-            '&start=' + t0 +
+            '&start=' + (t0 - groupTime) +
             '&groupTime=' + groupTime +
-            '&end=' + t1;
+            '&end=' + (t1 + groupTime);
             progress.loadGet(url,
                 [chartLoading], [chartArea], [],
                 function (response) {
-                    genAMM(response.content.list);
+                    genAMM(response.list, t0, t1);
                     presentedChart = targetChart;
                     setCalendar(t0, t1);
                     if(targetChart === 'other') {
@@ -506,13 +508,12 @@ $(document).ready(function() {
         }
     }
 
-    function genAMM(surveys) {
-        var data, options, values_min, values_avg, values_max, tags, i;
+    function genAMM(surveysExtended, t0, t1) {
+        var data, options, points_min, points_avg, points_max, i, last;
         prepareCanvas();
-        values_min = [];
-        values_max = [];
-        values_avg = [];
-        tags = [];
+        points_min = [];
+        points_max = [];
+        points_avg = [];
         options = {
             "tooltips": {
                 "mode": 'index'
@@ -525,7 +526,7 @@ $(document).ready(function() {
                 "text": ''
             },
             "hover": {
-                "intersect": false,
+                "intersect": true,
                 "mode": 'x'
             },
             "label": {
@@ -533,12 +534,19 @@ $(document).ready(function() {
             },
             "scales": {
                 "xAxes": [{
-                    "display": true,
-                    "barPercentage": 1,
-                    "autoSkip": true,
-                    "ticks": {
-                        "maxRotation": 0,
-                        "maxTicksLimit": 2
+                    "type" : 'time',
+                    "time" : {
+                        "minUnit" : 'minute',
+                        "tooltipFormat" : 'dddd, D MMMM YYYY, h:mm:ss',
+                        "displayFormats" : {
+                            "minute" : 'HH:mm',
+                            "hour" : 'HH:mm',
+                            "day" : 'dddd',
+                            "week" : 'DD.MM',
+                            "month" : 'DD.MM'
+                        },
+                        "min" : t0 * 1000,
+                        "max" : t1 * 1000
                     }
                 }],
                 "yAxes": [{
@@ -567,36 +575,88 @@ $(document).ready(function() {
             }
         };
         data = {
-            "showLine": false,
-            "labels": tags,
             "datasets": [{
                 "label": "minimalnie",
-                "data": values_min,
-                "fill": false,
-                "borderColor": "rgba(255,0,0,1)",
-                "backgroundColor": "rgba(255,0,0,1)",
-                "hoverBackgroundColor": "rgba(0,0,0,1)"
+                "data": points_min,
+                "fill": true,
+                "backgroundColor": '#ffee00',
+                "borderColor": '#ffcc00',
+                "pointBackgroundColor": '#ffee00',
+                "pointBorderColor": '#ffcc00',
+                "pointHoverBackgroundColor": '#ffee00',
+                "pointHoverBorderColor": '#ffcc00',
+                "borderWidth" : 1,
+                "pointBorderWidth" : 1,
+                "pointHoverBorderWidth" : 1,
+                "borderJoinStyle" : 'round',
+                "pointRadius" : 0,
+                "pointHoverRadius" : 5,
+                "pointHitRadius" : 5
             }, {
                 "label": "średnio",
-                "data": values_avg,
-                "fill": false,
-                "borderColor": "rgba(255,155,0,1)",
-                "backgroundColor": "rgba(255,200,0,1)",
-                "hoverBackgroundColor": "rgba(0,0,0,1)"
+                "data": points_avg,
+                "fill": true,
+                "backgroundColor": '#ff6600',
+                "borderColor": '#e62e00',
+                "pointBackgroundColor": '#ff6600',
+                "pointBorderColor": '#e62e00',
+                "pointHoverBackgroundColor": '#ff6600',
+                "pointHoverBorderColor": '#e62e00',
+                "borderWidth" : 1,
+                "pointBorderWidth" : 1,
+                "pointHoverBorderWidth" : 1,
+                "borderJoinStyle" : 'round',
+                "pointRadius" : 0,
+                "pointHoverRadius" : 5,
+                "pointHitRadius" : 5
             }, {
                 "label": "maksymalnie",
-                "data": values_max,
-                "fill": false,
-                "borderColor": "rgba(8, 95, 41,1)",
-                "backgroundColor": "rgba(8, 139, 41,1)",
-                "hoverBackgroundColor": "rgba(8, 139, 41,1)"
+                "data": points_max,
+                "fill": true,
+                "backgroundColor": '#cc0000',
+                "borderColor": '#800000',
+                "pointBackgroundColor": '#cc0000',
+                "pointBorderColor": '#800000',
+                "pointHoverBackgroundColor": '#cc0000',
+                "pointHoverBorderColor": '#800000',
+                "borderWidth" : 1,
+                "pointBorderWidth" : 1,
+                "pointHoverBorderWidth" : 1,
+                "borderJoinStyle" : 'round',
+                "pointRadius" : 0,
+                "pointHoverRadius" : 5,
+                "pointHitRadius" : 5
             }]
         };
-        for(i = 0; i < surveys.length; i++) {
-            values_avg.push( Math.round(surveys[i].average) );
-            values_min.push(surveys[i].min);
-            values_max.push(surveys[i].max);
-            tags.push( convert(surveys[i].timeStart) );
+        for(i = 0; i < surveysExtended.length; i++) {
+            last = surveysExtended[i];
+            points_avg.push({
+                "y" : Math.round(last.average),
+                "x" : last.timeStart * 1000
+            });
+            points_min.push({
+                "y" : last.min,
+                "x" : last.timeStart * 1000
+            });
+            points_max.push({
+                "y" : last.max,
+                "x" : last.timeStart * 1000
+            });
+        }
+        if(surveysExtended.length > 0) {
+            last = surveysExtended[surveysExtended.length-1];
+            points_avg.push({
+                "y" : Math.round(last.average),
+                "x" : last.timeEnd * 1000
+            });
+            points_min.push({
+                "y" : last.min,
+                "x" : last.timeEnd * 1000
+            });
+            points_max.push({
+                "y" : last.max,
+                "x" : last.timeEnd * 1000
+            });
         }
         myChart = Chart.Line(myCanvas, {
             "data": data,
@@ -605,10 +665,15 @@ $(document).ready(function() {
     }
 
     function genOriginal(surveys, before, after, t0, t1) {
-        var data, options, points, tags, i, last;
+        var data, options, points, i, last, ctx, grad;
         prepareCanvas();
+        ctx = myCanvas.get()[0].getContext('2d', {
+            "alpha": true
+        });
+        grad = ctx.createLinearGradient(0, 400, 0, 0);
+        grad.addColorStop(0.0, 'rgba(3,169,244,0.6)');
+        grad.addColorStop(1.0, 'rgba(3,169,244,0.6)');
         points = [];
-        tags = [];
         options = {
             "tooltips": {
                 "mode": 'index'
@@ -634,11 +699,11 @@ $(document).ready(function() {
                         "minUnit" : 'minute',
                         "tooltipFormat" : 'dddd, D MMMM YYYY, h:mm:ss',
                         "displayFormats" : {
-                            "minute" : 'HH:mm:ss',
+                            "minute" : 'HH:mm',
                             "hour" : 'HH:mm',
                             "day" : 'dddd',
                             "week" : 'DD.MM',
-                            "month" : 'DD.MM',
+                            "month" : 'DD.MM'
                         },
                         "min" : t0 * 1000,
                         "max" : t1 * 1000
@@ -679,16 +744,23 @@ $(document).ready(function() {
             }
         };
         data = {
-            //"showLine": false,
-            //"labels": tags,
             "datasets": [{
                 "label": 'liczba klientów',
                 "data": points,
                 "fill": true,
-                "borderColor": 'rgba(255,155,0,1)',
-                "backgroundColor": 'rgba(255,200,0,1)',
-                "pointBorderWidth": 1,
-                "hoverBackgroundColor": 'rgba(0,0,0,1)'
+                "backgroundColor": grad,
+                "borderColor": 'rgb(2, 139, 202)',
+                "pointBackgroundColor": grad,
+                "pointBorderColor": 'rgb(2, 139, 202)',
+                "pointHoverBackgroundColor": grad,
+                "pointHoverBorderColor": 'rgb(2, 139, 202)',
+                "borderWidth" : 1,
+                "pointBorderWidth" : 1,
+                "pointHoverBorderWidth" : 1,
+                "borderJoinStyle" : 'round',
+                "pointRadius" : 2,
+                "pointHoverRadius" : 7,
+                "pointHitRadius" : 7
             }]
         };
         if(before !== null) {
@@ -709,14 +781,12 @@ $(document).ready(function() {
                 "x" : after.timestamp * 1000
             });
         }
-        if(points.length > 0) {
+        else if(points.length > 0) {
             last = points[points.length - 1];
-            if(last.x < t1 * 1000) {
-                points.push({
-                    "y" : last.y,
-                    "x" : t1 * 1000
-                });
-            }
+            points.push({
+                "y" : last.y,
+                "x" : moment().valueOf()
+            });
         }
         myChart = Chart.Line(myCanvas, {
             "data": data,

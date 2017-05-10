@@ -387,22 +387,47 @@ var tabelka = {};
         function deviceFrequency(label, mhz, width16) {
             var cmpProperty = bl.uniquePrefix + bl.definitions.length + '_cmp';
             return bl.column(label, 'number', cmpProperty, width16, function(deviceDetailsDto) {
-                var sur, span;
+                var sur, span, fq;
                 span = $('<span></span>');
-                if(typeof deviceDetailsDto.frequency[mhz] !== 'undefined') {
-                    sur = deviceDetailsDto.frequency[mhz];
-                    if(sur !== null && sur.enabled) {
+                fq = deviceDetailsDto.frequency;
+                if(typeof fq[mhz] !== 'undefined') {
+                    sur = fq[mhz];
+                    span.append(
+                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>')
+                    );
+                    if(sur === null || sur.enabled === false) {
+                        deviceDetailsDto[cmpProperty] = -1;
+                        span.addClass('label label-danger');
+                        span.text('wyłączone');
+                        /*span.append(
+                            ' (wyłączone)'
+                        );*/
+                    }
+                    else if(sur.clients < 1) {
                         deviceDetailsDto[cmpProperty] = sur.clients;
+                        span.addClass('label label-warning');
                         span.text(sur.clients);
+                        /*span.append(
+                            ' (0 klientów)'
+                        );*/
                     }
                     else {
-                        deviceDetailsDto[cmpProperty] = -1;
-                        span.text('wył.');
+                        deviceDetailsDto[cmpProperty] = sur.clients;
+                        span.addClass('label label-success');
+                        span.text(sur.clients);
+                        /*span.append(
+                            ' (' + sur.clients + ' klientów)'
+                        );*/
                     }
                 }
                 else {
                     deviceDetailsDto[cmpProperty] = -2;
-                    span.text('-');
+                    span.addClass('label label-default');
+                    span.text('nie wspiera');
+                    /*span.append(
+                        $('<span class="glyphicon glyphicon-unchecked" style="color:#d9534f"></span>'),
+                        ' nie wspiera'
+                    );*/
                 }
                 return span;
             });

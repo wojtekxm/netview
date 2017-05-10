@@ -31,10 +31,9 @@ public class SearchServiceImpl implements SearchService {
         final String anywhere = "%" + query + "%";
 
         final List<DeviceDto> devices = em.createQuery("SELECT d FROM Device d WHERE " +
-                        "d.deleted = 0 AND (d.name LIKE :begins OR d.description LIKE :anywhere)",
+                        "d.deleted = 0 AND (d.name LIKE :begins)",
                 Device.class)
                 .setParameter("begins", begins)
-                .setParameter("anywhere", anywhere)
                 .getResultList()
                 .stream()
                 .map(DeviceDto::make)

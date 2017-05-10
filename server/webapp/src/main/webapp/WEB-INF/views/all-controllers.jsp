@@ -136,17 +136,17 @@ $(document).ready( function() {
             })
             .column('prawdziwy', 'number', 'cmp_fake', 2, function(cont) {
                 if(cont.fake) {
-                    cont.cmp_fake = 0;
-                    return $('<span></span>').append(
-                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>'),
-                        ' tak'
-                    );
-                }
-                else {
                     cont.cmp_fake = 1;
                     return $('<span></span>').append(
                         $('<span class="glyphicon glyphicon-unchecked" style="color:#d9534f"></span>'),
                         ' nie'
+                    );
+                }
+                else {
+                    cont.cmp_fake = 0;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>'),
+                        ' tak'
                     );
                 }
             })

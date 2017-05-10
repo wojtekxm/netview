@@ -57,7 +57,7 @@
 <div class="container">
     <div style="height: 80px;"></div>
     <div class="panel panel-default">
-        <div class="panel-body" style="background-color: #f8fafe;">
+        <div class="panel-body" id="header">
             <div id="tittle"><span class="glyphicon glyphicon-home"></span> <c:out value="${unit.description}"/>: </div>
         </div>
     </div>

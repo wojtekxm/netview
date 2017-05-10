@@ -57,7 +57,7 @@
 <div class="container">
     <div style="height: 80px;"></div>
     <div class="panel panel-default">
-        <div class="panel-body">
+        <div class="panel-body" id="header">
             <div id="tittle"><span class="glyphicon glyphicon-plus"></span>
                 Aktywacja konta użytkownika</div>
         </div>

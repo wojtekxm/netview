@@ -59,7 +59,7 @@
 <div class="container">
     <div style="height: 80px;"></div>
     <div class="panel panel-default">
-        <div class="panel-body" style="background-color: #f8fafe;">
+        <div class="panel-body" id="header">
             <div id="tittle"><span class="glyphicon glyphicon-th-list"></span> Kliknij aby powiązać z daną jednostką: </div>
         </div>
     </div>

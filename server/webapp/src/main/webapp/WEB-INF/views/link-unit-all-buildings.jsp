@@ -57,7 +57,7 @@
 </nav>
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default" style="background-color: #f8fafe;">
+    <div class="panel panel-default" id="header">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-home"></span> Kliknij aby powiązać z danym budynkiem:</div>
         </div>

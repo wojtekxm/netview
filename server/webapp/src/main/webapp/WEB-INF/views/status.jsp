@@ -59,7 +59,7 @@
 <div class="container">
     <div style="height: 80px;"></div>
     <div class="panel panel-default">
-        <div class="panel-body" style="background-color: #f8fafe;">
+        <div class="panel-body" id="header">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Aktualny stan urządzeń:</div>
         </div>
     </div>
@@ -103,7 +103,7 @@
     </ul>
 
     <div class="panel panel-default">
-        <div class="panel-heading" style="display:flex; font-size: 15px;">
+        <div class="panel-heading" style="display:flex; font-size: 15px;background-color: #2b2d2b;color:white;">
             <span class='glyphicon glyphicon-time'></span><div id="data_tittle" style="margin-left: 6px;"></div> &nbsp;&nbsp;&nbsp; <div id="data"></div>
         </div>
         <div class="panel-body">

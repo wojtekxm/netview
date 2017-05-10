@@ -56,7 +56,7 @@
 <div class="container">
     <div style="height: 80px;"></div>
     <div class="panel panel-default">
-        <div class="panel-body" style="background-color: #f8fafe;">
+        <div class="panel-body" id="header">
             <div id="tittle"><span class="glyphicon glyphicon-inbox"></span> <c:out value="${controller.name}"/>: </div>
             <%--<form method="post" action="/api/controller/accept-modify-controller" id="form1"></form>--%>
         </div>

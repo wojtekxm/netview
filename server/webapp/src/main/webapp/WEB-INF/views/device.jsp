@@ -15,14 +15,9 @@
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <style>
-        .box {
-            width: 100%;
-            padding: 5px;
-            height: 200px;
+        body {
+            background-color: rgb(217, 224, 231);
         }
-        /*body {*/
-            /*background-color: rgb(217, 224, 231);*/
-        /*}*/
     </style>
 </head>
 <body>
@@ -70,7 +65,7 @@
     <div style="margin-top:80px"></div>
     <div class="on-loading progress-space"></div>
     <div class="on-loaded">
-        <div class="panel panel-default">
+        <div class="panel panel-default panel-nv">
             <div class="panel-heading clearfix">
                 <h4 class="pull-left" style="margin-bottom: 0">Informacje o urządzeniu</h4>
                 <form class="pull-right" method="post" action="/device/remove/${device.id}">
@@ -99,7 +94,7 @@
                 </tr>
             </table>
         </div>
-        <div id="panel-chart" class="panel panel-default">
+        <div id="panel-chart" class="panel panel-default panel-nv">
             <div class="panel-heading">
                 <div class="btn-group btn-group-justified" data-toggle="buttons">
                     <label class="btn btn-primary active">
@@ -416,11 +411,6 @@ $(document).ready(function() {
         refresh();
     });
 
-    function checkRefresh() {
-        //... sprawdź czy w ogóle coś się zmieniło ...
-        refresh();
-    }
-
     function refresh() {
         var mhz, isOriginal, t0, t1, timeSpan, url, groupTime, targetChart;
 
@@ -495,7 +485,7 @@ $(document).ready(function() {
             progress.loadGet(url,
                 [chartLoading], [chartArea], [],
                 function (response) {
-                    genAMM(response.list, t0, t1);
+                    genAvgMinMax(response.list, t0, t1);
                     presentedChart = targetChart;
                     setCalendar(t0, t1);
                     if(targetChart === 'other') {
@@ -508,7 +498,7 @@ $(document).ready(function() {
         }
     }
 
-    function genAMM(surveysExtended, t0, t1) {
+    function genAvgMinMax(surveysExtended, t0, t1) {
         var data, options, points_min, points_avg, points_max, i, last;
         prepareCanvas();
         points_min = [];
@@ -526,7 +516,7 @@ $(document).ready(function() {
                 "text": ''
             },
             "hover": {
-                "intersect": false,
+                "intersect": true,
                 "mode": 'nearest'
             },
             "label": {
@@ -537,7 +527,7 @@ $(document).ready(function() {
                     "type" : 'time',
                     "time" : {
                         "minUnit" : 'minute',
-                        "tooltipFormat" : 'dddd, D MMMM YYYY, h:mm:ss',
+                        "tooltipFormat" : 'dddd, D MMMM YYYY, H:mm:ss',
                         "displayFormats" : {
                             "minute" : 'HH:mm',
                             "hour" : 'HH:mm',
@@ -579,12 +569,12 @@ $(document).ready(function() {
                 "label": "minimalnie",
                 "data": points_min,
                 "fill": true,
-                "backgroundColor": '#ffee00',
-                "borderColor": '#ffcc00',
-                "pointBackgroundColor": '#ffee00',
-                "pointBorderColor": '#ffcc00',
-                "pointHoverBackgroundColor": '#ffee00',
-                "pointHoverBorderColor": '#ffcc00',
+                "backgroundColor": '#ffc800',
+                "borderColor": '#ffc800',
+                "pointBackgroundColor": '#ffc800',
+                "pointBorderColor": '#ffc800',
+                "pointHoverBackgroundColor": '#ffc800',
+                "pointHoverBorderColor": '#ffc800',
                 "borderWidth" : 1,
                 "pointBorderWidth" : 1,
                 "pointHoverBorderWidth" : 1,
@@ -696,7 +686,7 @@ $(document).ready(function() {
                 "xAxes": [{
                     "type" : 'time',
                     "time" : {
-                        "tooltipFormat" : 'dddd, D MMMM YYYY, h:mm:ss',
+                        "tooltipFormat" : 'dddd, D MMMM YYYY, H:mm:ss',
                         "displayFormats" : {
                             "minute" : 'HH:mm',
                             "hour" : 'HH:mm',
@@ -752,9 +742,9 @@ $(document).ready(function() {
                 "pointBorderWidth" : 1,
                 "pointHoverBorderWidth" : 1,
                 "borderJoinStyle" : 'round',
-                "pointRadius" : 2,
-                "pointHoverRadius" : 7,
-                "pointHitRadius" : 7
+                "pointRadius" : 0,
+                "pointHoverRadius" : 6,
+                "pointHitRadius" : 6
             }]
         };
         if(before !== null) {

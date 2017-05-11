@@ -55,7 +55,7 @@
     </div>
 </nav>
 <div id="all" class="container-fluid">
-    <div id="container">
+    <div class="container">
         <h1>Generator sztucznych badań</h1>
         <div class="form-group row">
             <div class="col-sm-6">

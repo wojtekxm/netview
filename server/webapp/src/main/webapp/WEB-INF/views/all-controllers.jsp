@@ -27,7 +27,7 @@
         </div>
 
         <div class="collapse navbar-collapse" id="myDiv">
-            <ul class="nav navbar-nav" style="margin-left:10px;padding-right:3px;font-size: 16px;">
+            <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
@@ -56,18 +56,19 @@
 </nav>
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="margin: 0!important;">
         <div class="panel-body" id="header">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-inbox"></span> Kontrolery:</div>
         </div>
     </div>
-
-    <div class="pull-left on-loaded" style="margin-bottom: 15px;">
-        <button id="btn_examine" class="btn btn-primary pull-left" type="button">
-            <span class="glyphicon glyphicon-refresh"></span>
-            zbadaj wszystkie
-        </button>
-        <div id="examine_loading" class="pull-right progress-space"></div>
+    <div class="panel panel-default" style="height:52px;padding:8px;margin-bottom: 15px;margin-top:-1px;">
+        <div class="pull-left on-loaded" style="margin-bottom: 15px;">
+            <button id="btn_examine" class="btn btn-primary pull-left" type="button">
+                <span class="glyphicon glyphicon-refresh"></span>
+                zbadaj wszystkie
+            </button>
+            <div id="examine_loading" class="pull-right progress-space"></div>
+        </div>
     </div>
 
     <div class="on-loading"></div>

@@ -27,7 +27,7 @@
         </div>
 
         <div class="collapse navbar-collapse" id="myDiv">
-            <ul class="nav navbar-nav" style="margin-left:10px;padding-right:3px;font-size: 16px;">
+            <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
@@ -56,8 +56,8 @@
 </nav>
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
-        <div class="panel-body" id="header">
+    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
+        <div class="panel-body">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-home"></span> Jednostki organizacyjne:</div>
         </div>
     </div>

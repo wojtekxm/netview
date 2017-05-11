@@ -28,7 +28,7 @@
         </div>
 
         <div class="collapse navbar-collapse" id="myDiv">
-            <ul class="nav navbar-nav" style="margin-left:10px;padding-right:3px;font-size: 16px;">
+            <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
@@ -63,14 +63,14 @@
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Aktualny stan urządzeń:</div>
         </div>
     </div>
-    <div class="panel panel-default" style="padding:8px;margin-bottom: 6px;margin-top:-1px;">
+    <div class="panel panel-default" style="padding:8px;margin-bottom: 0px;margin-top:-1px;">
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
             <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
         </button>
         <button id="back" type="button" class="btn btn-success" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
         <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
     </div>
-    <div id="filters" class="collapse">
+    <div id="filters" class="collapse" style="margin-top: -1px!important;">
         <div class="panel panel-default"style="margin-bottom: 0!important;">
             <div class="panel-body">
                 <select id="stan" multiple="multiple">
@@ -94,8 +94,8 @@
         </div>
     </div>
 
-    <div style="height: 10px;"></div>
-    <ul class="view" style="z-index: 1000;top:0;">
+
+    <ul class="view" style="margin-top:15px;z-index: 1000;top:0;">
         <li>
             <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
         </li>
@@ -578,7 +578,6 @@
     var controllersSize = 0;
 
     $(document).ready(function(){
-        var devices = new Array();
         var buildings = new Array();
         var controllers = new Array();
 

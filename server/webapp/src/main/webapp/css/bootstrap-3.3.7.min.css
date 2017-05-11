@@ -63,6 +63,10 @@
 .navbar-inverse .navbar-nav > li ul li > a {
     color : #cdd6cd;
 }
+.navbar-inverse .navbar-nav > li > a:first-child{
+    margin-left: 10px;
+}
+
 .navbar-inverse .navbar-nav > li ul li> a:hover{
     color : #2df2be;
     background-color: #1D1F1D ;

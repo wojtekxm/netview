@@ -29,9 +29,13 @@ public class App {
     private static final boolean rootResetEnabled;
     private static final String rootResetName;
     private static final String rootResetPassword;
-    private static final AtomicInteger examineInterval;
-    private static final AtomicInteger databaseCleaningInterval;
-    private static final AtomicInteger serverDelay;
+    private static final AtomicInteger examineInterval; // sekundy
+    private static final AtomicInteger databaseCleaningInterval; // sekundy
+    private static final AtomicInteger serverDelay; // milisekundy
+    private static final AtomicInteger tokenPasswordExpiration; // minuty
+    private static final AtomicInteger tokenActivateExpiraton; // minuty
+    private static final AtomicInteger tokenAccessExpiration; // minuty
+
 
     static {
         try {
@@ -89,6 +93,9 @@ public class App {
             examineInterval = new AtomicInteger(300);
             databaseCleaningInterval = new AtomicInteger(100);
             serverDelay = new AtomicInteger(0);
+            tokenAccessExpiration = new AtomicInteger(15);
+            tokenActivateExpiraton = new AtomicInteger(60 * 24);
+            tokenPasswordExpiration = new AtomicInteger(60 * 24);
             reloadCustomProperties();
         } catch (IOException exc) {
             throw new IllegalStateException(exc);
@@ -210,14 +217,14 @@ public class App {
     }
 
     /**
-     * @return zawsze >= 0
+     * @return okres w sekundach wykonywania badań, liczba nieujemna
      */
     public static int getExamineInterval() {
         return examineInterval.get();
     }
 
     /**
-     * @param examineInterval >= 0
+     * @param examineInterval okres w sekundach wykonywania badań, liczba nieujemna
      */
     public static void setExamineInterval(int examineInterval) {
         if(examineInterval < 0) {
@@ -227,14 +234,14 @@ public class App {
     }
 
     /**
-     * @return zawsze >= 0
+     * @return okres w sekundach czyszczenia bazy, liczba nieujemna
      */
     public static int getDatabaseCleaningInterval() {
         return databaseCleaningInterval.get();
     }
 
     /**
-     * @param databaseCleaningInterval >= 0
+     * @param databaseCleaningInterval okres w sekundach czyszczenia bazy, liczba nieujemna
      */
     public static void setDatabaseCleaningInterval(int databaseCleaningInterval) {
         if(databaseCleaningInterval < 0) {
@@ -244,19 +251,70 @@ public class App {
     }
 
     /**
-     * @return milisekundy
+     * @return milisekundy opóźnienia API, liczba nieujemna
      */
     public static int getServerDelay() {
         return serverDelay.get();
     }
 
     /**
-     * @param serverDelay milisekundy, >= 0
+     * @param serverDelay milisekundy opóźnienia API, liczba nieujemna
      */
     public static void setServerDelay(int serverDelay) {
         if(serverDelay < 0) {
             throw new IllegalArgumentException("serverDelay < 0");
         }
         App.serverDelay.set(serverDelay);
+    }
+
+    /**
+     * @return minuty
+     */
+    public static int getTokenPasswordExpiration() {
+        return tokenPasswordExpiration.get();
+    }
+
+    /**
+     * @param tokenPasswordExpiration minuty
+     */
+    public static void setTokenPasswordExpiration(int tokenPasswordExpiration) {
+        if(tokenPasswordExpiration < 0) {
+            throw new IllegalArgumentException("tokenPasswordExpiration < 0");
+        }
+        App.tokenPasswordExpiration.set(tokenPasswordExpiration);
+    }
+
+    /**
+     * @return minuty
+     */
+    public static int getTokenActivateExpiraton() {
+        return tokenActivateExpiraton.get();
+    }
+
+    /**
+     * @param tokenActivateExpiraton minuty
+     */
+    public static void setTokenActivateExpiraton(int tokenActivateExpiraton) {
+        if(tokenActivateExpiraton < 0) {
+            throw new IllegalArgumentException("tokenActivateExpiraton < 0");
+        }
+        App.tokenActivateExpiraton.set(tokenActivateExpiraton);
+    }
+
+    /**
+     * @return minuty
+     */
+    public static int getTokenAccessExpiration() {
+        return tokenAccessExpiration.get();
+    }
+
+    /**
+     * @param tokenAccessExpiration minuty
+     */
+    public static void setTokenAccessExpiration(int tokenAccessExpiration) {
+        if(tokenAccessExpiration < 0) {
+            throw new IllegalArgumentException("tokenAccessExpiration < 0");
+        }
+        App.tokenAccessExpiration.set(tokenAccessExpiration);
     }
 }

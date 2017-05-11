@@ -1,14 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:url var="href" value="/modify-building?id=${id}"/>
-<c:url var="action" value="/building/remove/${id}"/>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Informacje o budynku</title>
+    <title>Budynek <c:out value="${building.name}"/></title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/progress.css">
@@ -30,7 +28,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -56,7 +54,7 @@
         </div>
     </div>
 </nav>
-<div class="container" style="margin-top:100px">
+<div class="container" style="margin-top:80px">
     <div class="on-loading"></div>
     <div class="on-loaded">
         <div class="row">
@@ -84,11 +82,11 @@
                         </li>
                     </ul>
                 </div>
-                <a href="${href}" class="btn btn-success pull-left" role="button">
+                <a href="/modify-building?id=${building.id}" class="btn btn-success pull-left" role="button">
                     <span class="glyphicon glyphicon-wrench"></span>
                     Zmień
                 </a>
-                <form class="pull-right" method="post" action="${action}">
+                <form class="pull-right" method="post" action="/building/remove/${building.id}">
                     <button type="submit" class="btn btn-danger pull-right" style="margin-bottom: 10px">
                         <span class="glyphicon glyphicon-trash"></span>
                         Usuń
@@ -101,7 +99,7 @@
         </div>
         <h4 style="margin-top: 50px">Jednostki organizacyjne powiązane z budynkiem</h4>
         <div id="tabelka_units"></div>
-        <a href="/link-building-all-units?id=${id}" class="btn btn-success" role="button">
+        <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button">
             <span class="glyphicon glyphicon-plus"></span>
             Połącz z jednostką organizacyjną...
         </a>
@@ -142,6 +140,7 @@
 "use strict";
 var building;
 $(document).ready(function(){
+    var buildingId = ${building.id};
     var modalLinkDevices, currentDevices, mapDevicesId;
 
     modalLinkDevices = $('#modalLinkDevices');
@@ -150,13 +149,13 @@ $(document).ready(function(){
 
     progress.loadParallel(
         [{
-            "url" : '/api/building/info/${id}'
+            "url" : '/api/building/info/' + buildingId
         }, {
-            "url" : '/api/building/units/${id}'
+            "url" : '/api/building/units/' + buildingId
         }, {
-            "url" : '/api/building/controllers-details/${id}'
+            "url" : '/api/building/controllers-details/' + buildingId
         }, {
-            "url" : '/api/building/devices-details/${id}'
+            "url" : '/api/building/devices-details/' + buildingId
         }],
         ['.on-loading'], ['.on-loaded'], [],
         function(responses) {

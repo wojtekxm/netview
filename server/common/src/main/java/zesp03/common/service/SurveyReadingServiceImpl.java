@@ -141,7 +141,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
     }
 
     @Override
-    public RangeSamples<SampleRaw> getOriginal(long deviceId, int frequencyMhz, int start, int end) {
+    public RangeSamples getOriginal(long deviceId, int frequencyMhz, int start, int end) {
         if(start < 0)
             throw new IllegalArgumentException("start < 0");
         if(start >= end)
@@ -177,7 +177,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         if(! afterList.isEmpty()) {
             after = SampleRaw.make( afterList.get(0) );
         }
-        final RangeSamples<SampleRaw> ranged = new RangeSamples<>();
+        final RangeSamples ranged = new RangeSamples();
         ranged.setBefore(before);
         ranged.setList(list);
         ranged.setAfter(after);
@@ -185,7 +185,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
     }
 
     @Override
-    public RangeSamples<SampleAvgMinMax> getMultiAvgMinMax(final long deviceId, final int frequencyMhz, final int start, int end, final int groupTime) {
+    public List<SampleAvgMinMax> getMultiAvgMinMax(final long deviceId, final int frequencyMhz, final int start, int end, final int groupTime) {
         if(start < 0) {
             throw new ValidationException("start", "less than 0");
         }
@@ -201,10 +201,8 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         }
 
         final List<SampleAvgMinMax> mainList = new ArrayList<>();
-        final RangeSamples<SampleAvgMinMax> ranged = new RangeSamples<>();
-        ranged.setList(mainList);
         if(start >= end) {
-            return ranged;
+            return mainList;
         }
 
         final Long frequencyId = getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
@@ -224,11 +222,11 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
             final DeviceSurvey survey = beforeList.get(0);
             timeBegin = survey.getTimestamp();
             if(survey.getTimestamp() < start) {
-                ranged.setBefore(SampleRaw.make(survey));
+                //ranged.setBefore(SampleRaw.make(survey));
             }
             else if(beforeList.size() > 1) {
                 final DeviceSurvey next = beforeList.get(1);
-                ranged.setBefore(SampleRaw.make(next));
+                //ranged.setBefore(SampleRaw.make(next));
             }
         }
         ArrayList<DeviceSurvey> surveys;
@@ -244,7 +242,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         }
 
         if(surveys.isEmpty()) {
-            return ranged;
+            return mainList;
         }
         final DeviceSurvey first = surveys.get(0);
         int t0, t1, processed;
@@ -307,17 +305,6 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
             t0 = t1;
             t1 = t0 + groupTime;
         }
-        final List<DeviceSurvey> afterList = em.createQuery("SELECT ds FROM DeviceSurvey ds " +
-                "WHERE ds.frequency.id = :fid AND ds.deleted = 0 AND " +
-                "ds.timestamp >= :end ORDER BY ds.timestamp ASC",
-                DeviceSurvey.class)
-                .setParameter("fid", frequencyId)
-                .setParameter("end", end)
-                .setMaxResults(1)
-                .getResultList();
-        if(! afterList.isEmpty()) {
-            ranged.setAfter( SampleRaw.make( afterList.get(0) ) );
-        }
-        return ranged;
+        return mainList;
     }
 }

@@ -30,7 +30,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -58,17 +58,19 @@
 </nav>
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
-        <div class="panel-body" style="background-color: #f8fafe;">
+    <div class="panel panel-default" style="margin: 0!important;">
+        <div class="panel-body" id="header">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Urządzenia:</div>
         </div>
     </div>
-    <div class="pull-left on-loaded" style="margin-bottom: 15px;">
-        <button id="btn_examine" class="btn btn-primary pull-left" type="button">
-            <span class="glyphicon glyphicon-refresh"></span>
-            zbadaj wszystkie
-        </button>
-        <div id="examine_loading" class="pull-right progress-space"></div>
+    <div class="panel panel-default" style="height:52px;padding:8px;margin-bottom: 15px;margin-top:-1px;">
+        <div class="pull-left on-loaded" style="margin-bottom: 15px;">
+            <button id="btn_examine" class="btn btn-primary pull-left" type="button">
+                <span class="glyphicon glyphicon-refresh"></span>
+                zbadaj wszystkie
+            </button>
+            <div id="examine_loading" class="pull-right progress-space"></div>
+        </div>
     </div>
     <div class="on-loading"></div>
     <div class="on-loaded">
@@ -125,7 +127,7 @@
 <script>
 "use strict";
 $(document).ready( function() {
-    var $dateTimePicker, devices, columnDefinitions, tabelkaSpace, btnDelete,
+    var $dateTimePicker, tabelkaSpace, btnDelete,
         spanTotalAll, spanTotalBefore, totalBeforeIsPending, totalBeforeChangedAgain;
 
     $dateTimePicker = $('#datetimepicker1');
@@ -140,31 +142,6 @@ $(document).ready( function() {
     totalBeforeIsPending = false;
     totalBeforeChangedAgain = false;
 
-    devices = [];
-    columnDefinitions = [
-        {
-            "label" : 'nazwa',
-            "comparator" : util.comparatorText('name'),
-            "extractor" : 'td_name',
-            "cssClass" : 'width-6'
-        }, {
-            "label" : '2,4 GHz',
-            "comparator" : util.comparatorNumber('cmp_2400'),
-            "extractor" : 'td_2400',
-            "cssClass" : 'width-2'
-        }, {
-            "label" : '5 GHz',
-            "comparator" : util.comparatorNumber('cmp_5000'),
-            "extractor" : 'td_5000',
-            "cssClass" : 'width-2'
-        }, {
-            "label" : 'kontroler',
-            "comparator" : util.comparatorText('cmp_controller'),
-            "extractor" : 'td_controller',
-            "cssClass" : 'width-6'
-        }
-    ];
-
     progress.loadParallel(
         [{
             "url" : '/api/device/details/all'
@@ -175,11 +152,7 @@ $(document).ready( function() {
         function(responses) {
             var btnExamine;
             btnExamine = $('#btn_examine');
-            devices = responses[0].list;
-            fixDevices();
-            tabelkaSpace.append(
-                tabelka.create(devices, columnDefinitions)
-            );
+            fixDevices(responses[0].list, false);
             spanTotalAll.text(responses[1].content);
             refreshTotalBefore();
             btnExamine.click(function() {
@@ -196,17 +169,9 @@ $(document).ready( function() {
                         ['#examine_loading'], [], [],
                         function(responses) {
                             btnExamine.prop('disabled', false);
-                            devices = responses[1].list;
                             spanTotalAll.text(responses[2].content);
                             refreshTotalBefore();
-                            fixDevices();
-                            tabelkaSpace.fadeOut(200, function() {
-                                tabelkaSpace.empty();
-                                tabelkaSpace.append(
-                                    tabelka.create(devices, columnDefinitions)
-                                );
-                                tabelkaSpace.fadeIn(200);
-                            });
+                            fixDevices(responses[1].list, true);
                         },
                         function() {
                             btnExamine.prop('disabled', false);
@@ -242,17 +207,9 @@ $(document).ready( function() {
             }],
             ['#delete_loading'], [], [],
             function(responses) {
-                devices = responses[1].list;
                 spanTotalAll.text(responses[2].content);
                 refreshTotalBefore();
-                fixDevices();
-                tabelkaSpace.fadeOut(200, function() {
-                    tabelkaSpace.empty();
-                    tabelkaSpace.append(
-                        tabelka.create(devices, columnDefinitions)
-                    );
-                    tabelkaSpace.fadeIn(200);
-                });
+                fixDevices(responses[1].list, true);
                 btnDelete.prop('disabled', false);
                 notify.success('#notify_deleted', 'Badania zostały usunięte');
             },
@@ -276,61 +233,49 @@ $(document).ready( function() {
         }
     });
 
-    function fixDevices() {
-        var i, dev, controller, freq, survey;
-        for(i = 0; i < devices.length; i++) {
-            dev = devices[i];
-            controller = dev.controller;
-            freq = dev.frequency;
-
-            dev.td_name = $('<a></a>')
-                .attr('href', '/device/' + dev.id)
-                .text(dev.name);
-
-            dev.td_2400 = $('<span></span>');
-            if(typeof freq['2400'] !== 'undefined') {
-                survey = freq['2400'];
-                if(survey !== null && survey.enabled) {
-                    dev.cmp_2400 = survey.clients;
-                    dev.td_2400.text(survey.clients);
+    function fixDevices(listOfDeviceDetailsDto, replacingOld) {
+        var builder = tabelka.builder('!')
+            .column('nazwa', 'text', 'name', 4, function(dev) {
+                return $('<a></a>')
+                    .attr('href', '/device/' + dev.id)
+                    .text(dev.name);
+            })
+            .deviceFrequency('2,4 GHz', 2400, 2)
+            .deviceFrequency('5 GHz', 5000, 2)
+            .column('kontroler', 'text', 'cmp_controller', 4, function(dev) {
+                var cont = dev.controller;
+                if(cont === null) {
+                    dev.cmp_controller = '';
+                    return '-';
                 }
                 else {
-                    dev.cmp_2400 = -1;
-                    dev.td_2400.text('wył.');
+                    dev.cmp_controller = cont.name;
+                    return $('<a></a>')
+                        .attr('href', '/controller/' + cont.id)
+                        .text(cont.name);
                 }
-            }
-            else {
-                dev.cmp_2400 = -2;
-                dev.td_2400.text('-');
-            }
-
-            dev.td_5000 = $('<span></span>');
-            if(typeof freq['5000'] !== 'undefined') {
-                survey = freq['5000'];
-                if(survey !== null && survey.enabled) {
-                    dev.cmp_5000 = survey.clients;
-                    dev.td_5000.text(survey.clients);
+            })
+            .column('lokalizacja', 'text', 'cmp_location', 4, function(dev) {
+                var b = dev.building;
+                if(b === null) {
+                    dev.cmp_location = '';
+                    return '-';
                 }
                 else {
-                    dev.cmp_5000 = -1;
-                    dev.td_5000.text('wył.');
+                    dev.cmp_location = b.name;
+                    return $('<a></a>')
+                        .attr('href', '/building/' + b.id)
+                        .text(b.name);
                 }
-            }
-            else {
-                dev.cmp_5000 = -2;
-                dev.td_5000.text('-');
-            }
-
-            if(controller === null) {
-                dev.cmp_controller = null;
-                dev.td_controller = $('<span></span>').text('-');
-            }
-            else {
-                dev.cmp_controller = controller.name;
-                dev.td_controller = $('<a></a>')
-                    .attr('href', '/controller/' + controller.id)
-                    .text(controller.name);
-            }
+            });
+        if(replacingOld) {
+            tabelkaSpace.fadeOut(200, function() {
+                builder.build('#tabelka_space', listOfDeviceDetailsDto);
+                tabelkaSpace.fadeIn(200);
+            });
+        }
+        else {
+            builder.build('#tabelka_space', listOfDeviceDetailsDto);
         }
     }
 

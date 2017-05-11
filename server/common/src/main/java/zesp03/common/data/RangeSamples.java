@@ -2,9 +2,9 @@ package zesp03.common.data;
 
 import java.util.List;
 
-public class RangeSamples<T> {
+public class RangeSamples {
     private SampleRaw before;
-    private List<T> list;
+    private List<SampleRaw> list;
     private SampleRaw after;
 
     public SampleRaw getBefore() {
@@ -15,11 +15,11 @@ public class RangeSamples<T> {
         this.before = before;
     }
 
-    public List<T> getList() {
+    public List<SampleRaw> getList() {
         return list;
     }
 
-    public void setList(List<T> list) {
+    public void setList(List<SampleRaw> list) {
         this.list = list;
     }
 

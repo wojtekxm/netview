@@ -29,7 +29,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -58,20 +58,20 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
-        <div class="panel-body" style="background-color: #f8fafe;">
+    <div class="panel panel-default" style="margin: 0!important;">
+        <div class="panel-body" id="header">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Aktualny stan urządzeń:</div>
         </div>
     </div>
-    <div style="margin-bottom: 5px;">
+    <div class="panel panel-default" style="padding:8px;margin-bottom: 0px;margin-top:-1px;">
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
             <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
         </button>
         <button id="back" type="button" class="btn btn-success" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
         <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
     </div>
-    <div id="filters" class="collapse">
-        <div class="panel panel-default">
+    <div id="filters" class="collapse" style="margin-top: -1px!important;">
+        <div class="panel panel-default"style="margin-bottom: 0!important;">
             <div class="panel-body">
                 <select id="stan" multiple="multiple">
                     <option type="checkbox" class="s" value="active" selected="true">Aktywne</option>
@@ -88,22 +88,21 @@
                     <button id="worst_15" type="button" class="btn btn-default" style="margin-right: 4px;">15 najgorszych urządzeń</button>
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
-                    <div id="result_success"></div>
                     <div id="result_error"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div style="height: 10px;"></div>
-    <ul class="view" style="z-index: 1000;top:0;">
+
+    <ul class="view" style="margin-top:15px;z-index: 1000;top:0;">
         <li>
             <ul id="devices" class="panel panel-default" style="padding: 4px;border: 1px solid #e0e0e0;list-style-type: none;"><div id="progress_area"></div></ul>
         </li>
     </ul>
 
     <div class="panel panel-default">
-        <div class="panel-heading" style="display:flex; font-size: 15px;">
+        <div class="panel-heading" style="display:flex; font-size: 15px;background-color: #2b2d2b;color:white;">
             <span class='glyphicon glyphicon-time'></span><div id="data_tittle" style="margin-left: 6px;"></div> &nbsp;&nbsp;&nbsp; <div id="data"></div>
         </div>
         <div class="panel-body">
@@ -342,8 +341,6 @@
     function filter(){
         var value = "";
 
-        $("#devices li").remove();
-
         var states = new Array();
         var stateId = "";
         $('.s :checkbox:checked').each(function(){
@@ -359,139 +356,181 @@
             controllers.push(controllerId);
         });
 
-
         var buildings = new Array();
         var buildingId = "";
         $('.b :checkbox:checked').each(function(){
             buildingId = $(this).attr('value');
             buildings.push(buildingId);
+
         });
+
 
         if(states.length == 0){
             if(ifFilter == true){
                 notify.danger('#result_error', 'Nie wybrano żadnego stanu');
             }
         }
-
         if(controllers.length == 0){
             if(ifFilter == true) {
                 notify.danger('#result_error', 'Nie wybrano żadnego kontrolera');
             }
         }
-
         if(buildings.length == 0){
             if(ifFilter == true) {
                 notify.danger('#result_error', 'Nie wybrano żadnego budynku');
             }
         }
 
+
+        var active = 0;
+        var inactive = 0;
+        var off = 0;
+        var all = 0;
         var ac = 0;
         var inac = 0;
         var of = 0;
         var al = 0;
+        var sum = 0;
+        var isEnabled = true;
+        var time = devices[0].frequencySurvey['2400'].timestamp;
+        var line = '';
+        var style = 'list-style-type: none;color:white;text-decoration:none;';
+        var clazz = '';
+        var h = '';
+        var currentDeviceStateDto = null;
+        var state2400 = null;
+        var state5000 = null;
 
 
 
-        for(var j=0;j<devices.length;j++){
-            var currentDeviceStateDto = devices[j];
-            var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
-            var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+
+        $("#devices li").remove();
+
+        var resultDevices = new Array();
+        for(var j=0; j<devices.length; j++){
+            if(controllers.length == controllersSize){
+                resultDevices.push(devices[j]);
+            }else{
+                for(var s = 0; s < controllers.length; s++){
+                    if (devices[j].controllerId != null) {
+                        if (controllers[s] == devices[j].controllerId.toString()) {
+                            resultDevices.push(devices[j]);
+                        }
+                    }
+                }
+            }
+        }
+
+        var resultDevices2 = new Array();
+        for(var j = 0; j < resultDevices.length; j++){
+            if(buildings.length == buildingsSize){
+                resultDevices2.push(resultDevices[j]);
+            }else{
+                for(var s = 0; s < buildings.length; s++){
+                    if (resultDevices[j].buildingId != null) {
+                        if (buildings[s] == resultDevices[j].buildingId.toString()) {
+                            resultDevices2.push(resultDevices[j]);
+                        }
+                    }
+                }
+            }
+        }
+
+        for(var j=0;j<resultDevices2.length;j++){
+            currentDeviceStateDto = resultDevices2[j];
+            state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+            state5000 = currentDeviceStateDto.frequencySurvey['5000'];
             if (frequency == "2400") {
                 if (typeof state2400 === 'undefined') {
                     continue;
                 }
                 if(state2400 === null){
-                    var isEnabled = false;
+                    isEnabled = false;
                 }
                 else {
-                    var sum = state2400.clients;
-                    var isEnabled = state2400.enabled;
-                    var time = state2400.timestamp;
+                    sum = state2400.clients;
+                    isEnabled = state2400.enabled;
                 }
             } else if (frequency == "5000") {
                 if (typeof state5000 === 'undefined') {
                     continue;
                 }
                 if(state5000 === null){
-                    var isEnabled = false;
+                    isEnabled = false;
                 }
                 else {
-                    var sum = state5000.clients;
-                    var isEnabled = state5000.enabled;
-                    var time = state5000.timestamp;
+                    sum = state5000.clients;
+                    isEnabled = state5000.enabled;
                 }
             }
 
+            for(var s=0;s<states.length;s++){
+                active = 0;
+                inactive = 0;
+                off = 0;
 
-            for(var i=0;i<controllers.length;i++){
-                for(var k=0;k<states.length;k++) {
-                    if (controllers[i] == devices[j].controllerId.toString()) {
-                        var active = 0;
-                        var inactive = 0;
-                        var off = 0;
-                        var all = 0;
-                        var style = 'list-style-type: none;color:white;text-decoration:none;';
+                style = 'list-style-type: none;color:white;text-decoration:none;';
 
-                        var h = "/device/" + currentDeviceStateDto.id;
-                        var clazz = '';
+                h = "/device/" + currentDeviceStateDto.id;
 
-                        if (isEnabled == true) {
-                            if(states[k] == 'active') {
-                                if (sum > 0 && sum <= 10) {
-                                    clazz = "greenDiode1";
-                                    active++;
-                                } else if (sum > 10 && sum <= 30) {
-                                    clazz = "greenDiode2";
-                                    active++;
-                                } else if (sum > 30 && sum <= 47) {
-                                    clazz = "greenDiode3";
-                                    active++;
-                                } else if (sum > 47) {
-                                    clazz = "greenDiode4";
-                                    active++;
-                                }
-                            }else if(states[k] == 'inactive'){
-                                if (sum == 0) {
-                                    clazz = "redDiode";
-                                    inactive++;
-                                }
-                            }
-                        } else if (isEnabled == false) {
-                            if(states[k] == 'off'){
-                                clazz = "greyDiode";
-                                sum = '-';
-                                off++;
-                            }
+                if (isEnabled == true) {
+                    if (states[s] == 'active') {
+                        if (sum > 0 && sum <= 10) {
+                            clazz = "greenDiode1";
+                            active++;
+                        } else if (sum > 10 && sum <= 30) {
+                            clazz = "greenDiode2";
+                            active++;
+                        } else if (sum > 30 && sum <= 47) {
+                            clazz = "greenDiode3";
+                            active++;
+                        } else if (sum > 47) {
+                            clazz = "greenDiode4";
+                            active++;
                         }
-                        var line = $('<li></li>').addClass(clazz)
-                            .attr('title', currentDeviceStateDto.name)
-                            .attr('data-toggle', 'tooltip')
-                            .append(
-                                $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
-                            );
-
-                        if (active + inactive + off != 0) {
-                            if(isEnabled == true){
-                                if(sum > 0){
-                                    ac++;
-                                }else if(sum == 0){
-                                    inac++;
-                                }
-                            }else if(isEnabled == false){
-                                of++;
-                            }
-                            $('#devices').append(line);
-                            $('#progress_area').remove();
+                    } else if (states[s] == 'inactive') {
+                        if (sum == 0) {
+                            clazz = "redDiode";
+                            inactive++;
                         }
-
-                        line.tooltip();
+                    }
+                } else if (isEnabled == false) {
+                    if (states[s] == 'off') {
+                        clazz = "greyDiode";
+                        sum = '-';
+                        off++;
                     }
                 }
+                line = $('<li></li>').addClass(clazz)
+                    .attr('title', currentDeviceStateDto.name)
+                    .attr('data-toggle', 'tooltip')
+                    .append(
+                        $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
+                    );
+
+                if (active + inactive + off != 0) {
+                    if (isEnabled == true) {
+                        if (sum > 0) {
+                            ac++;
+                        } else if (sum == 0) {
+                            inac++;
+                        }
+                    } else if (isEnabled == false) {
+                        of++;
+                    }
+                    $('#devices').append(line);
+                    $('#progress_area').remove();
+                }
+
+                line.tooltip();
             }
         }
 
-        al = ac+inac+of;
+        al = ac + inac + of;
 
+        if(al == 0){
+            notify.danger('#result_error', 'Brak wyników dla podanej konfiguracji');
+        }
 
         var date = new Date(time*1000);
         var n = date.toLocaleString();
@@ -535,10 +574,13 @@
         return x.localeCompare(y);
     }
 
+    var buildingsSize = 0;
+    var controllersSize = 0;
+
     $(document).ready(function(){
-        var devices = new Array();
         var buildings = new Array();
         var controllers = new Array();
+
 
         $.ajax({
             type: 'GET',
@@ -563,6 +605,7 @@
                     opt.appendTo(b);
                     b.multiselect('rebuild');
                 })
+                buildingsSize = buildings.length;
             }
         });
 
@@ -589,6 +632,7 @@
                     opt.appendTo(c);
                     c.multiselect('rebuild');
                 })
+                controllersSize = controllers.length;
             }
         });
 

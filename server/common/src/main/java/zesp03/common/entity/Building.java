@@ -1,8 +1,12 @@
 package zesp03.common.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //TODO equals
@@ -36,6 +40,16 @@ public class Building {
 
     @Column(precision=8, scale=6)
     private BigDecimal longitude;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Date updatedAt;
 
     @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
     private List<Controller> controllerList = new ArrayList<>();
@@ -100,5 +114,21 @@ public class Building {
 
     public List<LinkUnitBuilding> getLubList() {
         return lubList;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

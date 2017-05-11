@@ -29,7 +29,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -55,10 +55,16 @@
         </div>
     </div>
 </nav>
-<div id="all" class="container-fluid">
-    <div id="container">
-        <h1>Wyniki dla wyszukiwania: <mark><c:out value="${param.query}"/></mark></h1>
 
+<div class="container">
+    <div style="height: 80px;"></div>
+    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
+        <div class="panel-body">
+            <div id="tittle"><span class="glyphicon glyphicon-wrench"></span> Wyniki dla wyszukiwania: <c:out value="${param.query}"/></div>
+        </div>
+    </div>
+
+    <div class="panel panel-default" id="content">
         <h3>urządzenia</h3>
         <ol class="list">
             <c:forEach var="deviceDto" items="${search.devices}"><li><c:url var="h" value="/device/${deviceDto.id}"/>
@@ -105,6 +111,57 @@
         <hr>
     </div>
 </div>
+
+<%--<div id="all" class="container-fluid">--%>
+    <%--<div id="container">--%>
+        <%--<h1>Wyniki dla wyszukiwania: <mark><c:out value="${param.query}"/></mark></h1>--%>
+
+        <%--<h3>urządzenia</h3>--%>
+        <%--<ol class="list">--%>
+            <%--<c:forEach var="deviceDto" items="${search.devices}"><li><c:url var="h" value="/device/${deviceDto.id}"/>--%>
+                <%--<a href="${h}"><c:out value="${deviceDto.name}"/></a>--%>
+            <%--</li>--%>
+            <%--</c:forEach>--%>
+        <%--</ol>--%>
+        <%--<hr>--%>
+
+        <%--<h3>kontrolery</h3>--%>
+        <%--<ol class="list">--%>
+            <%--<c:forEach var="controllerDto" items="${search.controllers}"><li><c:url var="h" value="/controller/${controllerDto.id}"/>--%>
+                <%--<a href="${h}"><c:out value="${controllerDto.name}"/></a>--%>
+            <%--</li>--%>
+            <%--</c:forEach>--%>
+        <%--</ol>--%>
+        <%--<hr>--%>
+
+        <%--<h3>budynki</h3>--%>
+        <%--<ol class="list">--%>
+            <%--<c:forEach var="buildingDto" items="${search.buildings}"><li><c:url var="h" value="/building/${buildingDto.id}"/>--%>
+                <%--<a href="${h}"><c:out value="${buildingDto.name}"/></a>--%>
+            <%--</li>--%>
+            <%--</c:forEach>--%>
+        <%--</ol>--%>
+        <%--<hr>--%>
+
+        <%--<h3>jednostki</h3>--%>
+        <%--<ol class="list">--%>
+            <%--<c:forEach var="unitDto" items="${search.units}"><li><c:url var="h" value="/unit?id=${unitDto.id}"/>--%>
+                <%--<a href="${h}">[<c:out value="${unitDto.code}"/>] <c:out value="${unitDto.description}"/></a>--%>
+            <%--</li>--%>
+            <%--</c:forEach>--%>
+        <%--</ol>--%>
+        <%--<hr>--%>
+
+        <%--<h3>użytkownicy</h3>--%>
+        <%--<ol class="list">--%>
+            <%--<c:forEach var="userDto" items="${search.users}"><li><c:url var="h" value="/user?id=${userDto.id}"/>--%>
+                <%--<a href="${h}"><c:out value="${userDto.name}"/></a>--%>
+            <%--</li>--%>
+            <%--</c:forEach>--%>
+        <%--</ol>--%>
+        <%--<hr>--%>
+    <%--</div>--%>
+<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 </body>

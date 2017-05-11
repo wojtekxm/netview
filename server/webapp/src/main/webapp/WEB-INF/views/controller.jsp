@@ -1,14 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:url var="actionRemove" value="/controller/remove/${controller.id}"/>
-<c:url var="hrefModify" value="/modify-controller?id=${controller.id}"/>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kontroler</title>
+    <title>Kontroler <c:out value="${controller.name}"/></title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
@@ -30,7 +28,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -59,7 +57,7 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default" style="background-color: #f8fafe;">
+    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o kontrolerze: </div>
         </div>
@@ -111,12 +109,12 @@
 
         </table>
         <div class="clearfix">
-            <form class="pull-left" method="POST" action="${actionRemove}">
+            <form class="pull-left" method="POST" action="/controller/remove/${controller.id}">
                 <button class="btn btn-danger" type="submit" style="margin-right: 10px;">
                     <span class="glyphicon glyphicon-trash"></span> Usuń
                 </button>
             </form>
-            <a href="${hrefModify}" class="btn btn-success pull-left" role="button">
+            <a href="/modify-controller?id=${controller.id}" class="btn btn-success pull-left" role="button">
                 <span class="glyphicon glyphicon-wrench"></span> Zmień
             </a>
         </div>
@@ -130,6 +128,7 @@
 <script src="/js/progress.js"></script>
 <script src="/js/tabelka.js"></script>
 <script>
+//TODO wczytywać podstawową tabelkę przez API
 "use strict";
 $(document).ready(function() {
     function fixDevices(listOfDeviceDetailsDto) {

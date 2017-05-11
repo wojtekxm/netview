@@ -28,7 +28,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -56,18 +56,19 @@
 </nav>
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
-        <div class="panel-body" style="background-color: #f8fafe;">
+    <div class="panel panel-default" style="margin: 0!important;">
+        <div class="panel-body" id="header">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-inbox"></span> Kontrolery:</div>
         </div>
     </div>
-
-    <div class="pull-left on-loaded" style="margin-bottom: 15px;">
-        <button id="btn_examine" class="btn btn-primary pull-left" type="button">
-            <span class="glyphicon glyphicon-refresh"></span>
-            zbadaj wszystkie
-        </button>
-        <div id="examine_loading" class="pull-right progress-space"></div>
+    <div class="panel panel-default" style="height:52px;padding:8px;margin-bottom: 15px;margin-top:-1px;">
+        <div class="pull-left on-loaded" style="margin-bottom: 15px;">
+            <button id="btn_examine" class="btn btn-primary pull-left" type="button">
+                <span class="glyphicon glyphicon-refresh"></span>
+                zbadaj wszystkie
+            </button>
+            <div id="examine_loading" class="pull-right progress-space"></div>
+        </div>
     </div>
 
     <div class="on-loading"></div>
@@ -136,17 +137,17 @@ $(document).ready( function() {
             })
             .column('prawdziwy', 'number', 'cmp_fake', 2, function(cont) {
                 if(cont.fake) {
-                    cont.cmp_fake = 0;
-                    return $('<span></span>').append(
-                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>'),
-                        ' tak'
-                    );
-                }
-                else {
                     cont.cmp_fake = 1;
                     return $('<span></span>').append(
                         $('<span class="glyphicon glyphicon-unchecked" style="color:#d9534f"></span>'),
                         ' nie'
+                    );
+                }
+                else {
+                    cont.cmp_fake = 0;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>'),
+                        ' tak'
                     );
                 }
             })

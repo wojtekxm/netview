@@ -6,12 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import zesp03.webapp.dto.BuildingDto;
-import zesp03.webapp.dto.UnitDto;
 import zesp03.webapp.service.UnitService;
-
-import java.util.List;
 
 @Controller
 public class UnitPage {
@@ -22,15 +17,14 @@ public class UnitPage {
     public String get(
             @PathVariable("unitId") long unitId,
             ModelMap model) {
-        model.put("id", unitId);
+        model.put("unit", unitService.getOne(unitId));
         return "unit";
     }
 
     @PostMapping("/unit/remove/{unitId}")
     public String postRemove(
-            @PathVariable("unitId") long unitId,
-            ModelMap model) {
+            @PathVariable("unitId") long unitId) {
         unitService.removeUnit(unitId);
         return "redirect:/all-units";
-}
     }
+}

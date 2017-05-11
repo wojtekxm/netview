@@ -25,8 +25,7 @@ public class ControllerPage {
 
     @PostMapping("/controller/remove/{controllerId}")
     public String postRemove(
-            @PathVariable("controllerId") long controllerId,
-            ModelMap model) {
+            @PathVariable("controllerId") long controllerId) {
         controllerService.remove(controllerId);
         return "redirect:/all-controllers";
     }

@@ -1,14 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:url var="href" value="/modify-unit?id=${id}"/>
-<c:url var="action" value="/unit/remove/${id}"/>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Jednostki</title>
+    <title>Jednostka <c:out value="${unit.description}"/></title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
@@ -30,7 +28,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -61,7 +59,6 @@
     <div class="on-loading"></div>
     <div class="on-loaded">
         <div class="row">
-            <%--<div class="col-md-6">--%>
                 <div class="panel panel-default">
                     <div class="panel-heading">Informacje o jednostce</div>
                     <ul class="list-group" >
@@ -78,10 +75,9 @@
                             </div>
                         </li>
                     </ul>
-                <%--</div>--%>
                     <div>
-                        <a href="${href}" class="btn btn-success" role="button" style="float:left; margin-right: 10px;margin-top: 10px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
-                        <form class="pull-left" method="post" action="${action}">
+                        <a href="/modify-unit?id=${unit.id}" class="btn btn-success" role="button" style="float:left; margin-right: 10px;margin-top: 10px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
+                        <form class="pull-left" method="post" action="/unit/remove/${unit.id}">
                             <button type="submit" class="btn btn-danger " style="margin-top: 10px;">
                                 <span class="glyphicon glyphicon-trash"></span>
                                 Usuń
@@ -92,7 +88,7 @@
                 </div>
                 <h4 style="margin-top: 80px">Budynki powiązane z jednostką</h4>
                 <div id="tabelka_buildings"></div>
-                <a href="/link-unit-all-buildings?id=${id}" class="btn btn-success" role="button">
+                <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button">
                     <span class="glyphicon glyphicon-plus"></span>
                     Połącz z budynkiem ...
                 </a>
@@ -106,6 +102,7 @@
 <script>
 "use strict";
 $(document).ready(function() {
+    var unitId = ${unit.id};
     var unit;
 
     function fixBuildings(listOfBuildingDto) {
@@ -150,7 +147,7 @@ $(document).ready(function() {
     }
 
     progress.loadGet(
-        '/api/unit/details/${id}',
+        '/api/unit/details/' + unitId,
         ['.on-loading'], ['.on-loaded'], [],
         function(contentDtoOfUnitDetailsDto) {
             unit = contentDtoOfUnitDetailsDto.content.unit;

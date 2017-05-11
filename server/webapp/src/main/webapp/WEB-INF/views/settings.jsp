@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lista urządzeń</title>
+    <title>Ustawienia</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/progress.css">
     <link rel="stylesheet" href="/css/tabelka.css">
@@ -29,7 +29,7 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -58,7 +58,7 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default" style="background-color: #f8fafe;">
+    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-wrench"></span> Ustawienia </div>
         </div>
@@ -75,7 +75,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">Okres odśmiecania bazy (sekundy)</label>
+                <label class="col-sm-3 control-label">Okres czyszczenia bazy (sekundy)</label>
                 <div class="col-sm-6">
                     <input type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
                 </div>

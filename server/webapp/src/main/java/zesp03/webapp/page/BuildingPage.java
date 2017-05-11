@@ -18,14 +18,13 @@ public class BuildingPage {
     public String get(
             @PathVariable("buildingId") long buildingId,
             ModelMap model) {
-        model.put("id", buildingId);
+        model.put("building", buildingService.getOneBuilding(buildingId));
         return "building";
     }
 
     @PostMapping("/building/remove/{buildingId}")
     public String postRemove(
-            @PathVariable("buildingId") long buildingId,
-            ModelMap model) {
+            @PathVariable("buildingId") long buildingId) {
         buildingService.removeBuilding(buildingId);
         return "redirect:/all-buildings";
 }

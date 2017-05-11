@@ -32,16 +32,16 @@ public class User {
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "last_access")
+    @Column(name = "last_access", nullable = false)
     private Date lastAccess;
 
     public Long getId() {
@@ -106,5 +106,13 @@ public class User {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Date getLastAccess() {
+        return lastAccess;
+    }
+
+    public void setLastAccess(Date lastAccess) {
+        this.lastAccess = lastAccess;
     }
 }

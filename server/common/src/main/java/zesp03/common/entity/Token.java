@@ -26,11 +26,11 @@ public class Token {
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "expires")
+    @Column(name = "expires", nullable = false)
     private Date expires;
 
     public Long getId() {

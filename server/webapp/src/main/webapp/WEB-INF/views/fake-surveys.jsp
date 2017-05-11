@@ -54,62 +54,61 @@
         </div>
     </div>
 </nav>
-<div id="all" class="container-fluid">
-    <div class="container">
-        <h1>Generator sztucznych badań</h1>
-        <div class="form-group row">
-            <div class="col-sm-6">
-                <label for="device_id">id urządzenia</label>
-                <input id="device_id" type="number" class="form-control" required>
-            </div>
-            <div class="col-sm-6">
-                <label for="frequency_mhz">częstotliwość [MHz]</label>
-                <input id="frequency_mhz" type="number" class="form-control" value="2400" required>
-            </div>
+<div class="container">
+    <div style="margin-top:80px"></div>
+    <h1>Generator sztucznych badań</h1>
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <label for="device_id">id urządzenia</label>
+            <input id="device_id" type="number" class="form-control" required>
         </div>
-        <div class="form-group row">
-            <div class="col-sm-6">
-                <label for="number_of_surveys">liczba badań</label>
-                <input id="number_of_surveys" type="number" class="form-control" required>
-            </div>
-            <div class="col-sm-6">
-                <label for="max_clients">maksymalna liczba klientów</label>
-                <input id="max_clients" type="number" class="form-control" value="50" required>
-            </div>
+        <div class="col-sm-6">
+            <label for="frequency_mhz">częstotliwość [MHz]</label>
+            <input id="frequency_mhz" type="number" class="form-control" value="2400" required>
         </div>
-        <div class="form-group row">
-            <div class="col-sm-6">
-                <label for="min_interval">minimalny odstęp badań w sekundach</label>
-                <input id="min_interval" type="number" class="form-control" value="300" required>
-            </div>
-            <div class="col-sm-6">
-                <label for="max_interval">maksymalny odstęp badań w sekundach</label>
-                <input id="max_interval" type="number" class="form-control" value="300" required>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-6">
-                <label for="time_start">czas początkowy</label>
-                <div class='input-group date' id='datetimepicker1'>
-                    <input id="time_start" type='text' class="form-control">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <label>przewidywany czas ostatniego badania</label>
-                <input id="estimated_time_end" type="text" class="form-control" disabled>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-12 text-center">
-                <button id="submit" type="button" class="btn btn-primary">Generuj</button>
-                <div id="loading" class="progress-space"></div>
-            </div>
-        </div>
-        <div id="notify" class="row"></div>
     </div>
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <label for="number_of_surveys">liczba badań</label>
+            <input id="number_of_surveys" type="number" class="form-control" required>
+        </div>
+        <div class="col-sm-6">
+            <label for="max_clients">maksymalna liczba klientów</label>
+            <input id="max_clients" type="number" class="form-control" value="50" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <label for="min_interval">minimalny odstęp badań w sekundach</label>
+            <input id="min_interval" type="number" class="form-control" value="300" required>
+        </div>
+        <div class="col-sm-6">
+            <label for="max_interval">maksymalny odstęp badań w sekundach</label>
+            <input id="max_interval" type="number" class="form-control" value="300" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-6">
+            <label for="time_start">czas początkowy</label>
+            <div class='input-group date' id='datetimepicker1'>
+                <input id="time_start" type='text' class="form-control">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <label>przewidywany czas ostatniego badania</label>
+            <input id="estimated_time_end" type="text" class="form-control" disabled>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12 text-center">
+            <button id="submit" type="button" class="btn btn-primary">Generuj</button>
+            <div id="loading" class="progress-space"></div>
+        </div>
+    </div>
+    <div id="notify" class="row"></div>
 </div>
 
 <script src="/js/jquery-3.1.1.min.js"></script>

@@ -28,8 +28,8 @@
         </div>
 
         <div class="collapse navbar-collapse" id="myDiv">
-            <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+            <ul class="nav navbar-nav" style="margin-left:10px;padding-right:3px;font-size: 16px;">
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -58,12 +58,12 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="margin: 0!important;">
         <div class="panel-body" id="header">
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Aktualny stan urządzeń:</div>
         </div>
     </div>
-    <div style="margin-bottom: 5px;">
+    <div class="panel panel-default" style="padding:8px;margin-bottom: 6px;margin-top:-1px;">
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
             <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
         </button>
@@ -71,7 +71,7 @@
         <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning">
     </div>
     <div id="filters" class="collapse">
-        <div class="panel panel-default">
+        <div class="panel panel-default"style="margin-bottom: 0!important;">
             <div class="panel-body">
                 <select id="stan" multiple="multiple">
                     <option type="checkbox" class="s" value="active" selected="true">Aktywne</option>
@@ -88,7 +88,6 @@
                     <button id="worst_15" type="button" class="btn btn-default" style="margin-right: 4px;">15 najgorszych urządzeń</button>
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
-                    <div id="result_success"></div>
                     <div id="result_error"></div>
                 </div>
             </div>
@@ -393,393 +392,145 @@
         var al = 0;
         var sum = 0;
         var isEnabled = true;
-        var time = 0;
+        var time = devices[0].frequencySurvey['2400'].timestamp;
         var line = '';
-        var style = '';
+        var style = 'list-style-type: none;color:white;text-decoration:none;';
         var clazz = '';
         var h = '';
-        var bId;
-        var cId;
-        var resultDevices = new Array();
+        var currentDeviceStateDto = null;
+        var state2400 = null;
+        var state5000 = null;
+
 
 
 
         $("#devices li").remove();
 
-//        for(var j=0;j<devices.length;j++){
-//            var currentDeviceStateDto = devices[j];
-//            var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
-//            var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-//            if (frequency == "2400") {
-//                if (typeof state2400 === 'undefined') {
-//                    continue;
-//                }
-//                if(state2400 === null){
-//                    isEnabled = false;
-//                }
-//                else {
-//                    sum = state2400.clients;
-//                    isEnabled = state2400.enabled;
-//                    time = state2400.timestamp;
-//                }
-//            } else if (frequency == "5000") {
-//                if (typeof state5000 === 'undefined') {
-//                    continue;
-//                }
-//                if(state5000 === null){
-//                    isEnabled = false;
-//                }
-//                else {
-//                    sum = state5000.clients;
-//                    isEnabled = state5000.enabled;
-//                    time = state5000.timestamp;
-//                }
-//            }
-//            for(var s=0;s<states.length;s++){
-//                if (isEnabled == true) {
-//                    if (states[s] == 'active') {
-//                        if (sum > 0) {
-//                            resultDevices.push(devices[j]);
-//                        }
-//                    } else if (states[s] == 'inactive') {
-//                        if (sum == 0) {
-//                            resultDevices.push(devices[j]);
-//                        }
-//                    }
-//                } else if (isEnabled == false) {
-//                    if (states[s] == 'off') {
-//                        resultDevices.push(devices[j]);
-//                    }
-//                }
-//            }
-//        }
-
-
-
-
-        function filtersWithoutNulls(){
-            for(var j=0;j<devices.length;j++){
-                var currentDeviceStateDto = devices[j];
-                var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
-                var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-                if (frequency == "2400") {
-                    if (typeof state2400 === 'undefined') {
-                        continue;
-                    }
-                    if(state2400 === null){
-                        isEnabled = false;
-                    }
-                    else {
-                        sum = state2400.clients;
-                        isEnabled = state2400.enabled;
-                        time = state2400.timestamp;
-                    }
-                } else if (frequency == "5000") {
-                    if (typeof state5000 === 'undefined') {
-                        continue;
-                    }
-                    if(state5000 === null){
-                        isEnabled = false;
-                    }
-                    else {
-                        sum = state5000.clients;
-                        isEnabled = state5000.enabled;
-                        time = state5000.timestamp;
-                    }
-                }
-
-
-                for(var i=0;i<controllers.length;i++){
-                    if (devices[j].controllerId == null) {
-                        continue;
-                    }
-                    if (controllers[i] == devices[j].controllerId.toString()) {
-                        for(var k=0;k<states.length;k++) {
-                            for(var t=0;t<buildings.length;t++) {
-                                if (devices[j].buildingId == null) {
-                                    continue;
-                                }
-                                if (buildings[t] == devices[j].buildingId.toString()) {
-                                    active = 0;
-                                    inactive = 0;
-                                    off = 0;
-
-                                    style = 'list-style-type: none;color:white;text-decoration:none;';
-
-                                    h = "/device/" + currentDeviceStateDto.id;
-
-                                    if (isEnabled == true) {
-                                        if (states[k] == 'active') {
-                                            if (sum > 0 && sum <= 10) {
-                                                clazz = "greenDiode1";
-                                                active++;
-                                            } else if (sum > 10 && sum <= 30) {
-                                                clazz = "greenDiode2";
-                                                active++;
-                                            } else if (sum > 30 && sum <= 47) {
-                                                clazz = "greenDiode3";
-                                                active++;
-                                            } else if (sum > 47) {
-                                                clazz = "greenDiode4";
-                                                active++;
-                                            }
-                                        } else if (states[k] == 'inactive') {
-                                            if (sum == 0) {
-                                                clazz = "redDiode";
-                                                inactive++;
-                                            }
-                                        }
-                                    } else if (isEnabled == false) {
-                                        if (states[k] == 'off') {
-                                            clazz = "greyDiode";
-                                            sum = '-';
-                                            off++;
-                                        }
-                                    }
-                                    line = $('<li></li>').addClass(clazz)
-                                        .attr('title', currentDeviceStateDto.name)
-                                        .attr('data-toggle', 'tooltip')
-                                        .append(
-                                            $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
-                                        );
-
-                                    if (active + inactive + off != 0) {
-                                        if (isEnabled == true) {
-                                            if (sum > 0) {
-                                                ac++;
-                                            } else if (sum == 0) {
-                                                inac++;
-                                            }
-                                        } else if (isEnabled == false) {
-                                            of++;
-                                        }
-                                        $('#devices').append(line);
-                                        $('#progress_area').remove();
-                                    }
-
-                                    line.tooltip();
-                                }
-                            }
+        var resultDevices = new Array();
+        for(var j=0; j<devices.length; j++){
+            if(controllers.length == controllersSize){
+                resultDevices.push(devices[j]);
+            }else{
+                for(var s = 0; s < controllers.length; s++){
+                    if (devices[j].controllerId != null) {
+                        if (controllers[s] == devices[j].controllerId.toString()) {
+                            resultDevices.push(devices[j]);
                         }
                     }
                 }
             }
         }
-        function filtersWithNullsBuildings(){
-            for(var j=0;j<devices.length;j++){
-                var currentDeviceStateDto = devices[j];
-                var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
-                var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-                if (frequency == "2400") {
-                    if (typeof state2400 === 'undefined') {
-                        continue;
-                    }
-                    if(state2400 === null){
-                        isEnabled = false;
-                    }
-                    else {
-                        sum = state2400.clients;
-                        isEnabled = state2400.enabled;
-                        time = state2400.timestamp;
-                    }
-                } else if (frequency == "5000") {
-                    if (typeof state5000 === 'undefined') {
-                        continue;
-                    }
-                    if(state5000 === null){
-                        isEnabled = false;
-                    }
-                    else {
-                        sum = state5000.clients;
-                        isEnabled = state5000.enabled;
-                        time = state5000.timestamp;
-                    }
-                }
 
-
-                for(var i=0;i<controllers.length;i++){
-                    if (parseInt(controllers[i]) == devices[j].controllerId) {
-                        for(var k=0;k<states.length;k++) {
-//                            for(var t=0;t<buildings.length;t++) {
-//                                if (parseInt(buildings[t]) == devices[j].buildingId) {
-                                    active = 0;
-                                    inactive = 0;
-                                    off = 0;
-
-                                    style = 'list-style-type: none;color:white;text-decoration:none;';
-
-                                    h = "/device/" + currentDeviceStateDto.id;
-
-                                    if (isEnabled == true) {
-                                        if (states[k] == 'active') {
-                                            if (sum > 0 && sum <= 10) {
-                                                clazz = "greenDiode1";
-                                                active++;
-                                            } else if (sum > 10 && sum <= 30) {
-                                                clazz = "greenDiode2";
-                                                active++;
-                                            } else if (sum > 30 && sum <= 47) {
-                                                clazz = "greenDiode3";
-                                                active++;
-                                            } else if (sum > 47) {
-                                                clazz = "greenDiode4";
-                                                active++;
-                                            }
-                                        } else if (states[k] == 'inactive') {
-                                            if (sum == 0) {
-                                                clazz = "redDiode";
-                                                inactive++;
-                                            }
-                                        }
-                                    } else if (isEnabled == false) {
-                                        if (states[k] == 'off') {
-                                            clazz = "greyDiode";
-                                            sum = '-';
-                                            off++;
-                                        }
-                                    }
-                                    line = $('<li></li>').addClass(clazz)
-                                        .attr('title', currentDeviceStateDto.name)
-                                        .attr('data-toggle', 'tooltip')
-                                        .append(
-                                            $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
-                                        );
-
-                                    if (active + inactive + off != 0) {
-                                        if (isEnabled == true) {
-                                            if (sum > 0) {
-                                                ac++;
-                                            } else if (sum == 0) {
-                                                inac++;
-                                            }
-                                        } else if (isEnabled == false) {
-                                            of++;
-                                        }
-                                        $('#devices').append(line);
-                                        $('#progress_area').remove();
-                                    }
-
-                                    line.tooltip();
-//                                }
-//                            }
+        var resultDevices2 = new Array();
+        for(var j = 0; j < resultDevices.length; j++){
+            if(buildings.length == buildingsSize){
+                resultDevices2.push(resultDevices[j]);
+            }else{
+                for(var s = 0; s < buildings.length; s++){
+                    if (resultDevices[j].buildingId != null) {
+                        if (buildings[s] == resultDevices[j].buildingId.toString()) {
+                            resultDevices2.push(resultDevices[j]);
                         }
                     }
                 }
             }
         }
-        function filtersWithNullsControllers(){
-                for(var j=0;j<devices.length;j++){
-                    var currentDeviceStateDto = devices[j];
-                    var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
-                    var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
-                    if (frequency == "2400") {
-                        if (typeof state2400 === 'undefined') {
-                            continue;
+
+        for(var j=0;j<resultDevices2.length;j++){
+            currentDeviceStateDto = resultDevices2[j];
+            state2400 = currentDeviceStateDto.frequencySurvey['2400'];
+            state5000 = currentDeviceStateDto.frequencySurvey['5000'];
+            if (frequency == "2400") {
+                if (typeof state2400 === 'undefined') {
+                    continue;
+                }
+                if(state2400 === null){
+                    isEnabled = false;
+                }
+                else {
+                    sum = state2400.clients;
+                    isEnabled = state2400.enabled;
+                }
+            } else if (frequency == "5000") {
+                if (typeof state5000 === 'undefined') {
+                    continue;
+                }
+                if(state5000 === null){
+                    isEnabled = false;
+                }
+                else {
+                    sum = state5000.clients;
+                    isEnabled = state5000.enabled;
+                }
+            }
+
+            for(var s=0;s<states.length;s++){
+                active = 0;
+                inactive = 0;
+                off = 0;
+
+                style = 'list-style-type: none;color:white;text-decoration:none;';
+
+                h = "/device/" + currentDeviceStateDto.id;
+
+                if (isEnabled == true) {
+                    if (states[s] == 'active') {
+                        if (sum > 0 && sum <= 10) {
+                            clazz = "greenDiode1";
+                            active++;
+                        } else if (sum > 10 && sum <= 30) {
+                            clazz = "greenDiode2";
+                            active++;
+                        } else if (sum > 30 && sum <= 47) {
+                            clazz = "greenDiode3";
+                            active++;
+                        } else if (sum > 47) {
+                            clazz = "greenDiode4";
+                            active++;
                         }
-                        if(state2400 === null){
-                            isEnabled = false;
-                        }
-                        else {
-                            sum = state2400.clients;
-                            isEnabled = state2400.enabled;
-                            time = state2400.timestamp;
-                        }
-                    } else if (frequency == "5000") {
-                        if (typeof state5000 === 'undefined') {
-                            continue;
-                        }
-                        if(state5000 === null){
-                            isEnabled = false;
-                        }
-                        else {
-                            sum = state5000.clients;
-                            isEnabled = state5000.enabled;
-                            time = state5000.timestamp;
+                    } else if (states[s] == 'inactive') {
+                        if (sum == 0) {
+                            clazz = "redDiode";
+                            inactive++;
                         }
                     }
-
-
-                    for(var i=0;i<controllers.length;i++){
-                        if (parseInt(controllers[i]) == devices[j].controllerId) {
-                            for(var k=0;k<states.length;k++) {
-                                for(var t=0;t<buildings.length;t++) {
-                                    if (parseInt(buildings[t]) == devices[j].buildingId) {
-                                    active = 0;
-                                    inactive = 0;
-                                    off = 0;
-
-                                    style = 'list-style-type: none;color:white;text-decoration:none;';
-
-                                    h = "/device/" + currentDeviceStateDto.id;
-
-                                    if (isEnabled == true) {
-                                        if (states[k] == 'active') {
-                                            if (sum > 0 && sum <= 10) {
-                                                clazz = "greenDiode1";
-                                                active++;
-                                            } else if (sum > 10 && sum <= 30) {
-                                                clazz = "greenDiode2";
-                                                active++;
-                                            } else if (sum > 30 && sum <= 47) {
-                                                clazz = "greenDiode3";
-                                                active++;
-                                            } else if (sum > 47) {
-                                                clazz = "greenDiode4";
-                                                active++;
-                                            }
-                                        } else if (states[k] == 'inactive') {
-                                            if (sum == 0) {
-                                                clazz = "redDiode";
-                                                inactive++;
-                                            }
-                                        }
-                                    } else if (isEnabled == false) {
-                                        if (states[k] == 'off') {
-                                            clazz = "greyDiode";
-                                            sum = '-';
-                                            off++;
-                                        }
-                                    }
-                                    line = $('<li></li>').addClass(clazz)
-                                        .attr('title', currentDeviceStateDto.name)
-                                        .attr('data-toggle', 'tooltip')
-                                        .append(
-                                            $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
-                                        );
-
-                                    if (active + inactive + off != 0) {
-                                        if (isEnabled == true) {
-                                            if (sum > 0) {
-                                                ac++;
-                                            } else if (sum == 0) {
-                                                inac++;
-                                            }
-                                        } else if (isEnabled == false) {
-                                            of++;
-                                        }
-                                        $('#devices').append(line);
-                                        $('#progress_area').remove();
-                                    }
-
-                                    line.tooltip();
-                                    }
-                                }
-                            }
-                        }
+                } else if (isEnabled == false) {
+                    if (states[s] == 'off') {
+                        clazz = "greyDiode";
+                        sum = '-';
+                        off++;
                     }
                 }
+                line = $('<li></li>').addClass(clazz)
+                    .attr('title', currentDeviceStateDto.name)
+                    .attr('data-toggle', 'tooltip')
+                    .append(
+                        $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
+                    );
+
+                if (active + inactive + off != 0) {
+                    if (isEnabled == true) {
+                        if (sum > 0) {
+                            ac++;
+                        } else if (sum == 0) {
+                            inac++;
+                        }
+                    } else if (isEnabled == false) {
+                        of++;
+                    }
+                    $('#devices').append(line);
+                    $('#progress_area').remove();
+                }
+
+                line.tooltip();
+            }
         }
 
-        if(buildings.length == buildingsSize){
-            filtersWithNullsBuildings();
-        }else if(controllers.length == controllersSize){
-            filtersWithNullsControllers();
-        }else{
-            filtersWithoutNulls();
+        al = ac + inac + of;
+
+        if(al == 0){
+            notify.danger('#result_error', 'Brak wyników dla podanej konfiguracji');
         }
-
-        al = ac+inac+of;
-
 
         var date = new Date(time*1000);
         var n = date.toLocaleString();

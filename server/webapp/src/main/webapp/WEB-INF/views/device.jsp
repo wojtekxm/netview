@@ -71,7 +71,7 @@
     <div class="on-loading progress-space"></div>
     <div class="on-loaded">
         <div class="panel panel-default">
-            <div class="panel-heading clearfix">
+            <div class="panel-heading clearfix" style="background-color: #2b2d2b;color:white;">
                 <h4 class="pull-left" style="margin-bottom: 0">Informacje o urządzeniu</h4>
                 <form class="pull-right" method="post" action="/device/remove/${device.id}">
                     <button class="btn btn-sm btn-danger" type="submit">
@@ -100,7 +100,7 @@
             </table>
         </div>
         <div id="panel-chart" class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" style="background-color: #2b2d2b;color:white;">
                 <div class="btn-group btn-group-justified" data-toggle="buttons">
                     <label class="btn btn-primary active">
                         <input type="radio" id="radio_chart_day" name="chart" value="day" autocomplete="off" checked>
@@ -186,7 +186,7 @@
                     <canvas id="mycanvas" width="1000px" height="400px"></canvas>
                 </div>
             </div>
-            <div class="panel-footer clearfix">
+            <div class="panel-footer clearfix" style="background-color: #2b2d2b;color:white;">
                 <div class="row">
                     <div class="col-xs-4 clearfix">
                         <button id="btn_past" type="button" class="btn btn-primary pull-left">

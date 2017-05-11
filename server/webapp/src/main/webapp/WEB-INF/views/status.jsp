@@ -28,8 +28,8 @@
         </div>
 
         <div class="collapse navbar-collapse" id="myDiv">
-            <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;margin-left:10px;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+            <ul class="nav navbar-nav" style="margin-left:10px;padding-right:3px;font-size: 16px;">
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                 <li><a href="/all-controllers">Kontrolery</a></li>
                 <li><a href="/all-users">Użytkownicy</a></li>
                 <li><a href="/all-devices">Urządzenia</a></li>
@@ -63,7 +63,7 @@
             <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Aktualny stan urządzeń:</div>
         </div>
     </div>
-    <div class="panel panel-default" style="padding:8px;margin-bottom: 8px;">
+    <div class="panel panel-default" style="padding:8px;margin-bottom: 6px;margin-top:-1px;">
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
             <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
         </button>

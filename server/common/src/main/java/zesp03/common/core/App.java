@@ -12,8 +12,10 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class App {
     private static final Logger log = LoggerFactory.getLogger(App.class);
@@ -35,7 +37,7 @@ public class App {
     private static final AtomicInteger tokenPasswordExpiration; // minuty
     private static final AtomicInteger tokenActivateExpiraton; // minuty
     private static final AtomicInteger tokenAccessExpiration; // minuty
-
+    private static final AtomicLong lastReloadTime;
 
     static {
         try {
@@ -96,16 +98,20 @@ public class App {
             tokenAccessExpiration = new AtomicInteger(15);
             tokenActivateExpiraton = new AtomicInteger(60 * 24);
             tokenPasswordExpiration = new AtomicInteger(60 * 24);
-            reloadCustomProperties();
+            lastReloadTime = new AtomicLong(-1);
+            forceReloadCustomProperties();
         } catch (IOException exc) {
             throw new IllegalStateException(exc);
         }
     }
 
-    public static void reloadCustomProperties() {
+    public static void forceReloadCustomProperties() {
         int ei = examineInterval.get();
         int dci = databaseCleaningInterval.get();
         int sd = serverDelay.get();
+        int taccess = tokenAccessExpiration.get();
+        int tactivate = tokenActivateExpiraton.get();
+        int tpassword = tokenPasswordExpiration.get();
         final Charset utf8 = Charset.forName("UTF-8");
         try(BufferedReader br = Files.newBufferedReader(customPath, utf8)) {
             final Properties p = new Properties();
@@ -121,6 +127,18 @@ public class App {
             s = p.getProperty("zesp03.server.delay");
             if(s != null) {
                 sd = Integer.parseInt(s);
+            }
+            s = p.getProperty("zesp03.token.access");
+            if(s != null) {
+                taccess = Integer.parseInt(s);
+            }
+            s = p.getProperty("zesp03.token.activate");
+            if(s != null) {
+                tactivate = Integer.parseInt(s);
+            }
+            s = p.getProperty("zesp03.token.password");
+            if(s != null) {
+                tpassword = Integer.parseInt(s);
             }
         }
         catch(IOException exc) {
@@ -149,13 +167,36 @@ public class App {
         else {
             log.warn("rejected zesp03.server.delay={}", sd);
         }
+        if(taccess >= 0) {
+            tokenAccessExpiration.set(taccess);
+        }
+        else {
+            log.warn("rejected zesp03.token.access={}", taccess);
+        }
+        if(tactivate >= 0) {
+            tokenActivateExpiraton.set(tactivate);
+        }
+        else {
+            log.warn("rejected zesp03.token.activate={}", tactivate);
+        }
+        if(tpassword >= 0) {
+            tokenPasswordExpiration.set(tpassword);
+        }
+        else {
+            log.warn("rejected zesp03.token.password={}", tpassword);
+        }
+        lastReloadTime.set(Instant.now().toEpochMilli());
+        log.debug("custom properties reloaded");
     }
 
-    public static void saveCustomProperties() {
+    public static synchronized void saveCustomProperties() {
         final Properties p = new Properties();
         p.setProperty("zesp03.examine.interval", Integer.toString(examineInterval.get()));
         p.setProperty("zesp03.database.cleaning.interval", Integer.toString(databaseCleaningInterval.get()));
         p.setProperty("zesp03.server.delay", Integer.toString(serverDelay.get()));
+        p.setProperty("zesp03.token.access", Integer.toString(tokenAccessExpiration.get()));
+        p.setProperty("zesp03.token.activate", Integer.toString(tokenActivateExpiraton.get()));
+        p.setProperty("zesp03.token.password", Integer.toString(tokenPasswordExpiration.get()));
         final Charset utf8 = Charset.forName("UTF-8");
         try(BufferedWriter bw = Files.newBufferedWriter(customPath, utf8)) {
             p.store(bw, null);
@@ -173,6 +214,13 @@ public class App {
             f.setEncoding("UTF-8");
             if(flywayClean)f.clean();
             if(flywayMigrate)f.migrate();
+        }
+    }
+
+    private static void handleCachedProperties() {
+        final long now = Instant.now().toEpochMilli();
+        if(now > lastReloadTime.get() + 60000) {
+            forceReloadCustomProperties();
         }
     }
 
@@ -220,6 +268,7 @@ public class App {
      * @return okres w sekundach wykonywania badań, liczba nieujemna
      */
     public static int getExamineInterval() {
+        handleCachedProperties();
         return examineInterval.get();
     }
 
@@ -237,6 +286,7 @@ public class App {
      * @return okres w sekundach czyszczenia bazy, liczba nieujemna
      */
     public static int getDatabaseCleaningInterval() {
+        handleCachedProperties();
         return databaseCleaningInterval.get();
     }
 
@@ -254,6 +304,7 @@ public class App {
      * @return milisekundy opóźnienia API, liczba nieujemna
      */
     public static int getServerDelay() {
+        handleCachedProperties();
         return serverDelay.get();
     }
 
@@ -271,6 +322,7 @@ public class App {
      * @return minuty
      */
     public static int getTokenPasswordExpiration() {
+        handleCachedProperties();
         return tokenPasswordExpiration.get();
     }
 
@@ -288,6 +340,7 @@ public class App {
      * @return minuty
      */
     public static int getTokenActivateExpiraton() {
+        handleCachedProperties();
         return tokenActivateExpiraton.get();
     }
 
@@ -305,6 +358,7 @@ public class App {
      * @return minuty
      */
     public static int getTokenAccessExpiration() {
+        handleCachedProperties();
         return tokenAccessExpiration.get();
     }
 

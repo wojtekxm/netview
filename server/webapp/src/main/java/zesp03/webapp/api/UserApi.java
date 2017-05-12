@@ -2,7 +2,6 @@ package zesp03.webapp.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
@@ -11,16 +10,18 @@ import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
 import zesp03.webapp.filter.AuthenticationFilter;
+import zesp03.webapp.service.LoginService;
 import zesp03.webapp.service.UserService;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class UserApi {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LoginService loginService;
 
     @GetMapping("/api/user/all")
     public ListDto<UserDto> getAll() {
@@ -33,41 +34,62 @@ public class UserApi {
         return ContentDto.make( () -> userService.getOne(id) );
     }
 
-    @PostMapping(value = "/api/user/block/{userId}")
-    public BaseResultDto block(
-            @PathVariable("userId") long id) {
-        return BaseResultDto.make( () -> userService.block(id) );
-    }
-
     @PostMapping(value = "/api/user/create")
     public ContentDto<UserCreatedDto> create(HttpServletRequest request) {
-        return ContentDto.make( () -> userService.create( request.getServerName(), request.getServerPort() ) );
+        return ContentDto.make( () ->
+                userService.create(
+                        request.getServerName(),
+                        request.getServerPort()
+                )
+        );
+    }
+
+    @PostMapping(value = "/api/user/block/{userId}")
+    public BaseResultDto postBlock(
+            @PathVariable("userId") long userId,
+            HttpServletRequest req) {
+        return BaseResultDto.make( () ->
+                userService.block(
+                        userId,
+                        AuthenticationFilter.getUser(req).getId()
+                )
+        );
+    }
+
+    @PostMapping(value = "/api/user/unlock/{userId}")
+    public BaseResultDto postUnlock(
+            @PathVariable("userId") long userId,
+            HttpServletRequest req) {
+        return BaseResultDto.make( () ->
+                userService.unlock(
+                        userId,
+                        AuthenticationFilter.getUser(req).getId()
+                )
+        );
     }
 
     @PostMapping(value = "/api/user/remove/{userId}")
     public BaseResultDto remove(
-            @PathVariable("userId") long id) {
-        return BaseResultDto.make( () -> userService.remove(id) );
+            @PathVariable("userId") long userId,
+            HttpServletRequest req) {
+        return BaseResultDto.make( () ->
+                userService.remove(
+                        userId,
+                        AuthenticationFilter.getUser(req).getId()
+                )
+        );
     }
 
     @PostMapping(value = "/api/change-password", consumes = "application/json")
-    public ContentDto<AccessDto> changePassword(
+    public BaseResultDto changePassword(
             @RequestBody ChangePasswordDto dto,
-            HttpServletRequest req,
-            HttpServletResponse resp) {
-        return ContentDto.make( () -> {
-            UserDto user = (UserDto)req.getAttribute(AuthenticationFilter.ATTR_USERDTO);
-            AccessDto access = userService.changePassword(user.getId(), dto);
-            final Cookie cu = new Cookie(AuthenticationFilter.COOKIE_USERID, Long.toString(access.getUserId()));
-            cu.setMaxAge(60 * 60 * 24 * 30);
-            cu.setPath("/");
-            resp.addCookie(cu);
-            final Cookie cp = new Cookie(AuthenticationFilter.COOKIE_PASSTOKEN, access.getPassToken());
-            cp.setMaxAge(60 * 60 * 24 * 30);
-            cp.setPath("/");
-            resp.addCookie(cp);
-            return access;
-        } );
+            HttpServletRequest req) {
+        return BaseResultDto.make( () ->
+                loginService.changePassword(
+                        AuthenticationFilter.getUser(req).getId(),
+                        dto
+                )
+        );
     }
 
     @PostMapping(value = "/api/user/activate", consumes = "application/x-www-form-urlencoded")

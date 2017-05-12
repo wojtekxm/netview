@@ -22,7 +22,7 @@ public class GarbageCollectionWorker implements Runnable {
         long lastTime = 0L;
         NextClean next = NextClean.SURVEY;
         while(!responsiveShutdown.shouldStop()) {
-            App.reloadCustomProperties();
+            App.forceReloadCustomProperties();
             final long nextTime = lastTime + App.getDatabaseCleaningInterval() * 1000L;
             final long now = System.currentTimeMillis();
             if(now >= nextTime) {

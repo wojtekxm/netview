@@ -81,14 +81,6 @@ public class ControllerApi {
     @PostMapping(value = "/accept-modify-controller", consumes = "application/json")
     public BaseResultDto acceptModifyController(
             @RequestBody ControllerDto dto) {
-        log.debug("/accept-modify-controller");
-        log.debug("dto.getId()={}", dto.getId());
-        log.debug("dto.getName()={}", dto.getName());
-        log.debug("dto.getIpv4()={}", dto.getIpv4());
-        log.debug("dto.getDescription()={}", dto.getDescription());
-        log.debug("dto.getCommunityString()={}", dto.getCommunityString());
-        log.debug("dto.getBuildingId()={}", dto.getBuildingId());
-        log.debug("dto.isFake()={}\n", dto.isFake());
         return BaseResultDto.make( () -> controllerService.acceptModifyController(dto) );
     }
 }

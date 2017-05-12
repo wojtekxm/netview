@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import zesp03.common.core.App;
 import zesp03.common.entity.Token;
 import zesp03.common.entity.TokenAction;
 import zesp03.common.entity.User;
@@ -15,20 +16,15 @@ import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.TokenRepository;
 import zesp03.common.repository.UserRepository;
 import zesp03.common.util.Secret;
-import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
-import zesp03.webapp.dto.input.ChangePasswordDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -44,6 +40,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private LoginService loginService;
 
     @Override
     public UserDto getOne(Long userId) {
@@ -64,17 +63,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void block(Long userId) {
+    public void block(Long userId, Long callerId) {
+        if( userId.equals(callerId) ) {
+            throw new AccessException("you can not block yourself");
+        }
         User u = userRepository.findOne(userId);
         if (u == null) {
             throw new NotFoundException("user");
         }
         u.setBlocked(true);
-        userRepository.save(u);
     }
 
     @Override
-    public void remove(Long userId) {
+    public void unlock(Long userId, Long callerId) {
+        if( userId.equals(callerId) ) {
+            throw new AccessException("you can not unlock yourself");
+        }
+        User u = userRepository.findOne(userId);
+        if (u == null) {
+            throw new NotFoundException("user");
+        }
+        u.setBlocked(false);
+    }
+
+    @Override
+    public void remove(Long userId, Long callerId) {
+        if( userId.equals(callerId) ) {
+            throw new AccessException("you can not delete yourself");
+        }
         User u = userRepository.findOne(userId);
         if (u == null) {
             throw new NotFoundException("user");
@@ -84,8 +100,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCreatedDto create(String serverName, int serverPort) {
-        String tokenValue = generateToken(32);
-        Secret secret = Secret.create(tokenValue.toCharArray(), 1);
+        final String tokenValue = loginService.generateToken(32);
+        final Secret secret = Secret.create(tokenValue.toCharArray(), 1);
+        final Instant now = Instant.now();
+        final Instant expires = now.plusSeconds(App.getTokenActivateExpiraton() * 60);
 
         User u = new User();
         u.setName(null);
@@ -93,12 +111,14 @@ public class UserServiceImpl implements UserService {
         u.setActivated(false);
         u.setBlocked(true);
         u.setRole(UserRole.NORMAL);
+        u.setLastAccess(Date.from(now));
         userRepository.save(u);
 
         Token t = new Token();
         t.setSecret(secret.getData());
         t.setAction(TokenAction.ACTIVATE_ACCOUNT);
         t.setUser(u);
+        t.setExpires(Date.from(expires));
         tokenRepository.save(t);
 
         UserCreatedDto r = new UserCreatedDto();
@@ -120,82 +140,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long makeRoot(String userName) {
+    public void makeRoot(String userName, String password) {
         if(userName == null || userName.isEmpty()) {
             throw new ValidationException("username", "empty root username");
         }
         em.createQuery("UPDATE User u SET u.role = 'NORMAL' WHERE u.role = 'ROOT'")
                 .executeUpdate();
         List<User> list = userRepository.findByName(userName);
-        User u;
+        User user;
         if(list.isEmpty()) {
-            u = new User();
-            u.setName(userName);
-            u.setSecret(null);
-            u.setActivated(true);
-            u.setBlocked(false);
-            u.setRole(UserRole.ROOT);
-            userRepository.save(u);
+            user = new User();
+            user.setSecret(null);
+            userRepository.save(user);
         }
         else {
-            u = list.get(0);
-            u.setName(userName);
-            u.setActivated(true);
-            u.setBlocked(false);
-            u.setRole(UserRole.ROOT);
-            userRepository.save(u);
+            user = list.get(0);
         }
-        return u.getId();
-    }
-
-    @Override
-    public void setPassword(Long userId, String password) {
-        if(password == null || password.isEmpty()) {
-            throw new ValidationException("password", "empty password");
-        }
-
-        String hash = passwordToHash(password);
-        Secret s = Secret.create(hash.toCharArray(), 1);
-        User u = userRepository.findOne(userId);
-        if(u == null) {
-            throw new NotFoundException("user");
-        }
-        u.setSecret(s.getData());
-        userRepository.save(u);
-    }
-
-    @Override
-    public AccessDto changePassword(Long userId, ChangePasswordDto dto) {
-        final String old = dto.getOld();
-        final String desired = dto.getDesired();
-        final String repeat = dto.getRepeat();
-
-        if( desired == null || desired.isEmpty() ) {
-            throw new ValidationException("desired", "empty password");
-        }
-        if( ! desired.equals(repeat) ) {
-            throw new ValidationException("repeat", "passwords do not match");
-        }
-
-        String oldHash = passwordToHash(old);
-        String desiredHash = passwordToHash(desired);
-        Secret desiredSecret = Secret.create(desiredHash.toCharArray(), 1);
-        User u = userRepository.findOne(userId);
-        if(u == null) {
-            throw new NotFoundException("user");
-        }
-        if( u.getSecret() == null ) {
-            throw new AccessException("failed to confirm password, because user don't have one");
-        }
-        if( ! Secret.check( u.getSecret(), oldHash )  ) {
-            throw new AccessException("invalid old password");
-        }
-        u.setSecret( desiredSecret.getData() );
-        userRepository.save(u);
-        AccessDto result = new AccessDto();
-        result.setUserId(u.getId());
-        result.setPassToken(desiredHash);
-        return result;
+        user.setLastAccess(new Date());
+        user.setName(userName);
+        user.setActivated(true);
+        user.setBlocked(false);
+        user.setRole(UserRole.ROOT);
+        loginService.setPassword(user, password);
     }
 
     @Override
@@ -203,6 +169,7 @@ public class UserServiceImpl implements UserService {
         Token token = tokenRepository.findOne(tokenId);
         return token != null &&
                 token.getAction() == TokenAction.ACTIVATE_ACCOUNT &&
+                token.checkValid() &&
                 token.getUser() != null &&
                 !token.getUser().isActivated() &&
                 Secret.check(token.getSecret(), tokenValue);
@@ -210,63 +177,54 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void activate(ActivateUserDto dto) {
-        if(dto.getTokenValue() == null) {
+        final long tokenId = dto.getTokenId();
+        final String tokenValue = dto.getTokenValue();
+        final String username = dto.getUsername();
+        final String password = dto.getPassword();
+        final String repeatPassword = dto.getRepeatPassword();
+
+        if(tokenValue == null) {
             throw new ValidationException("token value", "null");
         }
-        if(dto.getUsername() == null || dto.getUsername().length() < 1) {
+        if(username == null || username.length() < 1) {
             throw new ValidationException("username", "empty name");
         }
-        if(dto.getPassword() == null || dto.getPassword().length() < 4) {
-            throw new ValidationException("password", "too short");
+        if(password == null) {
+            throw new ValidationException("password", "null");
         }
-        if( ! dto.getRepeatPassword().equals( dto.getPassword() ) ) {
+        if(repeatPassword == null) {
+            throw new ValidationException("repeatPassword", "null");
+        }
+        if( ! repeatPassword.equals( password ) ) {
             throw new ValidationException("repeatPassword", "does not match");
         }
-        String passwordHash = passwordToHash(dto.getPassword());
-        byte[] userSecret = Secret.create(passwordHash.toCharArray(), 1).getData();
 
         //TODO co jak nazwa użytkownika zajęta
-        Token token = tokenRepository.findOne(dto.getTokenId());
+        Token token = tokenRepository.findOne(tokenId);
         if(token == null) {
             throw new NotFoundException("token");
         }
-        User user = token.getUser();
-        if(user == null) {
-            throw new NotFoundException("user");
+        if(! token.checkValid()) {
+            throw new AccessException("token expired");
         }
         if(token.getAction() != TokenAction.ACTIVATE_ACCOUNT) {
             throw new ValidationException("token", "invalid token type");
         }
-        if(token.getUser().isActivated()) {
+        final User user = token.getUser();
+        if(user == null) {
+            throw new NotFoundException("user");
+        }
+        if(user.isActivated()) {
             throw new ValidationException("user", "already activated");
         }
-        if(!Secret.check(token.getSecret(), dto.getTokenValue())) {
+        if(!Secret.check(token.getSecret(), tokenValue)) {
             throw new ValidationException("token", "invalid value");
         }
-        user.setName(dto.getUsername());
-        user.setSecret(userSecret);
+        user.setName(username);
         user.setActivated(true);
         user.setBlocked(false);
+        user.setLastAccess(new Date());
+        loginService.setPassword(user, password);
         tokenRepository.delete(token);
-        userRepository.save(user);
-    }
-
-    @Override
-    public String passwordToHash(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] binaryPassword = password.getBytes("UTF-8");
-            byte[] binaryHash = md.digest(binaryPassword);
-            return Base64.getUrlEncoder().encodeToString(binaryHash);
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException exc) {
-            throw new IllegalStateException(exc);
-        }
-    }
-
-    @Override
-    public String generateToken(int randomBytes) {
-        byte[] bin = new byte[randomBytes];
-        new SecureRandom().nextBytes(bin);
-        return Base64.getUrlEncoder().encodeToString(bin);
     }
 }

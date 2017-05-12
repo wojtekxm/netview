@@ -9,6 +9,7 @@ public class UserDto {
     private boolean activated;
     private boolean blocked;
     private UserRole role;
+    private long lastAccess;// timestamp w milisekundach
 
     public long getId() {
         return id;
@@ -52,6 +53,14 @@ public class UserDto {
 
     public boolean isRoot() {
         return role == UserRole.ROOT;
+    }
+
+    public long getLastAccess() {
+        return lastAccess;
+    }
+
+    public void setLastAccess(long lastAccess) {
+        this.lastAccess = lastAccess;
     }
 
     public void wrap(User u) {

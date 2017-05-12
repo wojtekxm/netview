@@ -1,16 +1,42 @@
 package zesp03.webapp.service;
 
+import zesp03.common.entity.User;
 import zesp03.webapp.dto.AccessDto;
 import zesp03.webapp.dto.UserDto;
+import zesp03.webapp.dto.input.ChangePasswordDto;
 
 public interface LoginService {
+    AccessDto grantAccess(User user);
+
+    boolean checkLogin(User user, String password);
+
     /**
      * @return null jeśli się nie uda
      */
     AccessDto login(String userName, String password);
 
+    void logout(Long tokenId);
+
     /**
      * @return null jeśli uwierzytelnianie się nie powiodło.
      */
-    UserDto authenticate(Long userId, String passToken);
+    UserDto authenticate(Long tokenId, String tokenValue);
+
+    void changePassword(Long userId, ChangePasswordDto dto);
+
+    void setPassword(User user, String password);
+
+    /**
+     * @param password hasło dla którego ma być wyznaczony hash
+     * @return hash funkcji SHA-256 dla podanego hasła, zaprezentowany w formacie Base64URL.
+     */
+    String passwordToHash(String password);
+
+    /**
+     * Generuje losowy token w formacie Base64URL, reprezentujący ciąg bajtów o długości randomBytes.
+     *
+     * @param randomBytes liczba losowych bajtów do wygenerowania
+     * @return napis Base64URL reprezentujący losowo wygenerowany token.
+     */
+    String generateToken(int randomBytes);
 }

@@ -33,8 +33,6 @@ public class LoginPage {
         AccessDto result = loginService.login(username, password);
         if (result != null) {
             final int maxAge = (remember != null && remember.length() > 0) ? (60 * 60 * 24 * 30) : -1;
-            log.debug("maxAge={}", maxAge);
-
             final Cookie cu = new Cookie(
                     AuthenticationFilter.COOKIE_USERID,
                     Long.toString( result.getUserId() )

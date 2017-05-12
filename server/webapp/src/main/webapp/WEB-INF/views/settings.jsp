@@ -69,21 +69,75 @@
         </div>
         <form action="/settings" method="POST" class="form-horizontal">
             <div class="form-group">
-                <label class="col-sm-3 control-label">Okres badań (sekundy)</label>
-                <div class="col-sm-6">
-                    <input type="text" name="examineInterval" class="form-control" value="${examineInterval}">
+                <label class="col-sm-6 control-label" for="examineInterval">
+                    Okres badań
+                    <br>
+                    <small>sekundy</small>
+                </label>
+                <div class="col-sm-2">
+                    <input id="examineInterval" type="text" name="examineInterval" class="form-control" value="${examineInterval}">
+                </div>
+                <div class="col-sm-4">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">Okres czyszczenia bazy (sekundy)</label>
-                <div class="col-sm-6">
-                    <input type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
+                <label class="col-sm-6 control-label" for="databaseCleaningInterval">
+                    Okres czyszczenia bazy
+                    <br>
+                    <small>sekundy</small>
+                </label>
+                <div class="col-sm-2">
+                    <input id="databaseCleaningInterval" type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
+                </div>
+                <div class="col-sm-4">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">Opóźnienie API (milisekundy)</label>
-                <div class="col-sm-6">
-                    <input type="text" name="serverDelay" class="form-control" value="${serverDelay}">
+                <label class="col-sm-6 control-label" for="tokenAccessExpiration">
+                    Maksymalny czas nieaktywności użytkownika
+                    <br>
+                    <small>minuty</small>
+                </label>
+                <div class="col-sm-2">
+                    <input id="tokenAccessExpiration" type="text" name="tokenAccessExpiration" class="form-control" value="${tokenAccessExpiration}">
+                </div>
+                <div class="col-sm-4">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="tokenActivateExpiraton">
+                    Czas ważności tokenów aktywacji konta
+                    <br>
+                    <small>minuty</small>
+                </label>
+                <div class="col-sm-2">
+                    <input id="tokenActivateExpiraton" type="text" name="tokenActivateExpiraton" class="form-control" value="${tokenActivateExpiraton}">
+                </div>
+                <div class="col-sm-4">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="tokenPasswordExpiration">
+                    Czas ważności tokenów do resetowania hasła
+                    <br>
+                    <small>minuty</small>
+                </label>
+                <div class="col-sm-2">
+                    <input id="tokenPasswordExpiration" type="text" name="tokenPasswordExpiration" class="form-control" value="${tokenPasswordExpiration}">
+                </div>
+                <div class="col-sm-4">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="serverDelay">
+                    Opóźnienie API
+                    <br>
+                    <small>na potrzeby testów aplikacji, milisekundy</small>
+                </label>
+                <div class="col-sm-2">
+                    <input id="serverDelay" type="text" name="serverDelay" class="form-control" value="${serverDelay}">
+                </div>
+                <div class="col-sm-4">
                 </div>
             </div>
             <div class="form-group">
@@ -94,40 +148,6 @@
         </form>
     </div>
 </div>
-
-<%--<div class="container">--%>
-    <%--<div style="height: 100px;"></div>--%>
-    <%--<div class="clearfix">--%>
-        <%--<h4 class="pull-left">Ustawienia</h4>--%>
-    <%--</div>--%>
-    <%--<div id="notifyDiv" style="height: 100px">--%>
-    <%--</div>--%>
-    <%--<form action="/settings" method="POST" class="form-horizontal">--%>
-        <%--<div class="form-group">--%>
-            <%--<label class="col-sm-3 control-label">Okres badań (sekundy)</label>--%>
-            <%--<div class="col-sm-6">--%>
-                <%--<input type="text" name="examineInterval" class="form-control" value="${examineInterval}">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<div class="form-group">--%>
-            <%--<label class="col-sm-3 control-label">Okres odśmiecania bazy (sekundy)</label>--%>
-            <%--<div class="col-sm-6">--%>
-                <%--<input type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<div class="form-group">--%>
-            <%--<label class="col-sm-3 control-label">Opóźnienie API (milisekundy)</label>--%>
-            <%--<div class="col-sm-6">--%>
-                <%--<input type="text" name="serverDelay" class="form-control" value="${serverDelay}">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<div class="form-group">--%>
-            <%--<div class="col-sm-12 text-center">--%>
-                <%--<input class="btn btn-primary" type="submit" value="Zapisz">--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</form>--%>
-<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/notify.js"></script>

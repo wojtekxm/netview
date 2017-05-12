@@ -26,7 +26,7 @@ public class Token {
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -79,5 +79,9 @@ public class Token {
 
     public void setExpires(Date expires) {
         this.expires = expires;
+    }
+
+    public boolean checkValid() {
+        return new Date().before(expires);
     }
 }

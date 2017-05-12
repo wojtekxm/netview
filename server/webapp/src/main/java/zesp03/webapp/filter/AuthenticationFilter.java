@@ -54,4 +54,8 @@ public class AuthenticationFilter implements Filter {
     @Override
     public void init(FilterConfig config) throws ServletException {
     }
+
+    public static UserDto getUser(HttpServletRequest req) {
+        return (UserDto)req.getAttribute(ATTR_USERDTO);
+    }
 }

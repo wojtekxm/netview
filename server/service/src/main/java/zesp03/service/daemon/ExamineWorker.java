@@ -21,7 +21,7 @@ public class ExamineWorker implements Runnable {
     public void run() {
         long lastTime = 0L;
         while(!responsiveShutdown.shouldStop()) {
-            App.reloadCustomProperties();
+            App.forceReloadCustomProperties();
             final long nextTime = lastTime + App.getExamineInterval() * 1000L;
             final long now = System.currentTimeMillis();
             if(now >= nextTime) {

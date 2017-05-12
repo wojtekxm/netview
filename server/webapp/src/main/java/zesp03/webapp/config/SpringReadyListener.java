@@ -32,8 +32,7 @@ public class SpringReadyListener implements ApplicationListener<ContextRefreshed
             if( name != null &&
                     password != null &&
                     reset ) {
-                long id = userService.makeRoot(name);
-                userService.setPassword(id, password);
+                userService.makeRoot(name, password);
                 rootCreated = true;
                 log.info("root user with name \"{}\" has been updated", name);
             }

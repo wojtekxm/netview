@@ -45,7 +45,6 @@ public class LoginApi {
         }
         else {
             final int maxAge = (remember != null && remember.length() > 0) ? (60 * 60 * 24 * 30) : -1;
-            log.debug("maxAge={}", maxAge);
             AccessDto access = result.getContent();
 
             final Cookie cu = new Cookie(

@@ -29,14 +29,14 @@
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                 <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
-                <li><a href="/all-controllers">Kontrolery</a></li>
-                <li><a href="/all-users">Użytkownicy</a></li>
-                <li><a href="/all-devices">Urządzenia</a></li>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li> </c:if>
+                <c:if test="${loggedUser.role eq 'ROOT'}"> <li><a href="/all-users">Użytkownicy</a></li></c:if>
+                <c:if test="${loggedUser.role eq 'ROOT'}"> <li><a href="/all-devices">Urządzenia</a></li></c:if>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
                     <ul class="dropdown-menu"  style="background-color: #080b08;">
-                        <li><a href="/all-buildings">Budynki</a></li>
-                        <li><a href="/all-units">Jednostki</a></li>
+                        <c:if test="${loggedUser.role eq 'ROOT'}"> <li><a href="/all-buildings">Budynki</a></li></c:if>
+                        <c:if test="${loggedUser.role eq 'ROOT'}"> <li><a href="/all-units">Jednostki</a></li></c:if>
                     </ul>
                 </li>
             </ul>

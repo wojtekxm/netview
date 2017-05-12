@@ -122,13 +122,14 @@
                 </div>
             </div>
 
-            <div class="change_loading" class="progress-space"></div>
+
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
                         <input type="submit" value="Dodaj budynek" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
                     </span>
+                    <div id="change_loading" class="progress-space"></div>
                 </div>
             </div>
 

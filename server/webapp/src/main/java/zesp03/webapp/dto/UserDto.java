@@ -50,6 +50,10 @@ public class UserDto {
         this.role = role;
     }
 
+    public boolean isRoot() {
+        return role == UserRole.ROOT;
+    }
+
     public void wrap(User u) {
         this.id = u.getId();
         this.name = u.getName();

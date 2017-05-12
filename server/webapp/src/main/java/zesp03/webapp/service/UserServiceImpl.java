@@ -29,6 +29,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -93,13 +94,38 @@ public class UserServiceImpl implements UserService {
         u.setActivated(false);
         u.setBlocked(true);
         u.setRole(UserRole.NORMAL);
+        u.setLastAccess(new Date());//?
         userRepository.save(u);
+        log.debug("u.createdAt = {}", u.getCreatedAt());
+        log.debug("u.updatedAt = {}", u.getUpdatedAt());
+        log.debug("u.lastAccess = {}", u.getLastAccess());
+        em.flush();
+        log.debug("flushed user");
+        log.debug("u.createdAt = {}", u.getCreatedAt());
+        log.debug("u.updatedAt = {}", u.getUpdatedAt());
+        log.debug("u.lastAccess = {}", u.getLastAccess());
+        em.refresh(u);
+        log.debug("refreshed user");
+        log.debug("u.createdAt = {}", u.getCreatedAt());
+        log.debug("u.updatedAt = {}", u.getUpdatedAt());
+        log.debug("u.lastAccess = {}", u.getLastAccess());
 
         Token t = new Token();
         t.setSecret(secret.getData());
         t.setAction(TokenAction.ACTIVATE_ACCOUNT);
         t.setUser(u);
+        t.setExpires(new Date());//?
         tokenRepository.save(t);
+        log.debug("t.createdAt = {}", t.getCreatedAt());
+        log.debug("t.expires = {}", t.getExpires());
+        em.flush();
+        log.debug("flushed token");
+        log.debug("t.createdAt = {}", t.getCreatedAt());
+        log.debug("t.expires = {}", t.getExpires());
+        em.refresh(t);
+        log.debug("refreshed token");
+        log.debug("t.createdAt = {}", t.getCreatedAt());
+        log.debug("t.expires = {}", t.getExpires());
 
         UserCreatedDto r = new UserCreatedDto();
         r.setTokenId(t.getId());

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zesp03.common.data.RangeSamples;
 import zesp03.common.data.SampleAvgMinMax;
-import zesp03.common.data.SampleRaw;
 import zesp03.common.exception.SNMPException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.DeviceSurveyRepository;
@@ -14,6 +13,7 @@ import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.input.ImportFakeSurveysDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
+import zesp03.webapp.dto.result.ListDto;
 import zesp03.webapp.service.DeviceService;
 import zesp03.webapp.service.ImportService;
 
@@ -125,7 +125,7 @@ public class SurveysApi {
     }
 
     @GetMapping("/original")
-    public ContentDto< RangeSamples<SampleRaw> > getOriginal(
+    public ContentDto< RangeSamples > getOriginal(
             @RequestParam("device") long device,
             @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
@@ -141,12 +141,12 @@ public class SurveysApi {
     }
 
     @GetMapping("/avg-min-max")
-    public ContentDto< RangeSamples<SampleAvgMinMax> > getMultiAvgMinMax2(
+    public ListDto<SampleAvgMinMax> getMultiAvgMinMax2(
             @RequestParam("device") long device,
             @RequestParam("frequency") int frequencyMhz,
             @RequestParam("start") int start,
             @RequestParam("end") int end,
             @RequestParam("groupTime") int groupTime) {
-        return ContentDto.make( () -> surveyReadingService.getMultiAvgMinMax(device, frequencyMhz, start, end, groupTime) );
+        return ListDto.make( () -> surveyReadingService.getMultiAvgMinMax(device, frequencyMhz, start, end, groupTime) );
     }
 }

@@ -1,7 +1,11 @@
 package zesp03.common.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,6 +29,16 @@ public class Device {
 
     @Column(name = "deleted", nullable = false)
     private Long deleted;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false)
+    private Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Date updatedAt;
 
     @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
     private List<DeviceFrequency> frequencyList = new ArrayList<>();
@@ -75,5 +89,21 @@ public class Device {
 
     public void setFrequencyList(List<DeviceFrequency> frequencyList) {
         this.frequencyList = frequencyList;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

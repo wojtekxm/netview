@@ -3,8 +3,8 @@ package zesp03.common.service;
 import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.data.RangeSamples;
 import zesp03.common.data.SampleAvgMinMax;
-import zesp03.common.data.SampleRaw;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,12 +32,12 @@ public interface SurveyReadingService {
      * @param end    timestamp w sekundach, górny limit (wyłącznie) czasu badań.
      *               Musi być większy od <code>start</code>.
      */
-    RangeSamples<SampleRaw> getOriginal(long deviceId, int frequencyMhz, int start, int end);
+    RangeSamples getOriginal(long deviceId, int frequencyMhz, int start, int end);
 
     /**
      * @param start timestamp w sekundach, >= 0
      * @param end timestamp w sekundach, end > start
      * @param groupTime czas trwania jednej grupy w sekundach, > 0
      */
-    RangeSamples<SampleAvgMinMax> getMultiAvgMinMax(long deviceId, int frequencyMhz, int start, int end, int groupTime);
+    List<SampleAvgMinMax> getMultiAvgMinMax(long deviceId, int frequencyMhz, int start, int end, int groupTime);
 }

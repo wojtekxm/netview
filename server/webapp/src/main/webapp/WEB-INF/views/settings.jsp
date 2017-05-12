@@ -75,7 +75,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">Okres odśmiecania bazy (sekundy)</label>
+                <label class="col-sm-3 control-label">Okres czyszczenia bazy (sekundy)</label>
                 <div class="col-sm-6">
                     <input type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
                 </div>

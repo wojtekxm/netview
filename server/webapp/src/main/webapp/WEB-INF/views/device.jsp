@@ -15,14 +15,9 @@
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <style>
-        .box {
-            width: 100%;
-            padding: 5px;
-            height: 200px;
+        body {
+            background-color: rgb(217, 224, 231);
         }
-        /*body {*/
-            /*background-color: rgb(217, 224, 231);*/
-        /*}*/
     </style>
 </head>
 <body>
@@ -186,7 +181,7 @@
                     <canvas id="mycanvas" width="1000px" height="400px"></canvas>
                 </div>
             </div>
-            <div class="panel-footer clearfix" style="background-color: #2b2d2b;color:white;">
+            <div class="panel-footer clearfix">
                 <div class="row">
                     <div class="col-xs-4 clearfix">
                         <button id="btn_past" type="button" class="btn btn-primary pull-left">
@@ -268,6 +263,8 @@ $(document).ready(function() {
     arrFreqs = [2400, 5000];
     timeJump = 0;
     moment.locale('pl');
+    Chart.defaults.global.tooltips.caretSize = 8;
+    Chart.defaults.global.hover.animationDuration = 100;
     $('#datetimepicker1').datetimepicker({
         "locale": 'pl',
         "format": 'LLL'
@@ -414,11 +411,6 @@ $(document).ready(function() {
         refresh();
     });
 
-    function checkRefresh() {
-        //... sprawdź czy w ogóle coś się zmieniło ...
-        refresh();
-    }
-
     function refresh() {
         var mhz, isOriginal, t0, t1, timeSpan, url, groupTime, targetChart;
 
@@ -487,13 +479,13 @@ $(document).ready(function() {
         else {
             url = '/api/surveys/avg-min-max?device=' + device.id +
             '&frequency=' + mhz +
-            '&start=' + t0 +
+            '&start=' + (t0 - groupTime) +
             '&groupTime=' + groupTime +
-            '&end=' + t1;
+            '&end=' + (t1 + groupTime);
             progress.loadGet(url,
                 [chartLoading], [chartArea], [],
                 function (response) {
-                    genAMM(response.content.list);
+                    genAvgMinMax(response.list, t0, t1);
                     presentedChart = targetChart;
                     setCalendar(t0, t1);
                     if(targetChart === 'other') {
@@ -506,13 +498,12 @@ $(document).ready(function() {
         }
     }
 
-    function genAMM(surveys) {
-        var data, options, values_min, values_avg, values_max, tags, i;
+    function genAvgMinMax(surveysExtended, t0, t1) {
+        var data, options, points_min, points_avg, points_max, i, last;
         prepareCanvas();
-        values_min = [];
-        values_max = [];
-        values_avg = [];
-        tags = [];
+        points_min = [];
+        points_max = [];
+        points_avg = [];
         options = {
             "tooltips": {
                 "mode": 'index'
@@ -525,104 +516,8 @@ $(document).ready(function() {
                 "text": ''
             },
             "hover": {
-                "intersect": false,
-                "mode": 'x'
-            },
-            "label": {
-                "display": true
-            },
-            "scales": {
-                "xAxes": [{
-                    "display": true,
-                    "barPercentage": 1,
-                    "autoSkip": true,
-                    "ticks": {
-                        "maxRotation": 0,
-                        "maxTicksLimit": 2
-                    }
-                }],
-                "yAxes": [{
-                    "stacked": false,
-                    "display": true,
-                    "scaleLabel": {
-                        "display": true,
-                        "labelString": 'liczba klientów'
-                    },
-                    "ticks": {
-                        "autoSkip": false,
-                        "fixedStepSize": 10,
-                        "beginAtZero": true,
-                        "Min": -5,
-                        "suggestedMax": 50
-                    }
-                }]
-            },
-            "maintainAspectRatio": false,
-            "responsive": radioSizeAuto.prop('checked'),
-            "steppedLine": true,
-            "elements": {
-                "line": {
-                    "tension": 0
-                }
-            }
-        };
-        data = {
-            "showLine": false,
-            "labels": tags,
-            "datasets": [{
-                "label": "minimalnie",
-                "data": values_min,
-                "fill": false,
-                "borderColor": "rgba(255,0,0,1)",
-                "backgroundColor": "rgba(255,0,0,1)",
-                "hoverBackgroundColor": "rgba(0,0,0,1)"
-            }, {
-                "label": "średnio",
-                "data": values_avg,
-                "fill": false,
-                "borderColor": "rgba(255,155,0,1)",
-                "backgroundColor": "rgba(255,200,0,1)",
-                "hoverBackgroundColor": "rgba(0,0,0,1)"
-            }, {
-                "label": "maksymalnie",
-                "data": values_max,
-                "fill": false,
-                "borderColor": "rgba(8, 95, 41,1)",
-                "backgroundColor": "rgba(8, 139, 41,1)",
-                "hoverBackgroundColor": "rgba(8, 139, 41,1)"
-            }]
-        };
-        for(i = 0; i < surveys.length; i++) {
-            values_avg.push( Math.round(surveys[i].average) );
-            values_min.push(surveys[i].min);
-            values_max.push(surveys[i].max);
-            tags.push( convert(surveys[i].timeStart) );
-        }
-        myChart = Chart.Line(myCanvas, {
-            "data": data,
-            "options": options
-        });
-    }
-
-    function genOriginal(surveys, before, after, t0, t1) {
-        var data, options, points, tags, i, last;
-        prepareCanvas();
-        points = [];
-        tags = [];
-        options = {
-            "tooltips": {
-                "mode": 'index'
-            },
-            "legend": {
-                "display": true
-            },
-            "title": {
-                "display": false,
-                "text": ''
-            },
-            "hover": {
-                "intersect": false,
-                "mode": 'x'
+                "intersect": true,
+                "mode": 'nearest'
             },
             "label": {
                 "display": true
@@ -632,26 +527,17 @@ $(document).ready(function() {
                     "type" : 'time',
                     "time" : {
                         "minUnit" : 'minute',
-                        "tooltipFormat" : 'dddd, D MMMM YYYY, h:mm:ss',
+                        "tooltipFormat" : 'dddd, D MMMM YYYY, H:mm:ss',
                         "displayFormats" : {
-                            "minute" : 'HH:mm:ss',
+                            "minute" : 'HH:mm',
                             "hour" : 'HH:mm',
                             "day" : 'dddd',
                             "week" : 'DD.MM',
-                            "month" : 'DD.MM',
+                            "month" : 'DD.MM'
                         },
                         "min" : t0 * 1000,
                         "max" : t1 * 1000
                     }
-                    /*"type" : 'linear',
-                    "position": 'bottom',
-                    "display": true,
-                    "barPercentage": 1,
-                    "autoSkip": true,
-                    "ticks": {
-                        "maxRotation": 0,
-                        "maxTicksLimit": 2
-                    }*/
                 }],
                 "yAxes": [{
                     "stacked": false,
@@ -679,16 +565,186 @@ $(document).ready(function() {
             }
         };
         data = {
-            //"showLine": false,
-            //"labels": tags,
+            "datasets": [{
+                "label": "minimalnie",
+                "data": points_min,
+                "fill": true,
+                "backgroundColor": '#ffc800',
+                "borderColor": '#ffc800',
+                "pointBackgroundColor": '#ffc800',
+                "pointBorderColor": '#ffc800',
+                "pointHoverBackgroundColor": '#ffc800',
+                "pointHoverBorderColor": '#ffc800',
+                "borderWidth" : 1,
+                "pointBorderWidth" : 1,
+                "pointHoverBorderWidth" : 1,
+                "borderJoinStyle" : 'round',
+                "pointRadius" : 0,
+                "pointHoverRadius" : 5,
+                "pointHitRadius" : 5
+            }, {
+                "label": "średnio",
+                "data": points_avg,
+                "fill": true,
+                "backgroundColor": '#ff6600',
+                "borderColor": '#e62e00',
+                "pointBackgroundColor": '#ff6600',
+                "pointBorderColor": '#e62e00',
+                "pointHoverBackgroundColor": '#ff6600',
+                "pointHoverBorderColor": '#e62e00',
+                "borderWidth" : 1,
+                "pointBorderWidth" : 1,
+                "pointHoverBorderWidth" : 1,
+                "borderJoinStyle" : 'round',
+                "pointRadius" : 0,
+                "pointHoverRadius" : 5,
+                "pointHitRadius" : 5
+            }, {
+                "label": "maksymalnie",
+                "data": points_max,
+                "fill": true,
+                "backgroundColor": '#cc0000',
+                "borderColor": '#800000',
+                "pointBackgroundColor": '#cc0000',
+                "pointBorderColor": '#800000',
+                "pointHoverBackgroundColor": '#cc0000',
+                "pointHoverBorderColor": '#800000',
+                "borderWidth" : 1,
+                "pointBorderWidth" : 1,
+                "pointHoverBorderWidth" : 1,
+                "borderJoinStyle" : 'round',
+                "pointRadius" : 0,
+                "pointHoverRadius" : 5,
+                "pointHitRadius" : 5
+            }]
+        };
+        for(i = 0; i < surveysExtended.length; i++) {
+            last = surveysExtended[i];
+            points_avg.push({
+                "y" : Math.round(last.average),
+                "x" : last.timeStart * 1000
+            });
+            points_min.push({
+                "y" : last.min,
+                "x" : last.timeStart * 1000
+            });
+            points_max.push({
+                "y" : last.max,
+                "x" : last.timeStart * 1000
+            });
+        }
+        if(surveysExtended.length > 0) {
+            last = surveysExtended[surveysExtended.length-1];
+            points_avg.push({
+                "y" : Math.round(last.average),
+                "x" : last.timeEnd * 1000
+            });
+            points_min.push({
+                "y" : last.min,
+                "x" : last.timeEnd * 1000
+            });
+            points_max.push({
+                "y" : last.max,
+                "x" : last.timeEnd * 1000
+            });
+        }
+        myChart = Chart.Line(myCanvas, {
+            "data": data,
+            "options": options
+        });
+    }
+
+    function genOriginal(surveys, before, after, t0, t1) {
+        var data, options, points, i, last, ctx, grad;
+        prepareCanvas();
+        ctx = myCanvas.get()[0].getContext('2d', {
+            "alpha": true
+        });
+        grad = ctx.createLinearGradient(0, 400, 0, 0);
+        grad.addColorStop(0.0, 'rgba(3,169,244,0.6)');
+        grad.addColorStop(1.0, 'rgba(3,169,244,0.6)');
+        points = [];
+        options = {
+            "tooltips": {
+                "mode": 'index'
+            },
+            "legend": {
+                "display": true
+            },
+            "title": {
+                "display": false,
+                "text": ''
+            },
+            "hover": {
+                "intersect": true,
+                "mode": 'nearest'
+            },
+            "label": {
+                "display": true
+            },
+            "scales": {
+                "xAxes": [{
+                    "type" : 'time',
+                    "time" : {
+                        "tooltipFormat" : 'dddd, D MMMM YYYY, H:mm:ss',
+                        "displayFormats" : {
+                            "minute" : 'HH:mm',
+                            "hour" : 'HH:mm',
+                            "day" : 'dddd',
+                            "week" : 'DD.MM',
+                            "month" : 'DD.MM'
+                        },
+                        "min" : t0 * 1000,
+                        "max" : t1 * 1000
+                    },
+                    "ticks": {
+                        "autoSkip" : true,
+                        "maxRotation": 0
+                    }
+                }],
+                "yAxes": [{
+                    "stacked": false,
+                    "display": true,
+                    "scaleLabel": {
+                        "display": true,
+                        "labelString": 'liczba klientów'
+                    },
+                    "ticks": {
+                        "autoSkip": false,
+                        "fixedStepSize": 10,
+                        "beginAtZero": true,
+                        "Min": -5,
+                        "suggestedMax": 50
+                    }
+                }]
+            },
+            "maintainAspectRatio": false,
+            "responsive": radioSizeAuto.prop('checked'),
+            "steppedLine": true,
+            "elements": {
+                "line": {
+                    "tension": 0
+                }
+            }
+        };
+        data = {
             "datasets": [{
                 "label": 'liczba klientów',
                 "data": points,
                 "fill": true,
-                "borderColor": 'rgba(255,155,0,1)',
-                "backgroundColor": 'rgba(255,200,0,1)',
-                "pointBorderWidth": 1,
-                "hoverBackgroundColor": 'rgba(0,0,0,1)'
+                "backgroundColor": grad,
+                "borderColor": 'rgb(2, 139, 202)',
+                "pointBackgroundColor": grad,
+                "pointBorderColor": 'rgb(2, 139, 202)',
+                "pointHoverBackgroundColor": grad,
+                "pointHoverBorderColor": 'rgb(2, 139, 202)',
+                "borderWidth" : 1,
+                "pointBorderWidth" : 1,
+                "pointHoverBorderWidth" : 1,
+                "borderJoinStyle" : 'round',
+                "pointRadius" : 0,
+                "pointHoverRadius" : 6,
+                "pointHitRadius" : 6
             }]
         };
         if(before !== null) {
@@ -709,14 +765,12 @@ $(document).ready(function() {
                 "x" : after.timestamp * 1000
             });
         }
-        if(points.length > 0) {
+        else if(points.length > 0) {
             last = points[points.length - 1];
-            if(last.x < t1 * 1000) {
-                points.push({
-                    "y" : last.y,
-                    "x" : t1 * 1000
-                });
-            }
+            points.push({
+                "y" : last.y,
+                "x" : moment().valueOf()
+            });
         }
         myChart = Chart.Line(myCanvas, {
             "data": data,

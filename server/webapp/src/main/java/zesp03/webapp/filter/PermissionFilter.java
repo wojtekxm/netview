@@ -2,8 +2,11 @@ package zesp03.webapp.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zesp03.webapp.dto.UserDto;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class PermissionFilter implements Filter {
@@ -17,7 +20,7 @@ public class PermissionFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws ServletException, IOException {
         //TODO odkomentować jak u Pociechy będzie działać apka mobilna
-        /*final Boolean isStaticResource = (Boolean) req.getAttribute(StaticResourceFilter.ATTR_IS_STATIC);
+        final Boolean isStaticResource = (Boolean) req.getAttribute(StaticResourceFilter.ATTR_IS_STATIC);
         if (isStaticResource) {
             chain.doFilter(req, resp);
             return;
@@ -49,7 +52,7 @@ public class PermissionFilter implements Filter {
                 chain.doFilter(req, resp);
                 return;
             }
-        }*/
+        }
         chain.doFilter(req, resp);
     }
 

@@ -1,4 +1,5 @@
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
 <!DOCTYPE html>
@@ -838,7 +839,6 @@
     $(function() {
         $('#toggleFrequency').change(function() {
             ifFilter = false;
-            $('#devices li').remove();
             if(frequency == "2400"){
                 frequency = "5000";
             }else if(frequency == "5000"){

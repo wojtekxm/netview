@@ -35,18 +35,16 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                    <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
-                    <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li>
-                    <li><a href="/all-users">Użytkownicy</a></li>
-                    <li><a href="/all-devices">Urządzenia</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
-                        <ul class="dropdown-menu"  style="background-color: #080b08;">
-                            <li><a href="/all-buildings">Budynki</a></li>
-                            <li><a href="/all-units">Jednostki</a></li></c:if>
-                        </ul>
-                </ul>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li>
+                <li><a href="/all-users">Użytkownicy</a></li>
+                <li><a href="/all-devices">Urządzenia</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
+                    <ul class="dropdown-menu"  style="background-color: #080b08;">
+                        <li><a href="/all-buildings">Budynki</a></li>
+                        <li><a href="/all-units">Jednostki</a></li></c:if>
+                    </ul>
                 </li>
             </ul>
             <c:if test="${loggedUser.role eq 'ROOT'}">  <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
@@ -123,20 +121,20 @@
                 <div id="settings_advanced" class="collapse in">
                     <div class="row">
                         <div class="col-sm-3">
-                                początek<br>
-                                <div class='input-group date' id='datetimepicker1'>
-                                    <input id="time_start" type='text'  data-date-end-date="0d" class="form-control">
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                                koniec<br>
-                                <div class='input-group date' id='datetimepicker2'>
-                                    <input id="time_end" type='text'  data-date-end-date="0d" class="form-control">
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
+                            początek<br>
+                            <div class="input-group date" id="datetimepicker1" style="color:#555">
+                                <input id="time_start" type="text" data-date-end-date="0d" class="form-control">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            koniec<br>
+                            <div class="input-group date" id="datetimepicker2" style="color:#555">
+                                <input id="time_end" type="text" data-date-end-date="0d" class="form-control">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
                         </div>
                         <div class="col-sm-3">
                             Agregacja badań
@@ -227,7 +225,7 @@ $(document).ready(function() {
         settingsAdvanced, selectGroup,
         customSizeWidth, customSizeHeight, labFreq,
         tdName, tdFreq, tdController, tdLocation, tdSurveys, btnPast, btnFuture,
-        arrFreqs, currentFreq, presentedChart, timeJump;
+        arrFreqs, presentedChart, timeJump;
     device = {};
     chartLoading = $('#chart_loading');
     chartArea = $('#chart_area');
@@ -240,10 +238,6 @@ $(document).ready(function() {
         "2400" : $('#label_freq_2400'),
         "5000" : $('#label_freq_5000')
     };
-    radioChartDay = $('#radio_chart_day');
-    radioChartWeek = $('#radio_chart_week');
-    radioChartMonth = $('#radio_chart_month');
-    radioChartYear = $('#radio_chart_year');
     radioChartOther = $('#radio_chart_other');
     radioSizeAuto = $('#radio_size_auto');
     radioSizeCustom = $('#radio_size_custom');
@@ -385,7 +379,7 @@ $(document).ready(function() {
             btnFuture.click(function() {
                 timeJump++;
                 refresh();
-            })
+            });
             $('input[type=radio][name=frequency]').change(function() {
                 console.log(
                     "$('input[type=radio][name=frequency]'):checked",
@@ -778,25 +772,6 @@ $(document).ready(function() {
             "data": data,
             "options": options
         });
-    }
-
-    function convert(time) {
-        var DayName = ["niedziela", "poniedziałek", "wtorek", "sroda", "czwartek", "piątek", "sobota"];
-        var MonthName = ["stycznia ", "lutego ", "marca ", "kwietnia ", "maja ", "czerwca ",
-            "lipca ", "sierpnia ", "września ", "października ", "listopada ", "grudnia "];
-        time = time * 1000;
-        var temp = new Date(time);
-        var Seconds = temp.getSeconds();
-        var Minutes = temp.getMinutes();
-        var Hours = temp.getHours();
-        var WeekDay = temp.getDay();
-        var Month = temp.getMonth();
-        var Day = temp.getDate();
-        var Year = temp.getFullYear();
-        return (Hours > 9 ? '' : '0') + Hours + ":" +
-            (Minutes > 9 ? '' : '0') + Minutes + ":" +
-            (Seconds > 9 ? '' : '0') + Seconds + "    " +
-            Day + " " + MonthName[Month] + " " + Year + " (" + DayName[WeekDay] + ") ";
     }
 
     function getTimestampOrNull(oneOrTwo) {

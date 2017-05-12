@@ -5,7 +5,7 @@ body
     font-size:14px;
     background-attachment: scroll;
     background-size:contain;
-    background-color: #ecf2ff;
+    background-color: rgb(217, 224, 231);
 }
 
 .navbar {
@@ -15,20 +15,21 @@ body
 #header{
     background-color: #2b2d2b;
     color:white;
+    border-radius:3px;
 }
 
-#container
-{  margin-bottom:0px;
-    min-width: 200px;
-    max-width: 100%;
-    min-height: 100px;
-    max-height: 100%;
-    /*background-color: rgba(240,240,240,1);*/
-    background-color: white;
-    margin-left: 54px;
-    margin-right: 54px;
-    margin-top: 60px;
-}
+/*#container*/
+/*{  margin-bottom:0px;*/
+    /*min-width: 200px;*/
+    /*max-width: 100%;*/
+    /*min-height: 100px;*/
+    /*max-height: 100%;*/
+    /*!*background-color: rgba(240,240,240,1);*!*/
+    /*background-color: white;*/
+    /*margin-left: 54px;*/
+    /*margin-right: 54px;*/
+    /*margin-top: 60px;*/
+/*}*/
 
 
 /*animate css3 function*/
@@ -53,6 +54,7 @@ body
 
 ul.view
 {
+    border-radius: 3px;
     margin:0;
     padding:0;
     background-color: white;
@@ -65,7 +67,6 @@ ul.view
     max-width: 100%;
     min-height: 100px;
     max-height: 100%;
-    color:black;
     text-align: left;
     z-index: 999;
 }
@@ -99,6 +100,8 @@ ul.view li ul li:hover
 }
 
 #devices{
+    border-radius: 3px;
+    padding: 4px;
     background-color: white;
     display: table;
     position: relative;
@@ -392,6 +395,20 @@ ul li ul li.greyDiode:hover
     -ms-transform: scale(1.7, 1.7);
     -webkit-transform: scale(1.7, 1.7);
     -o-transform: scale(1.7, 1.7);
+}
+
+ul li ul li > a
+{
+    color:white;
+    text-decoration: none;
+    list-style-type: none;
+}
+
+ul li ul li > a:hover
+{
+    color:white;
+    text-decoration: none;
+    list-style-type: none;
 }
 
 ul li#wydzial

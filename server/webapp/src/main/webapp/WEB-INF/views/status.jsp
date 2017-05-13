@@ -68,13 +68,13 @@
             </div>
         </div>
 
-        <div class="panel panel-default" style="height:52px;padding:8px;margin-bottom: 0px;margin-top:-1px;display:flex;">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters" style="margin-right: 6px;">
+        <div class="panel panel-default" style="padding:8px;margin-bottom: 0px;margin-top:-1px;display:block;">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
                 <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
             </button>
-            <button id="back" type="button" class="btn btn-success" style="margin-right: 6px;" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
+            <button id="back" type="button" class="btn btn-success" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
             <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning" data-width="100">
-            <div style="margin-left: 15px;">
+            <div style="display:inline;float:right;position:relative;margin-right: 5px;">
                 <div id="examine_loading" class="progress-space"></div>
             </div>
         </div>
@@ -112,14 +112,16 @@
         </ul>
 
         <div class="panel panel-default">
-            <div class="panel-heading" style="display:flex; font-size: 15px;background-color: #2b2d2b;color:white;">
-                <span class='glyphicon glyphicon-time'></span><div id="data_tittle" style="margin-left: 6px;"></div> &nbsp;&nbsp;&nbsp; <div id="data"></div>
+            <div class="panel-heading" style="text-align: center;font-size: 15px;background-color: #2b2d2b;color:white;">
+                <span class='glyphicon glyphicon-time' style="display: inline;"></span><div id="data_tittle" style="display:inline;margin-left: 6px;"></div> &nbsp;&nbsp;&nbsp; <div id="data" style="display:inline;"></div>
             </div>
             <div class="panel-body">
-                <div id="countActive" style="display: inline;"></div><br>
-                <div id="countInactive" style="display: inline;"></div><br>
-                <div id="countOff" style="display: inline;"></div><br>
-                <div id="countAll" style="display: inline;"></div><br>
+                <div style="text-align: center;height: 100%;">
+                    <label><span class="label label-success" id="countActive" style="font-size: 16px;font-weight: normal"></span></label>
+                    <label><span class="label label-danger" id="countInactive" style="font-size: 16px;font-weight: normal"></span></label>
+                    <label><span class="label label-default" id="countOff" style="font-size: 16px;font-weight: normal"></span></label>
+                    <label><span class="label label-info" id="countAll" style="font-size: 16px;font-weight: normal"></span></label>
+                </div>
             </div>
         </div>
     </div>
@@ -164,11 +166,13 @@
     var ifFilter = true;
 
     $('#top_15').click(function(){
+        clearInterval(inter);
         filterChoice = "top";
         option = "best";
         topDevices(option);
     });
     $('#worst_15').click(function(){
+        clearInterval(inter);
         filterChoice = "worst";
         option = "worst";
         topDevices(option);
@@ -294,13 +298,15 @@
                 }
 
                 if(option == "best"){
+                    $('#countActive').css("display", "inline");
                     $('#countActive').text("15 urządzeń z największą liczbą użytkowników");
                     $('#countInactive').css("display", "none");
                     $('#countOff').css("display", "none");
                     $('#countAll').css("display", "none");
                 }else if(option == "worst"){
-                    $('#countActive').text("15 urządzeń z najmniejszą liczbą użytkowników");
-                    $('#countInactive').css("display", "none");
+                    $('#countActive').css("display", "none");
+                    $('#countInactive').css("display", "inline");
+                    $('#countInactive').text("15 urządzeń z najmniejszą liczbą użytkowników");
                     $('#countOff').css("display", "none");
                     $('#countAll').css("display", "none");
                 }

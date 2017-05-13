@@ -53,12 +53,20 @@ public class App {
                 appProperties.load(input);
                 input.close();
             }
-            final String configDirectory = appProperties.getProperty("zesp03.config.directory");
-            if(configDirectory == null) {
+            final String configDirectory1 = appProperties.getProperty("zesp03.config.directory");
+            if(configDirectory1 == null) {
                 throw new IllegalStateException("property \"zesp03.config.directory\" required but not defined");
             }
 
-            final Path launchPath = Paths.get(configDirectory, "launch.properties");
+            Path launchPath = Paths.get(configDirectory1, "launch.properties");
+            String configDirectory = configDirectory1;
+            if(!Files.exists(launchPath)) {
+                final String configDirectory2 = appProperties.getProperty("zesp03.config.directory2");
+                if(configDirectory2 != null) {
+                    launchPath = Paths.get(configDirectory2, "launch.properties");
+                    configDirectory = configDirectory2;
+                }
+            }
             final Charset utf8 = Charset.forName("UTF-8");
             try(BufferedReader br = Files.newBufferedReader(launchPath, utf8)) {
                 final Properties p = new Properties();

@@ -6,9 +6,10 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import java.io.IOException;
 
-public class StaticResourceFilter implements Filter {
-    private static final Logger log = LoggerFactory.getLogger(StaticResourceFilter.class);
-    private static final String ATTR_MARKED = "zesp03.webapp.filter.StaticResourceFilter.ATTR_MARKED";
+public class AllowPublicFilter implements Filter {
+    private static final Logger log = LoggerFactory.getLogger(AllowLoggedFilter.class);
+
+    private static final String ATTR_MARKED = "zesp03.webapp.filter.AllowPublicFilter.ATTR_MARKED";
 
     @Override
     public void destroy() {

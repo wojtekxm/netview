@@ -19,39 +19,34 @@ public class PermissionFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws ServletException, IOException {
-        //TODO odkomentować jak u Pociechy będzie działać apka mobilna
-        final Boolean isStaticResource = (Boolean) req.getAttribute(StaticResourceFilter.ATTR_IS_STATIC);
-        if (isStaticResource) {
+        if (StaticResourceFilter.marked(req)) {
             chain.doFilter(req, resp);
             return;
         }
         if (req instanceof HttpServletRequest && resp instanceof HttpServletResponse) {
             final HttpServletRequest hreq = (HttpServletRequest) req;
             final HttpServletResponse hresp = (HttpServletResponse) resp;
-            final UserDto loggedUser = (UserDto)hreq.getAttribute(AuthenticationFilter.ATTR_USERDTO);
+            final UserDto loggedUser = AuthenticationFilter.getUser(hreq);
+            if(AllowPublicFilter.marked(req) || AllowLoggedFilter.marked(req)) {
+                chain.doFilter(req, resp);
+                return;
+            }
+            if(loggedUser != null) {
+                if(loggedUser.isRoot()) {
+                    chain.doFilter(req, resp);
+                    return;
+                }
+                hresp.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
             final String uri = hreq.getRequestURI();
-            if( uri.equals("/") ||
-                    uri.startsWith("/activate-account") ||
-                    uri.startsWith("/login") ||
-                    uri.startsWith("/api/login") ) {
-                chain.doFilter(req, resp);
+            if(uri.startsWith("/api/")) {
+                //TODO zwrócić JSON?
+                hresp.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
-            if(loggedUser == null) {
-                if(uri.startsWith("/api/")) {
-                    hresp.sendError(HttpServletResponse.SC_FORBIDDEN);
-                    return;
-                }
-                else {
-                    hresp.sendRedirect("/login");
-                    return;
-                }
-            }
-            else {
-                //TODO czy jest rootem...
-                chain.doFilter(req, resp);
-                return;
-            }
+            hresp.sendRedirect("/login");
+            return;
         }
         chain.doFilter(req, resp);
     }

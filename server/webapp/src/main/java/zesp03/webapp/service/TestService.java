@@ -77,7 +77,7 @@ public class TestService {
 
     public void selectSurveys(Long deviceId, Integer frequencyMhz) {
         Long fi = surveyReadingService.getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
-        List<DeviceSurvey> list = deviceSurveyRepository.findFromPeriodNotDeletedOrderByTime(fi, 0, 2000000000);
+        List<DeviceSurvey> list = deviceSurveyRepository.findFromPeriodOrderByTime(fi, 0, 2000000000);
         for(DeviceSurvey ds : list) {
             ds.getTimestamp();
         }

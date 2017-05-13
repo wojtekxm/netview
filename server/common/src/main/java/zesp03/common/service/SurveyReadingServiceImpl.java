@@ -115,8 +115,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
                 "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id WHERE " +
                 filter +
                 " (dev.deleted = 0 OR dev.deleted IS NULL) AND " +
-                "( df.deleted = 0 OR  df.deleted IS NULL) AND " +
-                "(sur.deleted = 0 OR sur.deleted IS NULL)";
+                "( df.deleted = 0 OR  df.deleted IS NULL)";
     }
 
     private CurrentDeviceState merge(CurrentDeviceState currentOrNull, Object[] arrDevFreqSur) {
@@ -149,12 +148,12 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
 
         final Long frequencyId = getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
         final List<SampleRaw> list = deviceSurveyRepository
-                .findFromPeriodNotDeletedOrderByTime(frequencyId, start, end)
+                .findFromPeriodOrderByTime(frequencyId, start, end)
                 .stream()
                 .map(SampleRaw::make)
                 .collect(Collectors.toList());
         final List<DeviceSurvey> beforeList = em.createQuery("SELECT ds FROM DeviceSurvey ds " +
-                        "WHERE ds.frequency.id = :fid AND ds.deleted = 0 AND " +
+                        "WHERE ds.frequency.id = :fid AND " +
                         "ds.timestamp < :t ORDER BY ds.timestamp DESC",
                 DeviceSurvey.class)
                 .setParameter("fid", frequencyId)
@@ -166,7 +165,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
             before = SampleRaw.make( beforeList.get(0) );
         }
         final List<DeviceSurvey> afterList = em.createQuery("SELECT ds FROM DeviceSurvey ds " +
-                        "WHERE ds.frequency.id = :fid AND ds.deleted = 0 AND " +
+                        "WHERE ds.frequency.id = :fid AND " +
                         "ds.timestamp >= :end ORDER BY ds.timestamp ASC",
                 DeviceSurvey.class)
                 .setParameter("fid", frequencyId)
@@ -207,7 +206,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
 
         final Long frequencyId = getFrequencyIdNotDeletedOrThrow(deviceId, frequencyMhz);
         final List<DeviceSurvey> beforeList = em.createQuery("SELECT ds FROM DeviceSurvey ds WHERE " +
-                        "ds.frequency.id = :fid AND ds.deleted = 0 AND ds.timestamp <= :t " +
+                        "ds.frequency.id = :fid AND ds.timestamp <= :t " +
                         "ORDER BY ds.timestamp DESC",
                 DeviceSurvey.class)
                 .setParameter("fid", frequencyId)
@@ -230,7 +229,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
             }
         }
         ArrayList<DeviceSurvey> surveys;
-        final List<DeviceSurvey> originalSurveys = deviceSurveyRepository.findFromPeriodNotDeletedOrderByTime(frequencyId, timeBegin, end);
+        final List<DeviceSurvey> originalSurveys = deviceSurveyRepository.findFromPeriodOrderByTime(frequencyId, timeBegin, end);
         if(originalSurveys instanceof ArrayList) {
             surveys = (ArrayList<DeviceSurvey>)originalSurveys;
         }

@@ -30,9 +30,6 @@ public class ViewLastSurvey {
     @Column(name = "clients_sum", nullable = true)
     private Integer clientsSum;
 
-    @Column(name = "deleted", nullable = true)
-    private Long deleted;
-
     public Long getFrequencyId() {
         return frequencyId;
     }
@@ -79,13 +76,5 @@ public class ViewLastSurvey {
 
     public void setClientsSum(Integer clientsSum) {
         this.clientsSum = clientsSum;
-    }
-
-    public Long getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Long deleted) {
-        this.deleted = deleted;
     }
 }

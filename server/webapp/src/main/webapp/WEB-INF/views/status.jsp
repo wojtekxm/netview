@@ -10,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Status sieci</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
-    <link rel="stylesheet" href="/css/bootstrap-toggle.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/bootstrap-multiselect.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap-toggle.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-multiselect.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
@@ -52,7 +52,7 @@
             </form>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
                 <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
-                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  root</a></li>
+                <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout" style="margin-right: 10px;"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <div class="panel panel-default" style="height:52px;padding:8px;margin-bottom: 0px;margin-top:-1px;display:flex;">
+        <div class="panel panel-default" style="height:52px;padding:8px;margin-bottom: 0;margin-top:-1px;display:flex;">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters" style="margin-right: 6px;">
                 <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
             </button>

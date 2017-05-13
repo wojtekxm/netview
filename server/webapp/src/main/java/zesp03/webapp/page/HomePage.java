@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HomePage {
     @GetMapping("/")
     public String get(HttpServletRequest req) {
-        if(req.getAttribute(AuthenticationFilter.ATTR_USERDTO) != null)
+        if(AuthenticationFilter.getUser(req) != null)
             return "status";
         else
             return "home-public";

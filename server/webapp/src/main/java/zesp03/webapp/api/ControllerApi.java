@@ -25,12 +25,12 @@ public class ControllerApi {
     @Autowired
     private DeviceService deviceService;
 
-    @GetMapping("/all")
+    @GetMapping("/info/all")
     public ListDto<ControllerDto> getAll() {
         return ListDto.make( () -> controllerService.getAll() );
     }
 
-    @GetMapping("/{controllerId}")
+    @GetMapping("/info/{controllerId}")
     public ContentDto<ControllerDto> getOne(
             @PathVariable("controllerId") long controllerId) {
         return ContentDto.make( () -> controllerService.getOne(controllerId) );

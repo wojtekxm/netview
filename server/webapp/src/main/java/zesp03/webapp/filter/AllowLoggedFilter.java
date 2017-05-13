@@ -6,9 +6,10 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import java.io.IOException;
 
-public class StaticResourceFilter implements Filter {
-    private static final Logger log = LoggerFactory.getLogger(StaticResourceFilter.class);
-    private static final String ATTR_MARKED = "zesp03.webapp.filter.StaticResourceFilter.ATTR_MARKED";
+public class AllowLoggedFilter implements Filter {
+    private static final Logger log = LoggerFactory.getLogger(AllowLoggedFilter.class);
+
+    private static final String ATTR_MARKED = "zesp03.webapp.filter.AllowLoggedFilter.ATTR_MARKED";
 
     @Override
     public void destroy() {
@@ -17,7 +18,9 @@ public class StaticResourceFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws ServletException, IOException {
-        req.setAttribute(ATTR_MARKED, true);
+        if(AuthenticationFilter.getUser(req) != null) {
+            req.setAttribute(ATTR_MARKED, true);
+        }
         chain.doFilter(req, resp);
     }
 

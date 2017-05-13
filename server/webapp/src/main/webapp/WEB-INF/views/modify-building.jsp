@@ -61,7 +61,6 @@
     <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-home"></span> <c:out value="${building.name}"/>: </div>
-            <%--<form method="post" action="/api/accept-modify-building" id="form1"></form>--%>
         </div>
     </div>
 
@@ -153,7 +152,7 @@ $(document).ready(function () {
         };
         progress.load(
             [{
-                "url" : '/api/accept-modify-building',
+                "url" : '/api/building/accept-modify',
                 "method" : 'post',
                 "postData" : BuildingDto
             }],

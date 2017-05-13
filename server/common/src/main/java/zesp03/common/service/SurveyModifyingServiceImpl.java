@@ -68,7 +68,6 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
                     newSurvey.setClientsSum(0);
                 }
                 newSurvey.setFrequency(deviceFrequency);
-                newSurvey.setDeleted(0L);
                 if(previousSurvey == null) {
                     ds2persist.add(newSurvey);
                 }
@@ -166,7 +165,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             df.setDeleted(0L);
             deviceFrequencyRepository.save(df);
         }
-        deviceSurveyRepository.markDeletedAll(df);
+        deleteForFrequency(df);
         DeviceSurvey lastDS = null;
         for(SampleRaw sampleRaw : data) {
             if(sampleRaw.getTimestamp() < 0) {
@@ -179,7 +178,6 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             deviceSurvey.setClientsSum(sampleRaw.getClients());
             deviceSurvey.setTimestamp(sampleRaw.getTimestamp());
             deviceSurvey.setEnabled(sampleRaw.isEnabled());
-            deviceSurvey.setDeleted(0L);
             deviceSurveyRepository.save(deviceSurvey);
             lastDS = deviceSurvey;
         }
@@ -187,14 +185,15 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
 
     @Override
     public void deleteForAll() {
-        //em.createQuery("UPDATE DeviceSurvey ds SET ds.deleted = TRUE, ds.timestamp = -ds.timestamp")
-        em.createQuery("DELETE FROM DeviceSurvey ds")
-                .executeUpdate();
+        //em.createQuery("DELETE FROM DeviceSurvey ds").executeUpdate();
+        List<DeviceFrequency> list = deviceFrequencyRepository.findAllNotDeleted();
+        for(DeviceFrequency df : list) {
+            deleteForFrequency(df);
+        }
     }
 
     @Override
     public void deleteForAll(int before) {
-        //em.createQuery("UPDATE DeviceSurvey ds SET ds.deleted = TRUE, ds.timestamp = -ds.timestamp " +
         em.createQuery("DELETE FROM DeviceSurvey ds " +
                 "WHERE ds.timestamp < :b")
                 .setParameter("b", before)
@@ -240,5 +239,29 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
                     .setParameter("b", before)
                     .executeUpdate();
         }
+    }
+
+    @Override
+    public void deleteForFrequency(Long deviceId, int mhz) {
+        Optional<DeviceFrequency> opt = deviceFrequencyRepository.findByDeviceAndFrequencyNotDeleted(deviceId, mhz);
+        if(!opt.isPresent()) {
+            throw new NotFoundException("deviceFrequency");
+        }
+        DeviceFrequency df = opt.get();
+        df.setDeleted(df.getId());
+        DeviceFrequency young = new DeviceFrequency();
+        young.setFrequency(df.getFrequency());
+        young.setDeleted(0L);
+        deviceFrequencyRepository.save(young);
+    }
+
+    @Override
+    public void deleteForFrequency(DeviceFrequency df) {
+        df.setDeleted(df.getId());
+        DeviceFrequency young = new DeviceFrequency();
+        young.setDevice(df.getDevice());
+        young.setFrequency(df.getFrequency());
+        young.setDeleted(0L);
+        deviceFrequencyRepository.save(young);
     }
 }

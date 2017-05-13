@@ -102,13 +102,13 @@ public class SurveysApi {
 
     @GetMapping("/total/all/all")
     public ContentDto<Long> totalAll() {
-        return ContentDto.make( () -> deviceSurveyRepository.countNotDeleted() );
+        return ContentDto.make( () -> deviceSurveyRepository.count() );
     }
 
     @GetMapping("/total/all/{before}")
     public ContentDto<Long> totalAllBefore(
             @PathVariable("before") int before) {
-        return ContentDto.make( () -> deviceSurveyRepository.countBeforeNotDeleted(before) );
+        return ContentDto.make( () -> deviceSurveyRepository.countBefore(before) );
     }
 
     @GetMapping("/total/{deviceId}/all")

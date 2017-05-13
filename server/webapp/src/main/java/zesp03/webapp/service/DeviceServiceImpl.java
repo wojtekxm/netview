@@ -139,7 +139,7 @@ public class DeviceServiceImpl implements DeviceService {
         if(ids.isEmpty()) {
             return 0L;
         }
-        return deviceSurveyRepository.countForDeviceFrequenciesNotDeleted(ids);
+        return deviceSurveyRepository.countForDeviceFrequencies(ids);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class DeviceServiceImpl implements DeviceService {
         if(ids.isEmpty()) {
             return 0L;
         }
-        return deviceSurveyRepository.countBeforeForDeviceFrequenciesNotDeleted(ids, before);
+        return deviceSurveyRepository.countBeforeForDeviceFrequencies(ids, before);
     }
 
     @Override

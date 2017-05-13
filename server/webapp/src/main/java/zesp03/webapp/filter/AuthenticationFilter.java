@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthenticationFilter implements Filter {
-    public static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
     public static final String COOKIE_USERID = "userid";
     public static final String COOKIE_PASSTOKEN = "passtoken";
     // mapuje do UserDto, null jeśli uwierzytelnianie się nie powiodło
-    public static final String ATTR_USERDTO = "loggedUser";
+    private static final String ATTR_USERDTO = "zesp03.webapp.filter.AuthenticationFilter.ATTR_USERDTO";
+    private static final String ATTR_TID = "zesp03.webapp.filter.AuthenticationFilter.ATTR_TID";
+    private static final String ATTR_TVAL = "zesp03.webapp.filter.AuthenticationFilter.ATTR_TVAL";
 
     @Override
     public void destroy() {
@@ -26,8 +28,7 @@ public class AuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws ServletException, IOException {
-        Boolean isStaticResource = (Boolean) req.getAttribute(StaticResourceFilter.ATTR_IS_STATIC);
-        if (isStaticResource) {
+        if (StaticResourceFilter.marked(req)) {
             chain.doFilter(req, resp);
             return;
         }
@@ -35,16 +36,22 @@ public class AuthenticationFilter implements Filter {
             final HttpServletRequest hreq = (HttpServletRequest) req;
             final HttpServletResponse hresp = (HttpServletResponse) resp;
             UserDto user = null;
-            Cookie cookieUid = Cookies.find(hreq, COOKIE_USERID);
-            Cookie cookiePass = Cookies.find(hreq, COOKIE_PASSTOKEN);
-            if (cookieUid != null && cookieUid.getValue() != null
-                    && cookiePass != null && cookiePass.getValue() != null) {
+            Cookie cookieTid = Cookies.find(hreq, COOKIE_USERID);
+            Cookie cookieTval = Cookies.find(hreq, COOKIE_PASSTOKEN);
+            Long tid = null;
+            String tval = null;
+            if (cookieTid != null && cookieTid.getValue() != null
+                    && cookieTval != null && cookieTval.getValue() != null) {
                 try {
-                    long id = Long.parseLong(cookieUid.getValue());
-                    user = UglyUserServiceHolder.getLoginService().authenticate(id, cookiePass.getValue());
+                    tid = Long.parseLong(cookieTid.getValue());
+                    tval = cookieTval.getValue();
+                    user = UglyUserServiceHolder.getLoginService().authenticate(tid, cookieTval.getValue());
                 } catch (NumberFormatException ignore) {}
             }
+            hreq.setAttribute("loggedUser", user);
             hreq.setAttribute(ATTR_USERDTO, user);
+            hreq.setAttribute(ATTR_TID, tid);
+            hreq.setAttribute(ATTR_TVAL, tval);
             chain.doFilter(req, resp);
             return;
         }
@@ -55,7 +62,15 @@ public class AuthenticationFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
     }
 
-    public static UserDto getUser(HttpServletRequest req) {
+    public static UserDto getUser(ServletRequest req) {
         return (UserDto)req.getAttribute(ATTR_USERDTO);
+    }
+
+    public static Long getTid(ServletRequest req) {
+        return (Long)req.getAttribute(ATTR_TID);
+    }
+
+    public static String getTval(ServletRequest req) {
+        return (String)req.getAttribute(ATTR_TVAL);
     }
 }

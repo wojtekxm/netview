@@ -71,6 +71,7 @@
         <url-pattern>/activate-account</url-pattern>
         <url-pattern>/login</url-pattern>
         <url-pattern>/api/login</url-pattern>
+        <url-pattern>/logout</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>AllowLoggedFilter</filter-name>

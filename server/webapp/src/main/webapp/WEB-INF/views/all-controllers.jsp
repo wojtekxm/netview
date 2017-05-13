@@ -57,33 +57,35 @@
     </div>
 </nav>
 <div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" style="margin: 0!important;">
-        <div class="panel-body" id="header">
-            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-inbox"></span> Kontrolery:</div>
-        </div>
-    </div>
-    <div class="panel panel-default" style="height:52px;padding:8px;margin-bottom: 15px;margin-top:-1px;">
-        <div class="pull-left on-loaded" style="margin-bottom: 15px;">
-            <button id="btn_examine" class="btn btn-primary pull-left" type="button">
-                <span class="glyphicon glyphicon-refresh"></span>
-                zbadaj wszystkie
-            </button>
-            <div id="examine_loading" class="pull-right progress-space"></div>
-        </div>
-    </div>
-
     <div class="on-loading"></div>
     <div class="on-loaded">
+        <div style="height: 80px;"></div>
+        <div class="panel panel-default" style="margin: 0!important;">
+            <div class="panel-body" id="header">
+                <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-inbox"></span> Kontrolery:</div>
+            </div>
+        </div>
+        <div class="panel panel-default" style="display:flex;height:52px;padding:8px;margin-top:-1px;margin-bottom: 0!important;">
+            <div class="pull-left on-loaded" style="margin-bottom: 15px;">
+                <button id="btn_examine" class="btn btn-primary pull-left" type="button">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    zbadaj wszystkie
+                </button>
+                <div id="examine_loading" class="pull-right progress-space"></div>
+            </div>
+        </div>
+        <div class="panel panel-default" style="margin-top:-1px;padding:8px;">
+        </div>
         <div id="tabelka_space"></div>
         <div>
-            <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;margin-bottom:20px;">
+            <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;margin-bottom:5px;">
                 <span class="glyphicon glyphicon-plus"></span>
                 Dodaj nowy kontroler
             </a>
         </div>
     </div>
     <div id="notify_layer" style="position: fixed; top: 100px;"></div>
+
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

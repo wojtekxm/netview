@@ -688,7 +688,7 @@
             function(listDtoOfCurrentDeviceStateDto) {
                 devices = listDtoOfCurrentDeviceStateDto.list;
                 e();
-            }, undefined, 'lg'
+            }, undefined, 'md'
         );
     }
 

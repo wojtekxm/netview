@@ -143,7 +143,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             }
         }
         if(createdFrequencies > 0) {
-            log.info("{} DeviceFrequency entities created", createdFrequencies);
+            log.info("{} device frequencies created", createdFrequencies);
         }
     }
 

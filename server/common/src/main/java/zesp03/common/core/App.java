@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class App {
     private static final Logger log = LoggerFactory.getLogger(App.class);
@@ -37,6 +38,10 @@ public class App {
     private static final AtomicInteger tokenPasswordExpiration; // minuty
     private static final AtomicInteger tokenActivateExpiraton; // minuty
     private static final AtomicInteger tokenAccessExpiration; // minuty
+    private static final AtomicReference<String> adminMailUsername;
+    private static final AtomicReference<String> adminMailPassword;
+    private static final AtomicReference<String> adminMailSmtpHost;
+    private static final AtomicInteger adminMailSmtpPort;
     private static final AtomicLong lastReloadTime;
 
     static {
@@ -98,6 +103,10 @@ public class App {
             tokenAccessExpiration = new AtomicInteger(15);
             tokenActivateExpiraton = new AtomicInteger(60 * 24);
             tokenPasswordExpiration = new AtomicInteger(60 * 24);
+            adminMailUsername = new AtomicReference<>("");
+            adminMailPassword = new AtomicReference<>("");
+            adminMailSmtpHost = new AtomicReference<>("");
+            adminMailSmtpPort = new AtomicInteger(465);
             lastReloadTime = new AtomicLong(-1);
             forceReloadCustomProperties();
         } catch (IOException exc) {
@@ -106,87 +115,51 @@ public class App {
     }
 
     public static void forceReloadCustomProperties() {
-        int ei = examineInterval.get();
-        int dci = databaseCleaningInterval.get();
-        int sd = serverDelay.get();
-        int taccess = tokenAccessExpiration.get();
-        int tactivate = tokenActivateExpiraton.get();
-        int tpassword = tokenPasswordExpiration.get();
         final Charset utf8 = Charset.forName("UTF-8");
         try(BufferedReader br = Files.newBufferedReader(customPath, utf8)) {
             final Properties p = new Properties();
             p.load(br);
-            String s = p.getProperty("zesp03.examine.interval");
-            if(s != null) {
-                ei = Integer.parseInt(s);
-            }
-            s = p.getProperty("zesp03.database.cleaning.interval");
-            if(s != null) {
-                dci = Integer.parseInt(s);
-            }
-            s = p.getProperty("zesp03.server.delay");
-            if(s != null) {
-                sd = Integer.parseInt(s);
-            }
-            s = p.getProperty("zesp03.token.access");
-            if(s != null) {
-                taccess = Integer.parseInt(s);
-            }
-            s = p.getProperty("zesp03.token.activate");
-            if(s != null) {
-                tactivate = Integer.parseInt(s);
-            }
-            s = p.getProperty("zesp03.token.password");
-            if(s != null) {
-                tpassword = Integer.parseInt(s);
-            }
+            parseNonNegative(p, "zesp03.examine.interval", examineInterval);
+            parseNonNegative(p, "zesp03.database.cleaning.interval", databaseCleaningInterval);
+            parseNonNegative(p, "zesp03.server.delay", serverDelay);
+            parseNonNegative(p, "zesp03.token.access", tokenAccessExpiration);
+            parseNonNegative(p, "zesp03.token.activate", tokenActivateExpiraton);
+            parseNonNegative(p, "zesp03.token.password", tokenPasswordExpiration);
+            parseNotNull(p, "zesp03.admin.mail.username", adminMailUsername);
+            parseNotNull(p, "zesp03.admin.mail.password", adminMailPassword);
+            parseNotNull(p, "zesp03.admin.mail.smtphost", adminMailSmtpHost);
+            parseNonNegative(p, "zesp03.admin.mail.smtpport", adminMailSmtpPort);
         }
         catch(IOException exc) {
-            log.warn("reloading custom properties \"{}\"", customPath);
-            log.warn("file error", exc);
-        }
-        catch(NumberFormatException exc) {
-            log.warn("reloading custom properties \"{}\"", customPath);
-            log.warn("number parsing error", exc);
-        }
-        if(ei >= 0) {
-            examineInterval.set(ei);
-        }
-        else {
-            log.warn("rejected zesp03.examine.interval={}", ei);
-        }
-        if(dci >= 0) {
-            databaseCleaningInterval.set(dci);
-        }
-        else {
-            log.warn("rejected zesp03.database.cleaning.interval={}", dci);
-        }
-        if(sd >= 0) {
-            serverDelay.set(sd);
-        }
-        else {
-            log.warn("rejected zesp03.server.delay={}", sd);
-        }
-        if(taccess >= 0) {
-            tokenAccessExpiration.set(taccess);
-        }
-        else {
-            log.warn("rejected zesp03.token.access={}", taccess);
-        }
-        if(tactivate >= 0) {
-            tokenActivateExpiraton.set(tactivate);
-        }
-        else {
-            log.warn("rejected zesp03.token.activate={}", tactivate);
-        }
-        if(tpassword >= 0) {
-            tokenPasswordExpiration.set(tpassword);
-        }
-        else {
-            log.warn("rejected zesp03.token.password={}", tpassword);
+            log.warn("failed reloading custom properties \"{}\"", customPath);
         }
         lastReloadTime.set(Instant.now().toEpochMilli());
         log.debug("custom properties reloaded");
+    }
+
+    private static void parseNonNegative(Properties p, String key, AtomicInteger target) {
+        String v = p.getProperty(key);
+        if(v != null) {
+            try {
+                int x = Integer.parseInt(v);
+                if (x >= 0) {
+                    target.set(x);
+                }
+                else {
+                    log.warn("rejected " + key + "={}", v);
+                }
+            }
+            catch(NumberFormatException exc) {
+                log.warn("failed to parse " + key + "={} as number", v);
+            }
+        }
+    }
+
+    private static void parseNotNull(Properties p, String key, AtomicReference<String> target) {
+        String v = p.getProperty(key);
+        if(v != null) {
+            target.set(v);
+        }
     }
 
     public static synchronized void saveCustomProperties() {
@@ -197,6 +170,10 @@ public class App {
         p.setProperty("zesp03.token.access", Integer.toString(tokenAccessExpiration.get()));
         p.setProperty("zesp03.token.activate", Integer.toString(tokenActivateExpiraton.get()));
         p.setProperty("zesp03.token.password", Integer.toString(tokenPasswordExpiration.get()));
+        p.setProperty("zesp03.admin.mail.username", adminMailUsername.get());
+        p.setProperty("zesp03.admin.mail.password", adminMailPassword.get());
+        p.setProperty("zesp03.admin.mail.smtphost", adminMailSmtpHost.get());
+        p.setProperty("zesp03.admin.mail.smtpport", Integer.toString(adminMailSmtpPort.get()));
         final Charset utf8 = Charset.forName("UTF-8");
         try(BufferedWriter bw = Files.newBufferedWriter(customPath, utf8)) {
             p.store(bw, null);
@@ -370,5 +347,77 @@ public class App {
             throw new IllegalArgumentException("tokenAccessExpiration < 0");
         }
         App.tokenAccessExpiration.set(tokenAccessExpiration);
+    }
+
+    /**
+     * @return adres e-mail administratora na serwerze pocztowym, nigdy null
+     */
+    public static String getAdminMailUsername() {
+        handleCachedProperties();
+        return adminMailUsername.get();
+    }
+
+    /**
+     * @param adminMailUsername adres e-mail administratora na serwerze pocztowym, nigdy null
+     */
+    public static void setAdminMailUsername(String adminMailUsername) {
+        if(adminMailUsername == null) {
+            throw new IllegalArgumentException("adminMailUsername == null");
+        }
+        App.adminMailUsername.set(adminMailUsername);
+    }
+
+    /**
+     * @return hasło do konta e-mail administratora na serwerze pocztowym, nigdy null
+     */
+    public static String getAdminMailPassword() {
+        handleCachedProperties();
+        return adminMailPassword.get();
+    }
+
+    /**
+     * @param adminMailPassword hasło do konta e-mail administratora na serwerze pocztowym, nigdy null
+     */
+    public static void setAdminMailPassword(String adminMailPassword) {
+        if(adminMailPassword == null) {
+            throw new IllegalArgumentException("adminMailPassword == null");
+        }
+        App.adminMailPassword.set(adminMailPassword);
+    }
+
+    /**
+     * @return adres serwera pocztowego SMTP, nigdy null
+     */
+    public static String getAdminMailSmtpHost() {
+        handleCachedProperties();
+        return adminMailSmtpHost.get();
+    }
+
+    /**
+     * @param adminMailSmtpHost adres serwera pocztowego SMTP, nigdy null
+     */
+    public static void setAdminMailSmtpHost(String adminMailSmtpHost) {
+        if(adminMailSmtpHost == null) {
+            throw new IllegalArgumentException("adminMailSmtpHost == null");
+        }
+        App.adminMailSmtpHost.set(adminMailSmtpHost);
+    }
+
+    /**
+     * @return numer portu SMTP na serwerze poczty
+     */
+    public static int getAdminMailSmtpPort() {
+        handleCachedProperties();
+        return adminMailSmtpPort.get();
+    }
+
+    /**
+     * @param adminMailSmtpPort numer portu SMTP na serwerze poczty
+     */
+    public static void setAdminMailSmtpPort(int adminMailSmtpPort) {
+        if(adminMailSmtpPort < 1) {
+            throw new IllegalArgumentException("adminMailSmtpPort < 1");
+        }
+        App.adminMailSmtpPort.set(adminMailSmtpPort);
     }
 }

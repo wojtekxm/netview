@@ -565,6 +565,7 @@
         }else {
             $('#data').text(n);
             $('#data_tittle').text("Ostatnie badanie przeprowadzono:");
+            $('#countActive').css("display", "inline");
             $('#countInactive').css("display", "inline");
             $('#countOff').css("display", "inline");
             $('#countAll').css("display", "inline");

@@ -1,0 +1,58 @@
+package zesp03.webapp.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import zesp03.common.core.App;
+
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
+
+@Component
+public class AdminMailServiceImpl implements AdminMailService {
+    private static final Logger log = LoggerFactory.getLogger(AdminMailServiceImpl.class);
+
+    @Override
+    public boolean send(String targetMail, String subject, String htmlBody) {
+        final String username = App.getAdminMailUsername();
+        final String password = App.getAdminMailPassword();
+        final String host = App.getAdminMailSmtpHost();
+        final int port = App.getAdminMailSmtpPort();
+        final Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.socketFactory.port", port);
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", true);
+        props.put("mail.smtp.port", port);
+        props.put("mail.smtp.connectiontimeout", 2000);
+        props.put("mail.smtp.timeout", 2000);
+
+        final Session session = Session.getDefaultInstance(
+                props,
+                new javax.mail.Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username,password);
+                    }
+                }
+        );
+        try {
+            final Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(targetMail)
+            );
+            message.setSubject(subject);
+            message.setText(htmlBody);
+            Transport.send(message);
+        }
+        catch (MessagingException exc) {
+            log.warn("failed to send e-mail", exc);
+            return false;
+        }
+        return true;
+    }
+}

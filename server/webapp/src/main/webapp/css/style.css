@@ -1,7 +1,7 @@
 body
 {
-    padding: 0px;
-    margin:0px;
+    padding: 0;
+    margin:0;
     font-size:14px;
     background-attachment: scroll;
     background-size:contain;
@@ -401,7 +401,7 @@ ul li ul li > a:hover
 
 ul li#wydzial
 {
-    margin:0px;
+    margin:0;
     z-index:900;
 }
 
@@ -455,4 +455,27 @@ ul li#wydzial
 }
 .no-click:hover {
     background-color: white!important;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+div.page {
+    margin-top:80px;
+    margin-bottom:100px;
+}
+
+.panel-default>.panel-heading {
+    background-color: #2b2d2b !important;
+    color: white !important;
+    border: none !important;
+}
+
+.panel-default {
+    -webkit-box-shadow: 0 1px 3px 1px rgba(0,0,0,0.25);
+    -moz-box-shadow: 0 1px 3px 1px rgba(0,0,0,0.25);
+    box-shadow: 0 1px 3px 1px rgba(0,0,0,0.25);
+    border: none !important;
 }

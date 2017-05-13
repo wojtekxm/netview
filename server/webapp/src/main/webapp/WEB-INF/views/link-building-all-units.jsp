@@ -10,6 +10,7 @@
     <title>Powiąż</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/favicon.ico">
@@ -94,50 +95,7 @@
         </table>
 
     </div>
-    <div class="form-group">
-        <div class="col-sm-12">
-            <div id="result_success"></div>
-            <div id="result_error"></div>
-        </div>
-    </div>
 </div>
-
-<%--<div id="all" class="container-fluid">--%>
-    <%--<div id="container">--%>
-        <%--<div class="content">--%>
-            <%--<div>--%>
-                <%--<div id="wydzial"><div style="width: 100%;border-bottom: 1px solid #e0e0e0;padding-bottom: 3px;"><span class="glyphicon glyphicon-th-list"></span> Kliknij aby powiązać z daną jednostką:</div></div>--%>
-            <%--</div>--%>
-            <%--<div id="devices" class="panel panel-default" style="padding: 15px;">--%>
-
-                <%--<div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">--%>
-                    <%--Jednostki:--%>
-                <%--</div>--%>
-
-
-
-                <%--<table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;cursor: pointer;">--%>
-                    <%--<tr>--%>
-                        <%--&lt;%&ndash;<td>ID</td>&ndash;%&gt;--%>
-                        <%--<td>Kod</td>--%>
-                        <%--<td>Opis</td>--%>
-                    <%--</tr>--%>
-
-                    <%--<c:forEach items="${units}" var="unit">--%>
-
-                        <%--<tr onclick="window.document.location='link-building-units?id_building=${building.id}&id_unit=${unit.id}';">--%>
-                            <%--&lt;%&ndash;<td> <c:out value="${unit.id}"/></td>&ndash;%&gt;--%>
-                            <%--<td> <c:out value="${unit.code}"/></td>--%>
-                            <%--<td> <c:out value="${unit.description}"/></td>--%>
-
-                        <%--</tr>--%>
-                    <%--</c:forEach>--%>
-                <%--</table>--%>
-            <%--</div>--%>
-
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 </body>

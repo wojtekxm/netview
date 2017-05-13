@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="/css/progress.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/tabelka.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -215,11 +216,11 @@ $(document).ready( function() {
                 refreshTotalBefore();
                 fixDevices(responses[1].list, true);
                 btnDelete.prop('disabled', false);
-                notify.success('#notify_deleted', 'Badania zostały usunięte');
+                notify.success('Badania zostały usunięte');
             },
             function() {
                 btnDelete.prop('disabled', false);
-                notify.danger('#notify_deleted', 'Akcja się nie powiodła');
+                notify.danger('Akcja się nie powiodła');
             }
         );
     });

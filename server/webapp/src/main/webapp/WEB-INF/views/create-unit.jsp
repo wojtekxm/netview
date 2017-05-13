@@ -10,6 +10,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -91,12 +92,6 @@
         </div>
 
     </div>
-    <div class="form-group">
-        <div class="col-sm-12">
-            <div id="result_success"></div>
-            <div id="result_error"></div>
-        </div>
-    </div>
 </div>
 
 
@@ -124,11 +119,11 @@ $(document).ready(function () {
             ['#change_loading'], [], [],
             function() {
                 btnSubmit.prop('disabled', false);
-                notify.success('#result_success', 'Jednostka została dodana.');
+                notify.success('Jednostka została dodana.');
             },
             function() {
                 btnSubmit.prop('disabled', false);
-                notify.danger('#result_error', 'Nie udało się dodać jednostki.');
+                notify.danger('Nie udało się dodać jednostki.');
             }
         );
     });

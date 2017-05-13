@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css">
     <link rel="stylesheet" href="/css/status-small.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -220,8 +221,7 @@
 "use strict";
 $(document).ready(function() {
     var device, chartLoading, chartArea, btnCancel, btnCustomApply,
-        radioFreq, radioChartDay, radioChartWeek, radioChartMonth, radioChartYear,
-        radioChartOther, radioSizeAuto, radioSizeCustom, myCanvas, myChart,
+        radioFreq, radioChartOther, radioSizeAuto, radioSizeCustom, myCanvas, myChart,
         settingsAdvanced, selectGroup,
         customSizeWidth, customSizeHeight, labFreq,
         tdName, tdFreq, tdController, tdLocation, tdSurveys, btnPast, btnFuture,

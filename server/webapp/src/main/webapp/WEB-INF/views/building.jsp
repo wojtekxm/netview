@@ -181,7 +181,7 @@ $(document).ready(function(){
                     "defer" : 'defer'
                 })
             );
-        }, undefined, 'lg'
+        }, undefined, 'md'
     );
 
     modalLinkDevices.on('show.bs.modal', function() {

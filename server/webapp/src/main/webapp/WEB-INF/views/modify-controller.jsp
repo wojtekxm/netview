@@ -57,16 +57,16 @@
 </nav>
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
+    <div class="panel panel-default" id="header" style="margin-bottom: 0px!important;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-inbox"></span> <c:out value="${controller.name}"/>: </div>
             <%--<form method="post" action="/api/controller/accept-modify-controller" id="form1"></form>--%>
         </div>
     </div>
 
-    <div class="panel panel-default" id="content">
+    <div class="panel panel-default" id="content" style="margin-top: -1px!important;">
 
-        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0; margin-bottom: inherit;">
+        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0; margin-bottom: -1px!important;">
             Modyfikuj kontroler:
         </div>
 

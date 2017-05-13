@@ -59,14 +59,14 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
+    <div class="panel panel-default" id="header" style="margin-bottom: 0!important;">
         <div class="panel-body">
             <div id="tittle"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o kontrolerze: </div>
         </div>
     </div>
 
-    <div class="panel panel-default" id="content">
-        <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+    <div class="panel panel-default" id="content" style="margin-top: -1px!important;">
+        <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 8px;font-size: 16px;border: 1px solid #e0e0e0;">
             Szczegóły kontrolera:
         </div>
 
@@ -120,9 +120,10 @@
                 <span class="glyphicon glyphicon-wrench"></span> Zmień
             </a>
         </div>
+
+        <div class="on-loading progress-space-lg"></div>
+        <div id="tabelka_devices" class="on-loaded" style="margin-top:30px;"></div>
     </div>
-    <div class="on-loading progress-space-lg"></div>
-    <div id="tabelka_devices" class="on-loaded"></div>
 </div>
 
 <script src="/js/jquery-3.1.1.min.js"></script>

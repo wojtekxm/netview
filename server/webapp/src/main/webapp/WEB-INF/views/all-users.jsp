@@ -57,20 +57,22 @@
     </div>
 </nav>
 <div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
-        <div class="panel-body">
-            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-user"></span> Użytkownicy:</div>
-        </div>
-    </div>
     <div id="main_loading" class="later"></div>
     <div id="main_success" class="later">
-        <div id="tabelka_space"></div>
-        <div>
-            <a href="/create-user" class="btn btn-success" role="button" style="margin-bottom:20px;">
-                <span class="glyphicon glyphicon-plus"></span>
-                Dodaj nowego użytkownika
-            </a>
+        <div style="height: 80px;"></div>
+        <div class="panel panel-default" id="header" style="margin-bottom: 0px!important;">
+            <div class="panel-body">
+                <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-user"></span> Użytkownicy:</div>
+            </div>
+        </div>
+        <div class="panel panel-default" style="margin-bottom: -1px!important;padding:8px;">
+            <div id="tabelka_space"></div>
+            <div>
+                <a href="/create-user" class="btn btn-success" role="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Dodaj nowego użytkownika
+                </a>
+            </div>
         </div>
     </div>
 </div>

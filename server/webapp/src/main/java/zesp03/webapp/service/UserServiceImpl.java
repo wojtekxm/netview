@@ -151,7 +151,6 @@ public class UserServiceImpl implements UserService {
         if(list.isEmpty()) {
             user = new User();
             user.setSecret(null);
-            userRepository.save(user);
         }
         else {
             user = list.get(0);
@@ -161,6 +160,7 @@ public class UserServiceImpl implements UserService {
         user.setActivated(true);
         user.setBlocked(false);
         user.setRole(UserRole.ROOT);
+        userRepository.save(user);
         loginService.setPassword(user, password);
     }
 

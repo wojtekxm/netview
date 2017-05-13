@@ -1,6 +1,6 @@
 package zesp03.webapp.config;
 
-import zesp03.common.core.App;
+import zesp03.common.core.SchemaGuard;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -8,7 +8,7 @@ import javax.servlet.ServletContextListener;
 public class FlywayConfig implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent e) {
-        App.runFlyway();
+        SchemaGuard.runFlyway();
     }
 
     @Override

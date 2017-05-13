@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import zesp03.common.core.App;
+import zesp03.common.core.SchemaGuard;
 
 @Configuration
 public class Daemon {
@@ -17,7 +17,7 @@ public class Daemon {
     }
 
     public static void main(String[] args) {
-        App.runFlyway();
+        SchemaGuard.runFlyway();
         AnnotationConfigApplicationContext acac = new AnnotationConfigApplicationContext();
         acac.scan("zesp03.common.repository", "zesp03.common.service", "zesp03.service.daemon");
         acac.refresh();

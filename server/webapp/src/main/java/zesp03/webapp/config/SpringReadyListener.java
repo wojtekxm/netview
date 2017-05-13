@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import zesp03.common.core.App;
+import zesp03.common.core.Config;
 import zesp03.webapp.service.LoginService;
 import zesp03.webapp.service.UserService;
 
@@ -26,9 +26,9 @@ public class SpringReadyListener implements ApplicationListener<ContextRefreshed
     @Override
     public synchronized void onApplicationEvent(ContextRefreshedEvent event) {
         if(! rootCreated) {
-            String name = App.getRootResetName();
-            String password = App.getRootResetPassword();
-            boolean reset = App.isRootResetEnabled();
+            String name = Config.getRootResetName();
+            String password = Config.getRootResetPassword();
+            boolean reset = Config.isRootResetEnabled();
             if( name != null &&
                     password != null &&
                     reset ) {

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import zesp03.common.core.App;
+import zesp03.common.core.Config;
 import zesp03.common.service.GarbageCollectingService;
 
 @Component
@@ -22,8 +22,8 @@ public class GarbageCollectionWorker implements Runnable {
         long lastTime = 0L;
         NextClean next = NextClean.SURVEY;
         while(!responsiveShutdown.shouldStop()) {
-            App.forceReloadCustomProperties();
-            final long nextTime = lastTime + App.getDatabaseCleaningInterval() * 1000L;
+            Config.forceReloadCustomProperties();
+            final long nextTime = lastTime + Config.getDatabaseCleaningInterval() * 1000L;
             final long now = System.currentTimeMillis();
             if(now >= nextTime) {
                 switch (next) {

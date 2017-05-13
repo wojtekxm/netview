@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zesp03.common.core.App;
+import zesp03.common.core.Config;
 import zesp03.common.entity.Token;
 import zesp03.common.entity.TokenAction;
 import zesp03.common.entity.User;
@@ -48,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
         final String key = generateToken(32);
         final Secret accessSecret = Secret.create(key.toCharArray(), 1);
         final Instant now = Instant.now();
-        final Instant expires = now.plusSeconds( App.getTokenAccessExpiration() * 60 );
+        final Instant expires = now.plusSeconds( Config.getTokenAccessExpiration() * 60 );
 
         final Token token = new Token();
         token.setAction(TokenAction.ACCESS);
@@ -164,7 +164,7 @@ public class LoginServiceImpl implements LoginService {
         token.setExpires(
                 Date.from(
                         now.plusSeconds(
-                                App.getTokenAccessExpiration() * 60
+                                Config.getTokenAccessExpiration() * 60
                         )
                 )
         );

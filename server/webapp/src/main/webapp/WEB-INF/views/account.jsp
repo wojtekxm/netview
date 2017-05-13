@@ -31,16 +31,17 @@
                 <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
                     <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
                     <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li>
-                    <li><a href="/all-users">Użytkownicy</a></li>
-                    <li><a href="/all-devices">Urządzenia</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
-                        <ul class="dropdown-menu"  style="background-color: #080b08;">
-                            <li><a href="/all-buildings">Budynki</a></li>
-                            <li><a href="/all-units">Jednostki</a></li></c:if>
-                        </ul>
+                        <li><a href="/all-users">Użytkownicy</a></li>
+                        <li><a href="/all-devices">Urządzenia</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
+                            <ul class="dropdown-menu"  style="background-color: #080b08;">
+                                <li><a href="/all-buildings">Budynki</a></li>
+                                <li><a href="/all-units">Jednostki</a></li>
+                            </ul>
+                        </li>
+                    </c:if>
                 </ul>
-                </li>
             </ul>
             <c:if test="${loggedUser.role eq 'ROOT'}">  <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -49,7 +50,7 @@
                 </div>
             </form></c:if>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li style="margin-left: 0px!important;"><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
                 <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout" style="margin-right: 10px;"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
@@ -59,42 +60,77 @@
 
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
-        <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-user"></span> Zarządzanie kontem</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-user"></span> Zarządzanie kontem
         </div>
-    </div>
-
-    <div class="panel panel-default" id="content">
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Aktualne hasło</label>
-                <div class="col-sm-6">
-                    <input id="actual_password" type="password" class="form-control">
+        <div class="panel-body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Aktualne hasło</label>
+                    <div class="col-sm-6">
+                        <input id="actual_password" type="password" class="form-control">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Nowe hasło</label>
-                <div class="col-sm-6">
-                    <input id="new_password" type="password" class="form-control">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Nowe hasło</label>
+                    <div class="col-sm-6">
+                        <input id="new_password" type="password" class="form-control">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Powtórz nowe hasło</label>
-                <div class="col-sm-6">
-                    <input id="repeat_password" type="password" class="form-control">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Powtórz nowe hasło</label>
+                    <div class="col-sm-6">
+                        <input id="repeat_password" type="password" class="form-control">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-5 col-sm-7 clearfix">
-                    <button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>
-                    <div class="pull-left">
-                        <div id="change_loading" class="later progress-space"></div>
+                <div class="form-group">
+                    <div class="col-sm-offset-5 col-sm-7 clearfix">
+                        <button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>
+                        <div class="pull-left">
+                            <div id="change_loading" class="later progress-space"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <%--<div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">--%>
+        <%--<div class="panel-body">--%>
+            <%--<div id="tittle"><span class="glyphicon glyphicon-user"></span> Zarządzanie kontem</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+
+    <%--<div class="panel panel-default" id="content">--%>
+        <%--<div class="form-horizontal">--%>
+            <%--<div class="form-group">--%>
+                <%--<label class="col-sm-3 control-label">Aktualne hasło</label>--%>
+                <%--<div class="col-sm-6">--%>
+                    <%--<input id="actual_password" type="password" class="form-control">--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<div class="form-group">--%>
+                <%--<label class="col-sm-3 control-label">Nowe hasło</label>--%>
+                <%--<div class="col-sm-6">--%>
+                    <%--<input id="new_password" type="password" class="form-control">--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<div class="form-group">--%>
+                <%--<label class="col-sm-3 control-label">Powtórz nowe hasło</label>--%>
+                <%--<div class="col-sm-6">--%>
+                    <%--<input id="repeat_password" type="password" class="form-control">--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<div class="form-group">--%>
+                <%--<div class="col-sm-offset-5 col-sm-7 clearfix">--%>
+                    <%--<button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>--%>
+                    <%--<div class="pull-left">--%>
+                        <%--<div id="change_loading" class="later progress-space"></div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

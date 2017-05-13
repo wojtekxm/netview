@@ -10,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Status sieci</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
-    <link rel="stylesheet" href="/css/bootstrap-toggle.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-multiselect.css">
+    <link rel="stylesheet" href="/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap-multiselect.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
@@ -32,95 +32,101 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
-                <li><a href="/all-controllers">Kontrolery</a></li>
-                <li><a href="/all-users">Użytkownicy</a></li>
-                <li><a href="/all-devices">Urządzenia</a></li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
-                    <ul class="dropdown-menu"  style="background-color: #080b08;">
-                        <li><a href="/all-buildings">Budynki</a></li>
-                        <li><a href="/all-units">Jednostki</a></li>
-                    </ul>
-                </li>
+                <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
+                    <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                    <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li>
+                        <li><a href="/all-users">Użytkownicy</a></li>
+                        <li><a href="/all-devices">Urządzenia</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
+                            <ul class="dropdown-menu"  style="background-color: #080b08;">
+                                <li><a href="/all-buildings">Budynki</a></li>
+                                <li><a href="/all-units">Jednostki</a></li>
+                            </ul>
+                        </li>
+                    </c:if>
+                </ul>
             </ul>
-            <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
+            <c:if test="${loggedUser.role eq 'ROOT'}">  <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
                     <input type="text" name="query" class="form-control" placeholder="Szukaj..." style="margin-right:4px;max-width: 150px!important;">
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
-            </form>
+            </form></c:if>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li style="margin-left: 0px!important;"><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
                 <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout" style="margin-right: 10px;"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
     </div>
 </nav>
-
-<div class="container">
-    <div style="height: 80px;"></div>
+<div class="container" style="margin-top:80px">
     <div id="main_loading" class="later"></div>
     <div id="main_success" class="later">
-        <div class="panel panel-default" style="margin: 0!important;">
-            <div class="panel-body" id="header">
-                <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Aktualny stan urządzeń:</div>
-            </div>
-        </div>
-
-        <div class="panel panel-default" style="height:52px;padding:8px;margin-bottom: 0;margin-top:-1px;display:flex;">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters" style="margin-right: 6px;">
-                <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
-            </button>
-            <button id="back" type="button" class="btn btn-success" style="margin-right: 6px;" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
-            <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning" data-width="100">
-            <div style="margin-left: 15px;">
-                <div id="examine_loading" class="progress-space"></div>
-            </div>
-        </div>
-        <div id="filters" class="collapse" style="margin-top: -1px!important;">
-            <div class="panel panel-default"style="margin-bottom: 0!important;">
-                <div class="panel-body">
-                    <select id="stan" multiple="multiple">
-                        <option type="checkbox" class="s" value="active" selected="true">Aktywne</option>
-                        <option type="checkbox" class="s" value="inactive" selected="true">Niektywne</option>
-                        <option type="checkbox" class="s" value="off" selected="true">Wyłączone</option>
-                    </select>
-                    <select id="kontrolery" multiple="multiple"></select>
-                    <select id="budynki" multiple="multiple"></select>
-                    &nbsp;&nbsp;
-                    <button id="filters_commit" type="button" class="btn btn-info" style="width: 150px;"><span class='glyphicon glyphicon-ok'></span> Filtruj &nbsp;</button>
-                    <br>
-                    <div style="border-top: 1px ridge gainsboro; padding-top:10px; margin-top: 10px;">
-                        <button id="top_15" type="button" class="btn btn-default" style="">15 najlepszych urządzeń</button>
-                        <button id="worst_15" type="button" class="btn btn-default" style="margin-right: 4px;">15 najgorszych urządzeń</button>
-                    </div>
-                    <div class="form-group" style="margin-top: 20px;">
-                        <div id="result_error"></div>
-                    </div>
-                </div>
-            </div>
-            <div id="result_error_main"></div>
-        </div>
-
-
-
-        <ul class="view" style="margin-top:-1px;z-index: 1000;top:0;">
-            <li>
-                <ul id="devices" class="panel panel-default"></ul>
-            </li>
-        </ul>
-
         <div class="panel panel-default">
-            <div class="panel-heading" style="display:flex; font-size: 15px;background-color: #2b2d2b;color:white;">
-                <span class='glyphicon glyphicon-time'></span><div id="data_tittle" style="margin-left: 6px;"></div> &nbsp;&nbsp;&nbsp; <div id="data"></div>
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-cog"></span> Aktualny stan urządzeń:
             </div>
             <div class="panel-body">
-                <div id="countActive" style="display: inline;"></div><br>
-                <div id="countInactive" style="display: inline;"></div><br>
-                <div id="countOff" style="display: inline;"></div><br>
-                <div id="countAll" style="display: inline;"></div><br>
+                <div class="buttons">
+                    <div style="border: 1px solid gainsboro;padding:8px;border-radius: 3px;">
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
+                            <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
+                        </button>
+                        <button id="back" type="button" class="btn btn-success" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
+                        <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning" data-width="100">
+                        <div style="display:inline;float:right;position:relative;margin-right: 5px;">
+                            <div id="examine_loading" class="progress-space"></div>
+                        </div>
+                    </div>
+                    <div id="filters" class="collapse">
+                        <div style="margin-top: 15px!important; border: 1px solid gainsboro;padding:8px;border-radius: 3px;">
+                            <select id="stan" multiple="multiple">
+                                <option type="checkbox" class="s" value="active" selected="true">Aktywne</option>
+                                <option type="checkbox" class="s" value="inactive" selected="true">Niektywne</option>
+                                <option type="checkbox" class="s" value="off" selected="true">Wyłączone</option>
+                            </select>
+                            <select id="kontrolery" multiple="multiple"></select>
+                            <select id="budynki" multiple="multiple"></select>
+                            &nbsp;&nbsp;
+                            <button id="filters_commit" type="button" class="btn btn-info" style="width: 150px;"><span class='glyphicon glyphicon-ok'></span> Filtruj &nbsp;</button>
+                            <br>
+                            <div style="border-top: 1px solid gainsboro; padding-top:10px; margin-top: 10px;">
+                                <button id="top_15" type="button" class="btn btn-default" style="">15 najlepszych urządzeń</button>
+                                <button id="worst_15" type="button" class="btn btn-default" style="margin-right: 4px;">15 najgorszych urządzeń</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div id="result_error"></div>
+                </div>
+                <div id="result_error_main"></div>
+
+                <ul class="view" style="margin:0px!important;z-index: 1000;top:0;">
+                    <li>
+                        <ul id="devices"></ul>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading" style="text-align: center;font-size: 15px!important;background-color: #2b2d2b;color:white;">
+                <span class='glyphicon glyphicon-time' style="display: inline;"></span><div id="data_tittle" style="display:inline;margin-left: 6px;"></div> &nbsp;&nbsp;&nbsp; <div id="data" style="display:inline;"></div>
+            </div>
+            <div class="panel-body">
+                <div style="text-align: center;height: 100%;">
+                    <label><span class="label label-success" id="countActive" style="font-size: 16px;font-weight: normal"></span></label>
+                    <label><span class="label label-danger" id="countInactive" style="font-size: 16px;font-weight: normal"></span></label>
+                    <label><span class="label label-default" id="countOff" style="font-size: 16px;font-weight: normal"></span></label>
+                    <label><span class="label label-info" id="countAll" style="font-size: 16px;font-weight: normal"></span></label>
+                </div>
             </div>
         </div>
     </div>
@@ -165,11 +171,13 @@
     var ifFilter = true;
 
     $('#top_15').click(function(){
+        clearInterval(inter);
         filterChoice = "top";
         option = "best";
         topDevices(option);
     });
     $('#worst_15').click(function(){
+        clearInterval(inter);
         filterChoice = "worst";
         option = "worst";
         topDevices(option);
@@ -295,13 +303,15 @@
                 }
 
                 if(option == "best"){
+                    $('#countActive').css("display", "inline");
                     $('#countActive').text("15 urządzeń z największą liczbą użytkowników");
                     $('#countInactive').css("display", "none");
                     $('#countOff').css("display", "none");
                     $('#countAll').css("display", "none");
                 }else if(option == "worst"){
-                    $('#countActive').text("15 urządzeń z najmniejszą liczbą użytkowników");
-                    $('#countInactive').css("display", "none");
+                    $('#countActive').css("display", "none");
+                    $('#countInactive').css("display", "inline");
+                    $('#countInactive').text("15 urządzeń z najmniejszą liczbą użytkowników");
                     $('#countOff').css("display", "none");
                     $('#countAll').css("display", "none");
                 }
@@ -555,10 +565,11 @@
         }else {
             $('#data').text(n);
             $('#data_tittle').text("Ostatnie badanie przeprowadzono:");
+            $('#countActive').css("display", "inline");
             $('#countInactive').css("display", "inline");
             $('#countOff').css("display", "inline");
             $('#countAll').css("display", "inline");
-            $('#countActive').text('aktywne: ' + ac);
+            $('#countActive').text(' aktywne: ' + ac + ' ');
             $('#countInactive').text('nieaktywne: ' + inac);
             $('#countOff').text('wyłączone: ' + of);
             $('#countAll').text('wszystkie: ' + al);
@@ -825,7 +836,7 @@
         }else {
             $('#data').text(n);
             $('#data_tittle').text("Ostatnie badanie przeprowadzono:");
-            $('#countActive').text('aktywne: ' + active);
+            $('#countActive').text(' aktywne: ' + active + ' ');
             $('#countInactive').text('nieaktywne: ' + inactive);
             $('#countOff').text('wyłączone: ' + off);
             $('#countAll').text('wszystkie: ' + all);

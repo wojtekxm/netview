@@ -38,10 +38,11 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
                         <ul class="dropdown-menu"  style="background-color: #080b08;">
                             <li><a href="/all-buildings">Budynki</a></li>
-                            <li><a href="/all-units">Jednostki</a></li></c:if>
+                            <li><a href="/all-units">Jednostki</a></li>
                         </ul>
+                    </li>
+                    </c:if>
                 </ul>
-                </li>
             </ul>
             <c:if test="${loggedUser.role eq 'ROOT'}">  <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -50,14 +51,14 @@
                 </div>
             </form></c:if>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li style="margin-left: 0px!important;"><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
                 <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout" style="margin-right: 10px;"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
         </div>
     </div>
 </nav>
-<div class="container" style="margin-top:100px">
+<div class="container" style="margin-top:80px">
     <div class="on-loading"></div>
     <div class="on-loaded">
         <div class="row">

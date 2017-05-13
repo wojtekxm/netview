@@ -3,7 +3,7 @@ package zesp03.webapp.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import zesp03.common.core.App;
+import zesp03.common.core.Config;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -16,10 +16,10 @@ public class AdminMailServiceImpl implements AdminMailService {
 
     @Override
     public boolean send(String targetMail, String subject, String htmlBody) {
-        final String username = App.getAdminMailUsername();
-        final String password = App.getAdminMailPassword();
-        final String host = App.getAdminMailSmtpHost();
-        final int port = App.getAdminMailSmtpPort();
+        final String username = Config.getAdminMailUsername();
+        final String password = Config.getAdminMailPassword();
+        final String host = Config.getAdminMailSmtpHost();
+        final int port = Config.getAdminMailSmtpPort();
         final Properties props = new Properties();
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.socketFactory.port", port);

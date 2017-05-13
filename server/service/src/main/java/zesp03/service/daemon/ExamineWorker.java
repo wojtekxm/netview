@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import zesp03.common.core.App;
+import zesp03.common.core.Config;
 import zesp03.common.service.ExamineService;
 
 @Component
@@ -21,8 +21,8 @@ public class ExamineWorker implements Runnable {
     public void run() {
         long lastTime = 0L;
         while(!responsiveShutdown.shouldStop()) {
-            App.forceReloadCustomProperties();
-            final long nextTime = lastTime + App.getExamineInterval() * 1000L;
+            Config.forceReloadCustomProperties();
+            final long nextTime = lastTime + Config.getExamineInterval() * 1000L;
             final long now = System.currentTimeMillis();
             if(now >= nextTime) {
                 examineService.examineAll();

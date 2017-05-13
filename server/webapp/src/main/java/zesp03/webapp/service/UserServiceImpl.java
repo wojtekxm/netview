@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zesp03.common.core.App;
+import zesp03.common.core.Config;
 import zesp03.common.entity.Token;
 import zesp03.common.entity.TokenAction;
 import zesp03.common.entity.User;
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         final String tokenValue = loginService.generateToken(32);
         final Secret secret = Secret.create(tokenValue.toCharArray(), 1);
         final Instant now = Instant.now();
-        final Instant expires = now.plusSeconds(App.getTokenActivateExpiraton() * 60);
+        final Instant expires = now.plusSeconds(Config.getTokenActivateExpiraton() * 60);
 
         User u = new User();
         u.setName(null);
@@ -151,7 +151,6 @@ public class UserServiceImpl implements UserService {
         if(list.isEmpty()) {
             user = new User();
             user.setSecret(null);
-            userRepository.save(user);
         }
         else {
             user = list.get(0);
@@ -161,6 +160,7 @@ public class UserServiceImpl implements UserService {
         user.setActivated(true);
         user.setBlocked(false);
         user.setRole(UserRole.ROOT);
+        userRepository.save(user);
         loginService.setPassword(user, password);
     }
 

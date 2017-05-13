@@ -1,6 +1,5 @@
 package zesp03.common.core;
 
-import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zesp03.common.exception.ValidationException;
@@ -19,8 +18,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class App {
-    private static final Logger log = LoggerFactory.getLogger(App.class);
+/**
+ * Trzyma globalną konfigurację aplikacji. Zawiera same statyczne metody, jest thread-safe.
+ */
+public class Config {
+    private static final Logger log = LoggerFactory.getLogger(Config.class);
     private static final Path customPath;
 
     private static final boolean flywayClean;
@@ -48,17 +50,25 @@ public class App {
     static {
         try {
             final Properties appProperties = new Properties();
-            InputStream input = App.class.getResourceAsStream("/settings/app.properties");
+            InputStream input = Config.class.getResourceAsStream("/settings/app.properties");
             if(input != null) {
                 appProperties.load(input);
                 input.close();
             }
-            final String configDirectory = appProperties.getProperty("zesp03.config.directory");
-            if(configDirectory == null) {
+            final String configDirectory1 = appProperties.getProperty("zesp03.config.directory");
+            if(configDirectory1 == null) {
                 throw new IllegalStateException("property \"zesp03.config.directory\" required but not defined");
             }
 
-            final Path launchPath = Paths.get(configDirectory, "launch.properties");
+            Path launchPath = Paths.get(configDirectory1, "launch.properties");
+            String configDirectory = configDirectory1;
+            if(!Files.exists(launchPath)) {
+                final String configDirectory2 = appProperties.getProperty("zesp03.config.directory2");
+                if(configDirectory2 != null) {
+                    launchPath = Paths.get(configDirectory2, "launch.properties");
+                    configDirectory = configDirectory2;
+                }
+            }
             final Charset utf8 = Charset.forName("UTF-8");
             try(BufferedReader br = Files.newBufferedReader(launchPath, utf8)) {
                 final Properties p = new Properties();
@@ -135,7 +145,6 @@ public class App {
             log.warn("failed reloading custom properties \"{}\"", customPath);
         }
         lastReloadTime.set(Instant.now().toEpochMilli());
-        log.debug("custom properties reloaded");
     }
 
     private static void parseNonNegative(Properties p, String key, AtomicInteger target) {
@@ -181,17 +190,6 @@ public class App {
         }
         catch(IOException exc) {
             log.error("failed to save settings", exc);
-        }
-    }
-
-    public static synchronized void runFlyway() {
-        if(flywayClean || flywayMigrate) {
-            Flyway f = new Flyway();
-            f.setLocations("classpath:flyway");
-            f.setDataSource(mysqlUrl, flywayUser, flywayPassword);
-            f.setEncoding("UTF-8");
-            if(flywayClean)f.clean();
-            if(flywayMigrate)f.migrate();
         }
     }
 
@@ -257,7 +255,7 @@ public class App {
         if(examineInterval < 0) {
             throw new ValidationException("examineInterval", "negative");
         }
-        App.examineInterval.set(examineInterval);
+        Config.examineInterval.set(examineInterval);
     }
 
     /**
@@ -275,7 +273,7 @@ public class App {
         if(databaseCleaningInterval < 0) {
             throw new ValidationException("databaseCleaningInterval", "negative");
         }
-        App.databaseCleaningInterval.set(databaseCleaningInterval);
+        Config.databaseCleaningInterval.set(databaseCleaningInterval);
     }
 
     /**
@@ -293,7 +291,7 @@ public class App {
         if(serverDelay < 0) {
             throw new ValidationException("serverDelay", "negative");
         }
-        App.serverDelay.set(serverDelay);
+        Config.serverDelay.set(serverDelay);
     }
 
     /**
@@ -311,7 +309,7 @@ public class App {
         if(tokenPasswordExpiration < 0) {
             throw new ValidationException("tokenPasswordExpiration", "negative");
         }
-        App.tokenPasswordExpiration.set(tokenPasswordExpiration);
+        Config.tokenPasswordExpiration.set(tokenPasswordExpiration);
     }
 
     /**
@@ -329,7 +327,7 @@ public class App {
         if(tokenActivateExpiraton < 0) {
             throw new ValidationException("tokenActivateExpiraton", "negative");
         }
-        App.tokenActivateExpiraton.set(tokenActivateExpiraton);
+        Config.tokenActivateExpiraton.set(tokenActivateExpiraton);
     }
 
     /**
@@ -347,7 +345,7 @@ public class App {
         if(tokenAccessExpiration < 0) {
             throw new ValidationException("tokenAccessExpiration", "negative");
         }
-        App.tokenAccessExpiration.set(tokenAccessExpiration);
+        Config.tokenAccessExpiration.set(tokenAccessExpiration);
     }
 
     /**
@@ -365,7 +363,7 @@ public class App {
         if(adminMailUsername == null) {
             throw new ValidationException("adminMailUsername", "null");
         }
-        App.adminMailUsername.set(adminMailUsername);
+        Config.adminMailUsername.set(adminMailUsername);
     }
 
     /**
@@ -383,7 +381,7 @@ public class App {
         if(adminMailPassword == null) {
             throw new ValidationException("adminMailPassword", "null");
         }
-        App.adminMailPassword.set(adminMailPassword);
+        Config.adminMailPassword.set(adminMailPassword);
     }
 
     /**
@@ -401,7 +399,7 @@ public class App {
         if(adminMailSmtpHost == null) {
             throw new ValidationException("adminMailSmtpHost", "null");
         }
-        App.adminMailSmtpHost.set(adminMailSmtpHost);
+        Config.adminMailSmtpHost.set(adminMailSmtpHost);
     }
 
     /**
@@ -419,6 +417,6 @@ public class App {
         if(adminMailSmtpPort < 1) {
             throw new ValidationException("adminMailSmtpPort", "less than 1");
         }
-        App.adminMailSmtpPort.set(adminMailSmtpPort);
+        Config.adminMailSmtpPort.set(adminMailSmtpPort);
     }
 }

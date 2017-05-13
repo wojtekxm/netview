@@ -2,7 +2,7 @@ package zesp03.webapp.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zesp03.common.core.App;
+import zesp03.common.core.Config;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class ApiDelayFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws ServletException, IOException {
-        int sd = App.getServerDelay();
+        int sd = Config.getServerDelay();
         try {
             if(sd > 0) {
                 Thread.sleep(sd);

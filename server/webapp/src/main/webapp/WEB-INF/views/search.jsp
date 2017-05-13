@@ -10,6 +10,7 @@
     <title>Wyniki wyszukiwania</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/favicon.ico">
@@ -95,8 +96,8 @@
 
         <h3>jednostki</h3>
         <ol class="list">
-            <c:forEach var="unitDto" items="${search.units}"><li><c:url var="h" value="/unit?id=${unitDto.id}"/>
-                <a href="${h}">[<c:out value="${unitDto.code}"/>] <c:out value="${unitDto.description}"/></a>
+            <c:forEach var="unitDto" items="${search.units}"><li>
+                <a href="/unit?id=${unitDto.id}">[<c:out value="${unitDto.code}"/>] <c:out value="${unitDto.description}"/></a>
             </li>
             </c:forEach>
         </ol>
@@ -104,8 +105,8 @@
 
         <h3>użytkownicy</h3>
         <ol class="list">
-            <c:forEach var="userDto" items="${search.users}"><li><c:url var="h" value="/user?id=${userDto.id}"/>
-                <a href="${h}"><c:out value="${userDto.name}"/></a>
+            <c:forEach var="userDto" items="${search.users}"><li>
+                <a href="/user?id=${userDto.id}"><c:out value="${userDto.name}"/></a>
             </li>
             </c:forEach>
         </ol>

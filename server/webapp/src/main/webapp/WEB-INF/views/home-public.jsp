@@ -11,6 +11,7 @@
     <title>NetView</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/progress.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/loginStyle.css">
     <link rel="stylesheet" href="/css/metisMenu.min.css" media="screen">
     <link rel="stylesheet" href="/css/sb-admin-2.css" media="screen">

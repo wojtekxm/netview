@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/bootstrap-multiselect.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' type='text/css'>
 </head>
@@ -371,21 +372,21 @@
 
         if(states.length == 0){
             if(ifFilter == true){
-                notify.danger('#result_error', 'Nie wybrano żadnego stanu');
+                notify.danger('Nie wybrano żadnego stanu');
                 clearInterval(inter);
                 return;
             }
         }
         if(controllers.length == 0){
             if(ifFilter == true) {
-                notify.danger('#result_error', 'Nie wybrano żadnego kontrolera');
+                notify.danger('Nie wybrano żadnego kontrolera');
                 clearInterval(inter);
                 return;
             }
         }
         if(buildings.length == 0){
             if(ifFilter == true) {
-                notify.danger('#result_error', 'Nie wybrano żadnego budynku');
+                notify.danger('Nie wybrano żadnego budynku');
                 clearInterval(inter);
                 return;
             }
@@ -537,7 +538,7 @@
         al = ac + inac + of;
 
         if(al == 0){
-            notify.danger('#result_error', 'Brak wyników dla podanej konfiguracji');
+            notify.danger('Brak wyników dla podanej konfiguracji');
             clearInterval(inter);
             return;
         }
@@ -709,7 +710,7 @@
 
             success: function(listDtoOfCurrentDeviceStateDto) {
                 if(!listDtoOfCurrentDeviceStateDto.success) {
-                    notify.danger('#result_error_main', 'Wystąpił błąd podczas pobierania danych');
+                    notify.danger('Wystąpił błąd podczas pobierania danych');
                     return;
                 }
                 devices = listDtoOfCurrentDeviceStateDto.list;

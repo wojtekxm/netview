@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/progress.css">
     <link rel="stylesheet" href="/css/tabelka.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/favicon.ico">
 </head>
@@ -58,105 +59,132 @@
     </div>
 </nav>
 
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
-        <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-wrench"></span> Ustawienia </div>
-        </div>
-    </div>
+<div class="container page">
+    <form action="/settings" method="POST">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-wrench"></span> Ustawienia
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="examineInterval">
+                                Okres badań
+                                <small>sekundy</small>
+                            </label>
+                            <input id="examineInterval" type="number" name="examineInterval" class="form-control" value="${examineInterval}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="databaseCleaningInterval">
+                                Okres czyszczenia bazy
+                                <small>sekundy</small>
+                            </label>
+                            <input id="databaseCleaningInterval" type="number" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
+                        </div>
+                    </div>
+                </div>
 
-    <div class="panel panel-default" id="content">
-        <div id="notifyDiv" style="height: 100px">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tokenAccessExpiration">
+                                Maksymalny czas nieaktywności użytkownika
+                                <small>minuty</small>
+                            </label>
+                            <input id="tokenAccessExpiration" type="number" name="tokenAccessExpiration" class="form-control" value="${tokenAccessExpiration}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tokenActivateExpiraton">
+                                Czas ważności tokenów aktywacji konta
+                                <small>minuty</small>
+                            </label>
+                            <input id="tokenActivateExpiraton" type="number" name="tokenActivateExpiraton" class="form-control" value="${tokenActivateExpiraton}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tokenPasswordExpiration">
+                                Czas ważności tokenów do resetowania hasła
+                                <small>minuty</small>
+                            </label>
+                            <input id="tokenPasswordExpiration" type="number" name="tokenPasswordExpiration" class="form-control" value="${tokenPasswordExpiration}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="serverDelay">
+                                Opóźnienie API
+                                <small>na potrzeby testów aplikacji, milisekundy</small>
+                            </label>
+                            <input id="serverDelay" type="number" name="serverDelay" class="form-control" value="${serverDelay}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="adminMailUsername">
+                                Adres e-mail administratora
+                            </label>
+                            <input id="adminMailUsername" type="email" name="adminMailUsername" class="form-control" value="${adminMailUsername}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>
+                                Hasło do konta e-mail administratora
+                            </label>
+                            <input type="password" class="form-control" value="" placeholder="Można ustawić tylko w pliku konfiguracyjnym" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="adminMailSmtpHost">
+                                Adres SMTP serwera poczty
+                            </label>
+                            <input id="adminMailSmtpHost" type="text" name="adminMailSmtpHost" class="form-control" value="${adminMailSmtpHost}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="adminMailSmtpPort">
+                                Port SMTP na serwerze poczty
+                            </label>
+                            <input id="adminMailSmtpPort" type="number" name="adminMailSmtpPort" class="form-control" value="${adminMailSmtpPort}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <input class="btn btn-primary" type="submit" value="Zapisz">
+                    </div>
+                </div>
+            </div>
         </div>
-        <form action="/settings" method="POST" class="form-horizontal">
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="examineInterval">
-                    Okres badań
-                    <br>
-                    <small>sekundy</small>
-                </label>
-                <div class="col-sm-2">
-                    <input id="examineInterval" type="text" name="examineInterval" class="form-control" value="${examineInterval}">
-                </div>
-                <div class="col-sm-4">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="databaseCleaningInterval">
-                    Okres czyszczenia bazy
-                    <br>
-                    <small>sekundy</small>
-                </label>
-                <div class="col-sm-2">
-                    <input id="databaseCleaningInterval" type="text" name="databaseCleaningInterval" class="form-control" value="${databaseCleaningInterval}">
-                </div>
-                <div class="col-sm-4">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="tokenAccessExpiration">
-                    Maksymalny czas nieaktywności użytkownika
-                    <br>
-                    <small>minuty</small>
-                </label>
-                <div class="col-sm-2">
-                    <input id="tokenAccessExpiration" type="text" name="tokenAccessExpiration" class="form-control" value="${tokenAccessExpiration}">
-                </div>
-                <div class="col-sm-4">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="tokenActivateExpiraton">
-                    Czas ważności tokenów aktywacji konta
-                    <br>
-                    <small>minuty</small>
-                </label>
-                <div class="col-sm-2">
-                    <input id="tokenActivateExpiraton" type="text" name="tokenActivateExpiraton" class="form-control" value="${tokenActivateExpiraton}">
-                </div>
-                <div class="col-sm-4">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="tokenPasswordExpiration">
-                    Czas ważności tokenów do resetowania hasła
-                    <br>
-                    <small>minuty</small>
-                </label>
-                <div class="col-sm-2">
-                    <input id="tokenPasswordExpiration" type="text" name="tokenPasswordExpiration" class="form-control" value="${tokenPasswordExpiration}">
-                </div>
-                <div class="col-sm-4">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="serverDelay">
-                    Opóźnienie API
-                    <br>
-                    <small>na potrzeby testów aplikacji, milisekundy</small>
-                </label>
-                <div class="col-sm-2">
-                    <input id="serverDelay" type="text" name="serverDelay" class="form-control" value="${serverDelay}">
-                </div>
-                <div class="col-sm-4">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12 text-center">
-                    <input class="btn btn-primary" type="submit" value="Zapisz">
-                </div>
-            </div>
-        </form>
-    </div>
+    </form>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/notify.js"></script>
 <script>
-    <c:if test="${success eq true}">notify.success('#notifyDiv', 'sukces');
+    <c:if test="${success eq true}">
+    notify.success('Zapisane', true);
     </c:if>
-    <c:if test="${success eq false}">notify.danger('#notifyDiv', 'error');
+    <c:if test="${success eq false}">
+    notify.danger('Niepowodzenie. Pole "${errorField}" zawiera błąd.');
     </c:if>
 </script>
 </body>

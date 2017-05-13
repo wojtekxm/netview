@@ -10,6 +10,7 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
@@ -98,12 +99,6 @@
         </div>
 
     </div>
-    <div class="form-group">
-        <div class="col-sm-12">
-            <div id="result_success"></div>
-            <div id="result_error"></div>
-        </div>
-    </div>
 </div>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
@@ -132,11 +127,11 @@ $(document).ready(function () {
             ['#change_loading'], [], [],
             function(unitDto) {
                 btnSubmit.prop('disabled', false);
-                notify.success('#result_success', 'Dane zostały zmienione.');
+                notify.success('Dane zostały zmienione.');
             },
             function() {
                 btnSubmit.prop('disabled', false);
-                notify.danger('#result_error', 'Nie udało się zmienić danych.');
+                notify.danger('Nie udało się zmienić danych.');
             }
         );
     });

@@ -3,14 +3,15 @@ var notify = {};
     notify.success = success;
     notify.danger = danger;
 
-    function success(parentSelector, message) {
-        f(parentSelector, message, 'panel-success');
+    function success(message) {
+        f(message, 'panel-success');
     }
-    function danger(parentSelector, message) {
-        f(parentSelector, message, 'panel-danger');
+    function danger(message) {
+        f(message, 'panel-danger');
     }
-    function f(parentSelector, message, panelClass) {
-        var d = $('<div class="panel center-block"></div>')
+
+    function f(message, panelClass) {
+        var d = $('<div class="panel panel-notify center-block"></div>')
             .addClass(panelClass)
             .append(
                 $('<div class="panel-heading"></div>').text(message)
@@ -27,6 +28,6 @@ var notify = {};
         function end() {
             d.remove();
         }
-        $(parentSelector).append(d);
+        $(document.body).append(d);
     }
 })();

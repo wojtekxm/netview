@@ -3,6 +3,7 @@ package zesp03.common.core;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zesp03.common.exception.ValidationException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -254,7 +255,7 @@ public class App {
      */
     public static void setExamineInterval(int examineInterval) {
         if(examineInterval < 0) {
-            throw new IllegalArgumentException("examineInterval < 0");
+            throw new ValidationException("examineInterval", "negative");
         }
         App.examineInterval.set(examineInterval);
     }
@@ -272,7 +273,7 @@ public class App {
      */
     public static void setDatabaseCleaningInterval(int databaseCleaningInterval) {
         if(databaseCleaningInterval < 0) {
-            throw new IllegalArgumentException("databaseCleaningInterval < 0");
+            throw new ValidationException("databaseCleaningInterval", "negative");
         }
         App.databaseCleaningInterval.set(databaseCleaningInterval);
     }
@@ -290,7 +291,7 @@ public class App {
      */
     public static void setServerDelay(int serverDelay) {
         if(serverDelay < 0) {
-            throw new IllegalArgumentException("serverDelay < 0");
+            throw new ValidationException("serverDelay", "negative");
         }
         App.serverDelay.set(serverDelay);
     }
@@ -308,7 +309,7 @@ public class App {
      */
     public static void setTokenPasswordExpiration(int tokenPasswordExpiration) {
         if(tokenPasswordExpiration < 0) {
-            throw new IllegalArgumentException("tokenPasswordExpiration < 0");
+            throw new ValidationException("tokenPasswordExpiration", "negative");
         }
         App.tokenPasswordExpiration.set(tokenPasswordExpiration);
     }
@@ -326,7 +327,7 @@ public class App {
      */
     public static void setTokenActivateExpiraton(int tokenActivateExpiraton) {
         if(tokenActivateExpiraton < 0) {
-            throw new IllegalArgumentException("tokenActivateExpiraton < 0");
+            throw new ValidationException("tokenActivateExpiraton", "negative");
         }
         App.tokenActivateExpiraton.set(tokenActivateExpiraton);
     }
@@ -344,7 +345,7 @@ public class App {
      */
     public static void setTokenAccessExpiration(int tokenAccessExpiration) {
         if(tokenAccessExpiration < 0) {
-            throw new IllegalArgumentException("tokenAccessExpiration < 0");
+            throw new ValidationException("tokenAccessExpiration", "negative");
         }
         App.tokenAccessExpiration.set(tokenAccessExpiration);
     }
@@ -362,7 +363,7 @@ public class App {
      */
     public static void setAdminMailUsername(String adminMailUsername) {
         if(adminMailUsername == null) {
-            throw new IllegalArgumentException("adminMailUsername == null");
+            throw new ValidationException("adminMailUsername", "null");
         }
         App.adminMailUsername.set(adminMailUsername);
     }
@@ -380,7 +381,7 @@ public class App {
      */
     public static void setAdminMailPassword(String adminMailPassword) {
         if(adminMailPassword == null) {
-            throw new IllegalArgumentException("adminMailPassword == null");
+            throw new ValidationException("adminMailPassword", "null");
         }
         App.adminMailPassword.set(adminMailPassword);
     }
@@ -398,7 +399,7 @@ public class App {
      */
     public static void setAdminMailSmtpHost(String adminMailSmtpHost) {
         if(adminMailSmtpHost == null) {
-            throw new IllegalArgumentException("adminMailSmtpHost == null");
+            throw new ValidationException("adminMailSmtpHost", "null");
         }
         App.adminMailSmtpHost.set(adminMailSmtpHost);
     }
@@ -416,7 +417,7 @@ public class App {
      */
     public static void setAdminMailSmtpPort(int adminMailSmtpPort) {
         if(adminMailSmtpPort < 1) {
-            throw new IllegalArgumentException("adminMailSmtpPort < 1");
+            throw new ValidationException("adminMailSmtpPort", "less than 1");
         }
         App.adminMailSmtpPort.set(adminMailSmtpPort);
     }

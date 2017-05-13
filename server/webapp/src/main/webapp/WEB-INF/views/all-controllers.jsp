@@ -75,13 +75,13 @@
             </div>
         </div>
         <div class="panel panel-default" style="margin-top:-1px;padding:8px;">
-        </div>
-        <div id="tabelka_space"></div>
-        <div>
-            <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;margin-bottom:5px;">
-                <span class="glyphicon glyphicon-plus"></span>
-                Dodaj nowy kontroler
-            </a>
+            <div id="tabelka_space"></div>
+            <div>
+                <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;margin-bottom:5px;">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Dodaj nowy kontroler
+                </a>
+            </div>
         </div>
     </div>
     <div id="notify_layer" style="position: fixed; top: 100px;"></div>

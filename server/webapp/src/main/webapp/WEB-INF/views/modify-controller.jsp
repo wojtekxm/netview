@@ -66,7 +66,7 @@
 
     <div class="panel panel-default" id="content" style="margin-top: -1px!important;">
 
-        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0; margin-bottom: inherit;">
+        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0; margin-bottom: -1px!important;">
             Modyfikuj kontroler:
         </div>
 

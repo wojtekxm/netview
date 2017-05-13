@@ -195,7 +195,7 @@ public class App {
     public static synchronized void runFlyway() {
         if(flywayClean || flywayMigrate) {
             Flyway f = new Flyway();
-            f.setLocations("classpath:flyway");
+            f.setLocations("classpath:zesp03.common.flyway");
             f.setDataSource(mysqlUrl, flywayUser, flywayPassword);
             f.setEncoding("UTF-8");
             if(flywayClean)f.clean();

@@ -71,7 +71,7 @@
             <div class="panel-body">
                 <div class="buttons">
                     <div style="border: 1px solid gainsboro;padding:8px;border-radius: 3px;">
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
+                        <button id="filtersToggle" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters">
                             <span class="glyphicon glyphicon-arrow-down" style="margin: 0;padding: 0;"></span> Filtrowanie
                         </button>
                         <button id="back" type="button" class="btn btn-success" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
@@ -332,10 +332,11 @@
 
                 if(n == "Invalid Date"){
                     n = "";
-                    setTimeout(function(){
-                        $('#data').text(n);
-                        $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
-                    }, 5000);
+                    $('#data').text(n);
+                    $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
+                    btnFiltersToggle.prop('disabled', true);
+                    btnResetFilter.prop('disabled', true);
+                    $('#toggleFrequency').bootstrapToggle('disable');
                 }else {
                     $('#data').text(n);
                     $('#data_tittle').text("Ostatnie badanie przeprowadzono:");
@@ -346,11 +347,11 @@
 </script>
 
 <script type="text/javascript">
+    var btnFiltersToggle = $('#filtersToggle')
     var btnFilter = $('#filters_commit');
     var btnResetFilter = $('#back');
     var btnTop = $('#top_15');
     var btnWorst = $('#worst_15');
-
 
     function getFilteredDevices() {
         $('[data-toggle="tooltip"]').tooltip('destroy');
@@ -572,10 +573,11 @@
 
         if(n == "Invalid Date"){
             n = "";
-            setTimeout(function(){
-                $('#data').text(n);
-                $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
-            }, 5000);
+            $('#data').text(n);
+            $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
+            btnFiltersToggle.prop('disabled', true);
+            btnResetFilter.prop('disabled', true);
+            $('#toggleFrequency').bootstrapToggle('disable');
         }else {
             $('#data').text(n);
             $('#data_tittle').text("Ostatnie badanie przeprowadzono:");
@@ -812,6 +814,9 @@
                     n = "";
                     $('#data').text(n);
                     $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
+                    btnFiltersToggle.prop('disabled', true);
+                    btnResetFilter.prop('disabled', true);
+                    $('#toggleFrequency').bootstrapToggle('disable');
                 }
             }
 
@@ -829,10 +834,11 @@
 
         if(n == "Invalid Date"){
             n = "";
-            setTimeout(function(){
-                $('#data').text(n);
-                $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
-            }, 4000);
+            $('#data').text(n);
+            $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
+            btnFiltersToggle.prop('disabled', true);
+            btnResetFilter.prop('disabled', true);
+            $('#toggleFrequency').bootstrapToggle('disable');
         }else {
             $('#data').text(n);
             $('#data_tittle').text("Ostatnie badanie przeprowadzono:");

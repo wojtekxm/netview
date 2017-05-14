@@ -58,24 +58,28 @@
         </div>
     </div>
 </nav>
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" style="margin-bottom: 15px!important;">
-        <div class="panel-body" id="header">
-            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-home"></span> Budynki:</div>
-        </div>
-    </div>
-    <div class="on-loading progress-space-lg"></div>
+
+<div class="container" style="margin-top:80px">
+    <div class="on-loading"></div>
     <div class="on-loaded">
-        <div id="tabelka_buildings"></div>
-        <div>
-            <a href="/create-building" class="btn btn-success" role="button" style="width: 200px; margin-bottom:20px;">
-                <span class="glyphicon glyphicon-plus"></span>
-                Dodaj nowy budynek
-            </a>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-home"></span> Budynki:
+            </div>
+            <div class="panel-body">
+                <div id="tabelka_buildings"></div>
+                <div>
+                    <a href="/create-building" class="btn btn-success" role="button" style="width: 200px;">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Dodaj nowy budynek
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>

@@ -58,49 +58,47 @@
     </div>
 </nav>
 
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
+<div class="container" style="margin-top:80px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-home"></span> <c:out value="${unit.description}"/>:
+        </div>
         <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-home"></span> <c:out value="${unit.description}"/>: </div>
+            <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+                Modyfikuj jednostkę:
+            </div>
+
+            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
+
+                <tr>
+
+                    <input  id="id" type="hidden" name="id" value="${unit.id}" />
+
+                </tr>
+                <tr>
+                    <td  ><font color="red" ><b>*</b></font> Kod:</td>
+                    <td ><input  id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
+                </tr>
+
+                <tr>
+                    <td><font color="red" ><b>*</b></font> Nazwa:</td>
+                    <td ><input  id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
+                </tr>
+
+            </table>
+            <div style="height: 40px; margin-top:15px;">
+                <%--<a href="/unit/${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>--%>
+                <span style="display: flex;position: relative;float: left;">
+                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
+                    <input type="submit" value=" Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
+                    <div id="change_loading" class="later progress-space"></div>
+                </span>
+            </div>
         </div>
     </div>
-
-    <div class="panel panel-default" id="content">
-
-        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-            Modyfikuj jednostkę:
-        </div>
-
-        <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
-
-            <tr>
-
-                <input  id="id" type="hidden" name="id" value="${unit.id}" />
-
-            </tr>
-            <tr>
-                <td  ><font color="red" ><b>*</b></font> Kod:</td>
-                <td ><input  id="new_code" type="text" name="code" value="${unit.code}" style="width: 30%;"/></td>
-            </tr>
-
-            <tr>
-                <td><font color="red" ><b>*</b></font> Nazwa:</td>
-                <td ><input  id="new_description" type="text" name="description" value="${unit.description}" style="width: 30%;"/>
-            </tr>
-
-        </table>
-        <div style="height: 40px;">
-            <a href="/unit/${unit.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
-            <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
-                        <input type="submit" value=" Zatwierdź" class="btn btn-success"  id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
-                        <div id="change_loading" class="later progress-space"></div>
-                    </span>
-        </div>
-
-    </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

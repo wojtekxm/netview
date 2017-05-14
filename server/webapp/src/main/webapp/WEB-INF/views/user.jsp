@@ -57,53 +57,52 @@
     </div>
 </nav>
 
-
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header">
+<div class="container" style="margin-top:80px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-arrow-right"></span> Informacje o użytkowniku:
+        </div>
         <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o użytkowniku: </div>
+            <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+                Szczegóły użytkownika:
+            </div>
+            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
+                <tr>
+                    <td>Nazwa</td>
+                    <td><c:out value="${selected.name}"/></td>
+                </tr>
+                <tr>
+                    <td>ID</td>
+                    <td><c:out value="${selected.id}"/></td>
+                </tr>
+                <tr>
+                    <td>Rola</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${selected.role == 'NORMAL'}"><c:out value="zwykły użytkownik"/></c:when>
+                            <c:when test="${selected.role == 'ROOT'}"><c:out value="root"/></c:when>
+                        </c:choose>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Stan konta</td>
+                    <td id="user_state">
+                        <c:choose>
+                            <c:when test="${selected.blocked}"><c:out value="zablokowane"/></c:when>
+                            <c:when test="${!selected.activated}"><c:out value="nieaktywne"/></c:when>
+                            <c:otherwise><c:out value="aktywne"/></c:otherwise>
+                        </c:choose>
+                    </td>
+                </tr>
+            </table>
+            <div class="clearfix">
+                <button id="button_block" class="btn btn-danger" style="display:none;float:left;font-size:17px;"><span class="glyphicon glyphicon-exclamation-sign"></span> Zablokuj</button>
+            </div>
         </div>
     </div>
-
-    <div class="panel panel-default" id="content">
-        <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-            Szczegóły użytkownika:
-        </div>
-        <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
-            <tr>
-                <td>Nazwa</td>
-                <td><c:out value="${selected.name}"/></td>
-            </tr>
-            <tr>
-                <td>ID</td>
-                <td><c:out value="${selected.id}"/></td>
-            </tr>
-            <tr>
-                <td>Rola</td>
-                <td>
-                    <c:choose>
-                        <c:when test="${selected.role == 'NORMAL'}"><c:out value="zwykły użytkownik"/></c:when>
-                        <c:when test="${selected.role == 'ROOT'}"><c:out value="root"/></c:when>
-                    </c:choose>
-                </td>
-            </tr>
-            <tr>
-                <td>Stan konta</td>
-                <td id="user_state">
-                    <c:choose>
-                        <c:when test="${selected.blocked}"><c:out value="zablokowane"/></c:when>
-                        <c:when test="${!selected.activated}"><c:out value="nieaktywne"/></c:when>
-                        <c:otherwise><c:out value="aktywne"/></c:otherwise>
-                    </c:choose>
-                </td>
-            </tr>
-        </table>
-        <div class="clearfix">
-            <button id="button_block" class="btn btn-danger" style="margin-top:20px;display:none;float:left;font-size:17px;"><span class="glyphicon glyphicon-exclamation-sign"></span> Zablokuj</button>
-        </div>
-    </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

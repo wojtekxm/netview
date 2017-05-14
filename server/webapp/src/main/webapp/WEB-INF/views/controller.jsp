@@ -59,74 +59,143 @@
     </div>
 </nav>
 
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 0!important;">
+<div class="container" style="margin-top:80px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-arrow-right"></span> Informacje o kontrolerze:
+        </div>
         <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o kontrolerze: </div>
-        </div>
-    </div>
+            <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 8px;font-size: 16px;border: 1px solid #e0e0e0;">
+                Szczegóły kontrolera:
+            </div>
 
-    <div class="panel panel-default" id="content" style="margin-top: -1px!important;">
-        <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 8px;font-size: 16px;border: 1px solid #e0e0e0;">
-            Szczegóły kontrolera:
-        </div>
-
-        <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0; margin-bottom: inherit">
-            <tr>
-                <td>Nazwa</td>
-                <td><c:out value="${controller.name}"/></td>
-            </tr>
-            <tr>
-                <td>IP</td>
-                <td><c:out value="${controller.ipv4}"/></td>
-            </tr>
-            <tr>
-                <td>Opis</td>
-                <td><c:out value="${controller.description}"/></td>
-            </tr>
-            <tr>
-                <td>Community String</td>
-                <td><c:out value="${controller.communityString}"/></td>
-            </tr>
-
-
-            <c:if test="${ controller.building != null && controller.building.name != ''}">
-
-               <tr>
-                    <td>Budynek</td>
-                    <td><a href="/building/${controller.building.id}"><c:out value="${controller.building.name}"/></a> </td>
-                </tr>
-            </c:if>
-            <c:if test="${ controller.fake == false}">
-            <tr>
-                <td>Rodzaj kontrolera </td>
-                <td>Prawdziwy</td>
-            </tr>
-            </c:if>
-            <c:if test="${ controller.fake == true}">
+            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0; margin-bottom: inherit">
                 <tr>
-                    <td>Rodzaj kontrolera </td>
-                    <td>Sztuczny</td>
+                    <td>Nazwa</td>
+                    <td><c:out value="${controller.name}"/></td>
                 </tr>
-            </c:if>
+                <tr>
+                    <td>IP</td>
+                    <td><c:out value="${controller.ipv4}"/></td>
+                </tr>
+                <tr>
+                    <td>Opis</td>
+                    <td><c:out value="${controller.description}"/></td>
+                </tr>
+                <tr>
+                    <td>Community String</td>
+                    <td><c:out value="${controller.communityString}"/></td>
+                </tr>
 
-        </table>
-        <div class="clearfix">
-            <form class="pull-left" method="POST" action="/controller/remove/${controller.id}">
-                <button class="btn btn-danger" type="submit" style="margin-right: 10px;">
-                    <span class="glyphicon glyphicon-trash"></span> Usuń
-                </button>
-            </form>
-            <a href="/modify-controller?id=${controller.id}" class="btn btn-success pull-left" role="button">
-                <span class="glyphicon glyphicon-wrench"></span> Zmień
-            </a>
+
+                <c:if test="${ controller.building != null && controller.building.name != ''}">
+
+                    <tr>
+                        <td>Budynek</td>
+                        <td><a href="/building/${controller.building.id}"><c:out value="${controller.building.name}"/></a> </td>
+                    </tr>
+                </c:if>
+                <c:if test="${ controller.fake == false}">
+                    <tr>
+                        <td>Rodzaj kontrolera </td>
+                        <td>Prawdziwy</td>
+                    </tr>
+                </c:if>
+                <c:if test="${ controller.fake == true}">
+                    <tr>
+                        <td>Rodzaj kontrolera </td>
+                        <td>Sztuczny</td>
+                    </tr>
+                </c:if>
+
+            </table>
+            <div class="clearfix" style="margin-top: 20px;">
+                <a href="/modify-controller?id=${controller.id}" class="btn btn-success pull-left" role="button">
+                    <span class="glyphicon glyphicon-wrench"></span> Zmień
+                </a>
+                <form class="pull-left" method="POST" action="/controller/remove/${controller.id}">
+                    <button class="btn btn-danger" type="submit" style="margin-left: 15px;">
+                        <span class="glyphicon glyphicon-trash"></span> Usuń
+                    </button>
+                </form>
+            </div>
+
+            <div class="on-loading progress-space-lg"></div>
+            <div id="tabelka_devices" class="on-loaded" style="margin-top:30px;"></div>
         </div>
-
-        <div class="on-loading progress-space-lg"></div>
-        <div id="tabelka_devices" class="on-loaded" style="margin-top:30px;"></div>
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+
+
+<%--<div class="container">--%>
+    <%--<div style="height: 80px;"></div>--%>
+    <%--<div class="panel panel-default" id="header" style="margin-bottom: 0!important;">--%>
+        <%--<div class="panel-body">--%>
+            <%--<div id="tittle"><span class="glyphicon glyphicon-arrow-right"></span> Informacje o kontrolerze: </div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+
+    <%--<div class="panel panel-default" id="content" style="margin-top: -1px!important;">--%>
+        <%--<div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 8px;font-size: 16px;border: 1px solid #e0e0e0;">--%>
+            <%--Szczegóły kontrolera:--%>
+        <%--</div>--%>
+
+        <%--<table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0; margin-bottom: inherit">--%>
+            <%--<tr>--%>
+                <%--<td>Nazwa</td>--%>
+                <%--<td><c:out value="${controller.name}"/></td>--%>
+            <%--</tr>--%>
+            <%--<tr>--%>
+                <%--<td>IP</td>--%>
+                <%--<td><c:out value="${controller.ipv4}"/></td>--%>
+            <%--</tr>--%>
+            <%--<tr>--%>
+                <%--<td>Opis</td>--%>
+                <%--<td><c:out value="${controller.description}"/></td>--%>
+            <%--</tr>--%>
+            <%--<tr>--%>
+                <%--<td>Community String</td>--%>
+                <%--<td><c:out value="${controller.communityString}"/></td>--%>
+            <%--</tr>--%>
+
+
+            <%--<c:if test="${ controller.building != null && controller.building.name != ''}">--%>
+
+               <%--<tr>--%>
+                    <%--<td>Budynek</td>--%>
+                    <%--<td><a href="/building/${controller.building.id}"><c:out value="${controller.building.name}"/></a> </td>--%>
+                <%--</tr>--%>
+            <%--</c:if>--%>
+            <%--<c:if test="${ controller.fake == false}">--%>
+            <%--<tr>--%>
+                <%--<td>Rodzaj kontrolera </td>--%>
+                <%--<td>Prawdziwy</td>--%>
+            <%--</tr>--%>
+            <%--</c:if>--%>
+            <%--<c:if test="${ controller.fake == true}">--%>
+                <%--<tr>--%>
+                    <%--<td>Rodzaj kontrolera </td>--%>
+                    <%--<td>Sztuczny</td>--%>
+                <%--</tr>--%>
+            <%--</c:if>--%>
+
+        <%--</table>--%>
+        <%--<div class="clearfix">--%>
+            <%--<form class="pull-left" method="POST" action="/controller/remove/${controller.id}">--%>
+                <%--<button class="btn btn-danger" type="submit" style="margin-right: 10px;">--%>
+                    <%--<span class="glyphicon glyphicon-trash"></span> Usuń--%>
+                <%--</button>--%>
+            <%--</form>--%>
+            <%--<a href="/modify-controller?id=${controller.id}" class="btn btn-success pull-left" role="button">--%>
+                <%--<span class="glyphicon glyphicon-wrench"></span> Zmień--%>
+            <%--</a>--%>
+        <%--</div>--%>
+
+        <%--<div class="on-loading progress-space-lg"></div>--%>
+        <%--<div id="tabelka_devices" class="on-loaded" style="margin-top:30px;"></div>--%>
+    <%--</div>--%>
+<%--</div>--%>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

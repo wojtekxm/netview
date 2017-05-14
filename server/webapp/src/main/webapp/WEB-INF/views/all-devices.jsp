@@ -60,68 +60,76 @@
         </div>
     </div>
 </nav>
+
 <div class="container" style="margin-top:80px">
     <div class="on-loading"></div>
     <div class="on-loaded">
-        <div class="panel panel-default" style="margin: 0!important;">
-            <div class="panel-body" id="header">
-                <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-cog"></span> Urządzenia:</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-cog"></span> Urządzenia:
             </div>
-        </div>
-        <div class="panel panel-default" style="margin-bottom: 0!important;height:52px;padding:8px;margin-top:-1px;">
-            <div class="pull-left on-loaded">
-                <button id="btn_examine" class="btn btn-primary pull-left" type="button">
-                    <span class="glyphicon glyphicon-refresh"></span>
-                    zbadaj wszystkie
-                </button>
-                <div id="examine_loading" class="pull-right progress-space"></div>
-            </div>
-        </div>
-        <div class="panel panel-default" style="margin-top: -1px!important;padding:8px;">
-            <div id="tabelka_space"></div>
-            <div style="margin-top: 50px"></div>
-            <div class="panel panel-default">
-                <div class="panel-heading">Usuwanie starych badań</div>
-                <div class="panel-body">
-                    <div class="form-inline"><div class="radio">
-                        <label>
-                            <input type="radio" name="delete_type" value="all" checked>
-                            Wszystkie (<span id="total_all">?</span>)
-                        </label>
+            <div class="panel-body">
+                <div>
+                    <div class="pull-left on-loaded" style="margin-bottom: 15px;">
+                        <button id="btn_examine" class="btn btn-primary pull-left" type="button">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                            zbadaj wszystkie
+                        </button>
+                        <div class = "pull-right" style="height: 35px; margin:0px!important;">
+                            <div id="examine_loading" class="progress-space"></div>
+                        </div>
                     </div>
-                    </div>
-                    <div class="form-inline">
-                        <div class="radio">
-                            <label>
-                                <input id="radio_delete_before" type="radio" name="delete_type" value="before"/>
-                                Starsze niż
-                            </label>
-                            <div class='input-group date' id='datetimepicker1'>
-                                <input id="input_calendar" type='text' class="form-control" disabled>
-                                <span class="input-group-addon">
+                </div>
+                <div>
+                    <div id="tabelka_space"></div>
+                    <div style="margin-top: 50px"></div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="font-size: 15px!important;">Usuwanie starych badań</div>
+                        <div class="panel-body">
+                            <div class="form-inline"><div class="radio">
+                                <label>
+                                    <input type="radio" name="delete_type" value="all" checked>
+                                    Wszystkie (<span id="total_all">?</span>)
+                                </label>
+                            </div>
+                            </div>
+                            <div class="form-inline">
+                                <div class="radio">
+                                    <label>
+                                        <input id="radio_delete_before" type="radio" name="delete_type" value="before"/>
+                                        Starsze niż
+                                    </label>
+                                    <div class='input-group date' id='datetimepicker1'>
+                                        <input id="input_calendar" type='text' class="form-control" disabled>
+                                        <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
+                                    </div>
+                                    <span id="total_before"></span>
+                                </div>
                             </div>
-                            <span id="total_before"></span>
+                            <div class="row">
+                                <div class="col-sm-offset-5 col-sm-7 clearfix">
+                                    <button id="btn_delete" class="btn btn-danger pull-left">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                        Usuń
+                                    </button>
+                                    <div id="delete_loading" class="pull-left progress-space"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="notify_deleted"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-offset-5 col-sm-7 clearfix">
-                            <button id="btn_delete" class="btn btn-danger pull-left">
-                                <span class="glyphicon glyphicon-trash"></span>
-                                Usuń
-                            </button>
-                            <div id="delete_loading" class="pull-left progress-space"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div id="notify_deleted"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/moment-with-locales.min.js"></script>

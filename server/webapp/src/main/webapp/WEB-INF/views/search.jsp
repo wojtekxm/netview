@@ -9,9 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wyniki wyszukiwania</title>
     <link rel="stylesheet" href="/css/bootstrap-3.3.7.min.css" media="screen">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/favicon.ico">
 </head>
@@ -59,113 +60,120 @@
         </div>
     </div>
 </nav>
+
 <div class="container">
     <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
-        <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-wrench"></span> Wyniki dla wyszukiwania: <c:out value="${param.query}"/></div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-wrench"></span> Wyniki dla wyszukiwania: <c:out value="${param.query}"/>
         </div>
-    </div>
+        <div class="panel-body" style="padding-bottom: 30px;">
 
-    <div class="panel panel-default" id="content">
-        <h3>urządzenia</h3>
-        <ol class="list">
-            <c:forEach var="deviceDto" items="${search.devices}"><li><c:url var="h" value="/device/${deviceDto.id}"/>
-                <a href="${h}"><c:out value="${deviceDto.name}"/></a>
-            </li>
-            </c:forEach>
-        </ol>
-        <hr>
+            <h4 style="margin-bottom: 25px;border: 1px solid gainsboro;padding:15px;border-radius: 3px;">Kliknij na wybraną kategorię, aby zobaczyć wyniki wyszukiwania</h4>
 
-        <h3>kontrolery</h3>
-        <ol class="list">
-            <c:forEach var="controllerDto" items="${search.controllers}"><li><c:url var="h" value="/controller/${controllerDto.id}"/>
-                <a href="${h}"><c:out value="${controllerDto.name}"/></a>
-            </li>
-            </c:forEach>
-        </ol>
-        <hr>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#devs" style="width: 100%;">Urządzenia, <span id="devsLength"></span></button>
+            <ol class="list collapse" id="devs">
+                <c:forEach var="deviceDto" items="${search.devices}">
+                    <li><c:url var="h" value="/device/${deviceDto.id}"/>
+                        <a href="${h}"><c:out value="${deviceDto.name}"/></a>
+                    </li>
+                </c:forEach>
+            </ol>
+            <hr>
 
-        <h3>budynki</h3>
-        <ol class="list">
-            <c:forEach var="buildingDto" items="${search.buildings}"><li><c:url var="h" value="/building/${buildingDto.id}"/>
-                <a href="${h}"><c:out value="${buildingDto.name}"/></a>
-            </li>
-            </c:forEach>
-        </ol>
-        <hr>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#conts" style="width: 100%;">Kontrolery, <span id="contsLength"></span></button>
+            <ol class="list collapse" id="conts">
+                <c:forEach var="controllerDto" items="${search.controllers}"><li><c:url var="h" value="/controller/${controllerDto.id}"/>
+                    <a href="${h}"><c:out value="${controllerDto.name}"/></a>
+                </li>
+                </c:forEach>
+            </ol>
+            <hr>
 
-        <h3>jednostki</h3>
-        <ol class="list">
-            <c:forEach var="unitDto" items="${search.units}"><li>
-                <a href="/unit?id=${unitDto.id}">[<c:out value="${unitDto.code}"/>] <c:out value="${unitDto.description}"/></a>
-            </li>
-            </c:forEach>
-        </ol>
-        <hr>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#builds" style="width: 100%;">Budynki, <span id="buildsLength"></span></button>
+            <ol class="list collapse" id="builds">
+                <c:forEach var="buildingDto" items="${search.buildings}">
+                    <li><c:url var="h" value="/building/${buildingDto.id}"/>
+                        <a href="${h}"><c:out value="${buildingDto.name}"/></a>
+                    </li>
+                </c:forEach>
+            </ol>
+            <hr>
 
-        <h3>użytkownicy</h3>
-        <ol class="list">
-            <c:forEach var="userDto" items="${search.users}"><li>
-                <a href="/user?id=${userDto.id}"><c:out value="${userDto.name}"/></a>
-            </li>
-            </c:forEach>
-        </ol>
-        <hr>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#uts" style="width: 100%;">Jednostki, <span id="utsLength"></span></button>
+            <ol class="list collapse" id="uts">
+                <c:forEach var="unitDto" items="${search.units}"><li>
+                    <a href="/unit?id=${unitDto.id}">[<c:out value="${unitDto.code}"/>] <c:out value="${unitDto.description}"/></a>
+                </li>
+                </c:forEach>
+            </ol>
+            <hr>
+
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#usrs" style="width: 100%;">Użytkownicy, <span id="usrsLength"></span></button>
+            <ol class="list collapse" id="usrs">
+                <c:forEach var="userDto" items="${search.users}"><li>
+                    <a href="/user?id=${userDto.id}"><c:out value="${userDto.name}"/></a>
+                </li>
+                </c:forEach>
+            </ol>
+        </div>
     </div>
 </div>
 
-<%--<div id="all" class="container-fluid">--%>
-    <%--<div id="container">--%>
-        <%--<h1>Wyniki dla wyszukiwania: <mark><c:out value="${param.query}"/></mark></h1>--%>
-
-        <%--<h3>urządzenia</h3>--%>
-        <%--<ol class="list">--%>
-            <%--<c:forEach var="deviceDto" items="${search.devices}"><li><c:url var="h" value="/device/${deviceDto.id}"/>--%>
-                <%--<a href="${h}"><c:out value="${deviceDto.name}"/></a>--%>
-            <%--</li>--%>
-            <%--</c:forEach>--%>
-        <%--</ol>--%>
-        <%--<hr>--%>
-
-        <%--<h3>kontrolery</h3>--%>
-        <%--<ol class="list">--%>
-            <%--<c:forEach var="controllerDto" items="${search.controllers}"><li><c:url var="h" value="/controller/${controllerDto.id}"/>--%>
-                <%--<a href="${h}"><c:out value="${controllerDto.name}"/></a>--%>
-            <%--</li>--%>
-            <%--</c:forEach>--%>
-        <%--</ol>--%>
-        <%--<hr>--%>
-
-        <%--<h3>budynki</h3>--%>
-        <%--<ol class="list">--%>
-            <%--<c:forEach var="buildingDto" items="${search.buildings}"><li><c:url var="h" value="/building/${buildingDto.id}"/>--%>
-                <%--<a href="${h}"><c:out value="${buildingDto.name}"/></a>--%>
-            <%--</li>--%>
-            <%--</c:forEach>--%>
-        <%--</ol>--%>
-        <%--<hr>--%>
-
-        <%--<h3>jednostki</h3>--%>
-        <%--<ol class="list">--%>
-            <%--<c:forEach var="unitDto" items="${search.units}"><li><c:url var="h" value="/unit?id=${unitDto.id}"/>--%>
-                <%--<a href="${h}">[<c:out value="${unitDto.code}"/>] <c:out value="${unitDto.description}"/></a>--%>
-            <%--</li>--%>
-            <%--</c:forEach>--%>
-        <%--</ol>--%>
-        <%--<hr>--%>
-
-        <%--<h3>użytkownicy</h3>--%>
-        <%--<ol class="list">--%>
-            <%--<c:forEach var="userDto" items="${search.users}"><li><c:url var="h" value="/user?id=${userDto.id}"/>--%>
-                <%--<a href="${h}"><c:out value="${userDto.name}"/></a>--%>
-            <%--</li>--%>
-            <%--</c:forEach>--%>
-        <%--</ol>--%>
-        <%--<hr>--%>
-    <%--</div>--%>
-<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-toggle.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        var builds = $('#builds li');
+        var bl = builds.length;
+        if(bl == 0){
+            $('#builds').remove();
+            bl = 'nie znaleziono wyników';
+        }else{
+            bl = 'znaleziono ' + bl;
+        }
+        $('#buildsLength').text(bl);
+        var devs = $('#devs li');
+        var dl = devs.length;
+        if(dl == 0){
+            $('#devs').remove();
+            dl = 'nie znaleziono wyników';
+        }else{
+            dl = 'znaleziono ' + dl;
+        }
+        $('#devsLength').text(dl);
+        var conts = $('#conts li');
+        var cl = conts.length;
+        if(cl == 0){
+            $('#conts').remove();
+            cl = 'nie znaleziono wyników';
+        }else{
+            cl = 'znaleziono ' + cl;
+        }
+        $('#contsLength').text(cl);
+        var uts = $('#uts li');
+        var ul = uts.length;
+        if(ul == 0){
+            $('#uts').remove();
+            ul = 'nie znaleziono wyników';
+        }else{
+            ul = 'znaleziono ' + ul;
+        }
+        $('#utsLength').text(ul);
+        var usrs = $('#usrs li');
+        var usl = usrs.length;
+        if(usl == 0){
+            $('#usrs').remove();
+            usl = 'nie znaleziono wyników';
+        }else{
+            usl = 'znaleziono ' + usl;
+        }
+        $('#usrsLength').text(usl);
+    })
+</script>
+
+
 </body>
 </html>

@@ -95,42 +95,6 @@
             </div>
         </div>
     </div>
-    <%--<div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">--%>
-        <%--<div class="panel-body">--%>
-            <%--<div id="tittle"><span class="glyphicon glyphicon-user"></span> Zarządzanie kontem</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-
-    <%--<div class="panel panel-default" id="content">--%>
-        <%--<div class="form-horizontal">--%>
-            <%--<div class="form-group">--%>
-                <%--<label class="col-sm-3 control-label">Aktualne hasło</label>--%>
-                <%--<div class="col-sm-6">--%>
-                    <%--<input id="actual_password" type="password" class="form-control">--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<div class="form-group">--%>
-                <%--<label class="col-sm-3 control-label">Nowe hasło</label>--%>
-                <%--<div class="col-sm-6">--%>
-                    <%--<input id="new_password" type="password" class="form-control">--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<div class="form-group">--%>
-                <%--<label class="col-sm-3 control-label">Powtórz nowe hasło</label>--%>
-                <%--<div class="col-sm-6">--%>
-                    <%--<input id="repeat_password" type="password" class="form-control">--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<div class="form-group">--%>
-                <%--<div class="col-sm-offset-5 col-sm-7 clearfix">--%>
-                    <%--<button id="btn_submit" type="button" class="btn btn-primary pull-left">Zapisz</button>--%>
-                    <%--<div class="pull-left">--%>
-                        <%--<div id="change_loading" class="later progress-space"></div>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>

@@ -58,10 +58,12 @@
         </div>
     </div>
 </nav>
+
 <div class="container" style="margin-top:80px">
     <div class="on-loading"></div>
     <div class="on-loaded">
-        <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div class="panel panel-default">
                     <div class="panel-heading">Informacje o jednostce</div>
                     <ul class="list-group" >
@@ -79,14 +81,13 @@
                         </li>
                     </ul>
                     <div>
-                        <a href="/modify-unit?id=${unit.id}" class="btn btn-success" role="button" style="float:left; margin-right: 10px;margin-top: 10px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
+                        <a href="/modify-unit?id=${unit.id}" class="btn btn-success" role="button" style="float:left; margin-right: 15px;margin-top: 20px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
                         <form class="pull-left" method="post" action="/unit/remove/${unit.id}">
-                            <button type="submit" class="btn btn-danger " style="margin-top: 10px;">
+                            <button type="submit" class="btn btn-danger " style="margin-top: 20px;">
                                 <span class="glyphicon glyphicon-trash"></span>
                                 Usuń
                             </button>
                         </form>
-
                     </div>
                 </div>
                 <h4 style="margin-top: 80px">Budynki powiązane z jednostką</h4>
@@ -95,9 +96,11 @@
                     <span class="glyphicon glyphicon-plus"></span>
                     Połącz z budynkiem ...
                 </a>
+            </div>
         </div>
     </div>
 </div>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>

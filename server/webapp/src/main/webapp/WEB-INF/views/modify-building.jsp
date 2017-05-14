@@ -57,76 +57,74 @@
         </div>
     </div>
 </nav>
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
+
+<div class="container" style="margin-top:80px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-home"></span> <c:out value="${building.name}"/>:
+        </div>
         <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-home"></span> <c:out value="${building.name}"/>: </div>
-            <%--<form method="post" action="/api/accept-modify-building" id="form1"></form>--%>
-        </div>
-    </div>
+            <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
+                Modyfikuj budynek:
+            </div>
 
-    <div class="panel panel-default" id="content">
+            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0; margin-bottom: inherit;">
+                <tr>
+                    <input type="hidden" id="id" name="id" value="${building.id}" />
+                </tr>
+                <tr>
+                    <td><font color="red" ><b>*</b></font> Kod:</td>
+                    <td><input type="text" id="new_code" name="code" value="${building.code}" style="width: 30%;"/></td>
+                </tr>
 
-        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-            Modyfikuj budynek:
-        </div>
+                <tr>
+                    <td ><font color="red" ><b>*</b></font> Nazwa:</td>
+                    <td><input type="text" id="new_name" name="name" value="${building.name}" style="width: 30%;" />
+                </tr>
 
-        <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0; margin-bottom: inherit;">
-            <tr>
-                <input type="hidden" id="id" name="id" value="${building.id}" />
-            </tr>
-            <tr>
-                <td><font color="red" ><b>*</b></font> Kod:</td>
-                <td><input type="text" id="new_code" name="code" value="${building.code}" style="width: 30%;"/></td>
-            </tr>
+                <tr>
+                    <td>Ulica:</td>
+                    <td><input type="text" id="new_street" name="street" value="${building.street}" style="width: 30%;" />
+                </tr>
 
-            <tr>
-                <td ><font color="red" ><b>*</b></font> Nazwa:</td>
-                <td><input type="text" id="new_name" name="name" value="${building.name}" style="width: 30%;" />
-            </tr>
+                <tr>
+                    <td>Numer:</td>
+                    <td><input type="text" id="new_number" name="number" value="${building.number}" style="width: 30%;" />
+                </tr>
 
-            <tr>
-                <td>Ulica:</td>
-                <td><input type="text" id="new_street" name="street" value="${building.street}" style="width: 30%;" />
-            </tr>
+                <tr>
+                    <td>Kod pocztowy:</td>
+                    <td><input  type="text" id="new_postalCode" name="postalCode" value="${building.postalCode}" style="width: 30%;" />
+                </tr>
 
-            <tr>
-                <td>Numer:</td>
-                <td><input type="text" id="new_number" name="number" value="${building.number}" style="width: 30%;" />
-            </tr>
+                <tr>
+                    <td>Miasto:</td>
+                    <td><input  type="text" id="new_city" name="city" value="${building.city}" style="width: 30%;" />
+                </tr>
 
-            <tr>
-                <td>Kod pocztowy:</td>
-                <td><input  type="text" id="new_postalCode" name="postalCode" value="${building.postalCode}" style="width: 30%;" />
-            </tr>
+                <tr>
+                    <td><font color="red" ><b>*</b></font> Szerokość geograficzna:</td>
+                    <td><input  type="text" id="new_latitude" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
+                </tr>
 
-            <tr>
-                <td>Miasto:</td>
-                <td><input  type="text" id="new_city" name="city" value="${building.city}" style="width: 30%;" />
-            </tr>
+                <tr>
+                    <td ><font color="red" ><b>*</b></font> Długość geograficzna:</td>
+                    <td><input  type="text" id="new_longitude" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
 
-            <tr>
-                <td><font color="red" ><b>*</b></font> Szerokość geograficzna:</td>
-                <td><input  type="text" id="new_latitude" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
-            </tr>
-
-            <tr>
-                <td ><font color="red" ><b>*</b></font> Długość geograficzna:</td>
-                <td><input  type="text" id="new_longitude" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
-
-            </tr>
-        </table>
-        <div style="height: 40px;">
-            <a href="/building/${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>
-            <span style="display: flex;position: relative;float: left;">
+                </tr>
+            </table>
+            <div style="height: 40px; margin-top: 15px;">
+                <%--<a href="/building/${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>--%>
+                <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:19%;"></span>
 
                         <input id="btn_submit" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
                     </span>
-            <div id="change_loading" class="later progress-space"></div>
+                <div id="change_loading" class="later progress-space"></div>
+            </div>
         </div>
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
 
 

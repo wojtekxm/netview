@@ -57,81 +57,77 @@
         </div>
     </div>
 </nav>
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 0px!important;">
+
+<div class="container" style="margin-top:80px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-inbox"></span> <c:out value="${controller.name}"/>:
+        </div>
         <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-inbox"></span> <c:out value="${controller.name}"/>: </div>
-            <%--<form method="post" action="/api/controller/accept-modify-controller" id="form1"></form>--%>
-        </div>
-    </div>
+            <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0; margin-bottom: -1px!important;">
+                Modyfikuj kontroler:
+            </div>
 
-    <div class="panel panel-default" id="content" style="margin-top: -1px!important;">
+            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
+                <tr>
+                    <input id="id" type="hidden" name="id" value="${controller.id}" />
+                </tr>
 
-        <div class="panel-heading" style="background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0; margin-bottom: -1px!important;">
-            Modyfikuj kontroler:
-        </div>
+                <tr>
+                    <td ><font color="red" ><b>*</b></font> Nazwa:</td>
+                    <td><input  id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
+                </tr>
 
-        <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;margin-bottom: inherit;">
-            <tr>
-                <input id="id" type="hidden" name="id" value="${controller.id}" />
-            </tr>
+                <tr>
+                    <td ><font color="red" ><b>*</b></font> IPv4:</td>
+                    <td><input type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
+                </tr>
 
-            <tr>
-                <td ><font color="red" ><b>*</b></font> Nazwa:</td>
-                <td><input  id="new_name" type="text" name="name" value="${controller.name}" style="width: 30%;" />
-            </tr>
+                <tr>
+                    <td>Opis:</td>
+                    <td><input  type="text" id="new_description" name="description" value="${controller.description}" style="width: 30%;" />
+                </tr>
+                <tr>
+                    <td>Community String:</td>
+                    <td><input  type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <label>
+                            <input id="new_fake" name="fake" type="checkbox"
+                                   <c:if test="${ controller.fake == false}">checked="checked"</c:if> >
+                            Prawdziwy
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Budynek:</td>
+                    <td>
+                        <%--<label for="new_building">Wybierz budynek:</label>--%>
 
-            <tr>
-                <td ><font color="red" ><b>*</b></font> IPv4:</td>
-                <td><input type="text" id="new_ipv4" name="ipv4" value="${controller.ipv4}" style="width: 30%;" />
-            </tr>
+                        <select class="form-control" id="new_building"name="buildingId" data-width="auto" >
 
-            <tr>
-                <td>Opis:</td>
-                <td><input  type="text" id="new_description" name="description" value="${controller.description}" style="width: 30%;" />
-            </tr>
-            <tr>
-                <td>Community String:</td>
-                <td><input  type="text" id="new_communityString" name="communityString" value="${controller.communityString}" style="width: 30%;" />
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <label>
-                        <input id="new_fake" name="fake" type="checkbox"
-                               <c:if test="${ controller.fake == false}">checked="checked"</c:if> >
-                        Prawdziwy
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>Budynek:</td>
-                <td>
-            <%--<label for="new_building">Wybierz budynek:</label>--%>
+                            <option value="0"> </option>
 
-                    <select class="form-control" id="new_building"name="buildingId" data-width="auto" >
+                            <c:forEach items="${list}" var="building" >
 
-                        <option value="0"> </option>
+                                <option <c:if test="${ controller.buildingId == building.id}">
+                                    selected = "selected"   </c:if>   value="${building.id}"  >
+                                    <c:out value="${building.name}"/>
+                                </option>
 
-                         <c:forEach items="${list}" var="building" >
+                            </c:forEach>
+                        </select>
+                    </td>
+                </tr>
 
-                             <option <c:if test="${ controller.buildingId == building.id}">
-                             selected = "selected"   </c:if>   value="${building.id}"  >
-                                <c:out value="${building.name}"/>
-                            </option>
+            </table>
 
-                        </c:forEach>
-                    </select>
-                </td>
-            </tr>
+            <div style="margin-top: 15px;">
 
-                </table>
-
-        <div style="margin-bottom: 60px;">
-
-            <a href="/controller/${controller.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>
-            <span style="display: flex;position: relative;float: left;">
+                <%--<a href="/controller/${controller.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>--%>
+                <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%; left:15%;"></span>
                         <input type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
                         <div class="pull-left progress-space">
@@ -139,10 +135,12 @@
                 </div>
                     </span>
 
+            </div>
         </div>
-
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>

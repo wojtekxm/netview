@@ -58,42 +58,40 @@
     </div>
 </nav>
 
-
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
-        <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-home"></span> Nowa jednostka organizacyjna</div>
+<div class="container" style="margin-top:80px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-home"></span> Nowa jednostka organizacyjna
         </div>
-    </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
 
-    <div class="panel panel-default" id="content">
-        <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="new_code"><font color="red" ><b>*</b></font> Kod jednostki:</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" placeholder="Wprowadź kod jednostki"
+                               id="new_code" required="required" name="code"></div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="new_description"><font color="red" ><b>*</b></font> Nazwa jednostki:</label>
+                    <div class="col-sm-3">
+                        <input type="description" class="form-control" placeholder="Wprowadź nazwę jednostki"
+                               id="new_description" required="required" name="description"></div>
+                </div>
 
-            <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_code"><font color="red" ><b>*</b></font> Kod jednostki:</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" placeholder="Wprowadź kod jednostki"
-                           id="new_code" required="required" name="code"></div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_description"><font color="red" ><b>*</b></font> Nazwa jednostki:</label>
-                <div class="col-sm-3">
-                    <input type="description" class="form-control" placeholder="Wprowadź nazwę jednostki"
-                           id="new_description" required="required" name="description"></div>
-            </div>
-
-            <div class="change_loading" class="progress-space"></div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:4%;"></span>
-                    <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
+                <div class="change_loading" class="progress-space"></div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:4%;"></span>
+                        <input type="submit" value=" Dodaj jednostkę" id="btn_submit" class="btn btn-success" role="button" style="width: 200px;">
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+
 
 
 <script src="/js/jquery-3.1.1.min.js"></script>

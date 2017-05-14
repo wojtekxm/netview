@@ -58,83 +58,79 @@
     </div>
 </nav>
 
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
-        <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-inbox"></span> Nowy kontroler</div>
+<div class="container" style="margin-top:80px">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-inbox"></span> Nowy kontroler
         </div>
-    </div>
-
-    <div class="panel panel-default" id="content">
-
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label class="control-label col-sm-2 " for="new_name" ><font color="red" ><b>*</b></font> Nazwa kontrolera:</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
-                           id="new_name" required="required" name="name">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="new_ipv4" class="control-label col-sm-2 "><font color="red" ><b>*</b></font> Adres IPv4:</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
-                           id="new_ipv4" required="required" name="ipv4">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="new_description" class="control-label col-sm-2 ">Komentarz:</label>
-                <div class="col-sm-3">
-                    <input  type="text" class="form-control"  placeholder="Wprowadź komentarz (opcjonalne)"
-                           id="new_description" name="description">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="new_communityString" class="control-label col-sm-2 ">Community String:</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control"  placeholder="Wprowadź Community String"
-                           id="new_communityString" name="communityString">
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label for="new_building" class="control-label col-sm-2 ">Budynek:</label>
-                <div class="col-sm-3">
-                    <label for="new_building">Wybierz budynek:</label>
-
-                    <select  class="form-control" id="new_building"name="buildingId">
-                        <option></option>
-                        <c:forEach items="${list}" var="building" >
-                            <option value="${building.id}" >
-                                <c:out value="${building.name}"/>
-                            </option>
-                        </c:forEach>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <div class="checkbox">
-                        <label>
-                            <input  type="checkbox" <%--value="false" class="form-control"--%> id="new_fake" name="fake"> Prawdziwy </label>
+        <div class="panel-body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="new_name" ><font color="red" ><b>*</b></font> Nazwa kontrolera:</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control"  placeholder="Wprowadź nazwę kontrolera"
+                               id="new_name" required="required" name="name">
                     </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="new_ipv4" class="control-label col-sm-2 "><font color="red" ><b>*</b></font> Adres IPv4:</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control"  placeholder="Wprowadź Adres IPv4"
+                               id="new_ipv4" required="required" name="ipv4">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new_description" class="control-label col-sm-2 ">Komentarz:</label>
+                    <div class="col-sm-3">
+                        <input  type="text" class="form-control"  placeholder="Wprowadź komentarz (opcjonalne)"
+                                id="new_description" name="description">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new_communityString" class="control-label col-sm-2 ">Community String:</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control"  placeholder="Wprowadź Community String"
+                               id="new_communityString" name="communityString">
+                    </div>
+                </div>
 
-            <div class="change_loading" class="progress-space"></div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+
+                <div class="form-group">
+                    <label for="new_building" class="control-label col-sm-2 ">Budynek:</label>
+                    <div class="col-sm-3">
+                        <label for="new_building">Wybierz budynek:</label>
+
+                        <select  class="form-control" id="new_building"name="buildingId">
+                            <option></option>
+                            <c:forEach items="${list}" var="building" >
+                                <option value="${building.id}" >
+                                    <c:out value="${building.name}"/>
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input  type="checkbox" <%--value="false" class="form-control"--%> id="new_fake" name="fake"> Prawdziwy </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="change_loading" class="progress-space"></div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
                     <span style="display: flex;position: relative;float: left;">
                     <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:15%;"></span>
                         <input  type="submit" id="btn_submit" value="Dodaj kontroler" class="btn btn-success" role="button" style="width: 200px;">
                     </span>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 

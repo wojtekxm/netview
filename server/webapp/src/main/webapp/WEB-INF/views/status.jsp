@@ -76,7 +76,7 @@
                         </button>
                         <button id="back" type="button" class="btn btn-success" onclick="resetFilters();"><span class="glyphicon glyphicon-refresh"></span> Zresetuj filtry</button>
                         <input type="checkbox" id="toggleFrequency" data-toggle="toggleFrequency" data-on="5 GHz" data-off="2,4 GHz" data-onstyle="danger" data-offstyle="warning" data-width="100">
-                        <div style="display:inline;float:right;position:relative;margin-right: 5px;">
+                        <div class = "pull-right" style="height: 35px; margin-right:5px;">
                             <div id="examine_loading" class="progress-space"></div>
                         </div>
                     </div>
@@ -122,14 +122,15 @@
             </div>
             <div class="panel-body">
                 <div style="text-align: center;height: 100%;">
+                    <label><span class="label label-info" id="countAll" style="font-size: 16px;font-weight: normal"></span></label>
                     <label><span class="label label-success" id="countActive" style="font-size: 16px;font-weight: normal"></span></label>
                     <label><span class="label label-danger" id="countInactive" style="font-size: 16px;font-weight: normal"></span></label>
                     <label><span class="label label-default" id="countOff" style="font-size: 16px;font-weight: normal"></span></label>
-                    <label><span class="label label-info" id="countAll" style="font-size: 16px;font-weight: normal"></span></label>
                 </div>
             </div>
         </div>
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
 
 <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
@@ -239,6 +240,7 @@
     }
 
     function topDevices(option) {
+        $('[data-toggle="tooltip"]').tooltip('destroy');
         progress.loadGet(
             '/api/device/info/all',
             ['#examine_loading'], [], [],
@@ -322,6 +324,7 @@
 
 <script type="text/javascript">
     function getFilteredDevices() {
+        $('[data-toggle="tooltip"]').tooltip('destroy');
         progress.loadGet(
             '/api/device/info/all',
             ['#examine_loading'], [], [],
@@ -332,26 +335,6 @@
         );
     }
 
-    //    function getFilteredDevices(){
-    //        $('[data-toggle="tooltip"]').tooltip('destroy');
-    //        $.ajax({
-    //            type: 'GET',
-    //            url: '/api/device/info/all',
-    //            dataType: 'json',
-    //
-    //            success: function(listDtoOfCurrentDeviceStateDto) {
-    //                if(!listDtoOfCurrentDeviceStateDto.success) {
-    //                    return;
-    //                }
-    //                devices = listDtoOfCurrentDeviceStateDto.list;
-    //                filter();
-    //            },
-    //            error: function(){
-    //                $('#data').remove();
-    //                $('#data_tittle').text("Wystąpił błąd podczas pobierania danych");
-    //            }
-    //        });
-    //    }
 
     function filter(){
         var value = "";
@@ -535,10 +518,9 @@
                         .append(
                             $('<a>' + sum + '</a>').attr('href', h).attr('style', style)
                         );
+                    line.tooltip();
                     allLines = allLines.add(line);
                 }
-
-                line.tooltip();
             }
         }
 
@@ -684,16 +666,15 @@
     })
 </script>
 
-<script type="text/javascript">
-    $("#filters-button").click(function(e) {
-        $( ".filters" ).slideToggle( "slow" );
-    });
-</script>
+<%--<script type="text/javascript">--%>
+    <%--$("#filters-button").click(function(e) {--%>
+        <%--$( ".filters" ).slideToggle( "slow" );--%>
+    <%--});--%>
+<%--</script>--%>
 
 <script type="text/javascript">
     "use strict";
-
-    function firstLoad() {
+    $(document).ready( function(){
         progress.loadGet(
             '/api/device/info/all',
             ['#main_loading'], ['#main_success'], [],
@@ -702,33 +683,23 @@
                 e();
             }, undefined, 'md'
         );
-    }
-
-    $(document).ready( function(){
-        $.when(firstLoad()).done(function(){
-            setTimeout("$('.view').fadeIn(2000)", 2000);
-        })
+        inter = setInterval('allDevices()', 30000);
     });
 
 
     function allDevices()
     {
         $('[data-toggle="tooltip"]').tooltip('destroy');
-        $.ajax({
-            type: 'GET',
-            url: '/api/device/info/all',
-            dataType: 'json',
-
-            success: function(listDtoOfCurrentDeviceStateDto) {
-                if(!listDtoOfCurrentDeviceStateDto.success) {
-                    notify.danger('Wystąpił błąd podczas pobierania danych');
-                    return;
-                }
+        progress.loadGet(
+            '/api/device/info/all',
+            ['#examine_loading'], [], [],
+            function(listDtoOfCurrentDeviceStateDto) {
                 devices = listDtoOfCurrentDeviceStateDto.list;
                 e();
-            },
-        });
+            }, undefined, 'md'
+        );
     }
+
 
     function e(){
         clicked = "all";
@@ -842,9 +813,6 @@
             $('#countAll').text('wszystkie: ' + all);
         }
     }
-
-    //    allDevices();
-    inter = setInterval('allDevices()', 30000);
 </script>
 
 <script type="text/javascript">

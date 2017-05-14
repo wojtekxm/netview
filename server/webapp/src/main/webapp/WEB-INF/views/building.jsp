@@ -59,63 +59,68 @@
         </div>
     </div>
 </nav>
+
 <div class="container" style="margin-top:80px">
     <div class="on-loading"></div>
     <div class="on-loaded">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Informacje o budynku</div>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-4">nazwa</div>
-                                <div class="col-xs-8" id="field_name"></div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-4">kod</div>
-                                <div class="col-xs-8" id="field_code"></div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-4">adres</div>
-                                <div class="col-xs-8" id="field_address"></div>
-                            </div>
-                        </li>
-                    </ul>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><span class="glyphicon glyphicon-home"></span> Informacje o budynku</div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-xs-4">nazwa</div>
+                                        <div class="col-xs-8" id="field_name"></div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-xs-4">kod</div>
+                                        <div class="col-xs-8" id="field_code"></div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-xs-4">adres</div>
+                                        <div class="col-xs-8" id="field_address"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="/modify-building?id=${building.id}" class="btn btn-success pull-left" role="button">
+                            <span class="glyphicon glyphicon-wrench"></span>
+                            Zmień
+                        </a>
+                        <form class="pull-right" method="post" action="/building/remove/${building.id}">
+                            <button type="submit" class="btn btn-danger pull-right" style="margin-bottom: 10px">
+                                <span class="glyphicon glyphicon-trash"></span>
+                                Usuń
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="map" style="width: 100%; height: 300px; box-shadow: 0 0 10px -2px black"></div>
+                    </div>
                 </div>
-                <a href="/modify-building?id=${building.id}" class="btn btn-success pull-left" role="button">
-                    <span class="glyphicon glyphicon-wrench"></span>
-                    Zmień
+                <h4 style="margin-top: 50px">Jednostki organizacyjne powiązane z budynkiem</h4>
+                <div id="tabelka_units"></div>
+                <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Połącz z jednostką organizacyjną...
                 </a>
-                <form class="pull-right" method="post" action="/building/remove/${building.id}">
-                    <button type="submit" class="btn btn-danger pull-right" style="margin-bottom: 10px">
-                        <span class="glyphicon glyphicon-trash"></span>
-                        Usuń
-                    </button>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <div id="map" style="width: 100%; height: 300px; box-shadow: 0 0 10px -2px black"></div>
+                <h4 style="margin-top: 50px">Kontrolery znajdujące się w budynku</h4>
+                <div id="tabelka_controllers"></div>
+                <h4 style="margin-top: 50px">Urządzenia znajdujące się w budynku</h4>
+                <div id="tabelka_devices"></div>
+                <button class="btn btn-success" data-toggle="modal" data-target="#modalLinkDevices">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Przenieś urządzenie
+                </button>
             </div>
         </div>
-        <h4 style="margin-top: 50px">Jednostki organizacyjne powiązane z budynkiem</h4>
-        <div id="tabelka_units"></div>
-        <a href="/link-building-all-units?id=${building.id}" class="btn btn-success" role="button">
-            <span class="glyphicon glyphicon-plus"></span>
-            Połącz z jednostką organizacyjną...
-        </a>
-        <h4 style="margin-top: 50px">Kontrolery znajdujące się w budynku</h4>
-        <div id="tabelka_controllers"></div>
-        <h4 style="margin-top: 50px">Urządzenia znajdujące się w budynku</h4>
-        <div id="tabelka_devices"></div>
-        <button class="btn btn-success" data-toggle="modal" data-target="#modalLinkDevices">
-            <span class="glyphicon glyphicon-plus"></span>
-            Przenieś urządzenie
-        </button>
     </div>
 </div>
 <div id="modalLinkDevices" class="modal fade" tabindex="-1" role="dialog">

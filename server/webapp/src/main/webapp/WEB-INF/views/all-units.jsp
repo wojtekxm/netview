@@ -59,22 +59,42 @@
     </div>
 </nav>
 <div class="container" style="margin-top:80px">
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
-        <div class="panel-body">
-            <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-home"></span> Jednostki organizacyjne:</div>
-        </div>
-    </div>
     <div id="main_loading" class="later"></div>
     <div id="main_success" class="later">
-        <div id="tabelka_space"></div>
-        <div>
-            <a href="/create-unit" class="btn btn-success" role="button" style="margin-bottom:20px;">
-                <span class="glyphicon glyphicon-plus"></span>
-                Dodaj nową jednostkę organizacyjną
-            </a>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-home"></span> Jednostki organizacyjne:
+            </div>
+            <div class="panel-body">
+                <div id="tabelka_space"></div>
+                <div>
+                    <a href="/create-unit" class="btn btn-success" role="button" style="margin-bottom:20px;">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Dodaj nową jednostkę organizacyjną
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+<%--<div class="container" style="margin-top:80px">--%>
+    <%--<div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">--%>
+        <%--<div class="panel-body">--%>
+            <%--<div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-home"></span> Jednostki organizacyjne:</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+    <%--<div id="main_loading" class="later"></div>--%>
+    <%--<div id="main_success" class="later">--%>
+        <%--<div id="tabelka_space"></div>--%>
+        <%--<div>--%>
+            <%--<a href="/create-unit" class="btn btn-success" role="button" style="margin-bottom:20px;">--%>
+                <%--<span class="glyphicon glyphicon-plus"></span>--%>
+                <%--Dodaj nową jednostkę organizacyjną--%>
+            <%--</a>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>

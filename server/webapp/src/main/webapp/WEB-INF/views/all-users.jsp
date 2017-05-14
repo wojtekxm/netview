@@ -61,22 +61,42 @@
 <div class="container" style="margin-top:80px">
     <div id="main_loading" class="later"></div>
     <div id="main_success" class="later">
-        <div class="panel panel-default" id="header" style="margin-bottom: 0px!important;">
-            <div class="panel-body">
-                <div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-user"></span> Użytkownicy:</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-user"></span> Użytkownicy:
             </div>
-        </div>
-        <div class="panel panel-default" style="margin-bottom: -1px!important;padding:8px;">
-            <div id="tabelka_space"></div>
-            <div>
-                <a href="/create-user" class="btn btn-success" role="button">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Dodaj nowego użytkownika
-                </a>
+            <div class="panel-body">
+                <div id="tabelka_space"></div>
+                <div>
+                    <a href="/create-user" class="btn btn-success" role="button">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Dodaj nowego użytkownika
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
+<%--<div class="container" style="margin-top:80px">--%>
+    <%--<div id="main_loading" class="later"></div>--%>
+    <%--<div id="main_success" class="later">--%>
+        <%--<div class="panel panel-default" id="header" style="margin-bottom: 0px!important;">--%>
+            <%--<div class="panel-body">--%>
+                <%--<div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-user"></span> Użytkownicy:</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<div class="panel panel-default" style="margin-bottom: -1px!important;padding:8px;">--%>
+            <%--<div id="tabelka_space"></div>--%>
+            <%--<div>--%>
+                <%--<a href="/create-user" class="btn btn-success" role="button">--%>
+                    <%--<span class="glyphicon glyphicon-plus"></span>--%>
+                    <%--Dodaj nowego użytkownika--%>
+                <%--</a>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>

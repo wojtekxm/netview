@@ -363,7 +363,6 @@ $(document).ready(function() {
             $('input[type=radio][name=chart]').change(function() {
                 timeJump = 0;
                 var val = $('input[type=radio][name=chart]:checked').val();
-                console.log("$('input[type=radio][name=chart]:checked').val()", val);
                 if(val === 'other') {
                     settingsAdvanced.collapse('show');
                 }
@@ -384,10 +383,6 @@ $(document).ready(function() {
                 refresh();
             });
             $('input[type=radio][name=frequency]').change(function() {
-                console.log(
-                    "$('input[type=radio][name=frequency]'):checked",
-                    $('input[type=radio][name=frequency]:checked').val()
-                );
                 refresh();
             });
             $('input[type=radio][name=size]').change(function() {
@@ -539,6 +534,12 @@ $(document).ready(function() {
                         "autoSkip" : false,
                         "autoSkipPadding" : bestUnit.padding,
                         "maxRotation": 0
+                    },
+                    "afterBuildTicks" : function(x) {
+                        x.ticks.shift();
+                    },
+                    "gridLines" : {
+                        "zeroLineColor" : 'rgba(0,0,0,0.1)'
                     }
                 }],
                 "yAxes": [{
@@ -699,9 +700,15 @@ $(document).ready(function() {
                         "max" : t1 * 1000
                     },
                     "ticks": {
-                        "autoSkip" : true,
+                        "autoSkip" : false,
                         "autoSkipPadding" : bestUnit.padding,
                         "maxRotation": 0
+                    },
+                    "afterBuildTicks" : function(x) {
+                        x.ticks.shift();
+                    },
+                    "gridLines" : {
+                        "zeroLineColor" : 'rgba(0,0,0,0.1)'
                     }
                 }],
                 "yAxes": [{
@@ -712,7 +719,7 @@ $(document).ready(function() {
                         "labelString": 'liczba klientów'
                     },
                     "ticks": {
-                        "autoSkip": true,
+                        "autoSkip": false,
                         "fixedStepSize": 10,
                         "beginAtZero": true,
                         "Min": -5,
@@ -781,7 +788,6 @@ $(document).ready(function() {
     }
 
     function chooseUnit(t0, t1) {
-        console.log('chooseUnit...');
         var timeSpan, availableUnits, i, u, k, t, maxStep, best, canvasWidth;
         canvasWidth = parseInt( myCanvas.attr('width') );
         availableUnits = [ {
@@ -789,25 +795,25 @@ $(document).ready(function() {
             "span" : 60,
             "steps" : [1, 5, 10, 15, 20, 30],
             "format" : 'HH:mm',
-            "padding" : 25
+            "padding" : 35
         }, {
             "name" : 'hour',
             "span" : 3600,
-            "steps" : [1, 2, 3, 4 ],
+            "steps" : [1, 2, 3, 4, 6],
             "format" : 'HH:mm',
-            "padding" : 25
+            "padding" : 35
         }, {
             "name" : 'day',
             "span" : 86400,
             "steps" : [1],
             "format" :'dddd',
-            "padding" : 60
+            "padding" : 63
         }, {
             "name" : 'week',
             "span" : 86400 * 7,
             "steps" : [1],
             "format" : 'DD.MM',
-            "padding" : 30
+            "padding" : 35
         }, {
             "name" : 'month',
             "span" : 86400 * 30,
@@ -819,7 +825,7 @@ $(document).ready(function() {
             "span" : 86400 * 365,
             "steps" : [1, 5, 10, 20, 50, 100],
             "format" : 'YYYY',
-            "padding" : 60
+            "padding" : 35
         } ];
         timeSpan = t1 - t0;
         best = {
@@ -838,7 +844,6 @@ $(document).ready(function() {
                     best.step = t;
                 }
             }
-            console.log('best', best);
         }
         return best;
     }

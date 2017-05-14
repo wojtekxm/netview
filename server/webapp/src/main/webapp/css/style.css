@@ -462,7 +462,7 @@ div.page {
     margin-bottom:100px;
 }
 
-.panel-default>.panel-heading {
+.panel-default>.panel-heading, .panel-default>.panel-footer {
     background-color: #2b2d2b !important;
     color: white !important;
     /*border: none !important;*/

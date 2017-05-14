@@ -50,7 +50,7 @@ public class Config {
     static {
         try {
             final Properties appProperties = new Properties();
-            InputStream input = Config.class.getResourceAsStream("/settings/app.properties");
+            InputStream input = Config.class.getResourceAsStream("/zesp03/common/core/app.properties");
             if(input != null) {
                 appProperties.load(input);
                 input.close();

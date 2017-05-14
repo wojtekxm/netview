@@ -85,14 +85,14 @@ public class SurveysApi {
     @PostMapping("/delete/{deviceId}/all")
     public BaseResultDto deleteForOne(
             @PathVariable("deviceId") long deviceId) {
-        return BaseResultDto.make( () -> surveyModifyingService.deleteForOne(deviceId) );
+        return BaseResultDto.make( () -> surveyModifyingService.deleteForOneDevice(deviceId) );
     }
 
     @PostMapping("/delete/{deviceId}/{before}")
     public BaseResultDto deleteForOne(
             @PathVariable("deviceId") long deviceId,
             @PathVariable("before") int before) {
-        return BaseResultDto.make( () -> surveyModifyingService.deleteForOne(deviceId, before) );
+        return BaseResultDto.make( () -> surveyModifyingService.deleteForOneDevice(deviceId, before) );
     }
 
     @PostMapping("/fake")
@@ -102,26 +102,26 @@ public class SurveysApi {
 
     @GetMapping("/total/all/all")
     public ContentDto<Long> totalAll() {
-        return ContentDto.make( () -> deviceSurveyRepository.countNotDeleted() );
+        return ContentDto.make( () -> surveyReadingService.countAllForAll() );
     }
 
     @GetMapping("/total/all/{before}")
     public ContentDto<Long> totalAllBefore(
             @PathVariable("before") int before) {
-        return ContentDto.make( () -> deviceSurveyRepository.countBeforeNotDeleted(before) );
+        return ContentDto.make( () -> surveyReadingService.countBeforeForAll(before) );
     }
 
     @GetMapping("/total/{deviceId}/all")
     public ContentDto<Long> totalDevice(
             @PathVariable("deviceId") long deviceId) {
-        return ContentDto.make( () -> deviceService.countSurveys(deviceId) );
+        return ContentDto.make( () -> surveyReadingService.countAllForOne(deviceId) );
     }
 
     @GetMapping("/total/{deviceId}/{before}")
     public ContentDto<Long> totalDeviceBefore(
             @PathVariable("deviceId") long deviceId,
             @PathVariable("before") int before) {
-        return ContentDto.make( () -> deviceService.countSurveysBefore(deviceId, before) );
+        return ContentDto.make( () -> surveyReadingService.countBeforeForOne(deviceId, before) );
     }
 
     @GetMapping("/original")

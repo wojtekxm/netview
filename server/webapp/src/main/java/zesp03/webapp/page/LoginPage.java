@@ -66,7 +66,7 @@ public class LoginPage {
 
     @GetMapping("/login")
     public String get(HttpServletRequest req) {
-        if(req.getAttribute(AuthenticationFilter.ATTR_USERDTO) != null) {
+        if(AuthenticationFilter.getUser(req) != null) {
             return "redirect:/";
         }
         return "home-public";

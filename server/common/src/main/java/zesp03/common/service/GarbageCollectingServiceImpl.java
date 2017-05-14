@@ -30,23 +30,14 @@ public class GarbageCollectingServiceImpl implements GarbageCollectingService {
         if(maxDeletedRows < 1) {
             throw new IllegalArgumentException("maxDeletedRows < 1");
         }
-        List<DeviceSurvey> list = em.createQuery(
-                "SELECT ds FROM DeviceSurvey ds WHERE ds.deleted > 0",
+        List<DeviceSurvey> list = em.createQuery("SELECT ds FROM " +
+                        "DeviceSurvey ds LEFT JOIN ds.frequency f " +
+                        "WHERE f.deleted > 0",
                 DeviceSurvey.class)
                 .setMaxResults(maxDeletedRows)
                 .getResultList();
         int deleted = list.size();
         deleteFromDeviceSurvey(list);
-        if(deleted < maxDeletedRows) {
-            list = em.createQuery("SELECT ds FROM " +
-                            "DeviceSurvey ds LEFT JOIN ds.frequency f " +
-                            "WHERE f.deleted > 0",
-                    DeviceSurvey.class)
-                    .setMaxResults(maxDeletedRows - deleted)
-                    .getResultList();
-            deleted += list.size();
-            deleteFromDeviceSurvey(list);
-        }
         log.debug("deleted={}", deleted);
         return deleted > 0;
     }

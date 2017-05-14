@@ -11,10 +11,8 @@ import zesp03.webapp.dto.result.ListDto;
 import zesp03.webapp.service.BuildingService;
 import zesp03.webapp.service.DeviceService;
 
-import java.math.BigDecimal;
-
-//TODO /api/building
 @RestController
+@RequestMapping("/api/building")
 public class BuildingApi {
     @Autowired
     private BuildingService buildingService;
@@ -22,42 +20,42 @@ public class BuildingApi {
     @Autowired
     private DeviceService deviceService;
 
-    @GetMapping("/api/building/info/all")
+    @GetMapping("/info/all")
     public ListDto<BuildingDto> getAllBuildings() {
         return ListDto.make( () -> buildingService.getAllBuildings() );
     }
 
-    @GetMapping("/api/building/info/{buildingId}")
+    @GetMapping("/info/{buildingId}")
     public ContentDto<BuildingDto> getBuilding(
             @PathVariable("buildingId") long buildingId) {
         return ContentDto.make( () -> buildingService.getOneBuilding(buildingId) );
     }
 
-    @GetMapping("/api/building/units/{buildingId}")
+    @GetMapping("/units/{buildingId}")
     public ListDto<UnitDto> getUnits(
             @PathVariable("buildingId") long buildingId) {
         return ListDto.make( () -> buildingService.getUnits(buildingId) );
     }
 
-    @GetMapping("/api/building/controllers/{buildingId}")
+    @GetMapping("/controllers/{buildingId}")
     public ListDto<ControllerDto> getControllersInfo(
             @PathVariable("buildingId") long buildingId) {
         return ListDto.make( () -> buildingService.getControllersInfo(buildingId) );
     }
 
-    @GetMapping("/api/building/controllers-details/{buildingId}")
+    @GetMapping("/controllers-details/{buildingId}")
     public ListDto<ControllerDetailsDto> getControllersDetails(
             @PathVariable("buildingId") long buildingId) {
         return ListDto.make( () -> buildingService.getControllersDetails(buildingId) );
     }
 
-    @GetMapping("/api/building/devices-details/{buildingId}")
+    @GetMapping("/devices-details/{buildingId}")
     public ListDto<DeviceDetailsDto> getDevices(
             @PathVariable("buildingId") long buildingId) {
         return ListDto.make( () -> deviceService.checkDetailsByBuilding(buildingId) );
     }
 
-    @PostMapping("/api/building/unlink-unit")
+    @PostMapping("/unlink-unit")
     public BaseResultDto unlinkUnit(
             @RequestBody BuildingAndUnitDto dto) {
         return BaseResultDto.make( () ->
@@ -67,37 +65,25 @@ public class BuildingApi {
         );
     }
 
-    @GetMapping("/api/unitsbuildings")
-    public ContentDto<BuildingDetailsDto> getUnitsBuildings(
-            @RequestParam("id") long id ) {
-        return ContentDto.make( () -> buildingService.getUnitsBuildings(id) );
-    }
-
-    @PostMapping("/api/building/remove/{buildingId}")
+    @PostMapping("/remove/{buildingId}")
     public BaseResultDto removeBuilding(
             @PathVariable("buildingId") long buildingId) {
         return BaseResultDto.make( () -> buildingService.removeBuilding(buildingId) );
     }
 
-    @PostMapping(value = "/api/building/create", consumes = "application/json")
+    @PostMapping(value = "/create", consumes = "application/json")
     public BaseResultDto createBuilding(
             @RequestBody CreateBuildingDto dto) {
         return BaseResultDto.make( () -> buildingService.createBuilding(dto) );
     }
 
-    @GetMapping("/api/modify-building")
-    public ContentDto<BuildingDto> modifyBuilding(
-            @RequestParam("id") long id) {
-        return ContentDto.make( () -> buildingService.modifyBuilding(id) );
-    }
 
-    @PostMapping(value = "/api/accept-modify-building", consumes = "application/json")
+
+    @PostMapping(value = "/accept-modify", consumes = "application/json")
     public BaseResultDto acceptModifyBuilding(
             @RequestBody BuildingDto dto) {
         return BaseResultDto.make( () -> buildingService.acceptModifyBuilding(dto) );
     }
-
-
 }
 
 

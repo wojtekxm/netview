@@ -124,7 +124,6 @@
             </div>
         </div>
     </div>
-    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
 
 
@@ -152,7 +151,7 @@ $(document).ready(function () {
         };
         progress.load(
             [{
-                "url" : '/api/accept-modify-building',
+                "url" : '/api/building/accept-modify',
                 "method" : 'post',
                 "postData" : BuildingDto
             }],

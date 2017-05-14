@@ -7,7 +7,6 @@ import zesp03.common.data.CurrentDeviceState;
 import zesp03.common.entity.Building;
 import zesp03.common.entity.Controller;
 import zesp03.common.entity.Device;
-import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.repository.BuildingRepository;
 import zesp03.common.repository.ControllerRepository;
@@ -23,7 +22,6 @@ import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -123,40 +121,6 @@ public class DeviceServiceImpl implements DeviceService {
             throw new NotFoundException("device");
         }
         return DeviceDetailsDto.make( opt.get() );
-    }
-
-    @Override
-    public Long countSurveys(Long deviceId) {
-        Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
-        if(!opt.isPresent()) {
-            throw new NotFoundException("device");
-        }
-        Set<Long> ids = opt.get()
-                .getFrequencyList()
-                .stream()
-                .map(DeviceFrequency::getId)
-                .collect(Collectors.toSet());
-        if(ids.isEmpty()) {
-            return 0L;
-        }
-        return deviceSurveyRepository.countForDeviceFrequenciesNotDeleted(ids);
-    }
-
-    @Override
-    public Long countSurveysBefore(Long deviceId, int before) {
-        Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
-        if(!opt.isPresent()) {
-            throw new NotFoundException("device");
-        }
-        Set<Long> ids = opt.get()
-                .getFrequencyList()
-                .stream()
-                .map(DeviceFrequency::getId)
-                .collect(Collectors.toSet());
-        if(ids.isEmpty()) {
-            return 0L;
-        }
-        return deviceSurveyRepository.countBeforeForDeviceFrequenciesNotDeleted(ids, before);
     }
 
     @Override

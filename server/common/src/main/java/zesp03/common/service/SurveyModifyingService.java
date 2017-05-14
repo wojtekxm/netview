@@ -28,7 +28,7 @@ public interface SurveyModifyingService {
 
     void deleteForAll(int before);
 
-    void deleteForOne(Long deviceId);
+    void deleteForOneDevice(Long deviceId);
 
-    void deleteForOne(Long deviceId, int before);
+    void deleteForOneDevice(Long deviceId, int before);
 }

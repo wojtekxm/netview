@@ -23,9 +23,6 @@ public class DeviceSurvey {
     @Column(name = "clients_sum", nullable = false)
     private Integer clientsSum;
 
-    @Column(name = "deleted", nullable = false)
-    private Long deleted;
-
     public Long getId() {
         return id;
     }
@@ -64,13 +61,5 @@ public class DeviceSurvey {
 
     public void setClientsSum(Integer clientsSum) {
         this.clientsSum = clientsSum;
-    }
-
-    public Long getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Long deleted) {
-        this.deleted = deleted;
     }
 }

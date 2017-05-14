@@ -1,7 +1,7 @@
 CREATE TABLE controller (
 id BIGINT AUTO_INCREMENT,
 `name` VARCHAR(85) NOT NULL COLLATE 'utf8_general_ci' UNIQUE,
-ipv4 VARCHAR(15) NOT NULL COLLATE 'ascii_general_ci',
+ipv4 VARCHAR(15) NOT NULL COLLATE 'utf8_general_ci',
 description VARCHAR(1000) COLLATE 'utf8_general_ci',
 building_id BIGINT,
 PRIMARY KEY (id)
@@ -43,7 +43,7 @@ CREATE INDEX KEY_timestamp USING BTREE ON device_survey (`timestamp`);
 ALTER TABLE device_survey ADD UNIQUE UQ_frequency_id_timestamp (frequency_id, `timestamp`);
 
 CREATE TABLE hibernate_sequences (
-sequence_name VARCHAR(255) COLLATE 'ascii_bin' NOT NULL,
+sequence_name VARCHAR(255) COLLATE 'utf8_bin' NOT NULL,
 next_val BIGINT NOT NULL,
 PRIMARY KEY (sequence_name)
 );

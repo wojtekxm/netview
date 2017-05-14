@@ -36,20 +36,18 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                    <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
-                    <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li>
-                        <li><a href="/all-users">Użytkownicy</a></li>
-                        <li><a href="/all-devices">Urządzenia</a></li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
-                            <ul class="dropdown-menu"  style="background-color: #080b08;">
-                                <li><a href="/all-buildings">Budynki</a></li>
-                                <li><a href="/all-units">Jednostki</a></li>
-                            </ul>
-                        </li>
-                    </c:if>
-                </ul>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li>
+                    <li><a href="/all-users">Użytkownicy</a></li>
+                    <li><a href="/all-devices">Urządzenia</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
+                        <ul class="dropdown-menu"  style="background-color: #080b08;">
+                            <li><a href="/all-buildings">Budynki</a></li>
+                            <li><a href="/all-units">Jednostki</a></li>
+                        </ul>
+                    </li>
+                </c:if>
             </ul>
             <c:if test="${loggedUser.role eq 'ROOT'}">  <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -58,7 +56,7 @@
                 </div>
             </form></c:if>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <c:if test="${loggedUser.role eq 'ROOT'}">  <li style="margin-left: 0px!important;"><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li style="margin-left: 0 !important;"><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
                 <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout" style="margin-right: 10px;"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
@@ -282,7 +280,7 @@ $(document).ready(function() {
         } ],
         ['.on-loading'], ['.on-loaded'], [],
         function(responses) {
-            var arr, i, k, tmp, firstMhz;
+            var i, k, tmp, firstMhz;
             device = responses[0].content;
             tdName.text(device.name);
             if(device.controller === null) {
@@ -363,7 +361,6 @@ $(document).ready(function() {
             $('input[type=radio][name=chart]').change(function() {
                 timeJump = 0;
                 var val = $('input[type=radio][name=chart]:checked').val();
-                console.log("$('input[type=radio][name=chart]:checked').val()", val);
                 if(val === 'other') {
                     settingsAdvanced.collapse('show');
                 }
@@ -384,10 +381,6 @@ $(document).ready(function() {
                 refresh();
             });
             $('input[type=radio][name=frequency]').change(function() {
-                console.log(
-                    "$('input[type=radio][name=frequency]'):checked",
-                    $('input[type=radio][name=frequency]:checked').val()
-                );
                 refresh();
             });
             $('input[type=radio][name=size]').change(function() {
@@ -539,6 +532,12 @@ $(document).ready(function() {
                         "autoSkip" : false,
                         "autoSkipPadding" : bestUnit.padding,
                         "maxRotation": 0
+                    },
+                    "afterBuildTicks" : function(x) {
+                        x.ticks.shift();
+                    },
+                    "gridLines" : {
+                        "zeroLineColor" : 'rgba(0,0,0,0.1)'
                     }
                 }],
                 "yAxes": [{
@@ -699,9 +698,15 @@ $(document).ready(function() {
                         "max" : t1 * 1000
                     },
                     "ticks": {
-                        "autoSkip" : true,
+                        "autoSkip" : false,
                         "autoSkipPadding" : bestUnit.padding,
                         "maxRotation": 0
+                    },
+                    "afterBuildTicks" : function(x) {
+                        x.ticks.shift();
+                    },
+                    "gridLines" : {
+                        "zeroLineColor" : 'rgba(0,0,0,0.1)'
                     }
                 }],
                 "yAxes": [{
@@ -712,7 +717,7 @@ $(document).ready(function() {
                         "labelString": 'liczba klientów'
                     },
                     "ticks": {
-                        "autoSkip": true,
+                        "autoSkip": false,
                         "fixedStepSize": 10,
                         "beginAtZero": true,
                         "Min": -5,
@@ -781,21 +786,20 @@ $(document).ready(function() {
     }
 
     function chooseUnit(t0, t1) {
-        console.log('chooseUnit...');
-        var timeSpan, availableUnits, i, u, k, t, maxStep, best, canvasWidth;
+        var timeSpan, availableUnits, i, u, k, t, best, canvasWidth;
         canvasWidth = parseInt( myCanvas.attr('width') );
         availableUnits = [ {
             "name" : 'minute',
             "span" : 60,
             "steps" : [1, 5, 10, 15, 20, 30],
             "format" : 'HH:mm',
-            "padding" : 25
+            "padding" : 40
         }, {
             "name" : 'hour',
             "span" : 3600,
-            "steps" : [1, 2, 3, 4 ],
+            "steps" : [1, 2, 3, 4, 6],
             "format" : 'HH:mm',
-            "padding" : 25
+            "padding" : 40
         }, {
             "name" : 'day',
             "span" : 86400,
@@ -807,7 +811,7 @@ $(document).ready(function() {
             "span" : 86400 * 7,
             "steps" : [1],
             "format" : 'DD.MM',
-            "padding" : 30
+            "padding" : 35
         }, {
             "name" : 'month',
             "span" : 86400 * 30,
@@ -819,7 +823,7 @@ $(document).ready(function() {
             "span" : 86400 * 365,
             "steps" : [1, 5, 10, 20, 50, 100],
             "format" : 'YYYY',
-            "padding" : 60
+            "padding" : 35
         } ];
         timeSpan = t1 - t0;
         best = {
@@ -838,7 +842,6 @@ $(document).ready(function() {
                     best.step = t;
                 }
             }
-            console.log('best', best);
         }
         return best;
     }
@@ -857,16 +860,18 @@ $(document).ready(function() {
     }
 
     function prepareCanvas() {
-        var w, h;
+        var w, h, customWidth, customHeight;
         if(typeof myChart !== 'undefined') {
             myChart.destroy();
             myChart = undefined;
         }
+        customWidth = $('#custom_size_width');
+        customHeight = $('#custom_size_height');
         chartArea.empty();
         myCanvas = $('<canvas id="mycanvas"></canvas>');
         if( radioSizeCustom.prop('checked') && radioChartOther.prop('checked') ) {
-            w = parseInt( $('#custom_size_width').val() );
-            h = parseInt( $('#custom_size_height').val() );
+            w = parseInt( customWidth.val() );
+            h = parseInt( customHeight.val() );
             if(isNaN(w) || isNaN(h)) {
                 if(isNaN(w)) {
                     alert('Podaj poprawną szerokość');
@@ -876,11 +881,11 @@ $(document).ready(function() {
                 }
                 if(isNaN(w)) {
                     w = 1000;
-                    $('#custom_size_width').val(w);
+                    customWidth.val(w);
                 }
                 if(isNaN(h)) {
                     h = 400;
-                    $('#custom_size_height').val(h)
+                    customHeight.val(h)
                 }
             }
             w = Math.round(w);

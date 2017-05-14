@@ -144,6 +144,9 @@
 
 <script type="text/javascript">
     function resetFilters(){
+        btnWorst.prop('disabled', false);
+        btnTop.prop('disabled', false);
+        btnResetFilter.prop('disabled', true);
         $('option', $('#stan')).each(function(element) {
             $(this).removeAttr('selected').prop('selected', true);
         });
@@ -164,7 +167,6 @@
 </script>
 
 <script type="text/javascript">
-    var clicked = "all";
     var inter;
     var filterChoice = "filter";
     var frequency = "2400";
@@ -172,16 +174,22 @@
     var ifFilter = true;
 
     $('#top_15').click(function(){
+        btnTop.prop('disabled', true);
+        btnWorst.prop('disabled', false);
         clearInterval(inter);
         filterChoice = "top";
         option = "best";
         topDevices(option);
+        inter = setInterval('topDevices(option)', 30000);
     });
     $('#worst_15').click(function(){
+        btnWorst.prop('disabled', true);
+        btnTop.prop('disabled', false);
         clearInterval(inter);
         filterChoice = "worst";
         option = "worst";
         topDevices(option);
+        inter = setInterval('topDevices(option)', 30000);
     });
 
     function displayDevice(currentDeviceStateDto){
@@ -248,6 +256,7 @@
                 devices = listDtoOfCurrentDeviceStateDto.list;
                 var freq2400 = new Array();
                 var freq5000 = new Array();
+                var time = devices[0].frequencySurvey['2400'].timestamp;
 
                 for(var i = 0; i< devices.length; i++){
                     var currentDeviceStateDto = devices[i];
@@ -317,12 +326,32 @@
                     $('#countOff').css("display", "none");
                     $('#countAll').css("display", "none");
                 }
+
+                var date = new Date(time*1000);
+                var n = date.toLocaleString();
+
+                if(n == "Invalid Date"){
+                    n = "";
+                    setTimeout(function(){
+                        $('#data').text(n);
+                        $('#data_tittle').text("Nie przeprowadzono jeszcze żadnych badań");
+                    }, 5000);
+                }else {
+                    $('#data').text(n);
+                    $('#data_tittle').text("Ostatnie badanie przeprowadzono:");
+                }
             }
         );
     }
 </script>
 
 <script type="text/javascript">
+    var btnFilter = $('#filters_commit');
+    var btnResetFilter = $('#back');
+    var btnTop = $('#top_15');
+    var btnWorst = $('#worst_15');
+
+
     function getFilteredDevices() {
         $('[data-toggle="tooltip"]').tooltip('destroy');
         progress.loadGet(
@@ -331,6 +360,9 @@
             function(listDtoOfCurrentDeviceStateDto) {
                 devices = listDtoOfCurrentDeviceStateDto.list;
                 filter();
+
+                btnResetFilter.prop('disabled', false);
+                btnFilter.prop('disabled', false);
             }
         );
     }
@@ -559,6 +591,9 @@
     }
 
     $('#filters_commit').click(function(){
+        btnWorst.prop('disabled', false);
+        btnTop.prop('disabled', false);
+        btnFilter.prop('disabled', true);
         ifFilter = true;
         filterChoice = "filter";
         clearInterval(inter);
@@ -666,14 +701,9 @@
     })
 </script>
 
-<%--<script type="text/javascript">--%>
-    <%--$("#filters-button").click(function(e) {--%>
-        <%--$( ".filters" ).slideToggle( "slow" );--%>
-    <%--});--%>
-<%--</script>--%>
 
 <script type="text/javascript">
-    "use strict";
+
     $(document).ready( function(){
         progress.loadGet(
             '/api/device/info/all',
@@ -702,7 +732,6 @@
 
 
     function e(){
-        clicked = "all";
         clearInterval(interGreen);
         clearInterval(interRed);
         clearInterval(interGrey);
@@ -830,13 +859,17 @@
                 getFilteredDevices();
                 inter = setInterval('getFilteredDevices()', 30000);
             }else if(filterChoice == "top"){
+                btnWorst.prop('disabled', false);
                 clearInterval(inter);
                 option = "best";
                 topDevices(option);
+                inter = setInterval('topDevices(option)', 30000);
             }else if(filterChoice == "worst"){
+                btnTop.prop('disabled', false);
                 clearInterval(inter);
                 option = "worst";
                 topDevices(option);
+                inter = setInterval('topDevices(option)', 30000);
             }
 
         })

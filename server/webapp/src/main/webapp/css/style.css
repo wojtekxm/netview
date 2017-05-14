@@ -392,6 +392,33 @@ ul li ul li > a:hover
     text-decoration: none;
     list-style-type: none;
 }
+ul li ul li > a:active
+{
+    color:white;
+    text-decoration: none;
+    list-style-type: none;
+}
+ul li ul li > a:visited
+{
+    color:white;
+    text-decoration: none;
+    list-style-type: none;
+}
+ul li ul li > a:focus
+{
+    color:white;
+    text-decoration: none;
+    list-style-type: none;
+}
+
+
+
+ul li ul li > a:hover
+{
+    color:white;
+    text-decoration: none;
+    list-style-type: none;
+}
 
 ul li#wydzial
 {
@@ -485,4 +512,5 @@ div.page {
 
 .list{
     margin-top: 20px;
+
 }

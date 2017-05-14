@@ -61,15 +61,14 @@
     </div>
 </nav>
 
-<div class="container">
-    <div style="height: 80px;"></div>
+<div class="container" style="margin-top:80px">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-wrench"></span> Wyniki dla wyszukiwania: <c:out value="${param.query}"/>
+            <span class="glyphicon glyphicon-wrench"></span> Wyniki dla wyszukiwania dla zapytania: &nbsp; <c:out value="${param.query}"/>
         </div>
         <div class="panel-body" style="padding-bottom: 30px;">
 
-            <h4 style="margin-bottom: 25px;border: 1px solid gainsboro;padding:15px;border-radius: 3px;">Kliknij na wybraną kategorię, aby zobaczyć wyniki wyszukiwania</h4>
+            <h4 style="margin-bottom: 25px;border: 1px solid gainsboro;padding:15px;border-radius: 3px;">Kliknij na wybraną kategorię, aby zobaczyć wyniki</h4>
 
             <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#devs" style="width: 100%;">Urządzenia, <span id="devsLength"></span></button>
             <ol class="list collapse" id="devs">

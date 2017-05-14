@@ -36,20 +36,18 @@
 
         <div class="collapse navbar-collapse" id="myDiv">
             <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                <ul class="nav navbar-nav" style="padding-right:3px;font-size: 16px;">
-                    <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
-                    <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li>
-                        <li><a href="/all-users">Użytkownicy</a></li>
-                        <li><a href="/all-devices">Urządzenia</a></li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
-                            <ul class="dropdown-menu"  style="background-color: #080b08;">
-                                <li><a href="/all-buildings">Budynki</a></li>
-                                <li><a href="/all-units">Jednostki</a></li>
-                            </ul>
-                        </li>
-                    </c:if>
-                </ul>
+                <li><a style="background-color: black;padding-left:25px;padding-right: 20px;" href="/"><span class="glyphicon glyphicon-home"></span> &nbsp;NetView &nbsp;</a></li>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li><a href="/all-controllers">Kontrolery</a></li>
+                    <li><a href="/all-users">Użytkownicy</a></li>
+                    <li><a href="/all-devices">Urządzenia</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Lokalizacje<span class="caret"></span></a>
+                        <ul class="dropdown-menu"  style="background-color: #080b08;">
+                            <li><a href="/all-buildings">Budynki</a></li>
+                            <li><a href="/all-units">Jednostki</a></li>
+                        </ul>
+                    </li>
+                </c:if>
             </ul>
             <c:if test="${loggedUser.role eq 'ROOT'}">  <form method="get" action="/search" class="navbar-form navbar-nav" style="margin-right:5px;font-size: 16px;">
                 <div class="form-group" style="display:flex;">
@@ -58,7 +56,7 @@
                 </div>
             </form></c:if>
             <ul class="nav navbar-nav navbar-right" style="padding-right:3px;font-size: 16px;">
-                <c:if test="${loggedUser.role eq 'ROOT'}">  <li style="margin-left: 0px!important;"><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
+                <c:if test="${loggedUser.role eq 'ROOT'}">  <li style="margin-left: 0 !important;"><a href="/settings"><span class="glyphicon glyphicon-wrench"></span>  Ustawienia</a></li></c:if>
                 <li><a href="/account"><span class="glyphicon glyphicon-user"></span>  <c:out value="${loggedUser.name}"/></a></li>
                 <li><a href="/logout" style="margin-right: 10px;"><span class="glyphicon glyphicon-log-out"></span>  Wyloguj</a></li>
             </ul>
@@ -282,7 +280,7 @@ $(document).ready(function() {
         } ],
         ['.on-loading'], ['.on-loaded'], [],
         function(responses) {
-            var arr, i, k, tmp, firstMhz;
+            var i, k, tmp, firstMhz;
             device = responses[0].content;
             tdName.text(device.name);
             if(device.controller === null) {
@@ -788,26 +786,26 @@ $(document).ready(function() {
     }
 
     function chooseUnit(t0, t1) {
-        var timeSpan, availableUnits, i, u, k, t, maxStep, best, canvasWidth;
+        var timeSpan, availableUnits, i, u, k, t, best, canvasWidth;
         canvasWidth = parseInt( myCanvas.attr('width') );
         availableUnits = [ {
             "name" : 'minute',
             "span" : 60,
             "steps" : [1, 5, 10, 15, 20, 30],
             "format" : 'HH:mm',
-            "padding" : 35
+            "padding" : 40
         }, {
             "name" : 'hour',
             "span" : 3600,
             "steps" : [1, 2, 3, 4, 6],
             "format" : 'HH:mm',
-            "padding" : 35
+            "padding" : 40
         }, {
             "name" : 'day',
             "span" : 86400,
             "steps" : [1],
             "format" :'dddd',
-            "padding" : 63
+            "padding" : 60
         }, {
             "name" : 'week',
             "span" : 86400 * 7,
@@ -862,16 +860,18 @@ $(document).ready(function() {
     }
 
     function prepareCanvas() {
-        var w, h;
+        var w, h, customWidth, customHeight;
         if(typeof myChart !== 'undefined') {
             myChart.destroy();
             myChart = undefined;
         }
+        customWidth = $('#custom_size_width');
+        customHeight = $('#custom_size_height');
         chartArea.empty();
         myCanvas = $('<canvas id="mycanvas"></canvas>');
         if( radioSizeCustom.prop('checked') && radioChartOther.prop('checked') ) {
-            w = parseInt( $('#custom_size_width').val() );
-            h = parseInt( $('#custom_size_height').val() );
+            w = parseInt( customWidth.val() );
+            h = parseInt( customHeight.val() );
             if(isNaN(w) || isNaN(h)) {
                 if(isNaN(w)) {
                     alert('Podaj poprawną szerokość');
@@ -881,11 +881,11 @@ $(document).ready(function() {
                 }
                 if(isNaN(w)) {
                     w = 1000;
-                    $('#custom_size_width').val(w);
+                    customWidth.val(w);
                 }
                 if(isNaN(h)) {
                     h = 400;
-                    $('#custom_size_height').val(h)
+                    customHeight.val(h)
                 }
             }
             w = Math.round(w);

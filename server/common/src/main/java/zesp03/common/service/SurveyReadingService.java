@@ -22,6 +22,14 @@ public interface SurveyReadingService {
 
     Optional<CurrentDeviceState> checkOneFetch(Long deviceId);
 
+    long countAllForAll();
+
+    long countBeforeForAll(int before);
+
+    long countAllForOne(Long deviceId);
+
+    long countBeforeForOne(Long deviceId, int before);
+
     /**
      * Zwraca listę badań dla urządzenia o id równym <code>device</code>.
      * Zwrócona lista będzie posortowana po czasie wykonania badania, rosnąco.

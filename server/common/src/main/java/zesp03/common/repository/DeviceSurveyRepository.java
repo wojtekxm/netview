@@ -11,9 +11,6 @@ public interface DeviceSurveyRepository extends CrudRepository<DeviceSurvey, Lon
     @Query("SELECT ds FROM DeviceSurvey ds WHERE ds.frequency.id = ?1 AND ds.timestamp >= ?2 AND ds.timestamp < ?3 ORDER BY ds.timestamp ASC")
     List<DeviceSurvey> findFromPeriodOrderByTime(Long frequencyId, Integer timeStart, Integer timeEnd);
 
-    @Query("SELECT COUNT(ds.id) FROM DeviceSurvey ds WHERE ds.timestamp < ?1")
-    Long countBefore(int before);
-
     @Query("SELECT COUNT(ds.id) FROM DeviceSurvey ds WHERE ds.frequency.id IN ?1")
     Long countForDeviceFrequencies(Collection<Long> deviceFrequencyIds);
 

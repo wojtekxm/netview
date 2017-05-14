@@ -126,7 +126,8 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
             final List<DeviceFrequency> freqList = d.getFrequencyList();
             DeviceFrequency freq = null;
             for(DeviceFrequency test : freqList) {
-                if( (int)test.getFrequency() == si.getFrequencyMhz() ) {
+                if( (int)test.getFrequency() == si.getFrequencyMhz() &&
+                        test.getDeleted() == 0L ) {
                     freq = test;
                     break;
                 }
@@ -150,22 +151,24 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     public void importSurveys(Long deviceId, Integer frequencyMhz, List<SampleRaw> data) {
         data.sort(Comparator.comparingInt(SampleRaw::getTimestamp));
         Optional<DeviceFrequency> opt = deviceFrequencyRepository.findByDeviceAndFrequencyNotDeleted(deviceId, frequencyMhz);
-        DeviceFrequency df;
+        final DeviceFrequency df = new DeviceFrequency();
         if(opt.isPresent()) {
-            df = opt.get();
+            final DeviceFrequency old = opt.get();
+            old.setDeleted(old.getId());
+            deviceFrequencyRepository.save(old);
+            em.flush();
+            df.setDevice(old.getDevice());
         }
         else {
-            Optional<Device> optDevice = deviceRepository.findOneNotDeleted(deviceId);
+            final Optional<Device> optDevice = deviceRepository.findOneNotDeleted(deviceId);
             if(!opt.isPresent()) {
                 throw new NotFoundException("device");
             }
-            df = new DeviceFrequency();
             df.setDevice(optDevice.get());
-            df.setFrequency(frequencyMhz);
-            df.setDeleted(0L);
-            deviceFrequencyRepository.save(df);
         }
-        deleteForFrequency(df);
+        df.setFrequency(frequencyMhz);
+        df.setDeleted(0L);
+        deviceFrequencyRepository.save(df);
         DeviceSurvey lastDS = null;
         for(SampleRaw sampleRaw : data) {
             if(sampleRaw.getTimestamp() < 0) {
@@ -188,7 +191,16 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
         //em.createQuery("DELETE FROM DeviceSurvey ds").executeUpdate();
         List<DeviceFrequency> list = deviceFrequencyRepository.findAllNotDeleted();
         for(DeviceFrequency df : list) {
-            deleteForFrequency(df);
+            df.setDeleted(df.getId());
+            deviceFrequencyRepository.save(df);
+        }
+        em.flush();
+        for(DeviceFrequency df : list) {
+            DeviceFrequency n = new DeviceFrequency();
+            n.setDevice(df.getDevice());
+            n.setFrequency(df.getFrequency());
+            n.setDeleted(0L);
+            deviceFrequencyRepository.save(n);
         }
     }
 
@@ -201,7 +213,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     }
 
     @Override
-    public void deleteForOne(Long deviceId) {
+    public void deleteForOneDevice(Long deviceId) {
         Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
         if( ! opt.isPresent() ) {
             throw new NotFoundException("device");
@@ -221,7 +233,7 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
     }
 
     @Override
-    public void deleteForOne(Long deviceId, int before) {
+    public void deleteForOneDevice(Long deviceId, int before) {
         Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
         if( ! opt.isPresent() ) {
             throw new NotFoundException("device");
@@ -239,29 +251,5 @@ public class SurveyModifyingServiceImpl implements SurveyModifyingService {
                     .setParameter("b", before)
                     .executeUpdate();
         }
-    }
-
-    @Override
-    public void deleteForFrequency(Long deviceId, int mhz) {
-        Optional<DeviceFrequency> opt = deviceFrequencyRepository.findByDeviceAndFrequencyNotDeleted(deviceId, mhz);
-        if(!opt.isPresent()) {
-            throw new NotFoundException("deviceFrequency");
-        }
-        DeviceFrequency df = opt.get();
-        df.setDeleted(df.getId());
-        DeviceFrequency young = new DeviceFrequency();
-        young.setFrequency(df.getFrequency());
-        young.setDeleted(0L);
-        deviceFrequencyRepository.save(young);
-    }
-
-    @Override
-    public void deleteForFrequency(DeviceFrequency df) {
-        df.setDeleted(df.getId());
-        DeviceFrequency young = new DeviceFrequency();
-        young.setDevice(df.getDevice());
-        young.setFrequency(df.getFrequency());
-        young.setDeleted(0L);
-        deviceFrequencyRepository.save(young);
     }
 }

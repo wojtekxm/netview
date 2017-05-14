@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.result.BaseResultDto;
+import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.service.TestService;
 
 import java.util.Map;
@@ -17,6 +18,11 @@ public class TestApi {
 
     @Autowired
     private SurveyReadingService surveyReadingService;
+
+    @GetMapping("count-all")
+    public ContentDto<Long> getCountAll() {
+        return ContentDto.make( () -> surveyReadingService.countAllForAll() );
+    }
 
     @GetMapping("/check-all")
     public Map<Long, TestService.TestCurrentDeviceState> checkAll() {

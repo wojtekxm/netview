@@ -3,7 +3,6 @@ package zesp03.common.service;
 import zesp03.common.data.SampleRaw;
 import zesp03.common.data.SurveyInfo;
 import zesp03.common.entity.Controller;
-import zesp03.common.entity.DeviceFrequency;
 import zesp03.common.util.SurveyInfoCollection;
 
 import java.util.List;
@@ -29,11 +28,7 @@ public interface SurveyModifyingService {
 
     void deleteForAll(int before);
 
-    void deleteForOne(Long deviceId);
+    void deleteForOneDevice(Long deviceId);
 
-    void deleteForOne(Long deviceId, int before);
-
-    void deleteForFrequency(Long deviceId, int mhz);
-
-    void deleteForFrequency(DeviceFrequency df);
+    void deleteForOneDevice(Long deviceId, int before);
 }

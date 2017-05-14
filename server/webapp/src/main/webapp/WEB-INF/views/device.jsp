@@ -69,9 +69,9 @@
     <div style="margin-top:80px"></div>
     <div class="on-loading progress-space"></div>
     <div class="on-loaded">
-        <div class="panel panel-default">
+        <div class="panel panel-default" style="overflow: auto">
             <div class="panel-heading clearfix" style="background-color: #2b2d2b;color:white;">
-                <h4 class="pull-left" style="margin-bottom: 0">Informacje o urządzeniu</h4>
+                Informacje o urządzeniu
                 <form class="pull-right" method="post" action="/device/remove/${device.id}">
                     <button class="btn btn-sm btn-danger" type="submit">
                         <span class="glyphicon glyphicon-trash"></span>
@@ -498,11 +498,14 @@ $(document).ready(function() {
     }
 
     function genAvgMinMax(surveysExtended, t0, t1) {
-        var data, options, points_min, points_avg, points_max, i, last;
+        var data, options, points_min, points_avg, points_max, i, last, bestUnit, displayFormats;
         prepareCanvas();
         points_min = [];
         points_max = [];
         points_avg = [];
+        bestUnit = chooseUnit(t0, t1);
+        displayFormats = {};
+        displayFormats[bestUnit.name] = bestUnit.format;
         options = {
             "tooltips": {
                 "mode": 'index'
@@ -525,17 +528,17 @@ $(document).ready(function() {
                 "xAxes": [{
                     "type" : 'time',
                     "time" : {
-                        "minUnit" : 'minute',
                         "tooltipFormat" : 'dddd, D MMMM YYYY, H:mm:ss',
-                        "displayFormats" : {
-                            "minute" : 'HH:mm',
-                            "hour" : 'HH:mm',
-                            "day" : 'dddd',
-                            "week" : 'DD.MM',
-                            "month" : 'DD.MM'
-                        },
+                        "displayFormats" : displayFormats,
+                        "unit" : bestUnit.name,
+                        "unitStepSize" : bestUnit.step,
                         "min" : t0 * 1000,
                         "max" : t1 * 1000
+                    },
+                    "ticks": {
+                        "autoSkip" : false,
+                        "autoSkipPadding" : bestUnit.padding,
+                        "maxRotation": 0
                     }
                 }],
                 "yAxes": [{
@@ -568,12 +571,12 @@ $(document).ready(function() {
                 "label": "minimalnie",
                 "data": points_min,
                 "fill": true,
-                "backgroundColor": '#ffc800',
-                "borderColor": '#ffc800',
-                "pointBackgroundColor": '#ffc800',
-                "pointBorderColor": '#ffc800',
-                "pointHoverBackgroundColor": '#ffc800',
-                "pointHoverBorderColor": '#ffc800',
+                "backgroundColor": '#03a9f4',
+                "borderColor": '#01344c',
+                "pointBackgroundColor": '#03a9f4',
+                "pointBorderColor": '#01344c',
+                "pointHoverBackgroundColor": '#03a9f4',
+                "pointHoverBorderColor": '#01344c',
                 "borderWidth" : 1,
                 "pointBorderWidth" : 1,
                 "pointHoverBorderWidth" : 1,
@@ -585,12 +588,12 @@ $(document).ready(function() {
                 "label": "średnio",
                 "data": points_avg,
                 "fill": true,
-                "backgroundColor": '#ff6600',
-                "borderColor": '#e62e00',
-                "pointBackgroundColor": '#ff6600',
-                "pointBorderColor": '#e62e00',
-                "pointHoverBackgroundColor": '#ff6600',
-                "pointHoverBorderColor": '#e62e00',
+                "backgroundColor": '#b3e6fe',
+                "borderColor": '#01344c',
+                "pointBackgroundColor": '#b3e6fe',
+                "pointBorderColor": '#01344c',
+                "pointHoverBackgroundColor": '#b3e6fe',
+                "pointHoverBorderColor": '#01344c',
                 "borderWidth" : 1,
                 "pointBorderWidth" : 1,
                 "pointHoverBorderWidth" : 1,
@@ -602,12 +605,12 @@ $(document).ready(function() {
                 "label": "maksymalnie",
                 "data": points_max,
                 "fill": true,
-                "backgroundColor": '#cc0000',
-                "borderColor": '#800000',
-                "pointBackgroundColor": '#cc0000',
-                "pointBorderColor": '#800000',
-                "pointHoverBackgroundColor": '#cc0000',
-                "pointHoverBorderColor": '#800000',
+                "backgroundColor": '#01577e',
+                "borderColor": '#01344c',
+                "pointBackgroundColor": '#01577e',
+                "pointBorderColor": '#01344c',
+                "pointHoverBackgroundColor": '#01577e',
+                "pointHoverBorderColor": '#01344c',
                 "borderWidth" : 1,
                 "pointBorderWidth" : 1,
                 "pointHoverBorderWidth" : 1,
@@ -654,7 +657,7 @@ $(document).ready(function() {
     }
 
     function genOriginal(surveys, before, after, t0, t1) {
-        var data, options, points, i, last, ctx, grad;
+        var data, options, points, i, last, ctx, grad, bestUnit, displayFormats;
         prepareCanvas();
         ctx = myCanvas.get()[0].getContext('2d', {
             "alpha": true
@@ -663,6 +666,9 @@ $(document).ready(function() {
         grad.addColorStop(0.0, 'rgba(3,169,244,0.6)');
         grad.addColorStop(1.0, 'rgba(3,169,244,0.6)');
         points = [];
+        bestUnit = chooseUnit(t0, t1);
+        displayFormats = {};
+        displayFormats[bestUnit.name] = bestUnit.format;
         options = {
             "tooltips": {
                 "mode": 'index'
@@ -686,18 +692,15 @@ $(document).ready(function() {
                     "type" : 'time',
                     "time" : {
                         "tooltipFormat" : 'dddd, D MMMM YYYY, H:mm:ss',
-                        "displayFormats" : {
-                            "minute" : 'HH:mm',
-                            "hour" : 'HH:mm',
-                            "day" : 'dddd',
-                            "week" : 'DD.MM',
-                            "month" : 'DD.MM'
-                        },
+                        "displayFormats" : displayFormats,
+                        "unit" : bestUnit.name,
+                        "unitStepSize" : bestUnit.step,
                         "min" : t0 * 1000,
                         "max" : t1 * 1000
                     },
                     "ticks": {
                         "autoSkip" : true,
+                        "autoSkipPadding" : bestUnit.padding,
                         "maxRotation": 0
                     }
                 }],
@@ -709,7 +712,7 @@ $(document).ready(function() {
                         "labelString": 'liczba klientów'
                     },
                     "ticks": {
-                        "autoSkip": false,
+                        "autoSkip": true,
                         "fixedStepSize": 10,
                         "beginAtZero": true,
                         "Min": -5,
@@ -775,6 +778,69 @@ $(document).ready(function() {
             "data": data,
             "options": options
         });
+    }
+
+    function chooseUnit(t0, t1) {
+        console.log('chooseUnit...');
+        var timeSpan, availableUnits, i, u, k, t, maxStep, best, canvasWidth;
+        canvasWidth = parseInt( myCanvas.attr('width') );
+        availableUnits = [ {
+            "name" : 'minute',
+            "span" : 60,
+            "steps" : [1, 5, 10, 15, 20, 30],
+            "format" : 'HH:mm',
+            "padding" : 25
+        }, {
+            "name" : 'hour',
+            "span" : 3600,
+            "steps" : [1, 2, 3, 4 ],
+            "format" : 'HH:mm',
+            "padding" : 25
+        }, {
+            "name" : 'day',
+            "span" : 86400,
+            "steps" : [1],
+            "format" :'dddd',
+            "padding" : 60
+        }, {
+            "name" : 'week',
+            "span" : 86400 * 7,
+            "steps" : [1],
+            "format" : 'DD.MM',
+            "padding" : 30
+        }, {
+            "name" : 'month',
+            "span" : 86400 * 30,
+            "steps" : [1, 3, 6],
+            "format" : 'MMMM',
+            "padding" : 60
+        }, {
+            "name" : 'year',
+            "span" : 86400 * 365,
+            "steps" : [1, 5, 10, 20, 50, 100],
+            "format" : 'YYYY',
+            "padding" : 60
+        } ];
+        timeSpan = t1 - t0;
+        best = {
+            "name" : 'year',
+            "span" : 86400 * 365,
+            "step" : 100,
+            "format" : 'YYYY',
+            "padding" : 60
+        };
+        for(i = availableUnits.length-1; i >= 0; i--) {
+            u = availableUnits[i];
+            for(k = u.steps.length-1; k >= 0; k--) {
+                t = u.steps[k];
+                if(u.padding * timeSpan <= canvasWidth * u.span * t) {
+                    best = u;
+                    best.step = t;
+                }
+            }
+            console.log('best', best);
+        }
+        return best;
     }
 
     function getTimestampOrNull(oneOrTwo) {

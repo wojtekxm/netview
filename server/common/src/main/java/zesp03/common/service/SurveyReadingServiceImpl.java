@@ -15,6 +15,7 @@ import zesp03.common.entity.DeviceSurvey;
 import zesp03.common.exception.NotFoundException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.DeviceFrequencyRepository;
+import zesp03.common.repository.DeviceRepository;
 import zesp03.common.repository.DeviceSurveyRepository;
 
 import javax.persistence.EntityManager;
@@ -28,14 +29,17 @@ import java.util.stream.Collectors;
 public class SurveyReadingServiceImpl implements SurveyReadingService {
     private static final Logger log = LoggerFactory.getLogger(SurveyReadingServiceImpl.class);
 
-    @Autowired
-    private DeviceSurveyRepository deviceSurveyRepository;
-
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
-    DeviceFrequencyRepository deviceFrequencyRepository;
+    private DeviceSurveyRepository deviceSurveyRepository;
+
+    @Autowired
+    private DeviceFrequencyRepository deviceFrequencyRepository;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Override
     public Long getFrequencyIdNotDeletedOrThrow(Long deviceId, Integer frequencyMhz) {
@@ -115,7 +119,7 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
                 "LEFT JOIN DeviceSurvey sur ON vfs.surveyId = sur.id WHERE " +
                 filter +
                 " (dev.deleted = 0 OR dev.deleted IS NULL) AND " +
-                "( df.deleted = 0 OR  df.deleted IS NULL)";
+                " ( df.deleted = 0 OR  df.deleted IS NULL)";
     }
 
     private CurrentDeviceState merge(CurrentDeviceState currentOrNull, Object[] arrDevFreqSur) {
@@ -137,6 +141,71 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         CurrentDeviceState current = map.get(deviceId);
         CurrentDeviceState result = merge(current, arrDevFreqSur);
         map.put(deviceId, result);
+    }
+
+    @Override
+    public long countAllForAll() {
+        List<Object[]> list = em.createQuery("SELECT df, COUNT(ds.id) FROM DeviceFrequency df " +
+                "LEFT JOIN df.surveyList ds GROUP BY df.id HAVING df.deleted = 0",
+                Object[].class)
+                .getResultList();
+        long sum = 0L;
+        for(Object[] arr : list) {
+            Long count = ((Number)arr[1]).longValue();
+            sum += count;
+        }
+        return sum;
+    }
+
+    @Override
+    public long countBeforeForAll(int before) {
+        List<Object[]> list = em.createQuery("SELECT df, COUNT(ds.id) FROM DeviceFrequency df " +
+                        "LEFT JOIN df.surveyList ds GROUP BY df.id HAVING df.deleted = 0 AND ds.timestamp < :b",
+                Object[].class)
+                .setParameter("b", before)
+                .getResultList();
+        long sum = 0L;
+        for(Object[] arr : list) {
+            Long count = ((Number)arr[1]).longValue();
+            sum += count;
+        }
+        return sum;
+    }
+
+    @Override
+    public long countAllForOne(Long deviceId) {
+        Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
+        if(!opt.isPresent()) {
+            throw new NotFoundException("device");
+        }
+        Set<Long> ids = opt.get()
+                .getFrequencyList()
+                .stream()
+                .filter( df -> df.getDeleted() == 0 )
+                .map(DeviceFrequency::getId)
+                .collect(Collectors.toSet());
+        if(ids.isEmpty()) {
+            return 0L;
+        }
+        return deviceSurveyRepository.countForDeviceFrequencies(ids);
+    }
+
+    @Override
+    public long countBeforeForOne(Long deviceId, int before) {
+        Optional<Device> opt = deviceRepository.findOneNotDeleted(deviceId);
+        if(!opt.isPresent()) {
+            throw new NotFoundException("device");
+        }
+        Set<Long> ids = opt.get()
+                .getFrequencyList()
+                .stream()
+                .filter( df -> df.getDeleted() == 0 )
+                .map(DeviceFrequency::getId)
+                .collect(Collectors.toSet());
+        if(ids.isEmpty()) {
+            return 0L;
+        }
+        return deviceSurveyRepository.countBeforeForDeviceFrequencies(ids, before);
     }
 
     @Override
@@ -220,13 +289,6 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
         else {
             final DeviceSurvey survey = beforeList.get(0);
             timeBegin = survey.getTimestamp();
-            if(survey.getTimestamp() < start) {
-                //ranged.setBefore(SampleRaw.make(survey));
-            }
-            else if(beforeList.size() > 1) {
-                final DeviceSurvey next = beforeList.get(1);
-                //ranged.setBefore(SampleRaw.make(next));
-            }
         }
         ArrayList<DeviceSurvey> surveys;
         final List<DeviceSurvey> originalSurveys = deviceSurveyRepository.findFromPeriodOrderByTime(frequencyId, timeBegin, end);

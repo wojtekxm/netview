@@ -17,8 +17,6 @@ public interface DeviceService {
     List<DeviceDetailsDto> checkDetailsByBuilding(Long buildingId);
     DeviceNowDto checkOne(Long deviceId);
     DeviceDetailsDto checkDetailsOne(Long deviceId);
-    Long countSurveys(Long deviceId);
-    Long countSurveysBefore(Long deviceId, int before);
     void remove(Long deviceId);
     void linkController(Long deviceId, Long controllerId);
     void linkBuilding(Long deviceId, Long buildingId);

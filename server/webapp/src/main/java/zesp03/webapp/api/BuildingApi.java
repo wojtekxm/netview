@@ -12,7 +12,7 @@ import zesp03.webapp.service.BuildingService;
 import zesp03.webapp.service.DeviceService;
 
 /**
- * BuildingApi jest klasą, która służy do zarządzania kontrolerami.
+ * BuildingApi jest klasą, która służy do zarządzania budynkami.
  */
 @RestController
 @RequestMapping("/api/building")

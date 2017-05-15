@@ -103,19 +103,18 @@
                 </tr>
 
                 <tr>
-                    <td><font color="red" ><b>*</b></font> Szerokość geograficzna:</td>
+                    <td> Szerokość geograficzna:</td>
                     <td><input  type="text" id="new_latitude" name="latitude" value="${building.latitude}" style="width: 30%;"/></td>
                 </tr>
 
                 <tr>
-                    <td ><font color="red" ><b>*</b></font> Długość geograficzna:</td>
+                    <td > Długość geograficzna:</td>
                     <td><input  type="text" id="new_longitude" name="longitude" value="${building.longitude}" style="width: 30%;" /></td>
 
                 </tr>
             </table>
             <div style="height: 40px; margin-top: 15px;">
-                <%--<a href="/building/${building.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px; margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Wróć</a>--%>
-                <span style="display: flex;position: relative;float: left;">
+               <span style="display: flex;position: relative;float: left;">
                         <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:19%;"></span>
 
                         <input id="btn_submit" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >

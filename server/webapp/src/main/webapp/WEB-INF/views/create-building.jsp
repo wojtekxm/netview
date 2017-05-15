@@ -110,17 +110,17 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new_latitude" class="col-sm-2 control-label" ><font color="red" ><b>*</b></font> Szerokość geograficzna:</label>
+                        <label for="new_latitude" class="col-sm-2 control-label" > Szerokość geograficzna:</label>
                         <div class="col-sm-3">
                             <input type="text" class="form-control" placeholder="Wprowadź szerokosc geograficzną"
-                                   id="new_latitude" required="required" name="latitude">
+                                   id="new_latitude"  name="latitude">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new_longitude" class="col-sm-2 control-label" ><font color="red" ><b>*</b></font> Długość geograficzna:</label>
+                        <label for="new_longitude" class="col-sm-2 control-label" > Długość geograficzna:</label>
                         <div class="col-sm-3">
                             <input type="text" class="form-control" placeholder="Wprowadź długość geograficzną"
-                                   id="new_longitude" required="required" name="longitude">
+                                   id="new_longitude"  name="longitude">
                         </div>
                     </div>
 

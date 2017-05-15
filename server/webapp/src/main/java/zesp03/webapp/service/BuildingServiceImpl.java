@@ -121,12 +121,12 @@ public class BuildingServiceImpl implements BuildingService {
         if(dto.getName().isEmpty()) {
             throw new ValidationException("name", "null");
         }
-        if(dto.getLatitude() == null) {
-            throw new ValidationException("latitude", "null");
-        }
-        if(dto.getLongitude() == null) {
-            throw new ValidationException("longitude", "null");
-        }
+//        if(dto.getLatitude() == null) {
+//            throw new ValidationException("latitude", "null");
+//        }
+//        if(dto.getLongitude() == null) {
+//            throw new ValidationException("longitude", "null");
+//        }
 
         Building building = new Building();
         building.setCode(dto.getCode());
@@ -159,12 +159,12 @@ public class BuildingServiceImpl implements BuildingService {
         if(dto.getName() == null || dto.getName().isEmpty()) {
             throw new ValidationException("name", "Nie podano nazwy");
         }
-        if(dto.getLatitude() == null) {
-            throw new ValidationException("latitude", "null");
-        }
-        if(dto.getLongitude() == null) {
-            throw new ValidationException("longitude", "null");
-        }
+//        if(dto.getLatitude() == null) {
+//            throw new ValidationException("latitude", "null");
+//        }
+//        if(dto.getLongitude() == null) {
+//            throw new ValidationException("longitude", "null");
+//        }
 
         Building b = buildingRepository.findOne(dto.getId());
 

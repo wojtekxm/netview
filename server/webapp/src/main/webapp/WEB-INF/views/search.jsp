@@ -64,7 +64,7 @@
 <div class="container" style="margin-top:80px">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-wrench"></span> Wyniki dla wyszukiwania dla zapytania: &nbsp; <c:out value="${param.query}"/>
+            <span class="glyphicon glyphicon-wrench"></span> Wyniki dla zapytania: &nbsp; <c:out value="${param.query}"/>
         </div>
         <div class="panel-body" style="padding-bottom: 30px;">
 

@@ -256,7 +256,7 @@
                 devices = listDtoOfCurrentDeviceStateDto.list;
                 var freq2400 = new Array();
                 var freq5000 = new Array();
-                var time = devices[0].frequencySurvey['2400'].timestamp;
+                var time = 0;
 
                 for(var i = 0; i< devices.length; i++){
                     var currentDeviceStateDto = devices[i];
@@ -267,6 +267,7 @@
                             continue;
                         }
                         else if(state2400.enabled == true){
+                            time = state2400.timestamp;
                             freq2400.push(currentDeviceStateDto);
                         }
                     }else if(frequency == "5000"){
@@ -274,6 +275,7 @@
                             continue;
                         }
                         else if(state5000.enabled == true){
+                            time = state5000.timestamp;
                             freq5000.push(currentDeviceStateDto);
                         }
                     }
@@ -429,7 +431,7 @@
         var al = 0;
         var sum = 0;
         var isEnabled = true;
-        var time = devices[0].frequencySurvey['2400'].timestamp;
+        var time = 0;
         var style = 'list-style-type: none;color:white;text-decoration:none;';
         var clazz = '';
         var h = '';
@@ -484,6 +486,7 @@
                 else {
                     sum = state2400.clients;
                     isEnabled = state2400.enabled;
+                    time = state2400.timestamp;
                 }
             } else if (frequency == "5000") {
                 if (typeof state5000 === 'undefined') {
@@ -495,6 +498,7 @@
                 else {
                     sum = state5000.clients;
                     isEnabled = state5000.enabled;
+                    time = state5000.timestamp;
                 }
             }
 

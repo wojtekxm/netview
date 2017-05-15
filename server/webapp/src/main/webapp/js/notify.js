@@ -34,7 +34,7 @@ var notify = {};
         var d = $('<div class="panel panel-notify center-block"></div>')
             .addClass(panelClass)
             .append(
-                $('<div class="panel-heading"></div>').html('<span class="glyphicon glyphicon-ok-circle"></span>&nbsp;' + message)
+                $('<div class="panel-heading"></div>').html('<span class="glyphicon glyphicon-ok-sign"></span>&nbsp;' + message)
             );
         d.hide();
         d.fadeIn(100, function() {

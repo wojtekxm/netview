@@ -115,9 +115,9 @@
             </table>
             <div style="height: 40px; margin-top: 15px;">
                <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%;left:19%;"></span>
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;color: white;top: 30%;left:19%;"></span>
 
-                        <input id="btn_submit" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <input id="btn_submit" type="submit" value="Zatwierdź" class="btn btn-success" role="button" style="float:left;width:180px;" >
                     </span>
                 <div id="change_loading" class="later progress-space"></div>
             </div>

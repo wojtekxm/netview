@@ -34,7 +34,7 @@ public class AdminMailServiceImpl implements AdminMailService {
                 new javax.mail.Authenticator() {
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username,password);
+                        return new PasswordAuthentication(username, password);
                     }
                 }
         );
@@ -50,7 +50,7 @@ public class AdminMailServiceImpl implements AdminMailService {
             Transport.send(message);
         }
         catch (MessagingException exc) {
-            log.warn("failed to send e-mail", exc);
+            log.warn("failed to send e-mail as {}: {}", username, exc.getLocalizedMessage());
             return false;
         }
         return true;

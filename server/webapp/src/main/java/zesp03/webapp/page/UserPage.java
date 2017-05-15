@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.service.UserService;
 
@@ -13,11 +13,11 @@ public class UserPage {
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/user")
+    @GetMapping(value = "/user/{userId}")
     public String get(
-            @RequestParam(value="id") long id,
+            @PathVariable("userId") long userId,
             ModelMap model) {
-        UserDto dto = userService.getOne(id);
+        UserDto dto = userService.getOne(userId);
         model.put("selected", dto);
         return "user";
     }

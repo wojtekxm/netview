@@ -6,6 +6,7 @@ import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
 import zesp03.webapp.dto.input.ChangePasswordDto;
+import zesp03.webapp.dto.input.CreateUserDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -35,9 +36,12 @@ public class UserApi {
     }
 
     @PostMapping(value = "/api/user/create")
-    public ContentDto<UserCreatedDto> create(HttpServletRequest request) {
+    public ContentDto<UserCreatedDto> postCreate(
+            @RequestBody CreateUserDto dto,
+            HttpServletRequest request) {
         return ContentDto.make( () ->
                 userService.create(
+                        dto.getSendEmail(),
                         request.getServerName(),
                         request.getServerPort()
                 )

@@ -1,8 +1,10 @@
 package zesp03.common.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.concurrent.ThreadLocalRandom;
 
-// thread safe
+@Component
 public class RandomUtil {
     public boolean decide(double chance) {
         if(chance > 1.0)chance = 1.0;

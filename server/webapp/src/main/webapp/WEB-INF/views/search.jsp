@@ -111,7 +111,7 @@
             <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#usrs" style="width: 100%;">Użytkownicy, <span id="usrsLength"></span></button>
             <ol class="list collapse" id="usrs">
                 <c:forEach var="userDto" items="${search.users}"><li>
-                    <a href="/user?id=${userDto.id}"><c:out value="${userDto.name}"/></a>
+                    <a href="/user/${userDto.id}"><c:out value="${userDto.name}"/></a>
                 </li>
                 </c:forEach>
             </ol>

@@ -16,6 +16,7 @@ import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.TokenRepository;
 import zesp03.common.repository.UserRepository;
 import zesp03.common.util.Secret;
+import zesp03.common.util.Validator;
 import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
@@ -43,6 +44,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private AdminMailService adminMailService;
+
+    @Autowired
+    private Validator validator;
 
     @Override
     public UserDto getOne(Long userId) {
@@ -99,7 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserCreatedDto create(String serverName, int serverPort) {
+    public UserCreatedDto create(String sendEmail, String serverName, int serverPort) {
         final String tokenValue = loginService.generateToken(32);
         final Secret secret = Secret.create(tokenValue.toCharArray(), 1);
         final Instant now = Instant.now();
@@ -136,6 +143,18 @@ public class UserServiceImpl implements UserService {
                         .append(r.getTokenValue())
                         .toString()
         );
+        if(sendEmail != null) {
+            if(validator.checkEmail(sendEmail)) {
+                String subject = "Aktywacja konta w NetView";
+                String html = "By aktywować konto kliknij w poniższy link\n" + r.getActivationURL();
+                if (!adminMailService.send(sendEmail, subject, html)) {
+                    log.warn("failed to send activation e-mail to {}", sendEmail);
+                }
+            }
+            else {
+                log.debug("invalid e-mail {}", sendEmail);
+            }
+        }
         return r;
     }
 

@@ -2,8 +2,10 @@ package zesp03.webapp.service;
 
 import zesp03.common.entity.User;
 import zesp03.webapp.dto.AccessDto;
+import zesp03.webapp.dto.PasswordResetDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ChangePasswordDto;
+import zesp03.webapp.dto.input.ResetPasswordDto;
 
 public interface LoginService {
     AccessDto grantAccess(User user);
@@ -25,6 +27,12 @@ public interface LoginService {
     void changePassword(Long userId, ChangePasswordDto dto);
 
     void setPassword(User user, String password);
+
+    PasswordResetDto beginResetPassword(Long userId, String serverName, int serverPort);
+
+    void finishResetPassword(ResetPasswordDto dto);
+
+    boolean checkResetPassword(Long tokenId, String tokenValue);
 
     /**
      * @param password hasło dla którego ma być wyznaczony hash

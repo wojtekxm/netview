@@ -13,6 +13,8 @@ public interface UserService {
 
     void block(Long userId, Long callerId);
     void unlock(Long userId, Long callerId);
+    void advance(Long userId, Long callerId);
+    void degrade(Long userId, Long callerId);
 
     void remove(Long userId, Long callerId);
 

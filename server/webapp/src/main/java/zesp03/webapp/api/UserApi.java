@@ -4,11 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import zesp03.webapp.dto.PasswordResetDto;
 import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
 import zesp03.webapp.dto.input.ChangePasswordDto;
 import zesp03.webapp.dto.input.CreateUserDto;
+import zesp03.webapp.dto.input.ResetPasswordDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -77,6 +79,30 @@ public class UserApi {
         );
     }
 
+    @PostMapping("/advance/{userId}")
+    public BaseResultDto postAdvance(
+            @PathVariable("userId") long userId,
+            HttpServletRequest req) {
+        return BaseResultDto.make( () ->
+                userService.advance(
+                        userId,
+                        AuthenticationFilter.getUser(req).getId()
+                )
+        );
+    }
+
+    @PostMapping("/degrade/{userId}")
+    public BaseResultDto postDegrade(
+            @PathVariable("userId") long userId,
+            HttpServletRequest req) {
+        return BaseResultDto.make( () ->
+                userService.degrade(
+                        userId,
+                        AuthenticationFilter.getUser(req).getId()
+                )
+        );
+    }
+
     @PostMapping("/remove/{userId}")
     public BaseResultDto remove(
             @PathVariable("userId") long userId,
@@ -99,6 +125,25 @@ public class UserApi {
                         dto
                 )
         );
+    }
+
+    @PostMapping("/begin-reset-password/{userId}")
+    public ContentDto<PasswordResetDto> postResetPassword(
+            @PathVariable("userId") long userId,
+            HttpServletRequest request) {
+        return ContentDto.make( () ->
+                loginService.beginResetPassword(
+                        userId,
+                        request.getServerName(),
+                        request.getServerPort()
+                )
+        );
+    }
+
+    @PostMapping("/finish-reset-password")
+    public BaseResultDto postFinishResetPassword(
+            @RequestBody ResetPasswordDto dto) {
+        return BaseResultDto.make( () -> loginService.finishResetPassword(dto) );
     }
 
     @PostMapping("/activate")

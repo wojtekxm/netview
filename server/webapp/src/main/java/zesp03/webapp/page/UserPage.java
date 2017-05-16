@@ -5,8 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import zesp03.webapp.dto.UserDto;
+import zesp03.webapp.filter.AuthenticationFilter;
 import zesp03.webapp.service.UserService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class UserPage {
@@ -19,6 +23,15 @@ public class UserPage {
             ModelMap model) {
         UserDto dto = userService.getOne(userId);
         model.put("selected", dto);
+        model.put("id", userId);
         return "user";
+    }
+
+    @PostMapping("/user/remove/{userId}")
+    public String postRemove(
+            @PathVariable("userId") long userId,
+            HttpServletRequest req) {
+        userService.remove(userId, AuthenticationFilter.getUser(req).getId());
+        return "redirect:/all-users";
     }
 }

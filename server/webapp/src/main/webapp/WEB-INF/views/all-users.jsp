@@ -62,13 +62,14 @@
     <div id="main_loading" class="on-loading"></div>
     <div class="panel panel-default on-loaded">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-user"></span> Użytkownicy:
+            <span class="glyphicon glyphicon-user"></span>
+            Użytkownicy
         </div>
         <div class="panel-body">
             <div id="tabelka_users"></div>
             <button id="btn_new" class="btn btn-success" data-toggle="collapse" data-target="#form_create">
                 <span class="glyphicon glyphicon-plus"></span>
-                Nowy użytkownik...
+                Nowy użytkownik
             </button>
             <div id="form_create" class="collapse">
                 <hr>

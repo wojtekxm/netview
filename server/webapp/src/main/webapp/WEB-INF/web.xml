@@ -73,6 +73,8 @@
         <url-pattern>/login</url-pattern>
         <url-pattern>/api/login</url-pattern>
         <url-pattern>/logout</url-pattern>
+        <url-pattern>/reset-password</url-pattern>
+        <url-pattern>/api/user/finish-reset-password</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>AllowLoggedFilter</filter-name>

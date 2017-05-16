@@ -23,6 +23,8 @@ import zesp03.webapp.dto.input.ActivateUserDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,6 +108,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void advance(Long userId, Long callerId) {
+        if( userId.equals(callerId) ) {
+            throw new AccessException("you can not advance yourself");
+        }
+        User u = userRepository.findOne(userId);
+        if (u == null) {
+            throw new NotFoundException("user");
+        }
+        u.setRole(UserRole.ROOT);
+    }
+
+    @Override
+    public void degrade(Long userId, Long callerId) {
+        if( userId.equals(callerId) ) {
+            throw new AccessException("you can not degrade yourself");
+        }
+        User u = userRepository.findOne(userId);
+        if (u == null) {
+            throw new NotFoundException("user");
+        }
+        u.setRole(UserRole.NORMAL);
+    }
+
+    @Override
     public UserCreatedDto create(String sendEmail, String serverName, int serverPort) {
         final String tokenValue = loginService.generateToken(32);
         final Secret secret = Secret.create(tokenValue.toCharArray(), 1);
@@ -132,17 +158,21 @@ public class UserServiceImpl implements UserService {
         r.setTokenId(t.getId());
         r.setTokenValue(tokenValue);
         r.setUserId(u.getId());
-        r.setActivationURL(
-                new StringBuilder()
-                        .append("http://")
-                        .append(serverName)
-                        .append(serverPort != 80 ? ":" + serverPort : "")
-                        .append("/activate-account?tid=")
-                        .append(r.getTokenId())
-                        .append("&tv=")
-                        .append(r.getTokenValue())
-                        .toString()
-        );
+        try {
+            String url = new StringBuilder()
+                    .append("http://")
+                    .append(serverName)
+                    .append(serverPort != 80 ? ":" + serverPort : "")
+                    .append("/activate-account?tid=")
+                    .append(r.getTokenId())
+                    .append("&tv=")
+                    .append(URLEncoder.encode(r.getTokenValue(), "utf-8"))
+                    .toString();
+            r.setActivationURL(url);
+        }
+        catch(UnsupportedEncodingException exc) {
+            throw new IllegalStateException(exc);
+        }
         if(sendEmail != null) {
             if(validator.checkEmail(sendEmail)) {
                 String subject = "Aktywacja konta w NetView";
@@ -244,6 +274,6 @@ public class UserServiceImpl implements UserService {
         user.setBlocked(false);
         user.setLastAccess(new Date());
         loginService.setPassword(user, password);
-        tokenRepository.delete(token);
+        token.setExpires(new Date(0L));
     }
 }

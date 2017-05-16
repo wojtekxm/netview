@@ -36,10 +36,12 @@ public class PermissionFilter implements Filter {
                     chain.doFilter(req, resp);
                     return;
                 }
+                log.warn("access denied for normal user {} to resource {}", loggedUser.getName(), hreq.getRequestURI());
                 hresp.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
             final String uri = hreq.getRequestURI();
+            log.warn("access denied for non-authenticated user to resource {}", hreq.getRequestURI());
             if(uri.startsWith("/api/")) {
                 //TODO zwrócić JSON?
                 hresp.sendError(HttpServletResponse.SC_FORBIDDEN);

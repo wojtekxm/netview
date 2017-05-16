@@ -15,7 +15,7 @@
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
+<c:if test="${loggedUser != null}"><nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myDiv">
@@ -56,35 +56,85 @@
             </ul>
         </div>
     </div>
-</nav>
-
-<div class="container">
-    <div style="height: 80px;"></div>
-    <div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">
+</nav></c:if>
+<div class="container page">
+    <div id="before" class="panel panel-default">
+        <div class="panel-heading">
+            Aktywacja konta użytkownika
+        </div>
         <div class="panel-body">
-            <div id="tittle"><span class="glyphicon glyphicon-plus"></span>
-                Aktywacja konta użytkownika</div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">nazwa użytkownika</label>
+                    <div class="col-sm-6">
+                        <input id="username" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">wybierz hasło</label>
+                    <div class="col-sm-6">
+                        <input id="password" type="password" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">powtórz hasło</label>
+                    <div class="col-sm-6">
+                        <input id="password_repeat" type="password" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group text-center">
+                    <button id="btn_submit" class="btn btn-primary">Aktywuj konto</button>
+                    <div class="progress-space" style="display:inline-block">
+                        <div id="activate_loading"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="panel panel-default" id="content">
-        <form action="/api/user/activate" method="post">
-            <input type="hidden" name="tid" value="${param.tid}">
-            <input type="hidden" name="tv" value="${param.tv}">
-            nazwa użytkownika<br>
-            <input type="text" name="username"><br><br>
-            wybierz hasło<br>
-            <input type="password" name="password"><br><br>
-            powtórz hasło<br>
-            <input type="password" name="repeat"><br><br>
-            <button type="submit">Aktywuj konto</button>
-        </form>
-
+    <div id="after" class="panel panel-default later">
+        <div class="panel-body">
+            <h4>Właśnie utworzyłeś swoje konto, możesz się <a href="/login">zalogować.</a></h4>
+        </div>
     </div>
 </div>
-
-
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
+<script>
+"use strict";
+$(document).ready(function() {
+    var btnSubmit, divBefore, divAfter;
+    divBefore = $('#before');
+    divAfter = $('#after');
+    btnSubmit = $('#btn_submit');
+    btnSubmit.click(function() {
+        var activateUserDto;
+        activateUserDto = {
+            "tokenId" : ${param.tid},
+            "tokenValue" : '${param.tv}',
+            "username" : $('#username').val(),
+            "password" : $('#password').val(),
+            "repeatPassword" : $('#password_repeat').val()
+        };
+        progress.load(
+            [{
+                "url" : '/api/user/activate',
+                "method" : 'post',
+                "postData" : activateUserDto
+            }],
+            ['#activate_loading'], [], [],
+            function() {
+                divBefore.fadeOut(500, function() {
+                    divAfter.fadeIn(500);
+                });
+            }, function() {
+                notify.danger('Niepowodzenie');
+            }
+        );
+    });
+});
+</script>
 </body>
 </html>

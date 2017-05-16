@@ -181,7 +181,7 @@ $(document).ready( function() {
     }
 
     progress.loadGet(
-        '/api/user/all',
+        '/api/user/info/all',
         ['.on-loading'], ['.on-loaded'], [],
         function(listDtoOfUserDto) {
             fixUsers(listDtoOfUserDto.list);
@@ -212,7 +212,7 @@ $(document).ready( function() {
                 "method" : 'post',
                 "postData" : createUserDto
             }, {
-                "url" : '/api/user/all'
+                "url" : '/api/user/info/all'
             }],
             ['#create_loading'], [], [],
             function(responses) {

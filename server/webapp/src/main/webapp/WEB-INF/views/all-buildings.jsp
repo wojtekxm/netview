@@ -71,7 +71,7 @@
                 <div>
                     <a href="/create-building" class="btn btn-success" role="button" style="width: 200px;">
                         <span class="glyphicon glyphicon-plus"></span>
-                        Dodaj nowy budynek
+                        Nowy budynek
                     </a>
                 </div>
             </div>

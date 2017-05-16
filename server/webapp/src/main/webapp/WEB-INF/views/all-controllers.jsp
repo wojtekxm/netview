@@ -82,7 +82,7 @@
                     <div>
                         <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;margin-bottom:5px;">
                             <span class="glyphicon glyphicon-plus"></span>
-                            Dodaj nowy kontroler
+                            Nowy kontroler
                         </a>
                     </div>
                 </div>

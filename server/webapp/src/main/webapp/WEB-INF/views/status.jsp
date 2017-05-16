@@ -779,6 +779,27 @@
         var all=0;
         var style='text-align: center!important;';
         var allLines = $();
+        states = [];
+        controllers = [];
+        buildings = [];
+
+        var stateId = "";
+        $('.s :checkbox:checked').each(function(){
+            stateId = $(this).attr('value');
+            states.push(stateId);
+        });
+
+        var controllerId = "";
+        $('.c :checkbox:checked').each(function(){
+            controllerId = $(this).attr('value');
+            controllers.push(controllerId);
+        });
+
+        var buildingId = "";
+        $('.b :checkbox:checked').each(function(){
+            buildingId = $(this).attr('value');
+            buildings.push(buildingId);
+        });
 
 
         for(var i = 0; i< devices.length; i++){
@@ -889,28 +910,8 @@
 <script type="text/javascript">
     $(function() {
         $('#toggleFrequency').change(function() {
-            states = [];
-            controllers = [];
-            buildings = [];
             ifFilter = false;
 
-            var stateId = "";
-            $('.s :checkbox:checked').each(function(){
-                stateId = $(this).attr('value');
-                states.push(stateId);
-            });
-
-            var controllerId = "";
-            $('.c :checkbox:checked').each(function(){
-                controllerId = $(this).attr('value');
-                controllers.push(controllerId);
-            });
-
-            var buildingId = "";
-            $('.b :checkbox:checked').each(function(){
-                buildingId = $(this).attr('value');
-                buildings.push(buildingId);
-            });
 
             if(frequency == "2400"){
                 frequency = "5000";

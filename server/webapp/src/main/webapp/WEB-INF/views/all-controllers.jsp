@@ -80,7 +80,7 @@
                 <div>
                     <div id="tabelka_space"></div>
                     <div>
-                        <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;margin-bottom:5px;">
+                        <a href="/create-controller" class="btn btn-success" role="button">
                             <span class="glyphicon glyphicon-plus"></span>
                             Nowy kontroler
                         </a>

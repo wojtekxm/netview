@@ -68,7 +68,7 @@
             <div class="panel-body">
                 <div id="tabelka_space"></div>
                 <div>
-                    <a href="/create-unit" class="btn btn-success" role="button" style="margin-bottom:20px;">
+                    <a href="/create-unit" class="btn btn-success" role="button">
                         <span class="glyphicon glyphicon-plus"></span>
                         Nowa jednostka organizacyjna
                     </a>

@@ -69,7 +69,7 @@
             <div class="panel-body">
                 <div id="tabelka_buildings"></div>
                 <div>
-                    <a href="/create-building" class="btn btn-success" role="button" style="width: 200px;">
+                    <a href="/create-building" class="btn btn-success" role="button">
                         <span class="glyphicon glyphicon-plus"></span>
                         Nowy budynek
                     </a>

@@ -247,7 +247,7 @@ $(document).ready(function() {
             fixDevices(listDtoOfDeviceDetailsDto.list);
         },
         undefined,
-        'lg'
+        'md'
     );
 });
 </script>

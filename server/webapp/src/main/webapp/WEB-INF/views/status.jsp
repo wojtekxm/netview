@@ -176,6 +176,22 @@
     $('#top_15').click(function(){
         btnTop.prop('disabled', true);
         btnWorst.prop('disabled', false);
+
+
+        $('option', $('#stan')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#stan').multiselect('refresh');
+        $('option', $('#kontrolery')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#kontrolery').multiselect('refresh');
+        $('option', $('#budynki')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#budynki').multiselect('refresh');
+
+
         clearInterval(inter);
         filterChoice = "top";
         option = "best";
@@ -185,6 +201,21 @@
     $('#worst_15').click(function(){
         btnWorst.prop('disabled', true);
         btnTop.prop('disabled', false);
+
+        $('option', $('#stan')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#stan').multiselect('refresh');
+        $('option', $('#kontrolery')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#kontrolery').multiselect('refresh');
+        $('option', $('#budynki')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#budynki').multiselect('refresh');
+
+
         clearInterval(inter);
         filterChoice = "worst";
         option = "worst";
@@ -232,7 +263,7 @@
                 clazz = "redDiode";
             }
         } else if(isEnabled == false){
-            clazz = "redDiode";
+            clazz = "greyDiode";
             sum="-";
         }
         var line = $('<li></li>').addClass(clazz)
@@ -354,6 +385,9 @@
     var btnResetFilter = $('#back');
     var btnTop = $('#top_15');
     var btnWorst = $('#worst_15');
+    var states = new Array();
+    var controllers = new Array();
+    var buildings = new Array();
 
     function getFilteredDevices() {
         $('[data-toggle="tooltip"]').tooltip('destroy');
@@ -362,7 +396,7 @@
             ['#examine_loading'], [], [],
             function(listDtoOfCurrentDeviceStateDto) {
                 devices = listDtoOfCurrentDeviceStateDto.list;
-                filter();
+                filter(states, controllers, buildings);
 
                 btnResetFilter.prop('disabled', false);
                 btnFilter.prop('disabled', false);
@@ -371,32 +405,7 @@
     }
 
 
-    function filter(){
-        var value = "";
-
-        var states = new Array();
-        var stateId = "";
-        $('.s :checkbox:checked').each(function(){
-            stateId = $(this).attr('value');
-            states.push(stateId);
-        });
-
-
-        var controllers = new Array();
-        var controllerId = "";
-        $('.c :checkbox:checked').each(function(){
-            controllerId = $(this).attr('value');
-            controllers.push(controllerId);
-        });
-
-        var buildings = new Array();
-        var buildingId = "";
-        $('.b :checkbox:checked').each(function(){
-            buildingId = $(this).attr('value');
-            buildings.push(buildingId);
-
-        });
-
+    function filter(states, controllers, buildings){
 
         if(states.length == 0){
             if(ifFilter == true){
@@ -602,6 +611,29 @@
         btnFilter.prop('disabled', true);
         ifFilter = true;
         filterChoice = "filter";
+        states = [];
+        controllers = [];
+        buildings = [];
+
+        var stateId = "";
+        $('.s :checkbox:checked').each(function(){
+            stateId = $(this).attr('value');
+            states.push(stateId);
+        });
+
+        var controllerId = "";
+        $('.c :checkbox:checked').each(function(){
+            controllerId = $(this).attr('value');
+            controllers.push(controllerId);
+        });
+
+        var buildingId = "";
+        $('.b :checkbox:checked').each(function(){
+            buildingId = $(this).attr('value');
+            buildings.push(buildingId);
+        });
+
+
         clearInterval(inter);
         getFilteredDevices();
         inter = setInterval('getFilteredDevices()', 30000);
@@ -857,7 +889,29 @@
 <script type="text/javascript">
     $(function() {
         $('#toggleFrequency').change(function() {
+            states = [];
+            controllers = [];
+            buildings = [];
             ifFilter = false;
+
+            var stateId = "";
+            $('.s :checkbox:checked').each(function(){
+                stateId = $(this).attr('value');
+                states.push(stateId);
+            });
+
+            var controllerId = "";
+            $('.c :checkbox:checked').each(function(){
+                controllerId = $(this).attr('value');
+                controllers.push(controllerId);
+            });
+
+            var buildingId = "";
+            $('.b :checkbox:checked').each(function(){
+                buildingId = $(this).attr('value');
+                buildings.push(buildingId);
+            });
+
             if(frequency == "2400"){
                 frequency = "5000";
             }else if(frequency == "5000"){

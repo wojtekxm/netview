@@ -62,42 +62,46 @@
 <div class="container" style="margin-top:80px">
     <div class="on-loading"></div>
     <div class="on-loaded">
-        <div class="panel panel-default">
-            <div class="panel-body">
                 <div class="panel panel-default">
                     <div class="panel-heading">Informacje o jednostce</div>
-                    <ul class="list-group" >
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-4">kod</div>
-                                <div class="col-xs-8" id="field_code"></div>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-4">Nazwa</div>
-                                <div class="col-xs-8" id="field_description"></div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div>
-                        <a href="/modify-unit?id=${unit.id}" class="btn btn-success" role="button" style="float:left; margin-right: 15px;margin-top: 20px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
-                        <form class="pull-left" method="post" action="/unit/remove/${unit.id}">
-                            <button type="submit" class="btn btn-danger " style="margin-top: 20px;">
-                                <span class="glyphicon glyphicon-trash"></span>
-                                Usuń
-                            </button>
-                        </form>
+                    <div class="panel-body">
+                        <ul class="list-group" >
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-4">kod</div>
+                                    <div class="col-xs-8" id="field_code"></div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-4">Nazwa</div>
+                                    <div class="col-xs-8" id="field_description"></div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div>
+                            <a href="/modify-unit?id=${unit.id}" class="btn btn-success" role="button" style="float:left; margin-right: 15px;" ><span class="glyphicon glyphicon-wrench"></span> Zmień</a>
+                            <form class="pull-left" method="post" action="/unit/remove/${unit.id}">
+                                <button type="submit" class="btn btn-danger ">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                    Usuń
+                                </button>
+                            </form>
                     </div>
                 </div>
-                <h4 style="margin-top: 80px">Budynki powiązane z jednostką</h4>
-                <div id="tabelka_buildings"></div>
-                <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Połącz z budynkiem ...
-                </a>
-            </div>
-        </div>
+                </div>
+                <div class="panel panel-default on-loaded">
+                    <div class="panel-heading" style="margin-top:40px; font-size: 15px!important;">
+                        Budynki powiązane z jednostką
+                    </div>
+                    <div class="panel-body">
+                        <div id="tabelka_buildings"></div>
+                        <a href="/link-unit-all-buildings?id=${unit.id}" class="btn btn-success" role="button">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Połącz z budynkiem ...
+                        </a>
+                    </div>
+                </div>
     </div>
 </div>
 

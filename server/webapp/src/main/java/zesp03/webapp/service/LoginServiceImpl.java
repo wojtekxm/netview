@@ -10,17 +10,21 @@ import zesp03.common.entity.Token;
 import zesp03.common.entity.TokenAction;
 import zesp03.common.entity.User;
 import zesp03.common.exception.AccessException;
+import zesp03.common.exception.NotFoundException;
 import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.TokenRepository;
 import zesp03.common.repository.UserRepository;
 import zesp03.common.util.Secret;
 import zesp03.webapp.dto.AccessDto;
+import zesp03.webapp.dto.PasswordResetDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ChangePasswordDto;
+import zesp03.webapp.dto.input.ResetPasswordDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -203,6 +207,114 @@ public class LoginServiceImpl implements LoginService {
             throw new AccessException("invalid login data");
         }
         setPassword(user, desired);
+    }
+
+    @Override
+    public PasswordResetDto beginResetPassword(Long userId, String serverName, int serverPort) {
+        final User user = userRepository.findOne(userId);
+        if(user == null) {
+            throw new NotFoundException("user");
+        }
+        if(!user.isActivated()) {
+            throw new ValidationException("userId", "not activated");
+        }
+        final Instant expires = Instant.now().plusSeconds(Config.getTokenPasswordExpiration() * 60);
+        final String key = generateToken(32);
+        Secret secret = Secret.create(key.toCharArray(), 1);
+        final Token token = new Token();
+        token.setExpires(Date.from(expires));
+        token.setUser(user);
+        token.setAction(TokenAction.RESET_PASSWORD);
+        token.setSecret(secret.getData());
+        tokenRepository.save(token);
+
+        final PasswordResetDto dto = new PasswordResetDto();
+        dto.setTokenId(token.getId());
+        dto.setTokenValue(key);
+        dto.setUserId(user.getId());
+        try {
+            String url = new StringBuilder()
+                    .append("http://")
+                    .append(serverName)
+                    .append(serverPort != 80 ? ":" + serverPort : "")
+                    .append("/reset-password?tid=")
+                    .append(dto.getTokenId())
+                    .append("&tv=")
+                    .append(URLEncoder.encode(dto.getTokenValue(), "utf-8"))
+                    .toString();
+            dto.setResetURL(url);
+        }
+        catch(UnsupportedEncodingException exc) {
+            throw new IllegalStateException(exc);
+        }
+        return dto;
+    }
+
+    @Override
+    public void finishResetPassword(ResetPasswordDto dto) {
+        final long tokenId = dto.getTokenId();
+        final String tokenValue = dto.getTokenValue();
+        final String password = dto.getDesired();
+        final String repeatPassword = dto.getRepeat();
+
+        if(tokenValue == null) {
+            throw new ValidationException("token value", "null");
+        }
+        if(password == null) {
+            throw new ValidationException("password", "null");
+        }
+        if(repeatPassword == null) {
+            throw new ValidationException("repeatPassword", "null");
+        }
+        if( ! repeatPassword.equals( password ) ) {
+            throw new ValidationException("repeatPassword", "does not match");
+        }
+
+        final Token token = tokenRepository.findOne(tokenId);
+        if(token == null) {
+            throw new NotFoundException("token");
+        }
+        if(! token.checkValid()) {
+            throw new AccessException("token expired");
+        }
+        if(token.getAction() != TokenAction.RESET_PASSWORD) {
+            throw new ValidationException("token", "invalid token type");
+        }
+        final User user = token.getUser();
+        if(user == null) {
+            throw new NotFoundException("user");
+        }
+        if(! user.isActivated()) {
+            throw new ValidationException("user", "not activated");
+        }
+        if(!Secret.check(token.getSecret(), tokenValue)) {
+            throw new ValidationException("token", "invalid value");
+        }
+        setPassword(user, password);
+        user.setLastAccess(new Date());
+        token.setExpires(new Date(0L));
+    }
+
+    @Override
+    public boolean checkResetPassword(Long tokenId, String tokenValue) {
+        final Token token = tokenRepository.findOne(tokenId);
+        if(token == null) {
+            return false;
+        }
+        if(! token.checkValid()) {
+            return false;
+        }
+        if(token.getAction() != TokenAction.RESET_PASSWORD) {
+            return false;
+        }
+        final User user = token.getUser();
+        if(user == null) {
+            return false;
+        }
+        if(! user.isActivated()) {
+            return false;
+        }
+        return Secret.check(token.getSecret(), tokenValue);
     }
 
     @Deprecated

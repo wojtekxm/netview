@@ -11,7 +11,7 @@ import zesp03.common.exception.ValidationException;
 import zesp03.common.repository.BuildingRepository;
 import zesp03.common.repository.ControllerRepository;
 import zesp03.common.repository.DeviceRepository;
-import zesp03.common.util.IPv4;
+import zesp03.common.util.Validator;
 import zesp03.webapp.dto.ControllerDetailsDto;
 import zesp03.webapp.dto.ControllerDto;
 import zesp03.webapp.dto.input.CreateControllerDto;
@@ -37,6 +37,9 @@ public class ControllerServiceImpl implements ControllerService {
 
     @Autowired
     private BuildingRepository buildingRepository;
+
+    @Autowired
+    private Validator validator;
 
     @Override
     public Controller findOneNotDeletedOrThrow(Long controllerId) {
@@ -111,7 +114,7 @@ public class ControllerServiceImpl implements ControllerService {
         if(dto.getName().isEmpty()) {
             throw new ValidationException("name", "null");
         }
-        if( ! IPv4.isValid( dto.getIpv4() ) ) {
+        if( ! validator.checkIP( dto.getIpv4() ) ) {
             throw new ValidationException("ipv4", "invalid format");
         }
 
@@ -145,7 +148,7 @@ public class ControllerServiceImpl implements ControllerService {
         if( dto.getName() == null || dto.getName().isEmpty()) {
             throw new ValidationException("name", "null");
         }
-        if( ! IPv4.isValid( dto.getIpv4() ) ) {
+        if( ! validator.checkIP( dto.getIpv4() ) ) {
             throw new ValidationException("ipv4", "invalid format");
         }
         Controller c = findOneNotDeletedOrThrow(dto.getId());

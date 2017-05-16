@@ -15,6 +15,7 @@ public class DeviceApi {
     @Autowired
     private DeviceService deviceService;
 
+
     @GetMapping("/info/all")
     public ListDto<DeviceNowDto> getAll() {
         return ListDto.make( () -> deviceService.checkAll() );

@@ -13,11 +13,17 @@ public interface UserService {
 
     void block(Long userId, Long callerId);
     void unlock(Long userId, Long callerId);
+    void advance(Long userId, Long callerId);
+    void degrade(Long userId, Long callerId);
 
     void remove(Long userId, Long callerId);
 
-    // w zwróconym dto activationURL będzie null
-    UserCreatedDto create(String serverName, int serverPort);
+    /**
+     * @param sendEmail jeśli nie null, zostanie wysłany e-mail z linkiem aktywacyjnym na ten adres
+     * @param serverName adres serwera na który ma prowadzić link aktywacyjny
+     * @param serverPort port na docelowym serwerze
+     */
+    UserCreatedDto create(String sendEmail, String serverName, int serverPort);
 
     /**
      * @param userName nazwa użytkownika którą ma mieć root.

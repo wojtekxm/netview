@@ -58,130 +58,183 @@
         </div>
     </div>
 </nav>
-<div class="container" style="margin-top:80px">
-    <div id="main_loading" class="later"></div>
-    <div id="main_success" class="later">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon-user"></span> Użytkownicy:
-            </div>
-            <div class="panel-body">
-                <div id="tabelka_space"></div>
-                <div>
-                    <a href="/create-user" class="btn btn-success" role="button">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Dodaj nowego użytkownika
-                    </a>
+<div class="container page">
+    <div id="main_loading" class="on-loading"></div>
+    <div class="panel panel-default on-loaded">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-user"></span>
+            Użytkownicy
+        </div>
+        <div class="panel-body">
+            <div id="tabelka_users"></div>
+            <button id="btn_new" class="btn btn-success" data-toggle="collapse" data-target="#form_create">
+                <span class="glyphicon glyphicon-plus"></span>
+                Nowy użytkownik
+            </button>
+            <div id="form_create" class="collapse">
+                <hr>
+                <div class="form-inline">
+                    <label>
+                        <input id="check_send" type="checkbox" name="send" value="yes" checked>
+                        wyślij e-mail aktywacyjny
+                    </label>
+                    <input id="field_email" type="email" class="form-control">
+                    <button id="btn_submit" class="btn btn-primary">
+                        Stwórz
+                    </button>
+                    <div class="progress-space" style="display:inline-block">
+                        <div id="create_loading"></div>
+                    </div>
                 </div>
+                <div id="create_result"></div>
             </div>
         </div>
     </div>
-    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
-<%--<div class="container" style="margin-top:80px">--%>
-    <%--<div id="main_loading" class="later"></div>--%>
-    <%--<div id="main_success" class="later">--%>
-        <%--<div class="panel panel-default" id="header" style="margin-bottom: 0px!important;">--%>
-            <%--<div class="panel-body">--%>
-                <%--<div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-user"></span> Użytkownicy:</div>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<div class="panel panel-default" style="margin-bottom: -1px!important;padding:8px;">--%>
-            <%--<div id="tabelka_space"></div>--%>
-            <%--<div>--%>
-                <%--<a href="/create-user" class="btn btn-success" role="button">--%>
-                    <%--<span class="glyphicon glyphicon-plus"></span>--%>
-                    <%--Dodaj nowego użytkownika--%>
-                <%--</a>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
 <script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
 <script src="/js/tabelka.js"></script>
 <script>
 "use strict";
 $(document).ready( function() {
-    var users, columnDefinitions, currentTabelka;
-    currentTabelka = null;
-    users = [];
-    columnDefinitions = [
-        {
-            "label" : 'nazwa',
-            "comparator" : util.comparatorText('cmp_name'),
-            "extractor" : 'td_name',
-            "cssClass" : 'width-6'
-        }, {
-            "label" : 'typ',
-            "comparator" : util.comparatorText('role'),
-            "extractor" : 'td_role',
-            "cssClass" : 'width-6'
-        }, {
-            "label" : 'aktywne',
-            "comparator" : util.comparatorNumber('activated'),
-            "extractor" : 'td_activated',
-            "cssClass" : 'width-2'
-        }, {
-            "label" : 'zablokowane',
-            "comparator" : util.comparatorNumber('blocked'),
-            "extractor" : 'td_blocked',
-            "cssClass" : 'width-2'
-        }
-    ];
+    var fieldEmail, btnSubmit, createResult, checkSend;
+    fieldEmail = $('#field_email');
+    btnSubmit = $('#btn_submit');
+    createResult = $('#create_result');
+    checkSend = $('#check_send');
 
-    function fixUsers() {
-        var i, u;
-        for(i = 0; i < users.length; i++) {
-            u = users[i];
-
-            if(u.name === null) {
-                u.td_name = $('<a></a>')
-                    .attr('href', '/user?id=' + u.id)
-                    .text('[' + u.id + ']');
-                u.cmp_name = '[' + u.id + ']';
-            }
-            else {
-                u.td_name = $('<a></a>')
-                    .attr('href', '/user?id=' + u.id)
-                    .text(u.name);
-                u.cmp_name = u.name;
-            }
-
-            if(u.role === 'ROOT') {
-                u.td_role = $('<span></span>').text('root');
-            }
-            else {
-                u.td_role = $('<span></span>').text('zwykły');
-            }
-
-            if(u.activated) {
-                u.td_activated = $('<span></span>').text('tak');
-            }
-            else {
-                u.td_activated = $('<span></span>').text('nie');
-            }
-
-            if(u.blocked) {
-                u.td_blocked = $('<span></span>').text('tak');
-            }
-            else {
-                u.td_blocked = $('<span></span>').text('nie');
-            }
-        }
+    function fixUsers(listOfUserDto) {
+        tabelka.builder('!')
+            .column('nazwa', 'text', 'cmp_name', 2, function(user) {
+                if(user.name === null) {
+                    user.cmp_name = '[' + user.id + ']';
+                    return $('<a></a>')
+                        .attr('href', '/user/' + user.id)
+                        .text(user.cmp_name);
+                }
+                else {
+                    user.cmp_name = user.name;
+                    return $('<a></a>')
+                        .attr('href', '/user/' + user.id)
+                        .text(user.cmp_name);
+                }
+            })
+            .column('rola', 'number', 'cmp_role', 2, function(user) {
+                if(user.role === 'ROOT') {
+                    user.cmp_role = 0;
+                    return 'administrator';
+                }
+                else {
+                    user.cmp_role = 1;
+                    return 'zwykły';
+                }
+            })
+            .column('aktywowany', 'number', 'cmp_activated', 2, function(user) {
+                if(user.activated) {
+                    user.cmp_activated = 1;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>'),
+                        ' tak'
+                    );
+                }
+                else {
+                    user.cmp_activated = 0;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-unchecked" style="color:#d9534f"></span>'),
+                        ' nie'
+                    );
+                }
+            })
+            .column('zablokowany', 'number', 'cmp_blocked', 2, function(user) {
+                if(user.blocked) {
+                    user.cmp_blocked = 1;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>'),
+                        ' tak'
+                    );
+                }
+                else {
+                    user.cmp_blocked = 0;
+                    return $('<span></span>').append(
+                        $('<span class="glyphicon glyphicon-unchecked" style="color:#d9534f"></span>'),
+                        ' nie'
+                    );
+                }
+            })
+            .column('utworzony', 'number', 'createdAt', 4, function(user) {
+                var s = $('<span></span>');
+                s.attr('title', moment(user.createdAt).format('DD.MM.YYYY hh:mm:ss') );
+                var d = new Date().getTime() - user.createdAt;
+                s.text(moment.duration(d).locale('pl').humanize() + ' temu');
+                return s;
+            })
+            .column('ostatni dostęp', 'number', 'createdAt', 4, function(user) {
+                var s = $('<span></span>');
+                s.attr('title', moment(user.lastAccess).format('DD.MM.YYYY hh:mm:ss') );
+                var d = new Date().getTime() - user.lastAccess;
+                s.text(moment.duration(d).locale('pl').humanize() + ' temu');
+                return s;
+            })
+            .build('#tabelka_users', listOfUserDto);
     }
 
     progress.loadGet(
-        '/api/user/all',
-        ['#main_loading'], ['#main_success'], [],
+        '/api/user/info/all',
+        ['.on-loading'], ['.on-loaded'], [],
         function(listDtoOfUserDto) {
-            users = listDtoOfUserDto.list;
-            fixUsers();
-            $('#tabelka_space').append(
-                tabelka.create(users, columnDefinitions)
-            );
-        } );
+            fixUsers(listDtoOfUserDto.list);
+        }
+    );
+
+    $('input[type=checkbox][name=send]').change(function() {
+        if( $('input[type=checkbox][name=send]:checked').val() ) {
+            fieldEmail.prop('disabled', false);
+        }
+        else {
+            fieldEmail.prop('disabled', true);
+        }
+    });
+
+    btnSubmit.click(function() {
+        var createUserDto, email;
+        btnSubmit.prop('disabled', true);
+        createResult.empty();
+        email = fieldEmail.val();
+        createUserDto = {
+            "sendEmail" : checkSend.prop('checked') ? email : null
+        };
+        console.log('createUserDto', createUserDto);
+        progress.load(
+            [{
+                "url" : '/api/user/create',
+                "method" : 'post',
+                "postData" : createUserDto
+            }, {
+                "url" : '/api/user/info/all'
+            }],
+            ['#create_loading'], [], [],
+            function(responses) {
+                btnSubmit.prop('disabled', false);
+                var h4 = $('<h4></h4>').text('Nowego użytkownika można aktywować po odwiedzeniu linku:');
+                var a = $('<a></a>').attr('href', responses[0].content.activationURL)
+                    .text(responses[0].content.activationURL);
+                h4.hide();
+                a.hide();
+                createResult.append(h4, a);
+                h4.show(400);
+                a.show(400);
+                fixUsers(responses[1].list);
+                notify.success('Nowy użytkownik został stworzony');
+            },
+            function() {
+                btnSubmit.prop('disabled', false);
+                notify.danger('Niepowodzenie');
+            }
+        );
+    });
 } );
 </script>
 </body>

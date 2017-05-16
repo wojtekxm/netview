@@ -19,7 +19,7 @@ public class Daemon {
     public static void main(String[] args) {
         SchemaGuard.runFlyway();
         AnnotationConfigApplicationContext acac = new AnnotationConfigApplicationContext();
-        acac.scan("zesp03.common.repository", "zesp03.common.service", "zesp03.service.daemon");
+        acac.scan("zesp03.common.repository", "zesp03.common.util", "zesp03.common.service", "zesp03.service.daemon");
         acac.refresh();
         ExamineWorker ew = acac.getBean(ExamineWorker.class);
         GarbageCollectionWorker gcw = acac.getBean(GarbageCollectionWorker.class);

@@ -58,11 +58,11 @@
     </div>
 </nav>
 
-<div class="container">
-    <div style="height: 80px;"></div>
+<div class="container page">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-user"></span> Zarządzanie kontem
+            <span class="glyphicon glyphicon-user"></span>
+            Zarządzanie kontem
         </div>
         <div class="panel-body">
             <div class="form-horizontal">
@@ -112,7 +112,7 @@ $(document).ready(function () {
         };
         progress.load(
             [{
-                "url" : '/api/change-password',
+                "url" : '/api/user/change-password',
                 "method" : 'post',
                 "postData" : changePasswordDto
             }],

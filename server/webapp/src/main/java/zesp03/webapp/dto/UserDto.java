@@ -9,6 +9,8 @@ public class UserDto {
     private boolean activated;
     private boolean blocked;
     private UserRole role;
+    private long createdAt;
+    private long updatedAt;
     private long lastAccess;// timestamp w milisekundach
 
     public long getId() {
@@ -63,12 +65,31 @@ public class UserDto {
         this.lastAccess = lastAccess;
     }
 
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public void wrap(User u) {
         this.id = u.getId();
         this.name = u.getName();
         this.activated = u.isActivated();
         this.blocked = u.isBlocked();
         this.role = u.getRole();
+        this.lastAccess = u.getLastAccess().getTime();
+        this.createdAt = u.getCreatedAt().getTime();
+        this.updatedAt = u.getUpdatedAt().getTime();
     }
 
     public static UserDto make(User u) {

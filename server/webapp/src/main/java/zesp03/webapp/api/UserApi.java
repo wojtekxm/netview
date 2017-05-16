@@ -1,11 +1,16 @@
 package zesp03.webapp.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import zesp03.webapp.dto.PasswordResetDto;
 import zesp03.webapp.dto.UserCreatedDto;
 import zesp03.webapp.dto.UserDto;
 import zesp03.webapp.dto.input.ActivateUserDto;
 import zesp03.webapp.dto.input.ChangePasswordDto;
+import zesp03.webapp.dto.input.CreateUserDto;
+import zesp03.webapp.dto.input.ResetPasswordDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -16,35 +21,41 @@ import zesp03.webapp.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequestMapping("/api/user")
 public class UserApi {
+    private static final Logger log = LoggerFactory.getLogger(UserApi.class);
+
     @Autowired
     private UserService userService;
 
     @Autowired
     private LoginService loginService;
 
-    @GetMapping("/api/user/all")
+    @GetMapping("/info/all")
     public ListDto<UserDto> getAll() {
         return ListDto.make( () -> userService.getAll() );
     }
 
-    @GetMapping("/api/user")
+    @GetMapping("/info/{userId}")
     public ContentDto<UserDto> getOne(
-            @RequestParam("id") long id) {
-        return ContentDto.make( () -> userService.getOne(id) );
+            @PathVariable("userId") long userId) {
+        return ContentDto.make( () -> userService.getOne(userId) );
     }
 
-    @PostMapping(value = "/api/user/create")
-    public ContentDto<UserCreatedDto> create(HttpServletRequest request) {
+    @PostMapping("/create")
+    public ContentDto<UserCreatedDto> postCreate(
+            @RequestBody CreateUserDto dto,
+            HttpServletRequest request) {
         return ContentDto.make( () ->
                 userService.create(
+                        dto.getSendEmail(),
                         request.getServerName(),
                         request.getServerPort()
                 )
         );
     }
 
-    @PostMapping(value = "/api/user/block/{userId}")
+    @PostMapping("/block/{userId}")
     public BaseResultDto postBlock(
             @PathVariable("userId") long userId,
             HttpServletRequest req) {
@@ -56,7 +67,7 @@ public class UserApi {
         );
     }
 
-    @PostMapping(value = "/api/user/unlock/{userId}")
+    @PostMapping("/unlock/{userId}")
     public BaseResultDto postUnlock(
             @PathVariable("userId") long userId,
             HttpServletRequest req) {
@@ -68,7 +79,31 @@ public class UserApi {
         );
     }
 
-    @PostMapping(value = "/api/user/remove/{userId}")
+    @PostMapping("/advance/{userId}")
+    public BaseResultDto postAdvance(
+            @PathVariable("userId") long userId,
+            HttpServletRequest req) {
+        return BaseResultDto.make( () ->
+                userService.advance(
+                        userId,
+                        AuthenticationFilter.getUser(req).getId()
+                )
+        );
+    }
+
+    @PostMapping("/degrade/{userId}")
+    public BaseResultDto postDegrade(
+            @PathVariable("userId") long userId,
+            HttpServletRequest req) {
+        return BaseResultDto.make( () ->
+                userService.degrade(
+                        userId,
+                        AuthenticationFilter.getUser(req).getId()
+                )
+        );
+    }
+
+    @PostMapping("/remove/{userId}")
     public BaseResultDto remove(
             @PathVariable("userId") long userId,
             HttpServletRequest req) {
@@ -80,7 +115,7 @@ public class UserApi {
         );
     }
 
-    @PostMapping(value = "/api/change-password", consumes = "application/json")
+    @PostMapping("/change-password")
     public BaseResultDto changePassword(
             @RequestBody ChangePasswordDto dto,
             HttpServletRequest req) {
@@ -92,25 +127,26 @@ public class UserApi {
         );
     }
 
-    @PostMapping(value = "/api/user/activate", consumes = "application/x-www-form-urlencoded")
-    public BaseResultDto activate(
-            @RequestParam("tid") long tokenId,
-            @RequestParam("tv") String tokenValue,
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            @RequestParam("repeat") String repeatPassword) {
-        return BaseResultDto.make( () -> {
-            ActivateUserDto dto = new ActivateUserDto();
-            dto.setTokenId(tokenId);
-            dto.setTokenValue(tokenValue);
-            dto.setUsername(username);
-            dto.setPassword(password);
-            dto.setRepeatPassword(repeatPassword);
-            userService.activate(dto);
-        } );
+    @PostMapping("/begin-reset-password/{userId}")
+    public ContentDto<PasswordResetDto> postResetPassword(
+            @PathVariable("userId") long userId,
+            HttpServletRequest request) {
+        return ContentDto.make( () ->
+                loginService.beginResetPassword(
+                        userId,
+                        request.getServerName(),
+                        request.getServerPort()
+                )
+        );
     }
 
-    @PostMapping(value = "/api/user/activate", consumes = "application/json")
+    @PostMapping("/finish-reset-password")
+    public BaseResultDto postFinishResetPassword(
+            @RequestBody ResetPasswordDto dto) {
+        return BaseResultDto.make( () -> loginService.finishResetPassword(dto) );
+    }
+
+    @PostMapping("/activate")
     public BaseResultDto activate(
             @RequestBody ActivateUserDto dto) {
         return BaseResultDto.make( () -> userService.activate(dto) );

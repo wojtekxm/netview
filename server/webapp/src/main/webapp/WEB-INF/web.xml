@@ -69,9 +69,12 @@
         <filter-name>AllowPublicFilter</filter-name>
         <url-pattern>/</url-pattern>
         <url-pattern>/activate-account</url-pattern>
+        <url-pattern>/api/user/activate</url-pattern>
         <url-pattern>/login</url-pattern>
         <url-pattern>/api/login</url-pattern>
         <url-pattern>/logout</url-pattern>
+        <url-pattern>/reset-password</url-pattern>
+        <url-pattern>/api/user/finish-reset-password</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>AllowLoggedFilter</filter-name>
@@ -82,7 +85,7 @@
         <url-pattern>/api/building/info/*</url-pattern>
         <url-pattern>/api/controller/details/*</url-pattern>
         <url-pattern>/api/controller/info/*</url-pattern>
-        <url-pattern>/api/change-password</url-pattern>
+        <url-pattern>/api/user/change-password</url-pattern>
         <url-pattern>/api/surveys/total/*</url-pattern>
         <url-pattern>/api/surveys/original</url-pattern>
         <url-pattern>/api/surveys/avg-min-max</url-pattern>

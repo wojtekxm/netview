@@ -57,107 +57,292 @@
     </div>
 </nav>
 
-<div class="container" style="margin-top:80px">
-    <div class="panel panel-default">
+<div class="container page">
+    <div class="on-loading"></div>
+    <div class="panel panel-default on-loaded">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-arrow-right"></span> Informacje o użytkowniku:
+            <span class="glyphicon glyphicon-user"></span>
+            Informacje o użytkowniku
         </div>
         <div class="panel-body">
-            <div class="panel-heading" style="width: 100%;background-color: #fcfcfc; padding: 15px;font-size: 16px;border: 1px solid #e0e0e0;">
-                Szczegóły użytkownika:
-            </div>
-            <table class="table table-responsive" style="background-color: white!important;border: 1px solid #e0e0e0;">
-                <tr>
-                    <td>Nazwa</td>
-                    <td><c:out value="${selected.name}"/></td>
+            <table class="table table-bordered">
+                <colgroup>
+                    <col style="width: 30%">
+                    <col>
+                </colgroup>
+                <tr id="tr_name">
+                    <th>nazwa</th>
+                    <td id="user_name">?</td>
                 </tr>
                 <tr>
-                    <td>ID</td>
-                    <td><c:out value="${selected.id}"/></td>
+                    <th>rola</th>
+                    <td id="tr_role">
+                        <span id="span_role">?</span>
+                        <button id="btn_role" class="btn">?</button>
+                        <div class="progress-space-xs" style="display:inline-block">
+                            <div id="role_loading"></div>
+                        </div>
+                    </td>
                 </tr>
-                <tr>
-                    <td>Rola</td>
+                <tr id="tr_activated">
+                    <th>aktywowany</th>
+                    <td id="user_activated">?</td>
+                </tr>
+                <tr id="tr_blocked">
+                    <th>zablokowany</th>
                     <td>
-                        <c:choose>
-                            <c:when test="${selected.role == 'NORMAL'}"><c:out value="zwykły użytkownik"/></c:when>
-                            <c:when test="${selected.role == 'ROOT'}"><c:out value="root"/></c:when>
-                        </c:choose>
+                        <span id="span_blocked">?</span>
+                        <button id="btn_blocked" class="btn">?</button>
+                        <div class="progress-space-xs" style="display:inline-block">
+                            <div id="block_loading"></div>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td>Stan konta</td>
-                    <td id="user_state">
-                        <c:choose>
-                            <c:when test="${selected.blocked}"><c:out value="zablokowane"/></c:when>
-                            <c:when test="${!selected.activated}"><c:out value="nieaktywne"/></c:when>
-                            <c:otherwise><c:out value="aktywne"/></c:otherwise>
-                        </c:choose>
-                    </td>
+                    <th>stworzony</th>
+                    <td id="user_created">?</td>
+                </tr>
+                <tr id="tr_last_access">
+                    <th>ostatni dostęp</th>
+                    <td id="user_last_access">?</td>
                 </tr>
             </table>
-            <div class="clearfix">
-                <button id="button_block" class="btn btn-danger" style="display:none;float:left;font-size:17px;"><span class="glyphicon glyphicon-exclamation-sign"></span> Zablokuj</button>
+            <div class="row">
+                <div class="col-sm-6">
+                    <button id="btn_password" class="btn btn-primary">
+                        Zresetuj hasło
+                    </button>
+                    <div class="progress-space" style="display: inline-block">
+                        <div id="password_loading"></div>
+                    </div>
+                </div>
+                <div class="col-sm-6 clearfix">
+                    <c:if test="${loggedUser.id != id}"
+                    ><form class="pull-right" method="post" action="/user/remove/${id}" style="display: block">
+                        <button class="btn btn-danger pull-right" type="submit">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Usuń
+                        </button>
+                    </form></c:if>
+                </div>
             </div>
+            <div id="reset_result"></div>
         </div>
     </div>
-    <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
-
-
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
+<script src="/js/progress.js"></script>
+<script src="/js/notify.js"></script>
 <script>
-    var my = {};
-    my.selectedId = ${selected.id};
-    $(document).ready( function() {
-        $.ajax({
-            type: 'get',
-            url: '/api/user',
-            data: {
-                'id': my.selectedId
-            },
-            dataType: 'json',
-            success: function(contentDtoOfUserDto) {
-                var u = contentDtoOfUserDto.content;
+"use strict";
+$(document).ready(function() {
+    var loggedId, selectedId, user, userName, spanRole, btnRole, btnBlocked, btnPassword, userActivated,
+        userCreated, userLastAccess, spanBlocked, resetResult,
+        trRole, trBlocked, trLastAccess, trName, trActivated;
+    loggedId = ${loggedUser.id};
+    selectedId = ${id};
+    userName = $('#user_name');
+    userActivated = $('#user_activated');
+    userCreated = $('#user_created');
+    userLastAccess = $('#user_last_access');
+    spanRole = $('#span_role');
+    spanBlocked = $('#span_blocked');
+    btnBlocked = $('#btn_blocked');
+    btnRole = $('#btn_role');
+    btnPassword = $('#btn_password');
+    trRole = $('#tr_role');
+    trBlocked = $('#tr_blocked');
+    trLastAccess = $('#tr_last_access');
+    trName = $('#tr_name');
+    trActivated = $('#tr_activated');
+    resetResult = $('#reset_result');
 
-                var st = 'aktywne';
-                if(u.blocked)st = 'zablokowane';
-                else if(!u.activated)st = 'nieaktywne';
+    progress.loadGet(
+        '/api/user/info/' + selectedId,
+        ['.on-loading'], ['.on-loaded'], [],
+        function(contentDtoOfUserDto) {
+            updateUser(contentDtoOfUserDto.content);
+        },
+        function() {
+            notify.danger('Niepowodzenie');
+        }
+    );
 
-                if(!u.blocked) {
-                    $('#button_block').show();
-                }
-                $('#devices').show();
-                $('#progress_area').hide();
-                $('#button_block').click( function() {
-                    $.ajax({
-                        type: 'post',
-                        url: '/api/user/block/' + my.selectedId,
-                        dataType: 'json',
-                        success: function(baseResultDto) {
-                            if(baseResultDto.success) {
-                                $('#user_state').text('zablokowane');
-                                $('#button_block').hide(400);
-                                $('#progress_area').hide();
+    function updateUser(userDto) {
+        var when, diff, ago;
+        userName.text(userDto.name);
+        spanRole.text(userDto.role === 'ROOT' ? 'administrator' : 'zwykły użytkownik');
+        trName.hide();
+        trActivated.hide();
+        trBlocked.hide();
+        trLastAccess.hide();
+        if(loggedId != selectedId) {
+            trActivated.show();
+            if(userDto.activated) {
+                btnRole.show();
+                trName.show();
+                trLastAccess.show();
+                trBlocked.show();
+                userActivated.text('tak');
+                if (userDto.blocked) {
+                    spanBlocked.text('tak');
+                    btnBlocked.removeClass('btn-danger');
+                    btnBlocked.addClass('btn-success');
+                    btnBlocked.text('odblokuj');
+                    btnBlocked.click(function () {
+                        btnBlocked.prop('disabled', true);
+                        progress.load(
+                            [{
+                                "url": '/api/user/unlock/' + selectedId,
+                                "method": 'post'
+                            }, {
+                                "url": '/api/user/info/' + selectedId
+                            }],
+                            ['#block_loading'], [], [],
+                            function (responses) {
+                                btnBlocked.prop('disabled', false);
+                                updateUser(responses[1].content);
+                            },
+                            function () {
+                                btnBlocked.prop('disabled', false);
                             }
-                            else {
-                                $('#progress_area').text('RESULT: FAILED');
-                                $('#progress_area').show();
-                            }
-                        },
-                        error: function() {
-                            $('#progress_area').text('FAILED AJAX');
-                            $('#progress_area').show();
-                        }
+                        );
                     });
-                } );
-            },
-            error: function() {
-                $('#progress_area').text('Nie udało się pobrać informacji!');
-                $('#progress_area').show();
+                }
+                else {
+                    spanBlocked.text('nie');
+                    btnBlocked.removeClass('btn-success');
+                    btnBlocked.addClass('btn-danger');
+                    btnBlocked.text('zablokuj');
+                    btnBlocked.click(function () {
+                        btnBlocked.prop('disabled', true);
+                        progress.load(
+                            [{
+                                "url": '/api/user/block/' + selectedId,
+                                "method": 'post'
+                            }, {
+                                "url": '/api/user/info/' + selectedId
+                            }],
+                            ['#block_loading'], [], [],
+                            function (responses) {
+                                btnBlocked.prop('disabled', false);
+                                updateUser(responses[1].content);
+                            },
+                            function () {
+                                btnBlocked.prop('disabled', false);
+                            }
+                        );
+                    });
+                }
             }
-        });
-    } );
+            else {
+                btnRole.hide();
+                userActivated.text('nie');
+            }
+            if(userDto.role === 'ROOT') {
+                btnRole.removeClass('btn-success');
+                btnRole.addClass('btn-danger');
+                btnRole.text('zdegraduj do zwykłego');
+                btnRole.click(function () {
+                    btnRole.prop('disabled', true);
+                    progress.load(
+                        [{
+                            "url": '/api/user/degrade/' + selectedId,
+                            "method": 'post'
+                        }, {
+                            "url": '/api/user/info/' + selectedId
+                        }],
+                        ['#role_loading'], [], [],
+                        function (responses) {
+                            btnRole.prop('disabled', false);
+                            updateUser(responses[1].content);
+                        },
+                        function () {
+                            btnRole.prop('disabled', false);
+                        }
+                    );
+                });
+            }
+            else {
+                btnRole.removeClass('btn-danger');
+                btnRole.addClass('btn-success');
+                btnRole.text('awansuj na administratora')
+                btnRole.click(function () {
+                    btnRole.prop('disabled', true);
+                    progress.load(
+                        [{
+                            "url": '/api/user/advance/' + selectedId,
+                            "method": 'post'
+                        }, {
+                            "url": '/api/user/info/' + selectedId
+                        }],
+                        ['#role_loading'], [], [],
+                        function (responses) {
+                            btnRole.prop('disabled', false);
+                            updateUser(responses[1].content);
+                        },
+                        function () {
+                            btnRole.prop('disabled', false);
+                        }
+                    );
+                });
+            }
+        }
+        else {
+            btnRole.hide();
+            trName.show();
+            trLastAccess.show();
+        }
+        if(userDto.activated) {
+            btnPassword.show();
+            btnPassword.click(function() {
+                resetResult.empty();
+                btnPassword.prop('disabled', true);
+                progress.load(
+                    [{
+                        "url": '/api/user/begin-reset-password/' + selectedId,
+                        "method": 'post'
+                    }, {
+                        "url": '/api/user/info/' + selectedId
+                    }],
+                    ['#password_loading'], [], [],
+                    function (responses) {
+                        var h4, a;
+                        updateUser(responses[1].content);
+                        console.log('responses', responses);
+                        h4 = $('<h4></h4>').text('Hasło można zresetować na stronie:');
+                        a = $('<a></a>').attr('href', responses[0].content.resetURL)
+                            .text(responses[0].content.resetURL);
+                        h4.hide();
+                        a.hide();
+                        console.log('h4', h4);
+                        console.log('a', a);
+                        resetResult.append(h4, a);
+                        h4.show(400);
+                        a.show(400);
+                    },
+                    function () {
+                        btnRole.prop('disabled', false);
+                        notify.danger('Niepowodzenie');
+                    }
+                );
+            });
+        }
+        else {
+            btnPassword.hide();
+        }
+        when = moment(userDto.createdAt).format('DD.MM.YYYY hh:mm:ss');
+        diff = new Date().getTime() - userDto.createdAt;
+        ago = moment.duration(diff).locale('pl').humanize() + ' temu';
+        userCreated.text(when + ' (' + ago + ')');
+        when = moment(userDto.lastAccess).format('DD.MM.YYYY hh:mm:ss');
+        diff = new Date().getTime() - userDto.lastAccess;
+        ago = moment.duration(diff).locale('pl').humanize() + ' temu';
+        userLastAccess.text(when + ' (' + ago + ')');
+    }
+});
 </script>
 </body>
 </html>

@@ -20,6 +20,9 @@ public class ImportServiceImpl implements ImportService {
     @Autowired
     private SurveyModifyingService surveyModifyingService;
 
+    @Autowired
+    private RandomUtil randomUtil;
+
     @Override
     public void fakeSurveys(ImportFakeSurveysDto dto) {
         if(dto.getMaxInterval() < dto.getMinInterval()) {
@@ -31,10 +34,9 @@ public class ImportServiceImpl implements ImportService {
         if(dto.getTimeStart() < 0) {
             throw new ValidationException("timeStart", "less than zero");
         }
-        final RandomUtil ru = new RandomUtil();
         final List<SampleRaw> list = new ArrayList<>();
         int lastTime = 0;
-        int lastClients = ru.choose(0, dto.getMaxClients());
+        int lastClients = randomUtil.choose(0, dto.getMaxClients());
         boolean lastEnabled = true;
         for(int i = 0; i < dto.getNumberOfSurveys(); i++) {
             SampleRaw ss = new SampleRaw();
@@ -44,19 +46,19 @@ public class ImportServiceImpl implements ImportService {
                 time = dto.getTimeStart();
             }
             else {
-                time = lastTime + ru.choose(dto.getMinInterval(), dto.getMaxInterval());
+                time = lastTime + randomUtil.choose(dto.getMinInterval(), dto.getMaxInterval());
             }
-            if(ru.decide(0.9)) {
-                diff = ru.choose(-3, 3);
+            if(randomUtil.decide(0.9)) {
+                diff = randomUtil.choose(-3, 3);
             }
             else {
-                diff = ru.choose(-8, 8);
+                diff = randomUtil.choose(-8, 8);
             }
             if(lastEnabled) {
-                enabled = ru.decide(0.99);
+                enabled = randomUtil.decide(0.99);
             }
             else {
-                enabled = ru.decide(0.2);
+                enabled = randomUtil.decide(0.2);
             }
             if(enabled) {
                 clients = lastClients + diff;

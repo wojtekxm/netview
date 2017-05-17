@@ -16,6 +16,29 @@
     <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' type='text/css'>
+    <link rel="stylesheet" href="/css/cookieconsent.min.css" media="screen">
+    <script src="/js/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function(){
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#3c404d",
+                        "text": "#d6d6d6"
+                    },
+                    "button": {
+                        "background": "#8bed4f"
+                    }
+                },
+                "theme": "edgeless",
+                "content": {
+                    "message": "Ta strona wykorzystuje pliki cookies. Korzystanie z witryny oznacza zgodę na ich zapis lub odczyt wg ustawień przeglądarki.",
+                    "dismiss": "OK",
+                    "link": "O polityce cookies",
+                    "href": "wszystkoociasteczkach.pl/polityka-cookies/"
+                }
+            })});
+    </script>
 </head>
 <body>
 
@@ -176,6 +199,22 @@
     $('#top_15').click(function(){
         btnTop.prop('disabled', true);
         btnWorst.prop('disabled', false);
+
+
+        $('option', $('#stan')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#stan').multiselect('refresh');
+        $('option', $('#kontrolery')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#kontrolery').multiselect('refresh');
+        $('option', $('#budynki')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#budynki').multiselect('refresh');
+
+
         clearInterval(inter);
         filterChoice = "top";
         option = "best";
@@ -185,6 +224,21 @@
     $('#worst_15').click(function(){
         btnWorst.prop('disabled', true);
         btnTop.prop('disabled', false);
+
+        $('option', $('#stan')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#stan').multiselect('refresh');
+        $('option', $('#kontrolery')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#kontrolery').multiselect('refresh');
+        $('option', $('#budynki')).each(function(element) {
+            $(this).removeAttr('selected').prop('selected', true);
+        });
+        $('#budynki').multiselect('refresh');
+
+
         clearInterval(inter);
         filterChoice = "worst";
         option = "worst";
@@ -232,7 +286,7 @@
                 clazz = "redDiode";
             }
         } else if(isEnabled == false){
-            clazz = "redDiode";
+            clazz = "greyDiode";
             sum="-";
         }
         var line = $('<li></li>').addClass(clazz)
@@ -263,18 +317,22 @@
                     var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
                     var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
                     if(frequency == "2400"){
-                        if(typeof state2400 === 'undefined') {
+                        if(typeof state2400 === 'undefined'){
                             continue;
                         }
-                        else if(state2400.enabled == true){
+                        if(state2400 === null){
+                            continue;
+                        }else if(state2400.enabled == true){
                             time = state2400.timestamp;
                             freq2400.push(currentDeviceStateDto);
                         }
                     }else if(frequency == "5000"){
-                        if(typeof state5000 === 'undefined') {
+                        if(typeof state5000 === 'undefined'){
                             continue;
                         }
-                        else if(state5000.enabled == true){
+                        if(state5000 === null){
+                            continue;
+                        }else if(state5000.enabled == true){
                             time = state5000.timestamp;
                             freq5000.push(currentDeviceStateDto);
                         }
@@ -306,14 +364,19 @@
                 $('#devices li').remove();
 
                 if(frequency == "2400"){
-                    for(var i = 0; i < 15; i++){
-                        displayDevice(freq2400[i]);
+                    if(freq2400.length != 0){
+                        for(var i = 0; i < 15; i++){
+                            displayDevice(freq2400[i]);
+                        }
                     }
                 }else if(frequency == "5000"){
-                    for(var i = 0; i < 15; i++){
-                        displayDevice(freq5000[i]);
+                    if(freq5000.length != 0){
+                        for(var i = 0; i < 15; i++){
+                            displayDevice(freq5000[i]);
+                        }
                     }
                 }
+
 
                 if(option == "best"){
                     $('#countActive').css("display", "inline");
@@ -354,6 +417,9 @@
     var btnResetFilter = $('#back');
     var btnTop = $('#top_15');
     var btnWorst = $('#worst_15');
+    var states = new Array();
+    var controllers = new Array();
+    var buildings = new Array();
 
     function getFilteredDevices() {
         $('[data-toggle="tooltip"]').tooltip('destroy');
@@ -362,7 +428,7 @@
             ['#examine_loading'], [], [],
             function(listDtoOfCurrentDeviceStateDto) {
                 devices = listDtoOfCurrentDeviceStateDto.list;
-                filter();
+                filter(states, controllers, buildings);
 
                 btnResetFilter.prop('disabled', false);
                 btnFilter.prop('disabled', false);
@@ -371,32 +437,7 @@
     }
 
 
-    function filter(){
-        var value = "";
-
-        var states = new Array();
-        var stateId = "";
-        $('.s :checkbox:checked').each(function(){
-            stateId = $(this).attr('value');
-            states.push(stateId);
-        });
-
-
-        var controllers = new Array();
-        var controllerId = "";
-        $('.c :checkbox:checked').each(function(){
-            controllerId = $(this).attr('value');
-            controllers.push(controllerId);
-        });
-
-        var buildings = new Array();
-        var buildingId = "";
-        $('.b :checkbox:checked').each(function(){
-            buildingId = $(this).attr('value');
-            buildings.push(buildingId);
-
-        });
-
+    function filter(states, controllers, buildings){
 
         if(states.length == 0){
             if(ifFilter == true){
@@ -602,6 +643,29 @@
         btnFilter.prop('disabled', true);
         ifFilter = true;
         filterChoice = "filter";
+        states = [];
+        controllers = [];
+        buildings = [];
+
+        var stateId = "";
+        $('.s :checkbox:checked').each(function(){
+            stateId = $(this).attr('value');
+            states.push(stateId);
+        });
+
+        var controllerId = "";
+        $('.c :checkbox:checked').each(function(){
+            controllerId = $(this).attr('value');
+            controllers.push(controllerId);
+        });
+
+        var buildingId = "";
+        $('.b :checkbox:checked').each(function(){
+            buildingId = $(this).attr('value');
+            buildings.push(buildingId);
+        });
+
+
         clearInterval(inter);
         getFilteredDevices();
         inter = setInterval('getFilteredDevices()', 30000);
@@ -747,6 +811,27 @@
         var all=0;
         var style='text-align: center!important;';
         var allLines = $();
+        states = [];
+        controllers = [];
+        buildings = [];
+
+        var stateId = "";
+        $('.s :checkbox:checked').each(function(){
+            stateId = $(this).attr('value');
+            states.push(stateId);
+        });
+
+        var controllerId = "";
+        $('.c :checkbox:checked').each(function(){
+            controllerId = $(this).attr('value');
+            controllers.push(controllerId);
+        });
+
+        var buildingId = "";
+        $('.b :checkbox:checked').each(function(){
+            buildingId = $(this).attr('value');
+            buildings.push(buildingId);
+        });
 
 
         for(var i = 0; i< devices.length; i++){
@@ -858,6 +943,8 @@
     $(function() {
         $('#toggleFrequency').change(function() {
             ifFilter = false;
+
+
             if(frequency == "2400"){
                 frequency = "5000";
             }else if(frequency == "5000"){

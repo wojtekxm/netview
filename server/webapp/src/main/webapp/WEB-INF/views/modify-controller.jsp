@@ -13,6 +13,29 @@
     <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/cookieconsent.min.css" media="screen">
+    <script src="/js/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function(){
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#3c404d",
+                        "text": "#d6d6d6"
+                    },
+                    "button": {
+                        "background": "#8bed4f"
+                    }
+                },
+                "theme": "edgeless",
+                "content": {
+                    "message": "Ta strona wykorzystuje pliki cookies. Korzystanie z witryny oznacza zgodę na ich zapis lub odczyt wg ustawień przeglądarki.",
+                    "dismiss": "OK",
+                    "link": "O polityce cookies",
+                    "href": "wszystkoociasteczkach.pl/polityka-cookies/"
+                }
+            })});
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
@@ -128,8 +151,8 @@
 
                 <%--<a href="/controller/${controller.id}" class="btn btn-info" role="button" style="float:left;width:180px;font-size:17px;margin-right: 10px;" ><span class="glyphicon glyphicon-backward"></span> Powrót</a>--%>
                 <span style="display: flex;position: relative;float: left;">
-                        <span class="glyphicon glyphicon-ok" style="position: absolute;font-size:17px;color: white;top: 30%; left:15%;"></span>
-                        <input type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;font-size:17px;" >
+                        <span class="glyphicon glyphicon-ok" style="position: absolute;color: white;top: 30%; left:15%;"></span>
+                        <input type="submit" value="Zatwierdź" class="btn btn-success" id="btn_submit" role="button" style="float:left;width:180px;" >
                         <div class="pull-left progress-space">
                     <div id="change_loading" class="later"></div>
                 </div>

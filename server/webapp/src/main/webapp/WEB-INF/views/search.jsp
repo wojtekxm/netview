@@ -15,6 +15,29 @@
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/cookieconsent.min.css" media="screen">
+    <script src="/js/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function(){
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#3c404d",
+                        "text": "#d6d6d6"
+                    },
+                    "button": {
+                        "background": "#8bed4f"
+                    }
+                },
+                "theme": "edgeless",
+                "content": {
+                    "message": "Ta strona wykorzystuje pliki cookies. Korzystanie z witryny oznacza zgodę na ich zapis lub odczyt wg ustawień przeglądarki.",
+                    "dismiss": "OK",
+                    "link": "O polityce cookies",
+                    "href": "wszystkoociasteczkach.pl/polityka-cookies/"
+                }
+            })});
+    </script>
 </head>
 <body>
 
@@ -70,7 +93,7 @@
 
             <h4 style="margin-bottom: 25px;border: 1px solid gainsboro;padding:15px;border-radius: 3px;">Kliknij na wybraną kategorię, aby zobaczyć wyniki</h4>
 
-            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#devs" style="width: 100%;">Urządzenia, <span id="devsLength"></span></button>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#devs" style="text-align:left;width: 100%;">Urządzenia, <span id="devsLength"></span></button>
             <ol class="list collapse" id="devs">
                 <c:forEach var="deviceDto" items="${search.devices}">
                     <li><c:url var="h" value="/device/${deviceDto.id}"/>
@@ -80,7 +103,7 @@
             </ol>
             <hr>
 
-            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#conts" style="width: 100%;">Kontrolery, <span id="contsLength"></span></button>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#conts" style="text-align:left;width: 100%;">Kontrolery, <span id="contsLength"></span></button>
             <ol class="list collapse" id="conts">
                 <c:forEach var="controllerDto" items="${search.controllers}"><li><c:url var="h" value="/controller/${controllerDto.id}"/>
                     <a href="${h}"><c:out value="${controllerDto.name}"/></a>
@@ -89,7 +112,7 @@
             </ol>
             <hr>
 
-            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#builds" style="width: 100%;">Budynki, <span id="buildsLength"></span></button>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#builds" style="text-align:left;width: 100%;">Budynki, <span id="buildsLength"></span></button>
             <ol class="list collapse" id="builds">
                 <c:forEach var="buildingDto" items="${search.buildings}">
                     <li><c:url var="h" value="/building/${buildingDto.id}"/>
@@ -99,7 +122,7 @@
             </ol>
             <hr>
 
-            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#uts" style="width: 100%;">Jednostki, <span id="utsLength"></span></button>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#uts" style="text-align:left;width: 100%;">Jednostki, <span id="utsLength"></span></button>
             <ol class="list collapse" id="uts">
                 <c:forEach var="unitDto" items="${search.units}"><li>
                     <a href="/unit?id=${unitDto.id}">[<c:out value="${unitDto.code}"/>] <c:out value="${unitDto.description}"/></a>
@@ -108,7 +131,7 @@
             </ol>
             <hr>
 
-            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#usrs" style="width: 100%;">Użytkownicy, <span id="usrsLength"></span></button>
+            <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#usrs" style="text-align:left;width: 100%;">Użytkownicy, <span id="usrsLength"></span></button>
             <ol class="list collapse" id="usrs">
                 <c:forEach var="userDto" items="${search.users}"><li>
                     <a href="/user/${userDto.id}"><c:out value="${userDto.name}"/></a>

@@ -14,6 +14,29 @@
     <link rel="stylesheet" href="/css/tabelka.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/cookieconsent.min.css" media="screen">
+    <script src="/js/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function(){
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#3c404d",
+                        "text": "#d6d6d6"
+                    },
+                    "button": {
+                        "background": "#8bed4f"
+                    }
+                },
+                "theme": "edgeless",
+                "content": {
+                    "message": "Ta strona wykorzystuje pliki cookies. Korzystanie z witryny oznacza zgodę na ich zapis lub odczyt wg ustawień przeglądarki.",
+                    "dismiss": "OK",
+                    "link": "O polityce cookies",
+                    "href": "wszystkoociasteczkach.pl/polityka-cookies/"
+                }
+            })});
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
@@ -68,9 +91,9 @@
             <div class="panel-body">
                 <div id="tabelka_space"></div>
                 <div>
-                    <a href="/create-unit" class="btn btn-success" role="button" style="margin-bottom:20px;">
+                    <a href="/create-unit" class="btn btn-success" role="button">
                         <span class="glyphicon glyphicon-plus"></span>
-                        Dodaj nową jednostkę organizacyjną
+                        Nowa jednostka organizacyjna
                     </a>
                 </div>
             </div>
@@ -78,23 +101,7 @@
     </div>
     <div id="notify_layer" style="position: fixed; top: 100px;"></div>
 </div>
-<%--<div class="container" style="margin-top:80px">--%>
-    <%--<div class="panel panel-default" id="header" style="margin-bottom: 15px!important;">--%>
-        <%--<div class="panel-body">--%>
-            <%--<div style="font-size: 17px; display: inline-block;"><span class="glyphicon glyphicon-home"></span> Jednostki organizacyjne:</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-    <%--<div id="main_loading" class="later"></div>--%>
-    <%--<div id="main_success" class="later">--%>
-        <%--<div id="tabelka_space"></div>--%>
-        <%--<div>--%>
-            <%--<a href="/create-unit" class="btn btn-success" role="button" style="margin-bottom:20px;">--%>
-                <%--<span class="glyphicon glyphicon-plus"></span>--%>
-                <%--Dodaj nową jednostkę organizacyjną--%>
-            <%--</a>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
+
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap-3.3.7.min.js"></script>
 <script src="/js/progress.js"></script>

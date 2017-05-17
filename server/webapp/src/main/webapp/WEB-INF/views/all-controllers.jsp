@@ -14,6 +14,29 @@
     <link rel="stylesheet" href="/css/tabelka.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/cookieconsent.min.css" media="screen">
+    <script src="/js/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function(){
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#3c404d",
+                        "text": "#d6d6d6"
+                    },
+                    "button": {
+                        "background": "#8bed4f"
+                    }
+                },
+                "theme": "edgeless",
+                "content": {
+                    "message": "Ta strona wykorzystuje pliki cookies. Korzystanie z witryny oznacza zgodę na ich zapis lub odczyt wg ustawień przeglądarki.",
+                    "dismiss": "OK",
+                    "link": "O polityce cookies",
+                    "href": "wszystkoociasteczkach.pl/polityka-cookies/"
+                }
+            })});
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: #080b08;">
@@ -80,9 +103,9 @@
                 <div>
                     <div id="tabelka_space"></div>
                     <div>
-                        <a href="/create-controller" class="btn btn-success" role="button" style="width: 200px;margin-bottom:5px;">
+                        <a href="/create-controller" class="btn btn-success" role="button">
                             <span class="glyphicon glyphicon-plus"></span>
-                            Dodaj nowy kontroler
+                            Nowy kontroler
                         </a>
                     </div>
                 </div>

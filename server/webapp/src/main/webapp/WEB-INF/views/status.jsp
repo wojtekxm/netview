@@ -183,6 +183,30 @@
         });
         $('#budynki').multiselect('refresh');
         filterChoice = "filter";
+
+        states = [];
+        controllers = [];
+        buildings = [];
+
+        var stateId = "";
+        $('.s :checkbox:checked').each(function(){
+            stateId = $(this).attr('value');
+            states.push(stateId);
+        });
+
+        var controllerId = "";
+        $('.c :checkbox:checked').each(function(){
+            controllerId = $(this).attr('value');
+            controllers.push(controllerId);
+        });
+
+        var buildingId = "";
+        $('.b :checkbox:checked').each(function(){
+            buildingId = $(this).attr('value');
+            buildings.push(buildingId);
+        });
+
+
         clearInterval(inter);
         getFilteredDevices();
         inter = setInterval('getFilteredDevices()', 30000);
@@ -278,9 +302,9 @@
                 clazz = "greenDiode1";
             } else if (sum > 10 && sum <= 30) {
                 clazz = "greenDiode2";
-            } else if (sum > 30 && sum <= 47) {
+            } else if (sum > 30 && sum <= 40) {
                 clazz = "greenDiode3";
-            } else if (sum > 47) {
+            } else if (sum > 40) {
                 clazz = "greenDiode4";
             } else if (sum == 0) {
                 clazz = "redDiode";
@@ -522,7 +546,7 @@
                     continue;
                 }
                 if(state2400 === null){
-                    continue;
+                    isEnabled = false;
                 }
                 else {
                     sum = state2400.clients;
@@ -534,7 +558,7 @@
                     continue;
                 }
                 if(state5000 === null){
-                    continue;
+                    isEnabled = false;
                 }
                 else {
                     sum = state5000.clients;
@@ -560,10 +584,10 @@
                         } else if (sum > 10 && sum <= 30) {
                             clazz = "greenDiode2";
                             active++;
-                        } else if (sum > 30 && sum <= 47) {
+                        } else if (sum > 30 && sum <= 40) {
                             clazz = "greenDiode3";
                             active++;
-                        } else if (sum > 47) {
+                        } else if (sum > 40) {
                             clazz = "greenDiode4";
                             active++;
                         }
@@ -843,7 +867,7 @@
                     continue;
                 }
                 if(state2400 === null){
-                    continue;
+                    var isEnabled = false;
                 }
                 else {
                     var sum = state2400.clients;
@@ -855,7 +879,7 @@
                     continue;
                 }
                 if(state5000 === null){
-                    continue;
+                    var isEnabled = false;
                 }
                 else {
                     var sum = state5000.clients;
@@ -873,10 +897,10 @@
                 } else if (sum > 10 && sum <= 30) {
                     clazz = "greenDiode2";
                     active++;
-                } else if (sum > 30 && sum <= 47) {
+                } else if (sum > 30 && sum <= 40) {
                     clazz = "greenDiode3";
                     active++;
-                } else if (sum > 47) {
+                } else if (sum > 40) {
                     clazz = "greenDiode4";
                     active++;
                 } else if (sum == 0) {

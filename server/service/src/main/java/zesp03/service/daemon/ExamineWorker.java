@@ -11,11 +11,14 @@ import zesp03.common.service.ExamineService;
 public class ExamineWorker implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(Daemon.class);
 
-    @Autowired
     private ResponsiveShutdown responsiveShutdown;
 
     @Autowired
     private ExamineService examineService;
+
+    public void setResponsiveShutdown(ResponsiveShutdown responsiveShutdown) {
+        this.responsiveShutdown = responsiveShutdown;
+    }
 
     @Override
     public void run() {

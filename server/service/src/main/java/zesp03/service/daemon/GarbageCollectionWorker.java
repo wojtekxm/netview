@@ -11,11 +11,14 @@ import zesp03.common.service.GarbageCollectingService;
 public class GarbageCollectionWorker implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(GarbageCollectionWorker.class);
 
-    @Autowired
     private ResponsiveShutdown responsiveShutdown;
 
     @Autowired
     private GarbageCollectingService garbageCollectingService;
+
+    public void setResponsiveShutdown(ResponsiveShutdown responsiveShutdown) {
+        this.responsiveShutdown = responsiveShutdown;
+    }
 
     @Override
     public void run() {

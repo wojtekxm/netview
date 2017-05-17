@@ -317,24 +317,22 @@
                     var state2400 = currentDeviceStateDto.frequencySurvey['2400'];
                     var state5000 = currentDeviceStateDto.frequencySurvey['5000'];
                     if(frequency == "2400"){
-                        if(typeof state2400 === 'undefined') {
+                        if(typeof state2400 === 'undefined'){
                             continue;
                         }
                         if(state2400 === null){
                             continue;
-                        }
-                        else if(state2400.enabled == true){
+                        }else if(state2400.enabled == true){
                             time = state2400.timestamp;
                             freq2400.push(currentDeviceStateDto);
                         }
                     }else if(frequency == "5000"){
-                        if(typeof state5000 === 'undefined') {
+                        if(typeof state5000 === 'undefined'){
                             continue;
                         }
-                        if(state2400 === null){
+                        if(state5000 === null){
                             continue;
-                        }
-                        else if(state5000.enabled == true){
+                        }else if(state5000.enabled == true){
                             time = state5000.timestamp;
                             freq5000.push(currentDeviceStateDto);
                         }
@@ -366,14 +364,19 @@
                 $('#devices li').remove();
 
                 if(frequency == "2400"){
-                    for(var i = 0; i < 15; i++){
-                        displayDevice(freq2400[i]);
+                    if(freq2400.length != 0){
+                        for(var i = 0; i < 15; i++){
+                            displayDevice(freq2400[i]);
+                        }
                     }
                 }else if(frequency == "5000"){
-                    for(var i = 0; i < 15; i++){
-                        displayDevice(freq5000[i]);
+                    if(freq5000.length != 0){
+                        for(var i = 0; i < 15; i++){
+                            displayDevice(freq5000[i]);
+                        }
                     }
                 }
+
 
                 if(option == "best"){
                     $('#countActive').css("display", "inline");

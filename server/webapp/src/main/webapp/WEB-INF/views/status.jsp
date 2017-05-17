@@ -209,7 +209,7 @@
 
         clearInterval(inter);
         getFilteredDevices();
-        inter = setInterval('getFilteredDevices()', 30000);
+        inter = setInterval('getFilteredDevices()', 180000);
     }
 </script>
 
@@ -243,7 +243,7 @@
         filterChoice = "top";
         option = "best";
         topDevices(option);
-        inter = setInterval('topDevices(option)', 30000);
+        inter = setInterval('topDevices(option)', 180000);
     });
     $('#worst_15').click(function(){
         btnWorst.prop('disabled', true);
@@ -267,7 +267,7 @@
         filterChoice = "worst";
         option = "worst";
         topDevices(option);
-        inter = setInterval('topDevices(option)', 30000);
+        inter = setInterval('topDevices(option)', 180000);
     });
 
     function displayDevice(currentDeviceStateDto){
@@ -692,7 +692,7 @@
 
         clearInterval(inter);
         getFilteredDevices();
-        inter = setInterval('getFilteredDevices()', 30000);
+        inter = setInterval('getFilteredDevices()', 180000);
     })
 </script>
 
@@ -807,7 +807,7 @@
                 e();
             }, undefined, 'md'
         );
-        inter = setInterval('allDevices()', 30000);
+        inter = setInterval('allDevices()', 180000);
     });
 
 
@@ -978,19 +978,19 @@
             if(filterChoice == "filter"){
                 clearInterval(inter);
                 getFilteredDevices();
-                inter = setInterval('getFilteredDevices()', 30000);
+                inter = setInterval('getFilteredDevices()', 180000);
             }else if(filterChoice == "top"){
                 btnWorst.prop('disabled', false);
                 clearInterval(inter);
                 option = "best";
                 topDevices(option);
-                inter = setInterval('topDevices(option)', 30000);
+                inter = setInterval('topDevices(option)', 180000);
             }else if(filterChoice == "worst"){
                 btnTop.prop('disabled', false);
                 clearInterval(inter);
                 option = "worst";
                 topDevices(option);
-                inter = setInterval('topDevices(option)', 30000);
+                inter = setInterval('topDevices(option)', 180000);
             }
 
         })

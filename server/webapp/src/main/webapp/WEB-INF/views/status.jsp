@@ -16,6 +16,29 @@
     <link rel="stylesheet" href="/css/notify.css">
     <link rel="stylesheet" href="/css/progress.css">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' type='text/css'>
+    <link rel="stylesheet" href="/css/cookieconsent.min.css" media="screen">
+    <script src="/js/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function(){
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#3c404d",
+                        "text": "#d6d6d6"
+                    },
+                    "button": {
+                        "background": "#8bed4f"
+                    }
+                },
+                "theme": "edgeless",
+                "content": {
+                    "message": "Ta strona wykorzystuje pliki cookies. Korzystanie z witryny oznacza zgodę na ich zapis lub odczyt wg ustawień przeglądarki.",
+                    "dismiss": "OK",
+                    "link": "O polityce cookies",
+                    "href": "wszystkoociasteczkach.pl/polityka-cookies/"
+                }
+            })});
+    </script>
 </head>
 <body>
 
@@ -297,12 +320,18 @@
                         if(typeof state2400 === 'undefined') {
                             continue;
                         }
+                        if(state2400 === null){
+                            continue;
+                        }
                         else if(state2400.enabled == true){
                             time = state2400.timestamp;
                             freq2400.push(currentDeviceStateDto);
                         }
                     }else if(frequency == "5000"){
                         if(typeof state5000 === 'undefined') {
+                            continue;
+                        }
+                        if(state2400 === null){
                             continue;
                         }
                         else if(state5000.enabled == true){

@@ -522,7 +522,7 @@
                     continue;
                 }
                 if(state2400 === null){
-                    isEnabled = false;
+                    continue;
                 }
                 else {
                     sum = state2400.clients;
@@ -534,7 +534,7 @@
                     continue;
                 }
                 if(state5000 === null){
-                    isEnabled = false;
+                    continue;
                 }
                 else {
                     sum = state5000.clients;
@@ -843,7 +843,7 @@
                     continue;
                 }
                 if(state2400 === null){
-                    var isEnabled = false;
+                    continue;
                 }
                 else {
                     var sum = state2400.clients;
@@ -855,7 +855,7 @@
                     continue;
                 }
                 if(state5000 === null){
-                    var isEnabled = false;
+                    continue;
                 }
                 else {
                     var sum = state5000.clients;

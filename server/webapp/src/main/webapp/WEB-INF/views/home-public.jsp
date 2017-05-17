@@ -78,12 +78,6 @@
                                     <input class="form-control" placeholder="Hasło..." name="password" type="password" value="">
                                 </div>
                             </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="remember" type="checkbox" value="true">Zapamiętaj mnie
-                                </label>
-                            </div>
-                            <%--<input class="btn btn-lg btn-success btn-block" type="submit" value="Zaloguj">--%>
                             <button type="submit" class="btn btn-lg btn-success btn-block">
                                 <span class="glyphicon glyphicon-log-in"></span> &nbsp;&nbsp;Zaloguj
                             </button>

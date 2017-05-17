@@ -163,7 +163,7 @@
 $(document).ready(function() {
     var loggedId, selectedId, user, userName, spanRole, btnRole, btnBlocked, btnPassword, userActivated,
         userCreated, userLastAccess, spanBlocked, resetResult,
-        trRole, trBlocked, trLastAccess, trName, trActivated;
+        trRole, trBlocked, trLastAccess, trName, trActivated, userInfo;
     loggedId = ${loggedUser.id};
     selectedId = ${id};
     userName = $('#user_name');
@@ -187,6 +187,89 @@ $(document).ready(function() {
         ['.on-loading'], ['.on-loaded'], [],
         function(contentDtoOfUserDto) {
             updateUser(contentDtoOfUserDto.content);
+            btnBlocked.click(function () {
+                var postUrl = '/api/user/';
+                if(userInfo.blocked) {
+                    postUrl += 'unlock/';
+                }
+                else {
+                    postUrl += 'block/';
+                }
+                postUrl += selectedId;
+                btnBlocked.prop('disabled', true);
+                progress.load(
+                    [{
+                        "url": postUrl,
+                        "method": 'post'
+                    }, {
+                        "url": '/api/user/info/' + selectedId
+                    }],
+                    ['#block_loading'], [], [],
+                    function (responses) {
+                        btnBlocked.prop('disabled', false);
+                        updateUser(responses[1].content);
+                    },
+                    function () {
+                        btnBlocked.prop('disabled', false);
+                    }
+                );
+            });
+            btnRole.click(function () {
+                var postUrl = '/api/user/';
+                if(userInfo.role === 'ROOT') {
+                    postUrl += 'degrade/';
+                }
+                else {
+                    postUrl += 'advance/';
+                }
+                postUrl += selectedId;
+                btnRole.prop('disabled', true);
+                progress.load(
+                    [{
+                        "url": postUrl,
+                        "method": 'post'
+                    }, {
+                        "url": '/api/user/info/' + selectedId
+                    }],
+                    ['#role_loading'], [], [],
+                    function (responses) {
+                        btnRole.prop('disabled', false);
+                        updateUser(responses[1].content);
+                    },
+                    function () {
+                        btnRole.prop('disabled', false);
+                    }
+                );
+            });
+            btnPassword.click(function() {
+                resetResult.empty();
+                btnPassword.prop('disabled', true);
+                progress.load(
+                    [{
+                        "url": '/api/user/begin-reset-password/' + selectedId,
+                        "method": 'post'
+                    }, {
+                        "url": '/api/user/info/' + selectedId
+                    }],
+                    ['#password_loading'], [], [],
+                    function (responses) {
+                        var h4, a;
+                        updateUser(responses[1].content);
+                        h4 = $('<h4></h4>').text('Hasło można zresetować na stronie:');
+                        a = $('<a></a>').attr('href', responses[0].content.resetURL)
+                            .text(responses[0].content.resetURL);
+                        h4.hide();
+                        a.hide();
+                        resetResult.append(h4, a);
+                        h4.show(400);
+                        a.show(400);
+                    },
+                    function () {
+                        btnRole.prop('disabled', false);
+                        notify.danger('Niepowodzenie');
+                    }
+                );
+            });
         },
         function() {
             notify.danger('Niepowodzenie');
@@ -214,50 +297,12 @@ $(document).ready(function() {
                     btnBlocked.removeClass('btn-danger');
                     btnBlocked.addClass('btn-success');
                     btnBlocked.text('odblokuj');
-                    btnBlocked.click(function () {
-                        btnBlocked.prop('disabled', true);
-                        progress.load(
-                            [{
-                                "url": '/api/user/unlock/' + selectedId,
-                                "method": 'post'
-                            }, {
-                                "url": '/api/user/info/' + selectedId
-                            }],
-                            ['#block_loading'], [], [],
-                            function (responses) {
-                                btnBlocked.prop('disabled', false);
-                                updateUser(responses[1].content);
-                            },
-                            function () {
-                                btnBlocked.prop('disabled', false);
-                            }
-                        );
-                    });
                 }
                 else {
                     spanBlocked.text('nie');
                     btnBlocked.removeClass('btn-success');
                     btnBlocked.addClass('btn-danger');
                     btnBlocked.text('zablokuj');
-                    btnBlocked.click(function () {
-                        btnBlocked.prop('disabled', true);
-                        progress.load(
-                            [{
-                                "url": '/api/user/block/' + selectedId,
-                                "method": 'post'
-                            }, {
-                                "url": '/api/user/info/' + selectedId
-                            }],
-                            ['#block_loading'], [], [],
-                            function (responses) {
-                                btnBlocked.prop('disabled', false);
-                                updateUser(responses[1].content);
-                            },
-                            function () {
-                                btnBlocked.prop('disabled', false);
-                            }
-                        );
-                    });
                 }
             }
             else {
@@ -268,49 +313,11 @@ $(document).ready(function() {
                 btnRole.removeClass('btn-success');
                 btnRole.addClass('btn-danger');
                 btnRole.text('zdegraduj do zwykłego');
-                btnRole.click(function () {
-                    btnRole.prop('disabled', true);
-                    progress.load(
-                        [{
-                            "url": '/api/user/degrade/' + selectedId,
-                            "method": 'post'
-                        }, {
-                            "url": '/api/user/info/' + selectedId
-                        }],
-                        ['#role_loading'], [], [],
-                        function (responses) {
-                            btnRole.prop('disabled', false);
-                            updateUser(responses[1].content);
-                        },
-                        function () {
-                            btnRole.prop('disabled', false);
-                        }
-                    );
-                });
             }
             else {
                 btnRole.removeClass('btn-danger');
                 btnRole.addClass('btn-success');
-                btnRole.text('awansuj na administratora')
-                btnRole.click(function () {
-                    btnRole.prop('disabled', true);
-                    progress.load(
-                        [{
-                            "url": '/api/user/advance/' + selectedId,
-                            "method": 'post'
-                        }, {
-                            "url": '/api/user/info/' + selectedId
-                        }],
-                        ['#role_loading'], [], [],
-                        function (responses) {
-                            btnRole.prop('disabled', false);
-                            updateUser(responses[1].content);
-                        },
-                        function () {
-                            btnRole.prop('disabled', false);
-                        }
-                    );
-                });
+                btnRole.text('awansuj na administratora');
             }
         }
         else {
@@ -320,38 +327,6 @@ $(document).ready(function() {
         }
         if(userDto.activated) {
             btnPassword.show();
-            btnPassword.click(function() {
-                resetResult.empty();
-                btnPassword.prop('disabled', true);
-                progress.load(
-                    [{
-                        "url": '/api/user/begin-reset-password/' + selectedId,
-                        "method": 'post'
-                    }, {
-                        "url": '/api/user/info/' + selectedId
-                    }],
-                    ['#password_loading'], [], [],
-                    function (responses) {
-                        var h4, a;
-                        updateUser(responses[1].content);
-                        console.log('responses', responses);
-                        h4 = $('<h4></h4>').text('Hasło można zresetować na stronie:');
-                        a = $('<a></a>').attr('href', responses[0].content.resetURL)
-                            .text(responses[0].content.resetURL);
-                        h4.hide();
-                        a.hide();
-                        console.log('h4', h4);
-                        console.log('a', a);
-                        resetResult.append(h4, a);
-                        h4.show(400);
-                        a.show(400);
-                    },
-                    function () {
-                        btnRole.prop('disabled', false);
-                        notify.danger('Niepowodzenie');
-                    }
-                );
-            });
         }
         else {
             btnPassword.hide();
@@ -364,6 +339,7 @@ $(document).ready(function() {
         diff = new Date().getTime() - userDto.lastAccess;
         ago = moment.duration(diff).locale('pl').humanize() + ' temu';
         userLastAccess.text(when + ' (' + ago + ')');
+        userInfo = userDto;
     }
 });
 </script>

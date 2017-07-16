@@ -109,42 +109,24 @@
 <script>
 "use strict";
 $(document).ready( function() {
-    var units, columnDefinitions;
-    units = [];
-    columnDefinitions = [
-        {
-            "label" : 'nazwa',
-            "comparator" : util.comparatorText('description'),
-            "extractor" : 'td_description',
-            "cssClass" : 'width-12'
-        }, {
-            "label" : 'kod',
-            "comparator" : util.comparatorText('code'),
-            "extractor" : 'td_code',
-            "cssClass" : 'width-4'
-        }
-    ];
-
-    function fixUnits() {
-        var i, u;
-        for(i = 0; i < units.length; i++) {
-            u = units[i];
-            u.td_description = $('<a></a>')
-                .attr('href', '/unit/' + u.id)
-                .text(u.description);
-            u.td_code = $('<span></span>').text(u.code);
-        }
+    function fixUnits(listOfUnitDto) {
+        tabelka.builder('!')
+            .column('nazwa', 'text', 'description', 12, function(unit) {
+                return $('<a></a>')
+                    .attr('href', '/unit/' + unit.id)
+                    .text(unit.description);
+            })
+            .column('kod', 'text', 'code', 4, function(unit) {
+                return unit.code;
+            })
+            .build('#tabelka_space', listOfUnitDto);
     }
 
     progress.loadGet(
         '/api/unit/all',
         ['#main_loading'], ['#main_success'], [],
         function(listDtoOfUnitDto) {
-            units = listDtoOfUnitDto.list;
-            fixUnits();
-            $('#tabelka_space').append(
-                tabelka.create(units, columnDefinitions)
-            );
+            fixUnits(listDtoOfUnitDto.list);
         }
     );
 } );

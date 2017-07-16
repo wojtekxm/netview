@@ -50,7 +50,6 @@ var util = {};
 
 var tabelka = {};
 (function(){
-    tabelka.create = create;
     tabelka.builder = builder;
 
     /**
@@ -506,7 +505,7 @@ var tabelka = {};
             where = $(tabelkaSelector);
             where.empty();
             where.append(
-                tabelka.create(data, bl.definitions)
+                create(data, bl.definitions)
             );
         }
     }

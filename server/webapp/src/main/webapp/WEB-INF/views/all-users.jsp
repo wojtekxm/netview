@@ -131,6 +131,9 @@ $(document).ready( function() {
 
     function fixUsers(listOfUserDto) {
         tabelka.builder('!')
+            .searchGenerator(function(u) {
+                return [u.name];
+            })
             .column('nazwa', 'text', 'cmp_name', 2, function(user) {
                 if(user.name === null) {
                     user.cmp_name = '[' + user.id + ']';

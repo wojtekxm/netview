@@ -57,200 +57,231 @@ var tabelka = {};
      * "label" : string
      * "comparator" : optional function (if not specified, sorting is disabled)
      * "extractor" : string, name of data property holding <td> content
+     * "generator" : function generating value of extractor for each data element
      * "cssClass" : optional string
      * }
-     * @param data tabela danych, każdy element będzie pokazany w jednym wierszu
      * @param columnDefinitions, tabela ColumnDefinition, gdzie każdy element opisuje kolejną kolumnę
-     * @param optionalPaginationThresold
-     * @param optionalPageSizes
-     * @returns {*|jQuery|HTMLElement}
      */
-    function create(data, columnDefinitions, optionalPaginationThresold, optionalPageSizes) {
-        var i, k, tmp, last, sortIndex, sortAscending, sortedData, paginationBar,
-            paginationSizeSelect, paginationNavList, pageIndex, pageCapacity, pageSizes,
-            colgroup, theadRow, tbody, table, div;
-        sortIndex = -1;
-        sortAscending = true;
-        sortedData = [];
-        for(i = 0; i < data.length; i++) {
-            sortedData.push(data[i]);
-        }
-        if(typeof optionalPaginationThresold === 'undefined') {
-            optionalPaginationThresold = 10;
-        }
-        paginationBar = null;
-        if(data.length >= optionalPaginationThresold) {
-            paginationBar = $('<div class="clearfix" style="padding-bottom: 10px"></div>');
-            paginationSizeSelect = $('<select class="form-control" style="display: inline-block; width: 100px"></select>');
-            paginationNavList = $('<ul class="pagination pull-right" style="margin: 0"></ul>');
-            paginationBar.append(
-                $('<div class="pull-left form-inline"></div>').append(
-                    $('<div class="form-group"></div>').append(
-                        $('<span></span>').text('wyświetlaj po '),
-                        paginationSizeSelect
-                    )
-                ),
-                paginationNavList
-            );
-            paginationSizeSelect.change(function() {
-                pageCapacity = parseInt( $(this).val() );
-                pageIndex = 0;
-                refresh();
-            });
-        }
-        if(typeof optionalPageSizes === 'undefined') {
-            optionalPageSizes = [10, 25, 50, 100, 250, 500, 1000];
-        }
-        tmp = [];
-        for(i = 0; i < optionalPageSizes.length; i++) {
-            tmp.push(optionalPageSizes[i]);
-        }
-        tmp.push(data.length);
-        pageCapacity = tmp[0];
-        pageIndex = 0;
-        tmp.sort(util.compareNumbers);
-        last = null;
-        pageSizes = [];
-        for(i = 0; i < tmp.length; i++) {
-            k = tmp[i];
-            if(k === last)continue;
-            if(k < 1)continue;
-            if(k > data.length)continue;
-            pageSizes.push(k);
-            last = k;
+    function create(columnDefinitions, uniquePrefix, searchTextGenerator) {
+        var sortIndex, sortAscending, sortedData,
+            pageIndex, pageSizes, pageCapacity,
+            filteredData, filterText, searchTextProperty,
+            paginationDiv, theadRow, tbody;
+        initModel();
+        var result = {
+            "jqueryDom": initDom(),
+            "resetData": resetData
+        };
+        refreshDom();
+        return result;
+
+        function initModel() {
+            sortIndex = -1;
+            sortAscending = true;
+            sortedData = [];
+            filteredData = [];
+            filterText = '';
+            pageIndex = 0;
+            pageSizes = makeSizeOptions(0);
+            pageCapacity = pageSizes[0];
+            searchTextProperty = uniquePrefix + 'text';
         }
 
-        theadRow = $('<tr></tr>');
-        tbody = $('<tbody></tbody>');
-        colgroup = $('<colgroup></colgroup>');
-        colgroup.append( $('<col span="1" class="width-0"/>') );
-        for(i = 0; i < columnDefinitions.length; i++) {
-            if(typeof columnDefinitions[i].cssClass !== 'undefined') {
-                colgroup.append(
-                    $('<col span="1"/>').addClass(columnDefinitions[i].cssClass)
+        function initDom() {
+            var i, div, table, colgroup;
+            div = $('<div></div>');
+            colgroup = $('<colgroup></colgroup>');
+            colgroup.append( $('<col span="1" class="width-0"/>') );
+            for(i = 0; i < columnDefinitions.length; i++) {
+                if(typeof columnDefinitions[i].cssClass !== 'undefined') {
+                    colgroup.append(
+                        $('<col span="1"/>').addClass(columnDefinitions[i].cssClass)
+                    );
+                }
+                else {
+                    colgroup.append(
+                        $('<col span="1"/>')
+                    );
+                }
+            }
+            theadRow = $('<tr></tr>');
+            tbody = $('<tbody></tbody>');
+            table = $('<table class="table table-striped table-bordered" style="background-color: white;"></table>')
+                .append(
+                    colgroup,
+                    $('<thead></thead>').append(theadRow),
+                    tbody
                 );
+            div.append(table);
+            paginationDiv = $('<div class="clearfix"></div>');
+            div.append(paginationDiv);
+            return div;
+        }
+
+        function filterSearch() {
+            var i, k, source;
+            filteredData = [];
+            filterText = filterText.toLocaleLowerCase();
+            if(filterText === '') {
+                for (i = 0; i < sortedData.length; i++) {
+                    filteredData.push(sortedData[i]);
+                }
             }
             else {
-                colgroup.append(
-                    $('<col span="1"/>')
-                );
+                for (i = 0; i < sortedData.length; i++) {
+                    source = sortedData[i][searchTextProperty];
+                    for (k = 0; k < source.length; k++) {
+                        if (source[k].indexOf(filterText) > -1) {
+                            filteredData.push(sortedData[i]);
+                            break;
+                        }
+                    }
+                }
             }
         }
-        table = $('<table class="table table-striped table-bordered" style="background-color: white;"></table>')
-            .append(
-                colgroup,
-                $('<thead></thead>').append(theadRow),
-                tbody
-            );
-        div = $('<div></div>');
-        div.append(table);
-        if(paginationBar !== null) {
-            div.append(paginationBar);
-        }
-        refresh();
-        return div;
 
-        function refresh() {
-            var i, k, arr, last, li, definition, th, span, option, start, end, row, tr, totalPages;
+        function refreshDom() {
             tbody.empty();
             theadRow.empty();
+            paginationDiv.empty();
+            buildThead();
+            buildTbody();
+            buildPagination();
 
-            theadRow.append(
-                $('<th></th>')
-            );
-            for(i = 0; i < columnDefinitions.length; i++) {
-                definition = columnDefinitions[i];
-                th = $('<th></th>');
-                th.append(
-                    $('<span></span>').text(definition.label)
+            function buildThead() {
+                var i, definition, th, span;
+                theadRow.append(
+                    $('<th></th>')
                 );
-                if(typeof definition.comparator === 'function') {
-                    th.attr('style', 'cursor: pointer');
-                    span = $('<span class="pull-right glyphicon"></span>');
-                    if (i === sortIndex) {
-                        th.addClass('active');
-                        if (sortAscending) {
-                            span.addClass('glyphicon-sort-by-attributes');
-                        }
-                        else {
-                            span.addClass('glyphicon-sort-by-attributes-alt');
-                        }
-                    }
-                    else {
-                        span.addClass('glyphicon glyphicon-sort');
-                    }
-                    th.append(span);
-                    th.click(
-                        { "columnIndex": i },
-                        function(event) {
-                            var newSortIndex = event.data.columnIndex;
-                            if(newSortIndex === sortIndex) {
-                                sortAscending = !sortAscending;
-                                sortedData.reverse();
+                for(i = 0; i < columnDefinitions.length; i++) {
+                    definition = columnDefinitions[i];
+                    th = $('<th></th>');
+                    th.append(
+                        $('<span></span>').text(definition.label)
+                    );
+                    if(typeof definition.comparator === 'function') {
+                        th.attr('style', 'cursor: pointer');
+                        span = $('<span class="pull-right glyphicon"></span>');
+                        if (i === sortIndex) {
+                            th.addClass('active');
+                            if (sortAscending) {
+                                span.addClass('glyphicon-sort-by-attributes');
                             }
                             else {
-                                sortIndex = newSortIndex;
-                                sortAscending = true;
-                                sortedData.sort(
-                                    util.chooseComparator(
-                                        columnDefinitions[sortIndex].comparator
-                                    )
-                                );
+                                span.addClass('glyphicon-sort-by-attributes-alt');
                             }
-                            refresh();
                         }
-                    );
+                        else {
+                            span.addClass('glyphicon glyphicon-sort');
+                        }
+                        th.append(span);
+                        th.click(
+                            { "columnIndex": i },
+                            function(event) {
+                                var newSortIndex = event.data.columnIndex;
+                                if(newSortIndex === sortIndex) {
+                                    sortAscending = !sortAscending;
+                                    sortedData.reverse();
+                                    filteredData.reverse();
+                                }
+                                else {
+                                    sortIndex = newSortIndex;
+                                    sortAscending = true;
+                                    sortedData.sort(
+                                        util.chooseComparator(
+                                            columnDefinitions[sortIndex].comparator
+                                        )
+                                    );
+                                    filterSearch();
+                                }
+                                refreshDom();
+                            }
+                        );
+                    }
+                    theadRow.append(th);
                 }
-                theadRow.append(th);
             }
 
-            if(paginationBar !== null) {
+            function buildTbody() {
+                var i, k, start, end, tr;
                 start = pageIndex * pageCapacity;
                 end = start + pageCapacity;
-                if (end > sortedData.length) end = sortedData.length;
-            }
-            else {
-                start = 0;
-                end = sortedData.length;
-            }
-            for(i = start; i < end; i++) {
-                row = sortedData[i];
-                tr = $('<tr></tr>');
-                tr.append(
-                    $('<td></td>').addClass('text-center').text(i+1)
-                );
-                for(k = 0; k < columnDefinitions.length; k++) {
-                    definition = columnDefinitions[k];
+                if (end > filteredData.length) end = filteredData.length;
+                for(i = start; i < end; i++) {
+                    tr = $('<tr></tr>');
                     tr.append(
-                        $('<td></td>').append( row[definition.extractor] )
+                        $('<td></td>').addClass('text-center').text(i+1)
                     );
-                }
-                tbody.append(tr);
-            }
-            if(paginationBar !== null) {
-                paginationSizeSelect.empty();
-                for(i = 0; i < pageSizes.length; i++) {
-                    k = pageSizes[i];
-                    option = $('<option></option>');
-                    option.val(k);
-                    option.text(k);
-                    if(k === pageCapacity) {
-                        option.prop('selected', true);
+                    for(k = 0; k < columnDefinitions.length; k++) {
+                        tr.append(
+                            $('<td></td>').append(
+                                filteredData[i][ columnDefinitions[k].extractor ]
+                            )
+                        );
                     }
-                    paginationSizeSelect.append(option);
+                    tbody.append(tr);
                 }
+            }
 
-                paginationNavList.empty();
-                totalPages = Math.ceil( sortedData.length / pageCapacity );
-                if(totalPages > 1) {
-                    arr = [0, pageIndex - 2, pageIndex - 1, pageIndex, pageIndex + 1, pageIndex + 2, totalPages - 1];
-                    arr.sort(util.compareNumbers);
-                    last = null;
+            function buildPagination() {
+                var i, k, arr,
+                    searchInput, searchBtn, paginationNavList, paginationSizeSelect,
+                    span, li, opt;
+                var defaultPaginationThresold = 10;
+                if(sortedData.length >= defaultPaginationThresold) {
+                    paginationSizeSelect = $('<select class="form-control" style="display: inline-block; width: 100px"></select>');
+                    paginationNavList = $('<ul class="pagination pull-right" style="margin: 0"></ul>');
+                    searchInput = $('<input type="text" class="form-control">').val(filterText);
+                    searchBtn = $('<button type="button" class="btn btn-primary"></button>').text('filtruj');
+                    paginationDiv.append(
+                        $('<div class="row"></div>').append(
+                            $('<div class="col-sm-4" style="margin-bottom: 10px"></div>').append(
+                                $('<div class="input-group"></div>').append(
+                                    searchInput,
+                                    $('<span class="input-group-btn"></span>').append(
+                                        searchBtn
+                                    )
+                                )
+                            ),
+                            $('<div class="col-sm-4 text-center" style="margin-bottom: 10px"></div>').append(
+                                $('<div class="form-inline"></div>').append(
+                                    $('<div class="form-group"></div>').append(
+                                        $('<span></span>').text('wyświetlaj po '),
+                                        paginationSizeSelect
+                                    )
+                                )
+                            ),
+                            $('<div class="col-sm-4" style="margin-bottom: 10px"></div>').append(
+                                paginationNavList
+                            )
+                        )
+                    );
+                    searchBtn.click(function() {
+                        filterText = searchInput.val();
+                        filterSearch();
+                        refreshDom();
+                        searchBtn.prop('disabled', true);
+                    });
+                    paginationSizeSelect.change(function() {
+                        pageCapacity = parseInt( $(this).val() );
+                        if(pageIndex >= getTotalPages()) {
+                            pageIndex = getTotalPages() - 1;
+                        }
+                        refreshDom();
+                    });
+                    for(i = 0; i < pageSizes.length; i++) {
+                        k = pageSizes[i];
+                        opt = $('<option></option>');
+                        opt.val(k);
+                        opt.text(k);
+                        if(k === pageCapacity) {
+                            opt.prop('selected', true);
+                        }
+                        paginationSizeSelect.append(opt);
+                    }
+                    arr = makePageLinks();
                     for (i = 0; i < arr.length; i++) {
                         k = arr[i];
-                        if (last === k)continue;
-                        if (k < 0)continue;
-                        if (totalPages <= k)continue;
                         span = $('<span class="span-link"></span>');
                         span.text(k + 1);
                         li = $('<li></li>').append(span);
@@ -262,14 +293,120 @@ var tabelka = {};
                             { "pageIndex": k },
                             function(event) {
                                 pageIndex = event.data.pageIndex;
-                                refresh();
+                                refreshDom();
                             }
                         );
                         paginationNavList.append(li);
-                        last = k;
                     }
                 }
             }
+        }
+
+        function resetData(data) {
+            var i, row, k, def, tdContent, arr;
+            sortedData = [];
+            for(i = 0; i < data.length; i++) {
+                row = data[i];
+                sortedData.push(row);
+                for(k = 0; k < columnDefinitions.length; k++) {
+                    def = columnDefinitions[k];
+                    tdContent = def.generator(row);
+                    if(typeof tdContent === 'string') {
+                        tdContent = $('<span></span>').text(tdContent);
+                    }
+                    row[def.extractor] = tdContent;
+                }
+            }
+            for(i = 0; i < data.length; i++) {
+                arr = searchTextGenerator(data[i]);
+                for(k = 0; k < arr.length; k++) {
+                    arr[k] = arr[k].toLocaleLowerCase();
+                }
+                data[i][searchTextProperty] = arr;
+            }
+            if(sortIndex >= 0) {
+                sortedData.sort(
+                    util.chooseComparator(
+                        columnDefinitions[sortIndex].comparator,
+                        sortAscending
+                    )
+                );
+            }
+            filterSearch();
+            pageSizes = makeSizeOptions(data.length);
+            pageCapacity = getClosestNumber(pageSizes, pageCapacity);
+            if(pageIndex >= getTotalPages()) {
+                pageIndex = getTotalPages() - 1;
+            }
+            refreshDom();
+        }
+
+        // zwraca zawsze tablice z conajmniej jednym elementem
+        function makeSizeOptions(dataLength) {
+            var arr, last, k, i, result;
+            arr = [10, 25, 50, 100, 250, 500, 1000, dataLength];
+            arr.sort(util.compareNumbers);
+            last = null;
+            result = [];
+            for(i = 0; i < arr.length; i++) {
+                k = arr[i];
+                if(k === last)continue;
+                if(k > dataLength)continue;
+                result.push(k);
+                last = k;
+            }
+            return result;
+        }
+
+        // zwraca zawsze tablice z conajmniej jednym elementem
+        function makePageLinks() {
+            var totalPages, arr, i, k, last, result;
+            totalPages = getTotalPages();
+            arr = [0,
+                1,
+                pageIndex - 3,
+                pageIndex - 2,
+                pageIndex - 1,
+                pageIndex,
+                pageIndex + 1,
+                pageIndex + 2,
+                pageIndex + 3,
+                totalPages - 2,
+                totalPages - 1];
+            arr.sort(util.compareNumbers);
+            result = [];
+            last = null;
+            for (i = 0; i < arr.length; i++) {
+                k = arr[i];
+                if (last === k)continue;
+                if (k < 0)continue;
+                if (totalPages <= k)continue;
+                result.push(k);
+                last = k;
+            }
+            return result;
+        }
+
+        // zawsze conajmniej 1
+        function getTotalPages() {
+            if(filteredData.length < 1 || pageCapacity < 1) {
+                return 1;
+            }
+            return Math.ceil( filteredData.length / pageCapacity );
+        }
+
+        function getClosestNumber(options, target) {
+            var i, bestAbs, bestValue, currentValue, currentAbs;
+            bestValue = null;
+            for(i = 0; i < options.length; i++) {
+                currentValue = options[i];
+                currentAbs = Math.abs(currentValue - target);
+                if(bestValue === null || currentAbs < bestAbs) {
+                    bestValue = currentValue;
+                    bestAbs = currentAbs;
+                }
+            }
+            return bestValue;
         }
     }
 
@@ -294,12 +431,18 @@ var tabelka = {};
             bl.uniquePrefix = '!';
         }
         bl.futureData = [];
+        bl.searchGenerator = searchGenerator;
         bl.column = column;
         bl.special = special;
         bl.deviceFrequency = deviceFrequency;
         bl.buttonUnlink = buttonUnlink;
         bl.build = build;
         return bl;
+
+        function searchGenerator(searchTextGenerator) {
+            bl.searchTextGenerator = searchTextGenerator;
+            return bl;
+        }
 
         /**
          * @param label string, column header
@@ -311,7 +454,7 @@ var tabelka = {};
          * @returns builder
          */
         function column(label, sortType, propertyName, width16, columnGenerator) {
-            var comparator, clazz;
+            var comparator, clazz, generator;
             if(typeof width16 === 'string') {
                 clazz = width16;
             }
@@ -324,23 +467,21 @@ var tabelka = {};
             else if(sortType === 'number') {
                 comparator = util.comparatorNumber(propertyName);
             }
-            /*else if(sortType === null) {
-                comparator = undefined;
-            }*/
+            if(typeof columnGenerator === 'string') {
+                generator = function(row) {
+                    return $('<span></span>').text(row[columnGenerator]);
+                };
+            }
+            else {
+                generator = columnGenerator;
+            }
             bl.definitions.push( {
                 "label" : label,
                 "comparator" : comparator,
                 "extractor" : bl.uniquePrefix + bl.definitions.length + '_td',
+                "generator" : generator,
                 "cssClass" : clazz
             } );
-            if(typeof columnGenerator === 'string') {
-                bl.generators.push(function(row) {
-                    return $('<span></span>').text(row[columnGenerator]);
-                });
-            }
-            else {
-                bl.generators.push(columnGenerator);
-            }
             return bl;
         }
 
@@ -353,26 +494,27 @@ var tabelka = {};
          * @returns builder
          */
         function special(label, width16, columnGenerator) {
-            var clazz;
+            var clazz, generator;
             if(typeof width16 === 'string') {
                 clazz = width16;
             }
             else if(typeof width16 === 'number') {
                 clazz = 'width-' + width16;
             }
+            if(typeof columnGenerator === 'string') {
+                generator = function(row) {
+                    return $('<span></span>').text(row[columnGenerator]);
+                };
+            }
+            else {
+                generator = columnGenerator;
+            }
             bl.definitions.push( {
                 "label" : label,
                 "extractor" : bl.uniquePrefix + bl.definitions.length + '_td',
+                "generator" : generator,
                 "cssClass" : clazz
             } );
-            if(typeof columnGenerator === 'string') {
-                bl.generators.push(function(row) {
-                    return $('<span></span>').text(row[columnGenerator]);
-                });
-            }
-            else {
-                bl.generators.push(columnGenerator);
-            }
             return bl;
         }
 
@@ -488,25 +630,14 @@ var tabelka = {};
         }
 
         function build(tabelkaSelector, data) {
-            var where, i, k, row, def, generator, tdContent;
+            var where, result;
             bl.futureData = data;
-            for(i = 0; i < data.length; i++) {
-                row = data[i];
-                for(k = 0; k < bl.generators.length; k++) {
-                    def = bl.definitions[k];
-                    generator = bl.generators[k];
-                    tdContent = generator(row);
-                    if(typeof tdContent === 'string') {
-                        tdContent = $('<span></span>').text(tdContent);
-                    }
-                    row[def.extractor] = tdContent;
-                }
-            }
             where = $(tabelkaSelector);
             where.empty();
-            where.append(
-                create(data, bl.definitions)
-            );
+            result = create(bl.definitions, bl.uniquePrefix + '#', bl.searchTextGenerator);
+            result.resetData(data);
+            where.append(result.jqueryDom);
+            return result;
         }
     }
 })();

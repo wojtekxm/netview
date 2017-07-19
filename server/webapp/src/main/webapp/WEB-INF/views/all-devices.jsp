@@ -265,6 +265,9 @@ $(document).ready( function() {
 
     function fixDevices(listOfDeviceDetailsDto, replacingOld) {
         var builder = tabelka.builder('!')
+            .searchGenerator(function(d) {
+                return [d.name];
+            })
             .column('nazwa', 'text', 'name', 4, function(dev) {
                 return $('<a></a>')
                     .attr('href', '/device/' + dev.id)

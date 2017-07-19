@@ -112,6 +112,9 @@
 $(document).ready( function() {
     function fixBuildings(listOfBuildingDto) {
         tabelka.builder('!')
+            .searchGenerator(function(b) {
+                return [b.name, b.code, b.street, b.city];
+            })
             .column('nazwa', 'text', 'name', 7, function(building) {
                 return $('<a></a>')
                     .attr('href', '/building/' + building.id)

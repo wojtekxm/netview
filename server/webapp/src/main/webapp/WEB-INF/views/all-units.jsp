@@ -111,6 +111,9 @@
 $(document).ready( function() {
     function fixUnits(listOfUnitDto) {
         tabelka.builder('!')
+            .searchGenerator(function(u) {
+                return [u.description, u.code];
+            })
             .column('nazwa', 'text', 'description', 12, function(unit) {
                 return $('<a></a>')
                     .attr('href', '/unit/' + unit.id)

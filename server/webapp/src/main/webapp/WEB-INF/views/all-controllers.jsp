@@ -154,6 +154,9 @@ $(document).ready( function() {
 
     function fixControllers(listOfControllerDetailsDto, replacingOld) {
         var builder = tabelka.builder('!')
+            .searchGenerator(function(c) {
+                return [c.name, c.ipv4];
+            })
             .column('nazwa', 'text', 'name', 2, function(cont) {
                 return $('<a></a>')
                     .attr('href', '/controller/' + cont.id)

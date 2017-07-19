@@ -193,8 +193,9 @@
 var building;
 $(document).ready(function(){
     var buildingId = ${building.id};
-    var modalLinkDevices, currentDevices, mapDevicesId;
-
+    var tabelkaDevices, tabelkaModalDevices, modalLinkDevices, currentDevices, mapDevicesId;
+    tabelkaDevices = null;
+    tabelkaModalDevices = null;
     modalLinkDevices = $('#modalLinkDevices');
     currentDevices = [];
     mapDevicesId = {};
@@ -245,6 +246,9 @@ $(document).ready(function(){
 
     function fixUnits(listOfUnitDto) {
         tabelka.builder()
+            .searchGenerator(function(u) {
+                return [u.description, u.code];
+            })
             .column('nazwa', 'text', 'description', 12, function(unit) {
                     return $('<a></a>')
                         .attr('href', '/unit/' + unit.id)
@@ -272,6 +276,9 @@ $(document).ready(function(){
 
     function fixControllers(listOfControllerDetailsDto) {
         tabelka.builder('!')
+            .searchGenerator(function(c) {
+                return [c.name, c.ipv4];
+            })
             .column('nazwa', 'text', 'name', 3, function(cont) {
                 return $('<a></a>')
                     .attr('href', '/controller/' + cont.id)
@@ -316,36 +323,44 @@ $(document).ready(function(){
 
     function fixDevices(listOfDeviceDetailsDto) {
         var i;
-        tabelka.builder()
-            .column('nazwa', 'text', 'name', 6, function(dev) {
-                return $('<a></a>')
-                    .attr('href', '/device/' + dev.id)
-                    .text(dev.name);
-            })
-            .deviceFrequency('2,4 GHz', 2400, 2)
-            .deviceFrequency('5 GHz', 5000, 2)
-            .column('kontroler', 'text', 'cmp_controller', 6, function(dev) {
-                var con = dev.controller;
-                dev.cmp_controller = null;
-                if(con !== null) {
-                    dev.cmp_controller = con.name;
-                    return  $('<a></a>')
-                        .attr('href', '/controller/' + con.id)
-                        .text(con.name);
-                }
-                return $('<span></span>').text('-');
-            })
-            .buttonUnlink('usuń', function(deviceId) {
-                return [ {
-                    "url" : '/api/device/unlink-building/' + deviceId,
-                    "method" : 'post'
-                }, {
-                    "url" : '/api/building/devices-details/' + building.id
-                } ];
-            }, function(responses) {
-                fixDevices(responses[1].list);
-            })
-            .build('#tabelka_devices', listOfDeviceDetailsDto);
+        if(tabelkaDevices === null) {
+            tabelkaDevices = tabelka.builder()
+                .searchGenerator(function(d) {
+                    return [d.name];
+                })
+                .column('nazwa', 'text', 'name', 6, function (dev) {
+                    return $('<a></a>')
+                        .attr('href', '/device/' + dev.id)
+                        .text(dev.name);
+                })
+                .deviceFrequency('2,4 GHz', 2400, 2)
+                .deviceFrequency('5 GHz', 5000, 2)
+                .column('kontroler', 'text', 'cmp_controller', 6, function (dev) {
+                    var con = dev.controller;
+                    dev.cmp_controller = null;
+                    if (con !== null) {
+                        dev.cmp_controller = con.name;
+                        return $('<a></a>')
+                            .attr('href', '/controller/' + con.id)
+                            .text(con.name);
+                    }
+                    return $('<span></span>').text('-');
+                })
+                .buttonUnlink('usuń', function (deviceId) {
+                    return [{
+                        "url": '/api/device/unlink-building/' + deviceId,
+                        "method": 'post'
+                    }, {
+                        "url": '/api/building/devices-details/' + building.id
+                    }];
+                }, function (responses) {
+                    fixDevices(responses[1].list);
+                })
+                .build('#tabelka_devices', listOfDeviceDetailsDto);
+        }
+        else {
+            tabelkaDevices.resetData(listOfDeviceDetailsDto);
+        }
         currentDevices = listOfDeviceDetailsDto;
         mapDevicesId = {};
         for(i = 0; i < currentDevices.length; i++) {
@@ -354,76 +369,84 @@ $(document).ready(function(){
     }
 
     function fixModalDevices(listOfDeviceDetailsDto) {
-        tabelka.builder()
-            .column('nazwa', 'text', 'name', 6, function(dev) {
-                return $('<a></a>')
-                    .attr('href', '/device/' + dev.id)
-                    .text(dev.name);
-            })
-            .deviceFrequency('2,4 GHz', 2400, 2)
-            .deviceFrequency('5 GHz', 5000, 2)
-            .column('kontroler', 'text', 'cmp_controller', 6, function(dev) {
-                var con = dev.controller;
-                dev.cmp_controller = null;
-                if(con !== null) {
-                    dev.cmp_controller = con.name;
-                    return  $('<a></a>')
-                        .attr('href', '/controller/' + con.id)
-                        .text(con.name);
-                }
-                return $('<span></span>').text('-');
-            })
-            .special('', 1, function(dev) {
-                dev.button_span = $('<span class="glyphicon glyphicon-plus"></span>');
-                dev.button = $('<button class="btn btn-success btn-xs pull-right"></button>');
-                if(hasDevice(dev.id)) {
-                    dev.button.removeClass('btn-success');
-                    dev.button.addClass('btn-danger');
-                    dev.button_span.removeClass('glyphicon-plus');
-                    dev.button_span.addClass('glyphicon-minus');
-                }
-                dev.button.click( {
-                    "deviceId" : dev.id
-                }, function(event) {
-                    var i, devId, url;
-                    devId = event.data.deviceId;
-                    for(i = 0; i < listOfDeviceDetailsDto.length; i++) {
-                        listOfDeviceDetailsDto[i].button.prop('disabled', true);
+        if(tabelkaModalDevices === null) {
+            tabelkaModalDevices = tabelka.builder()
+                .searchGenerator(function(d) {
+                    return [d.name];
+                })
+                .column('nazwa', 'text', 'name', 6, function (dev) {
+                    return $('<a></a>')
+                        .attr('href', '/device/' + dev.id)
+                        .text(dev.name);
+                })
+                .deviceFrequency('2,4 GHz', 2400, 2)
+                .deviceFrequency('5 GHz', 5000, 2)
+                .column('kontroler', 'text', 'cmp_controller', 6, function (dev) {
+                    var con = dev.controller;
+                    dev.cmp_controller = null;
+                    if (con !== null) {
+                        dev.cmp_controller = con.name;
+                        return $('<a></a>')
+                            .attr('href', '/controller/' + con.id)
+                            .text(con.name);
                     }
-                    if(hasDevice(devId)) {
-                        url = '/api/device/unlink-building/' + devId;
+                    return $('<span></span>').text('-');
+                })
+                .special('', 0, function (dev) {
+                    dev.button_span = $('<span class="glyphicon glyphicon-plus"></span>');
+                    dev.button = $('<button class="btn btn-success btn-xs pull-right"></button>');
+                    if (hasDevice(dev.id)) {
+                        dev.button.removeClass('btn-success');
+                        dev.button.addClass('btn-danger');
+                        dev.button_span.removeClass('glyphicon-plus');
+                        dev.button_span.addClass('glyphicon-minus');
                     }
-                    else {
-                        url = '/api/device/link-building/' + devId + '/' + building.id;
-                    }
-                    progress.load(
-                        [ {
-                            "url" : url,
-                            "method" : 'post'
-                        }, {
-                            "url" : '/api/building/devices-details/' + building.id
-                        }, {
-                            "url" : '/api/device/details/all'
-                        } ],
-                        ['#loading_link_device_' + devId], [], [],
-                        function(responses) {
-                            fixDevices(responses[1].list);
-                            fixModalDevices(responses[2].list);
-                            var i;
-                            for(i = 0; i < listOfDeviceDetailsDto.length; i++) {
-                                listOfDeviceDetailsDto[i].button.prop('disabled', false);
-                            }
-                        }, undefined, 'xs' );
-                } ).append(
-                    dev.button_span
-                );
-                return $('<div class="clearfix" style="min-width:50px"></div>').append(
-                    dev.button,
-                    $('<div class="progress-space-xs pull-right"></div>')
-                        .attr('id', 'loading_link_device_' + dev.id)
-                );
-            })
-            .build('#tabelka_modal_devices', listOfDeviceDetailsDto);
+                    dev.button.click({
+                        "deviceId": dev.id
+                    }, function (event) {
+                        var i, devId, url;
+                        devId = event.data.deviceId;
+                        for (i = 0; i < listOfDeviceDetailsDto.length; i++) {
+                            listOfDeviceDetailsDto[i].button.prop('disabled', true);
+                        }
+                        if (hasDevice(devId)) {
+                            url = '/api/device/unlink-building/' + devId;
+                        }
+                        else {
+                            url = '/api/device/link-building/' + devId + '/' + building.id;
+                        }
+                        progress.load(
+                            [{
+                                "url": url,
+                                "method": 'post'
+                            }, {
+                                "url": '/api/building/devices-details/' + building.id
+                            }, {
+                                "url": '/api/device/details/all'
+                            }],
+                            ['#loading_link_device_' + devId], [], [],
+                            function (responses) {
+                                fixDevices(responses[1].list);
+                                fixModalDevices(responses[2].list);
+                                var i;
+                                for (i = 0; i < listOfDeviceDetailsDto.length; i++) {
+                                    listOfDeviceDetailsDto[i].button.prop('disabled', false);
+                                }
+                            }, undefined, 'xs');
+                    }).append(
+                        dev.button_span
+                    );
+                    return $('<div class="clearfix" style="min-width:50px"></div>').append(
+                        dev.button,
+                        $('<div class="progress-space-xs pull-right"></div>')
+                            .attr('id', 'loading_link_device_' + dev.id)
+                    );
+                })
+                .build('#tabelka_modal_devices', listOfDeviceDetailsDto);
+        }
+        else {
+            tabelkaModalDevices.resetData(listOfDeviceDetailsDto);
+        }
     }
 
     function hasDevice(id) {

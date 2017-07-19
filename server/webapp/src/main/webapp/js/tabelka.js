@@ -531,34 +531,26 @@ var tabelka = {};
                 var sur, span, fq;
                 span = $('<span></span>');
                 fq = deviceDetailsDto.frequency;
-                if(typeof fq[mhz] !== 'undefined') {
+                if((typeof fq[mhz] !== 'undefined') &&
+                    (fq[mhz] !== null)) {
                     sur = fq[mhz];
                     span.append(
                         $('<span class="glyphicon glyphicon-check" style="color:#5cb85c"></span>')
                     );
-                    if(sur === null || sur.enabled === false) {
+                    if(sur.enabled === false) {
                         deviceDetailsDto[cmpProperty] = -1;
                         span.addClass('label label-danger');
                         span.text('wyłączone');
-                        /*span.append(
-                            ' (wyłączone)'
-                        );*/
                     }
                     else if(sur.clients < 1) {
                         deviceDetailsDto[cmpProperty] = sur.clients;
                         span.addClass('label label-warning');
                         span.text(sur.clients);
-                        /*span.append(
-                            ' (0 klientów)'
-                        );*/
                     }
                     else {
                         deviceDetailsDto[cmpProperty] = sur.clients;
                         span.addClass('label label-success');
                         span.text(sur.clients);
-                        /*span.append(
-                            ' (' + sur.clients + ' klientów)'
-                        );*/
                     }
                 }
                 else {

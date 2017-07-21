@@ -1,10 +1,13 @@
+/*
+  This file is part of the NetView open source project
+  Copyright (c) 2017 NetView authors
+  Licensed under The MIT License
+ */
 package zesp03.webapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import zesp03.common.entity.Building;
 import zesp03.common.entity.LinkUnitBuilding;
 import zesp03.common.entity.Unit;
@@ -17,7 +20,6 @@ import zesp03.webapp.dto.LinkUnitBuildingDto;
 import zesp03.webapp.dto.UnitBuildingsDto;
 import zesp03.webapp.dto.UnitDto;
 import zesp03.webapp.dto.input.CreateUnitDto;
-import zesp03.webapp.dto.result.BaseResultDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

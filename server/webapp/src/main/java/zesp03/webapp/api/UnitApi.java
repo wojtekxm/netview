@@ -1,3 +1,8 @@
+/*
+  This file is part of the NetView open source project
+  Copyright (c) 2017 NetView authors
+  Licensed under The MIT License
+ */
 package zesp03.webapp.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +11,6 @@ import zesp03.webapp.dto.BuildingDto;
 import zesp03.webapp.dto.LinkUnitBuildingDto;
 import zesp03.webapp.dto.UnitBuildingsDto;
 import zesp03.webapp.dto.UnitDto;
-import zesp03.webapp.dto.input.BuildingAndUnitDto;
 import zesp03.webapp.dto.input.CreateUnitDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;

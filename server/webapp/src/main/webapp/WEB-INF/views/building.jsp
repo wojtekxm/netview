@@ -1,6 +1,10 @@
+<%--
+This file is part of the NetView open source project
+Copyright (c) 2017 NetView authors
+Licensed under The MIT License
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -405,12 +409,7 @@ $(document).ready(function(){
                 var jq = $('<input type="checkbox">');
                 var input = jq.get()[0];
                 input.addEventListener('change', function() {
-                    if(input.checked) {
-                        mapSelectedDevices[dev.id] = true;
-                    }
-                    else {
-                        mapSelectedDevices[dev.id] = false;
-                    }
+                    mapSelectedDevices[dev.id] = !!input.checked;
                     updateModalDom();
                 });
                 return jq;

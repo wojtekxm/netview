@@ -1,3 +1,8 @@
+/*
+ This file is part of the NetView open source project
+ Copyright (c) 2017 NetView authors
+ Licensed under The MIT License
+ */
 "use strict";
 var progress = {};
 ( function() {

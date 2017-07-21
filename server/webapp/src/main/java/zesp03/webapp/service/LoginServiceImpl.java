@@ -1,3 +1,8 @@
+/*
+  This file is part of the NetView open source project
+  Copyright (c) 2017 NetView authors
+  Licensed under The MIT License
+ */
 package zesp03.webapp.service;
 
 import org.slf4j.Logger;
@@ -85,10 +90,7 @@ public class LoginServiceImpl implements LoginService {
         if(password == null || password.length() < 1) {
             return false;
         }
-        if(! Secret.check(user.getSecret(), password)) {
-            return false;
-        }
-        return true;
+        return Secret.check(user.getSecret(), password);
     }
 
     @Override

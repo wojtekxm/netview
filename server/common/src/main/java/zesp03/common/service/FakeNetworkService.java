@@ -1,3 +1,8 @@
+/*
+  This file is part of the NetView open source project
+  Copyright (c) 2017 NetView authors
+  Licensed under The MIT License
+ */
 package zesp03.common.service;
 
 import org.slf4j.Logger;
@@ -38,13 +43,6 @@ public class FakeNetworkService implements NetworkService {
      */
     public FakeNetworkService() throws IOException {
         random = new Random();
-        parse("FakeNetworkServiceImpl_wifi02.txt");
-        parse("FakeNetworkServiceImpl_wifi03.txt");
-        parse("FakeNetworkServiceImpl_wifi05.txt");
-        parse("FakeNetworkServiceImpl_wifi06.txt");
-        parse("FakeNetworkServiceImpl_wifi07.txt");
-        parse("FakeNetworkServiceImpl_wifi10.txt");
-        parse("FakeNetworkServiceImpl_wifi11.txt");
         parse("FakeNetworkServiceImpl_wifi99.txt");
         parse("FakeNetworkServiceImpl_wifi441.txt");
         parse("FakeNetworkServiceImpl_wifi442.txt");

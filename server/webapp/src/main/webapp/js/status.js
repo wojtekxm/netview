@@ -1,11 +1,11 @@
+/*
+ This file is part of the NetView open source project
+ Copyright (c) 2017 NetView authors
+ Licensed under The MIT License
+ */
 "use strict";
 var devices = [];
 var interGreen;
-
-// $(document).ready(function(){
-//     $(".navbar-frame").load("header.html");
-// });
-
 
 function onlyGreen()
 {
@@ -32,7 +32,6 @@ function onlyGreen()
 
 
 function green(){
-    clicked = "green";
     clearInterval(inter);
     clearInterval(interRed);
     clearInterval(interGrey);
@@ -172,7 +171,6 @@ function onlyRed()
 
 
 function red(){
-    clicked = "red";
     clearInterval(interGreen);
     clearInterval(interGrey);
     clearInterval(inter);
@@ -287,7 +285,6 @@ function onlyGrey()
 
 
 function grey(){
-    clicked = "grey";
     clearInterval(inter);
     clearInterval(interGreen);
     clearInterval(interRed);

@@ -1,7 +1,10 @@
+<%--
+This file is part of the NetView open source project
+Copyright (c) 2017 NetView authors
+Licensed under The MIT License
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -436,7 +439,7 @@
 </script>
 
 <script type="text/javascript">
-    var btnFiltersToggle = $('#filtersToggle')
+    var btnFiltersToggle = $('#filtersToggle');
     var btnFilter = $('#filters_commit');
     var btnResetFilter = $('#back');
     var btnTop = $('#top_15');
@@ -730,12 +733,12 @@
                         type: 'checkbox',
                         value: item.id,
                         text: item.name,
-                        class: 'b',
+                        "class": 'b',
                         selected: true
                     });
                     opt.appendTo(b);
                     b.multiselect('rebuild');
-                })
+                });
                 buildingsSize = buildings.length;
             }
         });
@@ -757,12 +760,12 @@
                         type: 'checkbox',
                         value: item.id,
                         text: item.name,
-                        class: 'c',
+                        "class": 'c',
                         selected: true
                     });
                     opt.appendTo(c);
                     c.multiselect('rebuild');
-                })
+                });
                 controllersSize = controllers.length;
             }
         });

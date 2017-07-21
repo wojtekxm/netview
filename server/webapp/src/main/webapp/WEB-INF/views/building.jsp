@@ -176,9 +176,11 @@
             </div>
             <div class="modal-body">
                 <div id="loading_modal_devices" class="progress-space"></div>
-                <div id="tabelka_modal_devices" style="overflow: auto"></div>
+                <div id="tabelka_modal_devices"></div>
             </div>
             <div class="modal-footer">
+                Zaznaczono: <span id="span_devices_selected"></span> urządzeń
+                <button id="btn_modal_submit" type="button" class="btn btn-primary">Dodaj</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Zamknij</button>
             </div>
         </div>
@@ -193,12 +195,11 @@
 var building;
 $(document).ready(function(){
     var buildingId = ${building.id};
-    var tabelkaDevices, tabelkaModalDevices, modalLinkDevices, currentDevices, mapDevicesId;
+    var tabelkaDevices, tabelkaModalDevices, modalLinkDevices, mapSelectedDevices;
     tabelkaDevices = null;
     tabelkaModalDevices = null;
     modalLinkDevices = $('#modalLinkDevices');
-    currentDevices = [];
-    mapDevicesId = {};
+
 
     progress.loadParallel(
         [{
@@ -236,7 +237,7 @@ $(document).ready(function(){
 
     modalLinkDevices.on('show.bs.modal', function() {
         progress.loadGet(
-            '/api/device/details/all',
+            '/api/device/details/all-not-in-building/' + buildingId,
             ['#loading_modal_devices'], ['#tabelka_modal_devices'], [],
             function(response) {
                 fixModalDevices(response.list);
@@ -361,97 +362,85 @@ $(document).ready(function(){
         else {
             tabelkaDevices.resetData(listOfDeviceDetailsDto);
         }
-        currentDevices = listOfDeviceDetailsDto;
-        mapDevicesId = {};
-        for(i = 0; i < currentDevices.length; i++) {
-            mapDevicesId[currentDevices[i].id] = true;
+    }
+
+    function updateModalDom() {
+        var countSelectedDevices, k;
+        countSelectedDevices = 0;
+        for(k in mapSelectedDevices) {
+            if(mapSelectedDevices.hasOwnProperty(k) && mapSelectedDevices[k] === true) {
+                countSelectedDevices++;
+            }
         }
+        $('#span_devices_selected').text(countSelectedDevices);
+        $('#btn_modal_submit').prop('disabled', countSelectedDevices < 1);
     }
 
     function fixModalDevices(listOfDeviceDetailsDto) {
-        if(tabelkaModalDevices === null) {
-            tabelkaModalDevices = tabelka.builder()
-                .searchGenerator(function(d) {
-                    return [d.name];
-                })
-                .column('nazwa', 'text', 'name', 6, function (dev) {
+        mapSelectedDevices = {};
+        updateModalDom();
+        tabelkaModalDevices = tabelka.builder()
+            .searchGenerator(function(d) {
+                return [d.name];
+            })
+            .column('nazwa', 'text', 'name', 6, function (dev) {
+                return $('<a></a>')
+                    .attr('href', '/device/' + dev.id)
+                    .text(dev.name);
+            })
+            .deviceFrequency('2,4 GHz', 2400, 2)
+            .deviceFrequency('5 GHz', 5000, 2)
+            .column('kontroler', 'text', 'cmp_controller', 6, function (dev) {
+                var con = dev.controller;
+                dev.cmp_controller = null;
+                if (con !== null) {
+                    dev.cmp_controller = con.name;
                     return $('<a></a>')
-                        .attr('href', '/device/' + dev.id)
-                        .text(dev.name);
-                })
-                .deviceFrequency('2,4 GHz', 2400, 2)
-                .deviceFrequency('5 GHz', 5000, 2)
-                .column('kontroler', 'text', 'cmp_controller', 6, function (dev) {
-                    var con = dev.controller;
-                    dev.cmp_controller = null;
-                    if (con !== null) {
-                        dev.cmp_controller = con.name;
-                        return $('<a></a>')
-                            .attr('href', '/controller/' + con.id)
-                            .text(con.name);
+                        .attr('href', '/controller/' + con.id)
+                        .text(con.name);
+                }
+                return $('<span></span>').text('-');
+            })
+            .special('', 0, function (dev) {
+                var jq = $('<input type="checkbox">');
+                var input = jq.get()[0];
+                input.addEventListener('change', function() {
+                    if(input.checked) {
+                        mapSelectedDevices[dev.id] = true;
                     }
-                    return $('<span></span>').text('-');
-                })
-                .special('', 0, function (dev) {
-                    dev.button_span = $('<span class="glyphicon glyphicon-plus"></span>');
-                    dev.button = $('<button class="btn btn-success btn-xs pull-right"></button>');
-                    if (hasDevice(dev.id)) {
-                        dev.button.removeClass('btn-success');
-                        dev.button.addClass('btn-danger');
-                        dev.button_span.removeClass('glyphicon-plus');
-                        dev.button_span.addClass('glyphicon-minus');
+                    else {
+                        mapSelectedDevices[dev.id] = false;
                     }
-                    dev.button.click({
-                        "deviceId": dev.id
-                    }, function (event) {
-                        var i, devId, url;
-                        devId = event.data.deviceId;
-                        for (i = 0; i < listOfDeviceDetailsDto.length; i++) {
-                            listOfDeviceDetailsDto[i].button.prop('disabled', true);
-                        }
-                        if (hasDevice(devId)) {
-                            url = '/api/device/unlink-building/' + devId;
-                        }
-                        else {
-                            url = '/api/device/link-building/' + devId + '/' + building.id;
-                        }
-                        progress.load(
-                            [{
-                                "url": url,
-                                "method": 'post'
-                            }, {
-                                "url": '/api/building/devices-details/' + building.id
-                            }, {
-                                "url": '/api/device/details/all'
-                            }],
-                            ['#loading_link_device_' + devId], [], [],
-                            function (responses) {
-                                fixDevices(responses[1].list);
-                                fixModalDevices(responses[2].list);
-                                var i;
-                                for (i = 0; i < listOfDeviceDetailsDto.length; i++) {
-                                    listOfDeviceDetailsDto[i].button.prop('disabled', false);
-                                }
-                            }, undefined, 'xs');
-                    }).append(
-                        dev.button_span
-                    );
-                    return $('<div class="clearfix" style="min-width:50px"></div>').append(
-                        dev.button,
-                        $('<div class="progress-space-xs pull-right"></div>')
-                            .attr('id', 'loading_link_device_' + dev.id)
-                    );
-                })
-                .build('#tabelka_modal_devices', listOfDeviceDetailsDto);
-        }
-        else {
-            tabelkaModalDevices.resetData(listOfDeviceDetailsDto);
-        }
-    }
-
-    function hasDevice(id) {
-        return (typeof mapDevicesId[id] !== 'undefined') &&
-            (mapDevicesId[id] === true);
+                    updateModalDom();
+                });
+                return jq;
+            })
+            .build('#tabelka_modal_devices', listOfDeviceDetailsDto);
+        $('#btn_modal_submit').click(function() {
+            var list, k;
+            list = [];
+            for(k in mapSelectedDevices) {
+                if(mapSelectedDevices.hasOwnProperty(k) && mapSelectedDevices[k] === true) {
+                    list.push(parseInt(k));
+                }
+            }
+            progress.load(
+                [{
+                    "url": '/api/device/link-building',
+                    "method": 'post',
+                    "postData": {
+                        "deviceIds": list,
+                        "buildingId": buildingId
+                    }
+                }, {
+                    "url": '/api/building/devices-details/' + buildingId
+                }],
+                [], [], [], function(responses) {
+                    fixDevices(responses[1].list);
+                    modalLinkDevices.modal('hide');
+                }, undefined, 'md'
+            );
+        });
     }
 });
 function initMap() {

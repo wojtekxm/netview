@@ -16,6 +16,7 @@ import zesp03.common.service.SurveyReadingService;
 import zesp03.webapp.dto.DeviceDetailsDto;
 import zesp03.webapp.dto.DeviceDto;
 import zesp03.webapp.dto.DeviceNowDto;
+import zesp03.webapp.dto.input.LinkBuildingManyDevicesDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -88,6 +89,15 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public List<DeviceDetailsDto> checkDetailsAllNotInBuilding(Long buildingId) {
+        return surveyReadingService.checkAllNotInBuildingFetch(buildingId)
+                .values()
+                .stream()
+                .map(DeviceDetailsDto::make)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<DeviceDetailsDto> checkDetailsByController(Long controllerId) {
         return surveyReadingService.checkForControllerFetch(controllerId)
                 .values()
@@ -149,6 +159,17 @@ public class DeviceServiceImpl implements DeviceService {
             throw new NotFoundException("building");
         }
         findOneNotDeletedOrThrow(deviceId).setBuilding(bui);
+    }
+
+    @Override
+    public void linkBuilding(LinkBuildingManyDevicesDto dto) {
+        Building bui = buildingRepository.findOne(dto.getBuildingId());
+        if(bui == null) {
+            throw new NotFoundException("building");
+        }
+        for(Long deviceId : dto.getDeviceIds()) {
+            findOneNotDeletedOrThrow(deviceId).setBuilding(bui);
+        }
     }
 
     @Override

@@ -110,7 +110,7 @@ public class ExamineServiceImpl implements ExamineService {
                 originalSurveys = ser.queryDevices(controller.getIpv4(), controller.getCommunity());
             }
             catch(SNMPException exc) {
-                log.warn("could not examine controller: {}", exc.getLocalizedMessage());
+                log.warn("could not examine controller (id={}, ipv4={}): {}", controller.getId(), controller.getIpv4(), exc.getLocalizedMessage());
                 return 0;
             }
             final SurveyInfoCollection col = new SurveyInfoCollection(originalSurveys);

@@ -64,6 +64,20 @@ public class SurveyReadingServiceImpl implements SurveyReadingService {
     }
 
     @Override
+    public Map<Long, CurrentDeviceState> checkAllNotInBuildingFetch(Long buildingId) {
+        HashMap<Long, CurrentDeviceState> map = new HashMap<>();
+        List<Object[]> list = em.createQuery(
+                selectCheck("(dev.building.id != :bid OR dev.building.id IS NULL) AND"),
+                Object[].class)
+                .setParameter("bid", buildingId)
+                .getResultList();
+        for(Object[] arr : list) {
+            merge(map, arr);
+        }
+        return map;
+    }
+
+    @Override
     public Map<Long, CurrentDeviceState> checkForControllerFetch(Long controllerId) {
         HashMap<Long, CurrentDeviceState> map = new HashMap<>();
         List<Object[]> list = em.createQuery(

@@ -15,6 +15,9 @@ public interface SurveyReadingService {
     Map<Long, CurrentDeviceState> checkAllFetch();
 
     // kluczem w mapie jest id urządzenia
+    Map<Long, CurrentDeviceState> checkAllNotInBuildingFetch(Long buildingId);
+
+    // kluczem w mapie jest id urządzenia
     Map<Long, CurrentDeviceState> checkForControllerFetch(Long controllerId);
 
     // kluczem w mapie jest id urządzenia

@@ -76,7 +76,7 @@ var tabelka = {};
         return result;
 
         function initModel() {
-            sortIndex = -1;
+            sortIndex = 0;
             sortAscending = true;
             sortedData = [];
             filteredData = [];
@@ -324,14 +324,12 @@ var tabelka = {};
                 }
                 data[i][searchTextProperty] = arr;
             }
-            if(sortIndex >= 0) {
-                sortedData.sort(
-                    util.chooseComparator(
-                        columnDefinitions[sortIndex].comparator,
-                        sortAscending
-                    )
-                );
-            }
+            sortedData.sort(
+                util.chooseComparator(
+                    columnDefinitions[sortIndex].comparator,
+                    sortAscending
+                )
+            );
             filterSearch();
             pageSizes = makeSizeOptions(data.length);
             pageCapacity = getClosestNumber(pageSizes, pageCapacity);
@@ -364,13 +362,9 @@ var tabelka = {};
             totalPages = getTotalPages();
             arr = [0,
                 1,
-                pageIndex - 3,
-                pageIndex - 2,
                 pageIndex - 1,
                 pageIndex,
                 pageIndex + 1,
-                pageIndex + 2,
-                pageIndex + 3,
                 totalPages - 2,
                 totalPages - 1];
             arr.sort(util.compareNumbers);

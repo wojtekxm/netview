@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zesp03.webapp.dto.DeviceDetailsDto;
 import zesp03.webapp.dto.DeviceNowDto;
+import zesp03.webapp.dto.input.LinkBuildingManyDevicesDto;
 import zesp03.webapp.dto.result.BaseResultDto;
 import zesp03.webapp.dto.result.ContentDto;
 import zesp03.webapp.dto.result.ListDto;
@@ -24,6 +25,12 @@ public class DeviceApi {
     @GetMapping("/details/all")
     public ListDto<DeviceDetailsDto> getDetailsAll() {
         return ListDto.make( () -> deviceService.checkDetailsAll() );
+    }
+
+    @GetMapping("/details/all-not-in-building/{buildingId}")
+    public ListDto<DeviceDetailsDto> getDetailsAllNotInBuilding(
+            @PathVariable("buildingId") long buildingId) {
+        return ListDto.make(() -> deviceService.checkDetailsAllNotInBuilding(buildingId));
     }
 
     @GetMapping("/info/{deviceId}")
@@ -56,6 +63,11 @@ public class DeviceApi {
             @PathVariable("deviceId") long deviceId,
             @PathVariable("buildingId") long buildingId) {
         return BaseResultDto.make( () -> deviceService.linkBuilding(deviceId, buildingId) );
+    }
+
+    @PostMapping("/link-building")
+    public BaseResultDto linkBuildingMany(@RequestBody LinkBuildingManyDevicesDto dto) {
+        return BaseResultDto.make( () -> deviceService.linkBuilding(dto) );
     }
 
     @PostMapping("/unlink-controller/{deviceId}")
